@@ -397,6 +397,14 @@ main:has(.creator){max-width:1120px}
 .xlist{padding-left:1.1rem;margin:.2rem 0}.xlist li{margin:.35rem 0}
 .mistake{border-top:1px solid #e1d8cb;padding:.5rem 0}.mistake p{margin:.2rem 0}.mistake .bad{color:#8a2f2f}.mistake .better{color:#2d5f2d}
 .card h3 .btn{float:right;padding:.15rem .7rem;font-size:.8rem}
+
+.xcat{font:700 .85rem Arimo;letter-spacing:.08em;text-transform:uppercase;color:var(--brown);margin:.9rem 0 .3rem}
+.xshop{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.5rem}
+.xitem{display:grid;gap:.1rem;background:#fff;border:2px solid #e3d9c8;border-radius:10px;padding:.4rem;text-decoration:none;color:var(--ink);font-size:.8rem;align-content:start}
+.xitem:hover{border-color:var(--gold);background:#fff9ec}.xitem img{width:100%;aspect-ratio:1;object-fit:contain;background:#f3eee6;border-radius:6px}.xitem span{color:var(--brown);font-weight:700}
+
+.sitelink{text-decoration:none;display:inline-block;text-align:center}
+.xsite{margin:.2rem 0 .8rem}.xsite small{color:#6e6458;margin-left:.4rem}
 </style>
 </head>
 <body>
@@ -579,6 +587,43 @@ function playPractice(skill) {
 }
 const weakestSkill = () => { const w = Progress.skillAverages(state)[0]; return w ? w[0] : null; };
 
+// Every non-bottle product on ilovetequilacorrido.com: [category, name, shop handle, price, thumbnail]. Prices marked "from" rise with size.
+const SHOP = [
+  ["Tees and tops", "Corrido Classic Tee", "corrido-classic-tee", "from $19.00", "unisex-classic-tee-military-green-front-680fb818b9baf_300x.png"],
+  ["Tees and tops", "Corrido Logo Tee", "tequila-corrido-logo-tee", "$24.00", "unisex-staple-t-shirt-dark-grey-heather-front-68c3a7b7c3abb_300x.png"],
+  ["Tees and tops", "D.A.R.E. Oversized Tee", "d-a-r-e-oversized-tee", "from $27.90", "unisex-oversized-garment-dyed-t-shirt-washed-black-front-6a389845e4b64_300x.png"],
+  ["Tees and tops", "In My Tequila Era Tee", "in-my-tequila-era-tee", "from $29.00", "unisex-classic-tee-charcoal-front-68c3a296d1ab2_300x.png"],
+  ["Tees and tops", "Legacy Tee", "legacy-tee", "$34.00", "unisex-tri-blend-t-shirt-athletic-grey-triblend-front-6709aa94ccff0_300x.png"],
+  ["Tees and tops", "Mas Tequila Thick Tee", "mas-tequila-thick-tee", "from $24.90", "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_300x.png"],
+  ["Tees and tops", "Mexico Es Chingón Tee", "mexico-es-chingon-tee", "from $34.00", "unisex-organic-ribbed-neck-t-shirt-khaki-back-68c8c06355e98_300x.png"],
+  ["Tees and tops", "Más Tequila Tee", "mas-tequila-tee", "from $25.00", "unisex-staple-t-shirt-heather-dust-front-695deb716782d_300x.png"],
+  ["Tees and tops", "Pickleball Raglan", "pickleball-raglan", "$40.00", "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_300x.png"],
+  ["Tees and tops", "Tequila Delivery 24/7 Oversized Tee", "unisex-oversized-t-shirt", "from $29.50", "unisex-oversized-garment-dyed-t-shirt-washed-charcoal-front-6a388f734581f_300x.png"],
+  ["Tees and tops", "Tequila Delivery Tee", "tequila-delivery-tee", "$24.50", "unisex-staple-t-shirt-heather-deep-teal-front-and-back-6a3895fe6dda5_300x.png"],
+  ["Tees and tops", "Tequila Era Women’s Tee", "in-my-tequila-era-women-s-tee", "$29.00", "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_300x.png"],
+  ["Tees and tops", "Tequila On My Mind Organic Tee", "tequila-on-my-mind-organic-tee", "$29.00", "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_300x.png"],
+  ["Tees and tops", "Tequila On My Mind Tee", "tequila-on-my-mind-tee", "$34.00", "unisex-tri-blend-t-shirt-oatmeal-triblend-front-68c3ada5245e0_300x.png"],
+  ["Tees and tops", "Tequila Smuggler Tee", "tequila-smuggler-tee-1", "from $39.00", "oversized-faded-t-shirt-faded-khaki-front-680b21aec055b_300x.png"],
+  ["Tees and tops", "Tequila Spirit Animal Tee", "tequila-is-my-spirit-animal-tee", "from $29.00", "unisex-classic-tee-white-front-and-back-68c3a5c38db7c_300x.png"],
+  ["Tees and tops", "Women’s Crop Top", "women-s-crop-top", "$31.00", "womens-crop-top-hazy-pink-front-6709a29a0e35c_300x.png"],
+  ["Tees and tops", "Worth the Shot Tee", "worth-the-shot-ringer-tee", "from $36.00", "unisex-ringer-t-shirt-white-black-back-68c3a3cc5b1d5_300x.png"],
+  ["Polos", "Corrido Sport Polo (Black or Navy)", "corrido-sport-polo", "from $49.00", "adidas-sport-polo-shirt-black-front-68c3b07fa1fa4_300x.png"],
+  ["Polos", "Corrido Sport Polo (White)", "corrido-sport-polo-1", "from $49.00", "adidas-sport-polo-shirt-white-front-68c3b21363d43_300x.png"],
+  ["Polos", "Corrido x adidas Space-Dyed Polo", "corrido-x-adidas-space-dyed-polo", "from $64.00", "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_300x.png"],
+  ["Hoodies", "Crop Hoodie", "crop-hoodie", "$58.00", "womens-cropped-hoodie-military-green-front-6709b08357946_300x.png"],
+  ["Hoodies", "Tequila Delivery Hoodie", "tequila-delivery-hoodie", "from $61.00", "lane-seven-ls16001gd-i-urban-hoodie-garment-dyed-pigment-midnight-navy-back-6997f60b4444f_300x.png"],
+  ["Hats", "Cuffed Beanie", "cuffed-beanie", "$28.00", "cuffed-beanie-dark-grey-front-6709b16b8be6a_300x.png"],
+  ["Hats", "Drinking Corduroy Cap", "drinking-corduroy-cap", "$34.00", "vintage-corduroy-cap-brown-front-68dde58629ac6_300x.png"],
+  ["Hats", "Pickleball Trucker Cap", "pickleball-trucker-cap", "$29.00", "5-panel-trucker-cap-white-left-front-68c3b6d79fe76_300x.png"],
+  ["Hats", "Save Water Cap", "save-water-cap", "$29.00", "vintage-cap-navy-front-68c8c480a4e2e_300x.png"],
+  ["Hats", "Tequila Rebel Snapback", "tequila-rebel-snapback", "$34.00", "classic-snapback-natural-black-front-680925a92255f_300x.png"],
+  ["Hats", "Trucker Cap", "tequila-corrido-trucker-cap", "$35.00", "snapback-trucker-cap-charcoal-black-front-68c3b57080e74_300x.png"],
+  ["Gear and accessories", "Corrido Denim Tote Bag", "denim-tote-bag", "$39.00", "organic-denim-tote-bag-denim-blue-front-6709a1834ea16_300x.png"],
+  ["Gear and accessories", "Corrido Pickleball Paddle Set", "corrido-pickleball-paddle-set", "$59.00", "pickleball-paddle-_set_-wood-7.5-x-15.5-front-6998102d074e0_300x.png"],
+  ["Gear and accessories", "Not Water Travel Mug", "not-water-travel-mug", "from $29.50", "travel-mug-with-a-handle-white-25-oz-right-6a09155a10fd8_300x.png"],
+];
+const SHOP_CATS = ["Tees and tops", "Polos", "Hoodies", "Hats", "Gear and accessories"];
+
 // ---------- who is Tequila Corrido ----------
 // A read-only page for Ken's other goal: teach people who Corrido is. Only facts from the brand's own site.
 function explorer() {
@@ -591,6 +636,7 @@ function explorer() {
   ];
   app.innerHTML = `<section class="view sheet explore">
     <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Everything a new rep should know, in one place.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
+    <p class="xsite"><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a> <small>Opens in a new tab, so you can come right back.</small></p>
     <div class="card"><h3>The promise</h3><p><b>Additive-free.</b> Only three ingredients and no fake flavors. That one line is what to say when someone asks what's in it.</p></div>
     <div class="card"><h3>The lineup</h3><div class="xlineup">${lineup.map(([n, pr, notes, h]) => `<a class="xbottle" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>See it on the shop ↗</em></a>`).join("")}</div>
       <p class="note2">Prices are the public site prices. Wholesale pricing and margins aren't public, so a rep confirms those in writing.</p></div>
@@ -599,7 +645,9 @@ function explorer() {
       <li><b>The maker.</b> The tequila bears the stamp of one of the first female master distillers.</li>
       <li><b>Celebrity-free.</b> The site says it's not about flashy endorsements. The tequila does the talking, so a rep never claims famous fans.</li>
       <li><b>The voice.</b> Bold, irreverent and a little rebellious, set against mass-produced, overpriced tequila.</li></ul></div>
-    <div class="card"><h3>Merch</h3><p>The shop sells tees, caps, a beanie and a Corrido x adidas polo. You can wear most of it on your character: open <b>Character</b> and double-click any piece to see it on the shop.</p><p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></div>
+    <div class="card"><h3>Merch</h3><p>The shop sells a lot more than the tees, caps and polos you can wear on your character. Here is everything on the site, and every card opens the real product.</p>
+      ${SHOP_CATS.map(c => `<h4 class="xcat">${c}</h4><div class="xshop">${SHOP.filter(r => r[0] === c).map(([, n, h, pr, th]) => `<a class="xitem" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener">${th ? `<img src="${IMG}${th}" alt="" loading="lazy">` : ""}<b>${esc(n)}</b><span>${pr}</span></a>`).join("")}</div>`).join("")}
+      <p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></div>
     <div class="card"><h3>Selling it right</h3><ul class="xlist">
       <li><b>21 and over only.</b> Never encourage serving anyone under 21.</li>
       <li><b>Stick to the brand's own words.</b> No health, hangover, organic or low-calorie claims.</li>
@@ -640,7 +688,7 @@ function home() {
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
     <p class="legend">Lessons teach the brand. Missions are customer conversations, where you can type, speak or use the camera coach.</p>
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
-    <div class="maplinks"><button class="btn alt" id="goexplore" type="button">📖 Who is Tequila Corrido?</button>${!gated && weakestSkill() ? `<button class="btn alt" id="gopractice" type="button">🎯 Practice: ${esc(weakestSkill())}</button>` : ""}${!gated && (state.mistakes || []).length ? `<button class="btn alt" id="goreview" type="button">📝 Review ${(state.mistakes || []).length} missed</button>` : ""}</div>
+    <div class="maplinks"><button class="btn alt" id="goexplore" type="button">📖 Who is Tequila Corrido?</button><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a>${!gated && weakestSkill() ? `<button class="btn alt" id="gopractice" type="button">🎯 Practice: ${esc(weakestSkill())}</button>` : ""}${!gated && (state.mistakes || []).length ? `<button class="btn alt" id="goreview" type="button">📝 Review ${(state.mistakes || []).length} missed</button>` : ""}</div>
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${stops}</div></section>`;
   const launch = st => openDiff(() => (st.qs ? quiz(st) : play(st)), st);
@@ -885,7 +933,7 @@ const HAIRS = {
 const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
 // bbox = [left, top, right, bottom] of the product inside its image (0 to 1). W = width on the character.
 const OUTFITS = {
-  "Mas Tequila Tee": { g: "u", price: "$29.75", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
+  "Mas Tequila Tee": { g: "u", price: "$24.90", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
   "In My Tequila Era Tee": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
     imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2" },
   "Tequila On My Mind Tee": { g: "u", price: "$29.00", base: "#d8cdb4", Wk: .97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_600x.png?v=1778981479", bbox: [.075, .037, .918, .96] },
