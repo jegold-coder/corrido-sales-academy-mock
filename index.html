@@ -662,7 +662,7 @@ function explorer() {
       <li><b>Stick to the brand's own words.</b> No health, hangover, organic or low-calorie claims.</li>
       <li><b>Never invent numbers.</b> Prices, margins and sales figures get confirmed in writing, not guessed.</li>
       <li><b>Respect the other brand.</b> Name one real difference and invite a taste.</li></ul></div>
-    <details class="card xmerch"><summary><h3>Merch (just for reference)</h3></summary><p>You are selling the tequila, not the merch, so this is just for reference. The shop also sells more than the tees, caps and polos you can wear on your character, and every card opens the real product.</p>
+    <details class="card xmerch"><summary><h3>Merch</h3></summary><p>The shop sells more than the tees, caps and polos you can wear on your character. Every card opens the real product.</p>
       ${SHOP_CATS.map(c => `<h4 class="xcat">${c}</h4><div class="xshop">${SHOP.filter(r => r[0] === c).map(([, n, h, pr, th]) => `<a class="xitem" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener">${th ? `<img src="${IMG}${th}" alt="" loading="lazy">` : ""}<b>${esc(n)}</b><span>${pr}</span></a>`).join("")}</div>`).join("")}
       <p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></details>
     <p><button class="btn" id="xquiz" type="button">Test yourself with a lesson</button> <button class="btn alt" id="xmap" type="button">Back to the map</button></p></section>`;
