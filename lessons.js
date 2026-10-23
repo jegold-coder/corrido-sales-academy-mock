@@ -34,7 +34,6 @@ const BANK = [
   // ----- Selling
   { id: "busy", topic: "Selling", q: `The bar is slammed and the owner is busy. How do you open?`, a: `Respect their time and offer to come back`, w: [`Start your full pitch`, `Raise your voice over the noise`, `Wait at the bar all night`], why: `Respecting a busy owner's time earns you the conversation.` },
   { id: "switch", topic: "Selling", q: `"Why should I switch brands?" What's the best answer?`, a: `One real difference, then invite them to taste`, w: [`"We're simply the best"`, `"The other brand is overrated"`, `"Everyone is switching"`], why: `Specific and true, with proof they can taste for themselves.` },
-  { id: "collab", topic: "Selling", q: `Which brand made a polo with Tequila Corrido?`, a: `adidas`, w: [`Nike`, `Puma`, `Levi's`], why: `The site lists a Corrido x adidas Space-Dyed Polo.` },
 ];
 const Q = id => BANK.find(q => q.id === id);
 
