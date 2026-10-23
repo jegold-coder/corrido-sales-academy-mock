@@ -387,6 +387,16 @@ main:has(.creator){max-width:1120px}
 
 .checkgate{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;background:#fff4d6;border:3px solid var(--gold);border-radius:14px;padding:.8rem 1rem;margin:.4rem 0 .8rem}
 .checkgate p{margin:.2rem 0 0;font-size:.92rem}
+
+/* ===== v22: practice, review and the Who is Corrido page ===== */
+.maplinks{display:flex;gap:.5rem;flex-wrap:wrap;margin:.2rem 0 .8rem}
+.maplinks .btn{padding:.35rem .8rem;font-size:.88rem}
+.xlineup{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem}
+.xbottle{display:grid;gap:.15rem;background:#fff;border:2px solid var(--gold);border-radius:12px;padding:.6rem .8rem;text-decoration:none;color:var(--ink)}
+.xbottle:hover{background:#fff4d6}.xbottle b{font:1.1rem Rye,serif;text-transform:uppercase;font-weight:400}.xbottle .xprice{font-weight:700;color:var(--brown)}.xbottle small{color:#4d443a}.xbottle em{font-style:normal;font-size:.8rem;color:var(--teal);font-weight:700}
+.xlist{padding-left:1.1rem;margin:.2rem 0}.xlist li{margin:.35rem 0}
+.mistake{border-top:1px solid #e1d8cb;padding:.5rem 0}.mistake p{margin:.2rem 0}.mistake .bad{color:#8a2f2f}.mistake .better{color:#2d5f2d}
+.card h3 .btn{float:right;padding:.15rem .7rem;font-size:.8rem}
 </style>
 </head>
 <body>
@@ -546,6 +556,60 @@ const closePanel = () => { if (document.body.classList.contains("onboarding")) r
 document.addEventListener("click", e => { if (!e.target.isConnected || e.target.closest("header, footer, dialog, .sheet, #camBox, .gate, a")) return; closePanel(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("dialog[open]")) closePanel(); });
 
+
+// ---------- practice a weak skill ----------
+// Builds a short mixed session from the steps that train one skill, taken from every mission. Each step keeps its own
+// customer and scene. It is not a map stop, so it never unlocks anything, but it earns XP and feeds the skill scores.
+function practiceScenario(skill) {
+  const pool = [];
+  SCENARIOS.forEach(m => m.steps.forEach((st, i) => pool.push({ ...st, src: m, ckey: m.id + ":" + i })));
+  let picks = shuffle(pool.filter(p => p.skill === skill)).slice(0, 5);
+  if (picks.length < 4) {   // a rare skill: top up with the next weakest ones
+    for (const [k] of Progress.skillAverages(state)) { if (k === skill) continue; picks = picks.concat(shuffle(pool.filter(p => p.skill === k)).slice(0, 2)); if (picks.length >= 4) break; }
+  }
+  if (picks.length < 4) picks = picks.concat(shuffle(pool.filter(p => !picks.includes(p))).slice(0, 4 - picks.length));
+  picks = picks.slice(0, 5);
+  const first = picks[0].src;
+  return { id: "practice", practice: true, title: "Practice: " + skill, sub: "Mixed customers", icon: "🎯", theme: first.theme, cust: first.cust, hidden: "",
+    win: `Nice practice. Each round you replay the moments that trip you up, and the skill scores on your Dashboard follow.`, lose: `Not this time. Practice rounds don't cost you anything, so try another.`, steps: picks };
+}
+function playPractice(skill) {
+  if (document.body.classList.contains("onboarding")) return;
+  openDiff(() => play(practiceScenario(skill)), { title: "Practice: " + skill, sub: "A few moments from different customers" });
+}
+const weakestSkill = () => { const w = Progress.skillAverages(state)[0]; return w ? w[0] : null; };
+
+// ---------- who is Tequila Corrido ----------
+// A read-only page for Ken's other goal: teach people who Corrido is. Only facts from the brand's own site.
+function explorer() {
+  stopAll(); Cam.stop(); Sound.stop();
+  const lineup = [
+    ["Blanco", "$44.99", "Citrus, fruity, floral agave and a slight crisp pepper.", "blanco"],
+    ["Reposado", "$54.99", "Vanilla, caramel, fruit and spice.", "reposado"],
+    ["Overproof", "$56.99", "Cooked agave, citrus, tropical hints and subtle spices.", "overproof"],
+    ["Añejo", "$89.99", "Coffee, agave and dried fruit.", "anejo"],
+  ];
+  app.innerHTML = `<section class="view sheet explore">
+    <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Everything a new rep should know, in one place.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
+    <div class="card"><h3>The promise</h3><p><b>Additive-free.</b> Only three ingredients and no fake flavors. That one line is what to say when someone asks what's in it.</p></div>
+    <div class="card"><h3>The lineup</h3><div class="xlineup">${lineup.map(([n, pr, notes, h]) => `<a class="xbottle" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>See it on the shop ↗</em></a>`).join("")}</div>
+      <p class="note2">Prices are the public site prices. Wholesale pricing and margins aren't public, so a rep confirms those in writing.</p></div>
+    <div class="card"><h3>The story</h3><ul class="xlist">
+      <li><b>The name.</b> A corrido is a traditional Mexican ballad. The brand borrows its music-and-rebellion spirit, with vinyl records and piano keys all over the look.</li>
+      <li><b>The maker.</b> The tequila bears the stamp of one of the first female master distillers.</li>
+      <li><b>Celebrity-free.</b> The site says it's not about flashy endorsements. The tequila does the talking, so a rep never claims famous fans.</li>
+      <li><b>The voice.</b> Bold, irreverent and a little rebellious, set against mass-produced, overpriced tequila.</li></ul></div>
+    <div class="card"><h3>Merch</h3><p>The shop sells tees, caps, a beanie and a Corrido x adidas polo. You can wear most of it on your character: open <b>Character</b> and double-click any piece to see it on the shop.</p><p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></div>
+    <div class="card"><h3>Selling it right</h3><ul class="xlist">
+      <li><b>21 and over only.</b> Never encourage serving anyone under 21.</li>
+      <li><b>Stick to the brand's own words.</b> No health, hangover, organic or low-calorie claims.</li>
+      <li><b>Never invent numbers.</b> Prices, margins and sales figures get confirmed in writing, not guessed.</li>
+      <li><b>Respect the other brand.</b> Name one real difference and invite a taste.</li></ul></div>
+    <p><button class="btn" id="xquiz" type="button">Test yourself with a lesson</button> <button class="btn alt" id="xmap" type="button">Back to the map</button></p></section>`;
+  $("#xback").onclick = home; $("#xmap").onclick = home;
+  $("#xquiz").onclick = () => { const l = LESSONS[0]; openDiff(() => quiz(l), l); };
+}
+
 // ---------- home / map ----------
 // The knowledge check is required before the map opens. People who already have progress from before this rule are let through.
 const needsCheck = () => !state.pre && !(state.history && state.history.length > 0);
@@ -576,6 +640,7 @@ function home() {
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
     <p class="legend">Lessons teach the brand. Missions are customer conversations, where you can type, speak or use the camera coach.</p>
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
+    <div class="maplinks"><button class="btn alt" id="goexplore" type="button">📖 Who is Tequila Corrido?</button>${!gated && weakestSkill() ? `<button class="btn alt" id="gopractice" type="button">🎯 Practice: ${esc(weakestSkill())}</button>` : ""}${!gated && (state.mistakes || []).length ? `<button class="btn alt" id="goreview" type="button">📝 Review ${(state.mistakes || []).length} missed</button>` : ""}</div>
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${stops}</div></section>`;
   const launch = st => openDiff(() => (st.qs ? quiz(st) : play(st)), st);
@@ -587,6 +652,9 @@ function home() {
   });
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
+  $("#goexplore").onclick = explorer;
+  if ($("#gopractice")) $("#gopractice").onclick = () => playPractice(weakestSkill());
+  if ($("#goreview")) $("#goreview").onclick = () => dashboard("review");
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------
@@ -1199,12 +1267,23 @@ function optionsFor(st) {
   const mk = (a, k, d) => ({ t: a[0], fb: a[1], k, d, skill: st.skill });
   const wd = st.wd || [-10, -5, -5], plain = state.diff !== "easy";
   const right = mk(plain && st.RH ? [st.RH, st.R[1]] : st.R, "best", st.rd || [15, 15, 10]);
-  const wrongs = state.diff === "easy" ? [st.E[0], st.H[0]] : st.H;
+  const wrongs = state.diff === "easy" ? [st.E[0], st.H[Math.floor(Math.random() * st.H.length)]] : st.H;
   return shuffle([right, ...wrongs.map(w => mk(w, "bad", wd))]);
+}
+
+// A mission can open in a few different ways, so a replay doesn't start with the same line. Never the same one twice in a row.
+function withOpener(sc) {
+  const alts = OPENERS[sc.id];
+  if (!alts) return sc;
+  const all = [sc.steps[0].line, ...alts], last = (state.opener || {})[sc.id];
+  const pool = all.map((_, n) => n).filter(n => n !== last), n = pool[Math.floor(Math.random() * pool.length)];
+  state.opener = { ...(state.opener || {}), [sc.id]: n };
+  return n === 0 ? sc : { ...sc, steps: [{ ...sc.steps[0], line: all[n] }, ...sc.steps.slice(1)] };
 }
 
 function play(sc) {
   const [t, i, p] = D().start;
+  sc = sc.practice ? sc : withOpener(sc);
   state.sc = sc; voiceUsed = false;
   if (state.cam) { Cam.reset(); Cam.begin(); } else Cam.stop();
   Sound.start(sc.theme);
@@ -1218,7 +1297,7 @@ let voiceUsed = false;
 
 function step(i, M, log, hintsLeft) {
   stopAll();
-  const sc = state.sc, S = sc.steps[i], cust = sc.cust, key = sc.id + ":" + i, K = CRITERIA[key];
+  const sc = state.sc, S = sc.steps[i], view = S.src || sc, cust = view.cust, key = S.ckey || sc.id + ":" + i, K = CRITERIA[key];
   const typed = state.mode === "type" && !!K;
   const opts = typed ? [] : optionsFor(S);
   const avg = (M.trust + M.interest) / 2;
@@ -1236,7 +1315,7 @@ function step(i, M, log, hintsLeft) {
         <input id="llmKey" type="password" placeholder="Gemini API key (optional)" autocomplete="off" value="${esc(Coach.llm.key)}"><button type="button" class="btn alt" id="llmSave">Use key</button></details>
     </div>`;
   app.innerHTML = `<section class="view sheet">${lessonTop(i / sc.steps.length)}
-    <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, sc)}</div>
+    <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, view)}</div>
     <div class="names"><span>${cust.name} · ${cust.role}</span><span>${esc(repName())} · Rep</span></div>
     ${state.cam ? '<p class="camline" id="camLine" role="status">📷 ${esc(Cam.msg || "Starting camera…")}</p>' : ""}
     <div class="bubble" id="bub" aria-live="polite">${S.line}</div>
@@ -1268,7 +1347,7 @@ function step(i, M, log, hintsLeft) {
     M.trust = clamp(M.trust + o.d[0]); M.interest = clamp(M.interest + o.d[1]); M.price = clamp(M.price + o.d[2]);
     if (o.k === "bad") { state.hearts = Math.max(0, state.hearts - 1); hud(); }
     const reply = S.reply[o.k];
-    log.push({ skill: o.skill, k: o.k, score: o.score != null ? o.score : (o.k === "best" ? 1 : 0), line: S.line, text: o.t, reply, fb: o.fb, typed: !!o.typed });
+    log.push({ cname: cust.name, skill: o.skill, k: o.k, score: o.score != null ? o.score : (o.k === "best" ? 1 : 0), line: S.line, text: o.t, reply, fb: o.fb, typed: !!o.typed });
     $("#pl").setAttribute("class", "mood " + plumb((M.trust + M.interest) / 2));
     [M.trust, M.interest, M.price].forEach((v, n) => { $("#n" + "tip"[n]).style.width = v + "%"; });
     $("#bub").innerHTML = `<b>${cust.name}:</b> ${reply}`;
@@ -1276,6 +1355,11 @@ function step(i, M, log, hintsLeft) {
     const lab = o.k === "best" ? "Great move! " : "Not quite. ";
     const better = o.k === "best" ? "" : (typed ? S.R[0] : (opts.find(x => x.k === "best") || {}).t || S.R[0]).replace(/<[^>]+>/g, "");
     if (log.length) log[log.length - 1].better = better;
+    // keep a running list of moments to review. Getting the same moment right later clears it.
+    const plain = t => String(t || "").replace(/<[^>]+>/g, "");
+    state.mistakes = (state.mistakes || []).filter(m => m.ck !== key);
+    if (o.k !== "best") state.mistakes.unshift({ ck: key, mid: view.id, mission: view.title, skill: S.skill, line: plain(S.line), text: plain(o.t), better, fb: plain(o.fb), date: Progress.today() });
+    state.mistakes = state.mistakes.slice(0, 80); Progress.save(state);
     const last = i === sc.steps.length - 1 || state.hearts === 0;
     $("#fb").innerHTML = `<div class="feed ${o.k}"><span>${lab}${o.typed ? esc(o.fb) : o.fb}${better ? `<span class="better"><b>Try this instead:</b> <i>${esc(better)}</i></span>` : ""}</span><button class="btn" id="nx">${last ? "See results" : "Continue"}</button></div>`;
     $("#nx").onclick = () => (last ? results(M, log) : step(i + 1, M, log, hintsLeft));
@@ -1353,7 +1437,7 @@ function coachSummary(skills) {
 function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
   stopAll();
   state.xp += xp;
-  if (stars > 0) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
+  if (stars > 0 && !L.practice) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
   const pct = Math.round(Object.values(skills).reduce((a, b) => a + b, 0) / (Object.keys(skills).length * 5) * 100);
   const { log, sc, ...meta } = extra;
   const earned = Progress.record(state, { id: L.id, title: L.title, diff: state.diff, mode: L.qs ? "choice" : state.mode, pct, stars, won: stars > 0, xp, skills, lesson: !!L.qs, ...meta }, TOTAL_STOPS());
@@ -1361,7 +1445,7 @@ function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
   Sound.stop(); Sound.sfx(stars ? "win" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
   const next = stars > 0 && ALL_STOPS()[ALL_STOPS().findIndex(x => x.id === L.id) + 1];
   const deliver = meta.cameraScores ? `<div class="card"><h3>Delivery (camera coach)</h3>${[["Eye contact", "eye"], ["Posture", "posture"], ["Presence", "presence"], ["Expression", "smile"]].map(([l, k]) => `<div class="row"><span>${l}</span><div class="bar"><i style="width:${meta.cameraScores[k]}%"></i></div><b>${meta.cameraScores[k]}%</b></div>`).join("")}<ul class="tips">${Cam.tips(meta.cameraScores).map(t => `<li>${t}</li>`).join("")}</ul><p class="note2">Nothing was recorded. Only these percentages are kept.</p></div>` : "";
-  const transcript = log ? log.map(l => `${sc.cust.name}: ${l.line.replace(/<[^>]+>/g, "")}\n${repName()}: ${l.text.replace(/<[^>]+>/g, "")}\n${sc.cust.name}: ${l.reply}`).join("\n\n") : "";
+  const transcript = log ? log.map(l => `${l.cname || sc.cust.name}: ${l.line.replace(/<[^>]+>/g, "")}\n${repName()}: ${l.text.replace(/<[^>]+>/g, "")}\n${l.cname || sc.cust.name}: ${l.reply}`).join("\n\n") : "";
   const steps = log ? `<div class="card"><h3>Step by step</h3>${log.map((l, j) => `<div class="stepnote ${l.k}"><b>${j + 1}. ${l.skill}</b> <span>${l.k === "best" ? "✓" : "✗"}</span><p>${l.typed ? esc(l.fb) : l.fb}</p>${l.better ? `<p class="better"><b>Try this instead:</b> <i>${esc(l.better)}</i></p>` : ""}</div>`).join("")}<p class="note2">${coachSummary(skills)}</p></div>
     <details class="card"><summary>Conversation transcript</summary><pre id="tx" class="tx">${esc(transcript)}</pre><button class="btn alt" id="cpy" type="button">Copy transcript</button></details>` : "";
   app.innerHTML = `<section class="view result sheet">

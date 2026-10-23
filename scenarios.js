@@ -541,3 +541,48 @@ SCENARIOS.splice(3, 0, HARDNO);    // marco, sam, dana, hardno, priya, comply, r
 SCENARIOS.splice(5, 0, BUYER);     // ..., priya, buyer, comply, ray
 SCENARIOS.splice(6, 0, MIA);       // ..., buyer, mia, comply, ray
 SCENARIOS.splice(8, 0, STICKUP);   // ..., comply, stickup, ray
+
+// Other ways each mission can open, used on replay (index.html picks one at random, never the same twice in a row).
+// Each keeps the same situation and the same hidden worry as the original opening line.
+const OPENERS = {
+  marco: [
+    `It's a quarter to five and every stool is taken. Marco is pulling pints and doesn't look up. "I'm in the weeds here. Make it quick."`,
+    `Marco is restocking the well behind a crowded bar. "Friday rush, friend. Whatever you're selling, I've got about ten seconds."`,
+  ],
+  sam: [
+    `Sam is wiping down the host stand and straightening menus. "Hey there. We're not open yet. Can I help you with something?"`,
+    `A host in a crisp black shirt looks up from the reservation book. "Hi. Doors open in an hour, but go ahead, what do you need?"`,
+  ],
+  dana: [
+    `Dana's desk is buried in invoices and she keeps typing. "If you've got a price sheet, leave it. I already carry forty tequilas. What makes you different?"`,
+    `Dana waves you to a chair without looking up from her screen. "Make it fast. Forty tequilas on my shelf already. Why would I add yours?"`,
+  ],
+  hardno: [
+    `Tony is restocking chips and barely glances over. "Whatever it is, no. I don't take alcohol reps. Save your breath."`,
+    `Tony folds his arms at the register. "Let me guess: liquor. Don't want it. Don't need it. Door's right there."`,
+  ],
+  priya: [
+    `Priya is cutting open a box of new stock and laughs nervously. "Oh, hi! Sorry, I'm still setting up. What are you here about?"`,
+    `Priya looks up from a clipboard of orders. "Hi! I opened just a few weeks ago and I'm still learning what to stock. What do you have?"`,
+  ],
+  buyer: [
+    `Lunch rush at Rosa's taquería. A corrido plays on the speaker, a framed vinyl record hangs by the register, and families fill the tables. "Hola. Eating, or selling?"`,
+    `Rosa glances up from the counter as a corrido plays from the speaker and a vinyl record sits framed on the wall. "Welcome. Table, or are you here to sell me something?"`,
+  ],
+  mia: [
+    `Mia is checking a tablet behind the lounge bar. "My guests want something special, but my staff can't learn a whole new brand. What are you pouring?"`,
+    `Mia sets down her tablet. "Our after-dinner crowd wants something memorable, and my team is stretched thin. Tell me about your tequila, but keep it simple."`,
+  ],
+  comply: [
+    `Jess is walking the venue with a clipboard and a bottle in hand. "Before I order: will this tequila make my guests feel better the next day?"`,
+    `Jess turns the bottle over in her hands. "Honest question for my party planning: does this give people fewer hangovers than other tequila?"`,
+  ],
+  stickup: [
+    `You're showing Ben a bottle at the counter when the door slams open. A hooded man shouts for everyone to get on the floor and demands the cash. Ben freezes.`,
+    `You're chatting with Ben near the register when a hooded man bursts in, shouting for everyone to stay down and hand over the money. Ben freezes.`,
+  ],
+  ray: [
+    `Ray is checking a delivery slip at the host stand. "I've poured the same big-name tequila for years and nobody's complained. Why would I change?"`,
+    `Ray finishes a call and looks you over. "My guests know the brand we pour. Why would I put something unfamiliar on my shelf?"`,
+  ],
+};

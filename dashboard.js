@@ -8,7 +8,7 @@ function dashboard(tab = dashTab) {
   dashTab = tab;
   const lv = levelOf(state.xp), cur = LEVELS[lv][1], nxt = LEVELS[lv + 1];
   const pctNext = nxt ? Math.round((state.xp - cur) / (nxt[1] - cur) * 100) : 100;
-  const tabs = [["progress", "Progress"], ["badges", "Badges"], ["team", "Team"], ["check", "Knowledge check"], ["settings", "Settings"]];
+  const tabs = [["progress", "Progress"], ["badges", "Badges"], ["team", "Team"], ["review", "Review"], ["check", "Knowledge check"], ["settings", "Settings"]];
   app.innerHTML = `<section class="view sheet dash">
     <div class="dhead">
       <div class="dav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div>
@@ -21,7 +21,7 @@ function dashboard(tab = dashTab) {
   $("#dback").onclick = home;
   app.querySelectorAll(".tab").forEach(b => b.onclick = () => dashboard(b.dataset.t));
   const body = $("#dbody");
-  ({ progress: dashProgress, badges: dashBadges, team: dashTeam, check: dashCheck, settings: dashSettings })[tab](body);
+  ({ progress: dashProgress, badges: dashBadges, team: dashTeam, review: dashReview, check: dashCheck, settings: dashSettings })[tab](body);
   if (tab === "progress") {
     body.insertAdjacentHTML("afterbegin", `<div class="savenote"><span><b>Your progress is saved only in this browser.</b> Clearing browser data, or opening the game on another computer, starts you over. Download a backup to keep it safe.</span><button class="btn alt" id="bak" type="button">Download backup</button></div>`);
     $("#bak").onclick = exportProgress;
@@ -53,12 +53,25 @@ function dashProgress(el) {
   const weak = skills[0];
   const done = ALL_STOPS().filter(x => state.done[x.id]).length;
   const rec = !H.length ? "Start with Meet Corrido, then Marco's Bar."
-    : weak ? `Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). Replay a mission that tests it, ideally by typing your answers.` : "";
+    : weak ? `Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). <button class="btn" id="pweak" type="button">Practice ${weak[0]}</button> A short mix of moments from different customers, picked to train it.` : "";
+  const wirePractice = () => { if ($("#pweak")) $("#pweak").onclick = () => playPractice(weak[0]); };
   el.innerHTML = `<div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? avg + "%" : "–"}</b><span>average score</span></div></div>
     <p class="learn">${rec}</p>
     <div class="card"><h3>Skills</h3>${skills.length ? skills.map(([k, v, n], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
     ${cameraDash(H)}
     <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)} · ${h.mode === "type" ? "typed" : "choice"}</td><td>${h.pct}%</td><td>${"★".repeat(h.stars)}${"☆".repeat(3 - h.stars)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
+  wirePractice();
+}
+
+function dashReview(el) {
+  const list = state.mistakes || [];
+  if (!list.length) { el.innerHTML = `<div class="card"><h3>Nothing to review</h3><p class="note2">When you pick a wrong answer in a mission it lands here, with a stronger answer next to it. Get the same moment right later and it clears itself.</p></div>`; return; }
+  const by = {}; list.forEach(m => (by[m.skill] = by[m.skill] || []).push(m));
+  el.innerHTML = `<p class="note2">${list.length} moment${list.length === 1 ? "" : "s"} to review, grouped by skill. Practice a skill to clear them.</p>` +
+    Object.entries(by).sort((a, b) => b[1].length - a[1].length).map(([sk, ms]) => `<div class="card"><h3>${esc(sk)} <span class="chip">${ms.length}</span><button class="btn alt pskill" data-s="${esc(sk)}" type="button">Practice this</button></h3>${ms.map(m => `<div class="mistake"><small>${esc(m.mission)} · ${esc(m.date)}</small><p><b>Customer:</b> ${esc(m.line)}</p><p class="bad"><b>You said:</b> ${esc(m.text)}</p><p class="better"><b>Try this instead:</b> <i>${esc(m.better)}</i></p><p class="note2">${esc(m.fb)}</p></div>`).join("")}</div>`).join("") +
+    `<p><button class="btn alt" id="clrrev" type="button">Clear the whole list</button></p>`;
+  el.querySelectorAll(".pskill").forEach(b => b.onclick = () => playPractice(b.dataset.s));
+  $("#clrrev").onclick = () => { if (confirm("Clear every moment from your review list?")) { state.mistakes = []; Progress.save(state); dashboard("review"); } };
 }
 
 function cameraDash(H) {

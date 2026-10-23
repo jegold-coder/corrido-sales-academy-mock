@@ -39,7 +39,8 @@ What it loads from the internet:
 | Body-language rating (stretch) | Optional camera coach: eye contact, posture, presence, smile. Video never leaves the device |
 | Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 11 badges, daily streak, team board using share codes |
 | Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
-| "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty |
+| "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules |
+| Practice and review | A Review tab collects every wrong answer with a stronger one, and a Practice button replays one weak skill across different customers. Missions also open with a different line on replay |
 
 Difficulty changes how obvious the right answer is. Easy has one obvious wrong answer and one believable one. Medium and Hard have three believable wrong answers, each sounding professional with one fatal flaw, and all about the same length as the right answer so length is no clue. Hard also has no hints and a 30-second timer.
 
