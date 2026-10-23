@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrido Sales Academy (Mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Rye&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sand:#e3dcd6; --cream:#fdfaf5; --brown:#915f1b; --deep:#3a2410; --ink:#1e2021;
+  --teal:#2e8b9a; --teal-d:#1f6a77; --red:#b5432a; --green:#3f8f4f; --gold:#e0a42f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sand);color:var(--ink);font:16px/1.5 Arimo,system-ui,sans-serif}
+h1,h2,h3{font-family:Rye,Georgia,serif;font-weight:400;letter-spacing:.02em;margin:0 0 .4rem;text-transform:uppercase}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.hidden{display:none!important}
+
+/* top bar */
+.top{background:var(--brown);color:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;position:sticky;top:0;z-index:5}
+.logo{font-family:Rye,serif;font-size:1.3rem;line-height:1}
+.logo small{display:block;font:700 .6rem Arimo;letter-spacing:.25em}
+.stats{display:flex;gap:1.1rem;font-weight:700}
+.mock{background:var(--ink);color:var(--gold);text-align:center;font-size:.8rem;padding:.25rem;letter-spacing:.08em}
+
+main{max-width:760px;margin:0 auto;padding:1.2rem}
+.view{animation:in .3s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+
+/* age gate */
+.gate{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:20;padding:1rem}
+.gate .box{background:var(--brown);color:var(--cream);text-align:center;padding:2rem 1.5rem;max-width:420px;border:3px solid var(--deep);border-radius:6px}
+.gate h2{font-size:1.5rem}
+.btn{background:var(--teal);color:var(--cream);border:0;border-bottom:4px solid var(--teal-d);border-radius:10px;padding:.7rem 1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.btn:active{transform:translateY(2px);border-bottom-width:2px}
+.btn.alt{background:var(--sand);color:var(--ink);border-bottom-color:#b7ab9f}
+.btn.gold{background:var(--gold);color:var(--deep);border-bottom-color:#a87a1a}
+
+/* path map */
+.hello{background:var(--deep);color:var(--cream);border-radius:12px;padding:1.2rem;margin-bottom:1.2rem}
+.hello p{margin:.2rem 0;color:#e8d9c2}
+.path{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:1rem 0}
+.node{width:92px;height:92px;border-radius:50%;border:0;border-bottom:8px solid var(--teal-d);background:var(--teal);color:var(--cream);font-size:2.2rem;position:relative;display:grid;place-items:center}
+.node:hover:not(:disabled){transform:translateY(-3px)}
+.node.done{background:var(--gold);border-bottom-color:#a87a1a}
+.node:disabled{background:#c9bfb4;border-bottom-color:#a99d90;cursor:not-allowed;color:#857a6e}
+.node .stars{position:absolute;bottom:-22px;font-size:.8rem;color:var(--gold);white-space:nowrap}
+.lab{font-weight:700;text-align:center;margin-bottom:.8rem}
+.lab small{display:block;font-weight:400;color:#6e6458}
+.start{position:absolute;top:-34px;background:var(--cream);color:var(--teal-d);padding:.1rem .7rem;border-radius:8px;font-weight:700;font-size:.8rem;box-shadow:0 2px 0 #0003;animation:bob 1s infinite alternate}
+@keyframes bob{to{transform:translateY(-4px)}}
+.wiggle:nth-of-type(2n){transform:translateX(-46px)}
+.wiggle:nth-of-type(2n+1){transform:translateX(46px)}
+
+/* lesson shell */
+.lesson-top{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.x{background:none;border:0;font-size:1.6rem;color:#6e6458}
+.prog{flex:1;height:14px;background:#cfc4b8;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--green);border-radius:9px;transition:width .4s}
+.hearts{font-weight:700;color:var(--red)}
+
+/* scene (Sims-ish) */
+.scene{background:linear-gradient(180deg,#5a3a1c 0 55%,#2d1b0b 55%);border-radius:14px;padding:1rem;color:var(--cream);position:relative;border:3px solid var(--deep);overflow:hidden}
+.shelf{display:flex;gap:.6rem;justify-content:center;font-size:1.6rem;opacity:.8;margin-bottom:.5rem}
+.people{display:flex;justify-content:space-around;align-items:flex-end;min-height:130px}
+.person{text-align:center}
+.person .face{font-size:4.2rem;line-height:1}
+.person.talk .face{animation:talk .5s infinite alternate}
+@keyframes talk{to{transform:translateY(-5px)}}
+.plumb{width:18px;height:26px;margin:0 auto 4px;background:var(--green);clip-path:polygon(50% 0,100% 40%,50% 100%,0 40%);transition:background .4s}
+.plumb.mid{background:var(--gold)}.plumb.low{background:var(--red)}
+.nm{font-size:.8rem;font-weight:700;background:#0006;border-radius:6px;padding:0 .5rem;display:inline-block}
+.bubble{background:var(--cream);color:var(--ink);border-radius:12px;padding:.8rem 1rem;margin-top:.8rem;position:relative;font-size:1.02rem}
+.bubble b{color:var(--brown)}
+
+/* needs bars */
+.needs{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.8rem 0}
+.need{background:var(--cream);border-radius:10px;padding:.4rem .6rem;font-size:.78rem;font-weight:700}
+.need .bar{height:9px;background:#d8cdc0;border-radius:6px;margin-top:3px;overflow:hidden}
+.need .bar i{display:block;height:100%;background:var(--teal);transition:width .5s}
+.need .d{font-weight:700;float:right}.need .d.up{color:var(--green)}.need .d.dn{color:var(--red)}
+
+/* options */
+.q{margin:1rem 0 .5rem;font-family:Rye,serif;font-size:1.15rem;text-transform:uppercase}
+.opts{display:grid;gap:.6rem}
+.opt{text-align:left;background:var(--cream);border:2px solid #cfc4b8;border-bottom-width:5px;border-radius:12px;padding:.8rem 1rem;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt:disabled{cursor:default}
+.opt.best{background:#dff1e0;border-color:var(--green)}
+.opt.meh{background:#fbf0d3;border-color:var(--gold)}
+.opt.bad{background:#f6dcd5;border-color:var(--red)}
+.feed{margin-top:.8rem;padding:1rem;border-radius:12px;font-weight:700;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.feed.best{background:#dff1e0;color:#1f5a2c}.feed.meh{background:#fbf0d3;color:#6b4e0d}.feed.bad{background:#f6dcd5;color:#7a2a17}
+.feed span{flex:1;min-width:220px;font-weight:400}
+
+/* result */
+.result{text-align:center}
+.bigstars{font-size:3rem;color:var(--gold);letter-spacing:.2rem}
+.card{background:var(--cream);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0;text-align:left}
+.row{display:grid;grid-template-columns:140px 1fr 38px;gap:.6rem;align-items:center;margin:.35rem 0;font-size:.92rem}
+.row .bar{height:10px;background:#d8cdc0;border-radius:6px;overflow:hidden}.row .bar i{display:block;height:100%;background:var(--teal)}
+.rewards{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
+.rw{background:var(--deep);color:var(--gold);padding:.5rem 1rem;border-radius:10px;font-weight:700}
+.learn{border-left:5px solid var(--brown);background:var(--cream);padding:.8rem 1rem;border-radius:0 12px 12px 0;margin:.8rem 0}
+.fact{background:var(--cream);border-radius:12px;padding:1rem;margin:.8rem 0}
+@media(max-width:520px){.node{width:78px;height:78px}.wiggle:nth-of-type(2n){transform:translateX(-26px)}.wiggle:nth-of-type(2n+1){transform:translateX(26px)}.row{grid-template-columns:100px 1fr 34px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== v2: vibe background, map, people ===== */
+body{background:
+  radial-gradient(ellipse at 50% 0%, #c9831f 0, rgba(201,131,31,0) 55%),
+  repeating-conic-gradient(from 0deg at 50% -5%, #4a2c12 0 5deg, #3b2310 5deg 10deg);
+  background-attachment:fixed;min-height:100vh}
+.bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.bg svg.flags{position:absolute;top:0;left:0;width:100%;height:70px}
+.rec{position:absolute;border-radius:50%;width:340px;height:340px;opacity:.5;animation:spin 40s linear infinite;
+  background:radial-gradient(circle,#c9831f 0 11%,#111 11% 13%,#1c1c1c 13% 30%,#0d0d0d 30% 31%,#1c1c1c 31% 52%,#0d0d0d 52% 53%,#1c1c1c 53% 74%,#0d0d0d 74% 75%,#1c1c1c 75% 100%)}
+.rec.a{left:-140px;bottom:-60px}.rec.b{right:-150px;top:140px;width:300px;height:300px;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.note{position:absolute;color:var(--gold);opacity:.35;font-size:2rem;animation:float 9s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-26px) rotate(8deg)}}
+.keys{position:absolute;left:0;right:0;bottom:0;height:34px;opacity:.5;
+  background:repeating-linear-gradient(90deg,#f4ead8 0 38px,#1e2021 38px 40px)}
+.keys::after{content:"";position:absolute;inset:0 0 14px 0;background:repeating-linear-gradient(90deg,transparent 0 26px,#1e2021 26px 40px,transparent 40px 80px)}
+.mock,.top,main{position:relative;z-index:2}
+.top{position:sticky}
+.sheet{background:var(--cream);border-radius:18px;padding:1.2rem;box-shadow:0 10px 0 #0004,0 0 0 3px var(--deep)}
+.hello{background:#1e1208cc;border:2px solid var(--gold);backdrop-filter:blur(2px)}
+.hello h1{color:var(--gold)}
+
+.map{position:relative;width:min(100%,400px);margin:1rem auto 2rem}
+.map svg.roads{position:absolute;inset:0;width:100%;height:100%}
+.rd-base{fill:none;stroke:#1c1008;stroke-width:26;stroke-linecap:round;opacity:.55}
+.rd-mid{fill:none;stroke:#e8c58a;stroke-width:5;stroke-linecap:round;stroke-dasharray:1 13}
+.rd-base.done{stroke:#a87a1a;opacity:.9}
+.rd-mid.done{stroke:#fff2c4;stroke-dasharray:none}
+.stop{position:absolute;transform:translate(-50%,-50%);text-align:center}
+.stop .lab{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:170px;margin-top:10px;color:var(--cream);text-shadow:0 2px 3px #000a}
+.stop .lab small{color:#e8d3ae}
+.stop .node{box-shadow:0 0 0 6px #0003}
+.stop .node.cur{animation:pulse 1.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 14px #2e8b9a55}}
+.deco{position:absolute;transform:translate(-50%,-50%);font-size:2.2rem;opacity:.85;filter:drop-shadow(0 3px 2px #0006)}
+.legend{text-align:center;color:#e8d3ae;font-size:.85rem}
+
+.scene{background:radial-gradient(circle at 50% 0,#8a5a2b 0,#4f2f15 60%,#2d1b0b 100%)}
+.scene::before{content:"";position:absolute;inset:0 0 auto 0;height:26px;background:radial-gradient(circle at 12px 0,#ffd98a 0 5px,transparent 6px) 0 0/48px 26px repeat-x;opacity:.9}
+.shelf{margin-top:.6rem}
+.person{width:44%}
+.ppl{width:150px;max-width:100%;height:auto;display:block;margin:0 auto}
+.ppl .eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.ppl .mouth{transform-box:fill-box;transform-origin:center}
+.talking .mouth{animation:yap .2s infinite alternate}
+@keyframes yap{from{transform:scaleY(.6) scaleX(.9)}to{transform:scaleY(3) scaleX(1.05)}}
+.talking .ppl{animation:talk .45s infinite alternate}
+.person .plumb{position:absolute;left:50%;transform:translateX(-50%);top:-16px}
+.person{position:relative}
+.vbtn{position:absolute;right:10px;top:34px;background:#0007;color:var(--cream);border:1px solid var(--gold);border-radius:99px;padding:.2rem .7rem;font-size:.78rem;z-index:3}
+
+/* ===== v3: difficulty + illustrated bar scene ===== */
+.diff{display:flex;gap:.5rem;margin:.8rem 0 .3rem;flex-wrap:wrap}
+.dbtn{background:#0000;color:var(--cream);border:2px solid #e8d3ae;border-radius:99px;padding:.35rem 1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.85rem}
+.dbtn[aria-checked=true]{background:var(--gold);color:var(--deep);border-color:var(--gold)}
+.ddesc{color:#e8d3ae;font-size:.9rem;margin:.2rem 0 0}
+.chip{display:inline-block;background:var(--deep);color:var(--gold);border-radius:99px;padding:.05rem .7rem;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.stage{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--deep);background:#2d1b0b}
+.stage svg{display:block;width:100%;height:auto}
+.stage .vbtn{top:10px}
+.names{display:flex;justify-content:space-around;margin:.5rem 0}
+.names span{font-size:.8rem;font-weight:700;background:var(--deep);color:var(--cream);border-radius:6px;padding:.1rem .6rem}
+.bubble{margin-top:.6rem;background:#f4ead8;border:2px solid var(--deep)}
+.mood{fill:var(--green);stroke:#fff8;stroke-width:1.5;animation:bobm 1.6s ease-in-out infinite alternate}
+.mood.mid{fill:var(--gold)}.mood.low{fill:var(--red)}
+@keyframes bobm{to{transform:translateY(-4px)}}
+.p.talking{animation:talk .45s infinite alternate}
+.timer{height:8px;background:#d8cdc0;border-radius:6px;overflow:hidden;margin:.6rem 0 0}
+.timer i{display:block;height:100%;width:100%;background:var(--red)}
+.hintrow{margin-top:.8rem}
+.hintbox{background:#e6f3f5;border-left:5px solid var(--teal);padding:.6rem .8rem;border-radius:0 10px 10px 0;margin-top:.5rem}
+
+/* ===== v5: original vibe background + Corrido photos ===== */
+.lede{font-family:Rye,serif;text-transform:uppercase;color:var(--gold);font-size:1.3rem;text-align:center;margin:.6rem 0 0;text-shadow:0 2px 3px #000a}
+.photo{position:absolute;background-size:cover;background-position:center;opacity:.32;mix-blend-mode:luminosity}
+.photo.a{inset:0 0 0 auto;width:46%;background-image:url(https://ilovetequilacorrido.com/cdn/shop/files/home_Records_1.png?v=1723618784);-webkit-mask-image:linear-gradient(90deg,transparent,#000 70%);mask-image:linear-gradient(90deg,transparent,#000 70%)}
+.photo.b{inset:0 auto 0 0;width:30%;background-image:url(https://ilovetequilacorrido.com/cdn/shop/files/home_bottle_5ae80be2-803b-4e8c-bd4f-b83aaf7413ee.jpg?v=1723533174);-webkit-mask-image:linear-gradient(270deg,transparent,#000 70%);mask-image:linear-gradient(270deg,transparent,#000 70%)}
+.snap{position:absolute;transform:translate(-50%,-50%) rotate(var(--r));width:104px;background:var(--cream);padding:5px 5px 14px;border-radius:3px;box-shadow:0 6px 12px #0007}
+.snap img{display:block;width:100%;height:112px;object-fit:cover;object-position:center top;border-radius:2px}
+@media(max-width:520px){.snap{width:78px}.snap img{height:84px}.photo{opacity:.22}}
+.diffbtn{background:var(--deep);color:var(--gold);border:1px solid var(--gold);border-radius:99px;padding:.15rem .8rem;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.diffbtn:disabled{opacity:.6;cursor:default}
+dialog#diffDlg{background:var(--cream);color:var(--ink);border:3px solid var(--deep);border-radius:16px;max-width:460px;width:92%;padding:1.2rem}
+dialog#diffDlg::backdrop{background:#000a}
+.dcards{display:grid;gap:.6rem;margin:.8rem 0}
+.dcard{text-align:left;background:#fff;border:2px solid #cfc4b8;border-bottom-width:5px;border-radius:12px;padding:.7rem .9rem;display:grid;gap:.1rem;color:var(--ink)}
+.dcard b{font-family:Rye,serif;text-transform:uppercase;font-weight:400;font-size:1.05rem}
+.dcard span{font-size:.9rem;color:#4d443a}.dcard small{color:var(--brown);font-weight:700}
+.dcard:hover,.dcard.on{border-color:var(--teal)}
+.dcard.on{background:#e6f3f5}
+
+/* ===== v6: calmer background ===== */
+body{background:radial-gradient(ellipse at 50% 0%,#6b4520 0,#3a2410 55%,#24150a 100%) fixed}
+.photo.a{width:60%;opacity:.14;mix-blend-mode:normal;filter:blur(2px) saturate(.7);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 80%);mask-image:linear-gradient(90deg,transparent,#000 80%)}
+.rd-base{opacity:.4}
+.snap{width:92px;box-shadow:0 4px 10px #0006}
+.snap img{height:100px}
+.stop .node{box-shadow:0 0 0 5px #0002}
+
+/* ===== v7: a bit more, still calm ===== */
+.photo.a{opacity:.2}
+.photo.b{opacity:.14;filter:blur(2px) saturate(.7);mix-blend-mode:normal;width:34%}
+.bg svg.flags{height:40px}
+.rec{opacity:.22;animation:none}
+.keys{opacity:.25}
+
+/* ===== v8: calm talking ===== */
+.talking .mouth{animation:none}
+.p.talking{animation:nod .5s infinite alternate}
+@keyframes nod{to{transform:translateY(-1.5px)}}
+
+/* ===== v9: character creator ===== */
+.cwrap{display:grid;grid-template-columns:230px 1fr;gap:1.2rem;align-items:start}
+.cprev{position:sticky;top:90px;display:grid;gap:.6rem}
+.cprev svg{width:100%;height:auto;background:radial-gradient(circle at 50% 30%,#a06a34,#3a2410);border-radius:14px;border:3px solid var(--deep)}
+.nlab{font-weight:700;font-size:.85rem;display:grid;gap:.25rem}
+.nlab input{font:inherit;padding:.5rem .7rem;border:2px solid #cfc4b8;border-radius:10px;background:#fff}
+.grp{margin:.5rem 0 .9rem}
+.grp h3{font:700 .8rem Arimo,sans-serif;letter-spacing:.06em;color:var(--brown);margin:0 0 .35rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip2{border:2px solid #cfc4b8;background:#fff;border-radius:99px;padding:.25rem .8rem;font-size:.88rem;color:var(--ink)}
+.chip2[aria-pressed=true]{border-color:var(--teal);background:#e6f3f5;font-weight:700}
+.sw{width:32px;height:32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #cfc4b8;padding:0}
+.sw.match{background:repeating-linear-gradient(45deg,#fff 0 4px,#ddd 4px 8px)}
+.sw[aria-pressed=true]{box-shadow:0 0 0 3px var(--teal)}
+@media(max-width:640px){.cwrap{grid-template-columns:1fr}.cprev{position:static;max-width:260px;margin:0 auto}}
+
+.chip2 small{color:var(--brown);font-weight:400}
+.note2{font-size:.8rem;color:#6e6458}
+
+.nreq{color:var(--red);font-weight:700;margin-left:.6rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.nlab input[aria-invalid=true]{border-color:var(--red)}
+
+/* ===== v10: creator backdrop ===== */
+.cprev svg{background:none;border:0;border-radius:0}
+.pframe{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--deep);background:#1f1309}
+.pframe::before{content:"";position:absolute;inset:0;background:url(https://ilovetequilacorrido.com/cdn/shop/files/home_Records_1.png?v=1723618784) 30% center/cover;opacity:.8}
+.pframe::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(20,12,6,0) 45%,rgba(20,12,6,.4) 100%)}
+.pframe svg{position:relative;z-index:1;display:block}
+
+/* ===== v11: typed answers, notes, badges ===== */
+.sr{position:absolute;left:-9999px}
+.typed{display:grid;gap:.6rem;margin-top:.5rem}
+.typed textarea{font:inherit;padding:.7rem .9rem;border:2px solid #cfc4b8;border-radius:12px;background:#fff;color:var(--ink);resize:vertical;min-height:84px}
+.typed textarea:focus{outline:3px solid var(--teal);outline-offset:1px}
+.row2{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}.row2 small{margin-left:auto;color:#6e6458}
+.btn.rec{background:var(--red);border-bottom-color:#7a2a17;color:#fff}
+.checks2{list-style:none;margin:0;padding:.5rem .8rem;background:#fff;border:2px dashed #cfc4b8;border-radius:12px;font-size:.9rem}
+.checks2 li{padding:.1rem 0;color:#6e6458}.checks2 li::before{content:"○ "}.checks2 li.ok{color:#2e7d3a;font-weight:700}.checks2 li.ok::before{content:"● "}
+details.ai{font-size:.85rem}details.ai summary{cursor:pointer;color:var(--brown)}details.ai input{font:inherit;padding:.4rem .6rem;border:2px solid #cfc4b8;border-radius:8px;margin-right:.4rem;width:min(100%,280px)}
+.stepnote{border-left:4px solid var(--red);padding:.2rem .7rem;margin:.5rem 0}.stepnote.best{border-color:var(--green)}.stepnote p{margin:.1rem 0 0;font-size:.92rem}
+.stepnote span{font-weight:700}
+.tx{white-space:pre-wrap;font:.82rem/1.5 Arimo,sans-serif;background:#f4efe4;padding:.7rem;border-radius:8px;max-height:260px;overflow:auto}
+details.card summary{cursor:pointer;font-weight:700}
+.rw.badge-new{background:var(--gold);color:var(--deep)}
+
+/* ===== v12: dashboard ===== */
+.dhead{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-bottom:.8rem}
+.dav{width:84px;height:84px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 30%,#a06a34,#3a2410);border:3px solid var(--deep);flex:none}
+.dav svg{width:100%;height:100%;display:block}
+.dwho{flex:1;min-width:200px}.dwho h1{margin:0;font-size:1.5rem}.dwho p{margin:.1rem 0 .4rem;color:#4d443a}.dwho .bar{height:10px;background:#d8cdc0;border-radius:6px;overflow:hidden}.dwho .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold))}.dwho small{color:#6e6458}
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;border-bottom:2px solid #d8cdc0;margin-bottom:1rem}
+.tab{background:none;border:0;border-bottom:4px solid transparent;padding:.5rem .8rem;font-weight:700;color:#6e6458}
+.tab[aria-selected=true]{color:var(--deep);border-bottom-color:var(--teal)}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.8rem}
+.stats3 div{background:#fff;border-radius:12px;padding:.7rem;text-align:center}.stats3 b{display:block;font:1.4rem Rye,serif}.stats3 span{font-size:.8rem;color:#6e6458}
+.focus{color:var(--red);font-weight:700}
+.hist{width:100%;border-collapse:collapse;font-size:.88rem}.hist th{text-align:left;color:#6e6458;font-weight:700}.hist td,.hist th{padding:.3rem .4rem;border-bottom:1px solid #e6ddd0}
+.badgegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
+.bcard{background:#fff;border:2px dashed #cfc4b8;border-radius:12px;padding:.7rem;text-align:center;display:grid;gap:.2rem;opacity:.7}
+.bcard.on{border:2px solid var(--gold);background:#fff8e6;opacity:1}.bcard .bi{font-size:1.8rem}.bcard small{color:#6e6458}
+.lb{list-style:none;margin:0;padding:0}.lb li{display:flex;justify-content:space-between;gap:.5rem;padding:.4rem .6rem;border-bottom:1px solid #e6ddd0;flex-wrap:wrap}.lb li.me{background:#fff8e6;border-radius:8px;font-weight:700}
+.x2{background:none;border:0;color:#a0453a;margin-left:.4rem}
+.dash input{font:inherit;padding:.5rem .7rem;border:2px solid #cfc4b8;border-radius:10px;margin-right:.4rem;width:min(100%,420px);background:#fff}
+@media(max-width:520px){.stats3{grid-template-columns:1fr}.dash .row{grid-template-columns:96px 1fr 38px}}
+
+/* ===== v13: camera coach ===== */
+#camBox{position:fixed;right:12px;bottom:46px;z-index:30;width:160px;background:#000c;border:2px solid var(--gold);border-radius:12px;overflow:hidden;display:none}
+#camBox video{width:100%;display:block;transform:scaleX(-1);background:#111;min-height:60px}
+#camStat{font-size:.72rem;color:#fff;padding:.25rem .4rem;background:#000a}
+#camBox.off{width:auto;max-width:210px}#camBox.off video{display:none}
+.camopt{font-weight:700}.tips{margin:.4rem 0 0;padding-left:1.2rem;font-size:.9rem}
+@media(max-width:520px){#camBox{width:110px;bottom:40px}}
+
+/* ===== v14: phone-friendly header ===== */
+.top{flex-wrap:wrap;gap:.4rem .8rem}
+.stats{flex-wrap:wrap;gap:.4rem .9rem;align-items:center;justify-content:flex-end}
+.stats>span{white-space:nowrap}
+@media(max-width:700px){
+  .logo{font-size:1.05rem}.top{padding:.5rem .8rem}
+  .stats{width:100%;justify-content:flex-start;font-size:.82rem;gap:.35rem .6rem}
+  .lvname{display:none}.diffbtn{padding:.1rem .6rem;font-size:.72rem}
+  main{padding:.8rem}.sheet{padding:.9rem}
+}
+
+/* ===== v15: accessibility ===== */
+.skip{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--deep);padding:.5rem 1rem;z-index:50;font-weight:700}
+.skip:focus{left:8px;top:8px}
+main:focus{outline:none}
+
+.warnnote{color:var(--red)}
+.camline{margin:.3rem 0;font-weight:700;color:var(--brown);font-size:.9rem}
+
+/* ===== v16: first-run flow ===== */
+body.onboarding .stats{visibility:hidden}
+.tut{text-align:center}.tut h1{margin:.2rem 0 .6rem}.tut p,.tut .tutlist{text-align:left;max-width:520px;margin:.5rem auto}
+.tuttop{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.tuticon{font-size:3rem}
+.tutlist{padding-left:1.2rem}.tutlist li{margin:.3rem 0}
+.tutdemo{text-align:left;margin-top:.6rem}
+.dots{display:flex;gap:.4rem;justify-content:center;margin:1rem 0}.dots i{width:10px;height:10px;border-radius:50%;background:#d8cdc0}.dots i.on{background:var(--teal)}
+.tut .row2{justify-content:center}
+
+
+/* ===== v18: sound button lives in the corner, not the header ===== */
+.soundfab{position:fixed;left:12px;bottom:44px;z-index:40;width:44px;height:44px;border-radius:50%;padding:0;font-size:1.25rem;background:var(--deep);color:var(--gold);border:2px solid var(--gold);box-shadow:0 4px 10px #0007}
+.soundfab:hover{filter:brightness(1.15)}
+body.onboarding .soundfab{display:none}
+
+/* ===== v19: stats live in a footer ===== */
+.foot{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;align-items:center;gap:.6rem;padding:.45rem .8rem;background:var(--brown);border-top:2px solid var(--gold);box-shadow:0 -4px 14px #0004}
+.foot .pill{display:inline-flex;align-items:center;gap:.4rem;background:#0003;border:1px solid #e3b34155;border-radius:99px;padding:.15rem .8rem;color:var(--cream);font-weight:700;white-space:nowrap;line-height:1.5}
+.foot .pill b{color:var(--gold);font-size:1.05rem}
+.foot .pill em{font-style:normal;font-weight:400;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+.foot .lvname{color:var(--gold)}
+.xpbar{display:inline-block;width:70px;height:8px;border-radius:9px;background:#0005;overflow:hidden}
+.xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#f5d27a);transition:width .5s}
+main{padding-bottom:5rem}
+body.onboarding .foot{display:none}
+.soundfab{bottom:64px!important}#camBox{bottom:66px!important}
+@media(max-width:700px){.foot{gap:.3rem;padding:.4rem .4rem}.foot .pill{padding:.1rem .5rem;font-size:.8rem}.foot .pill em,.foot .lvname{display:none}.xpbar{width:44px}}
+
+/* ===== v20: clearer map, stop popup, meters, footer, sound label ===== */
+.nextup{display:flex;justify-content:space-between;align-items:center;gap:.8rem;background:#fff9ec;border:2px solid var(--gold);border-radius:14px;padding:.6rem .9rem;margin:.4rem 0 .8rem}
+.nextup small{color:var(--brown);text-transform:uppercase;letter-spacing:.06em}
+.lockmsg{background:#fff;border-left:5px solid var(--red);border-radius:8px;padding:.5rem .8rem;margin:.2rem 0 .8rem;font-weight:700}
+.node.locked{background:#c9bfb4;border-bottom-color:#a99d90;color:#857a6e;cursor:not-allowed}
+.sumline{margin:.2rem 0 .6rem;font-size:1.05rem}
+.dactions{display:flex;gap:.6rem;flex-wrap:wrap;margin:.4rem 0 .8rem}
+details.dcustom{border-top:1px solid #d8cdc0;padding-top:.5rem}
+details.dcustom>summary{cursor:pointer;font-weight:700;color:var(--brown);padding:.2rem 0}
+.dh{font:700 .8rem Arimo;letter-spacing:.08em;text-transform:uppercase;color:var(--brown);margin:.6rem 0 .2rem}
+.camnote{background:#fff;border-left:4px solid var(--teal);border-radius:6px;padding:.4rem .6rem}
+.meterhint{margin:.3rem 0 0}
+.need{display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:center;cursor:help}
+.better{display:block;margin-top:.3rem;font-weight:400}
+.stepnote .better{margin:.1rem 0 0;color:#2d5f2d}
+.shoplinks{display:grid;gap:.3rem;margin-top:.5rem}
+.shoplink{display:block;background:#fff;border:2px solid var(--gold);border-radius:10px;padding:.3rem .6rem;font-size:.82rem;font-weight:700;color:var(--deep);text-decoration:none}
+.shoplink:hover{background:#fff4d6}
+.sr{position:absolute;left:-9999px}
+.foot .pill{cursor:default;user-select:none}
+.foot .pill.clickable{cursor:pointer}.foot .pill.clickable:hover{background:#0005;border-color:var(--gold)}
+.soundfab{width:auto!important;height:40px!important;border-radius:99px!important;padding:0 .8rem!important;font-size:1rem!important;display:flex;align-items:center;gap:.3rem;font-weight:700}
+.soundfab span{font-size:.78rem;letter-spacing:.04em}
+@media(max-width:700px){.soundfab span{display:none}.soundfab{padding:0 .6rem!important}.nextup{flex-wrap:wrap}}
+.savenote{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;background:#fff9ec;border:2px solid var(--gold);border-radius:12px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
+.filebtn{display:inline-block;cursor:pointer}
+
+.foot .soundfab{position:static!important;height:auto!important;width:auto!important;box-shadow:none!important;background:#0003!important;border:1px solid #e3b34155!important;color:var(--cream)!important;padding:.15rem .8rem!important;font-size:1rem!important;border-radius:99px!important}
+.foot .soundfab:hover{border-color:var(--gold)!important}
+body.onboarding .foot{display:none}
+
+/* ===== v21: shorter character screen: wider, two columns of options, Save always in reach ===== */
+main:has(.creator){max-width:1120px}
+.creator .cwrap{grid-template-columns:250px 1fr}
+.creator .copts{column-count:2;column-gap:1.4rem}
+.creator .grp{break-inside:avoid;margin:.2rem 0 .8rem}
+.creator .cprev .pframe svg{max-height:46vh;width:auto;margin:0 auto}
+.creator .cprev .pframe{display:flex;justify-content:center}
+.csavebar{position:sticky;bottom:60px;z-index:6;background:linear-gradient(to top,var(--cream,#fdf6e7) 70%,transparent);padding:.6rem 0 .2rem;margin-top:.4rem}
+@media(max-width:900px){.creator .copts{column-count:1}main:has(.creator){max-width:760px}}
+@media(max-width:640px){.creator .cwrap{grid-template-columns:1fr}.creator .cprev .pframe svg{max-height:none;width:100%}}
+</style>
+</head>
+<body>
+<a class="skip" href="#app">Skip to main content</a>
+<div class="bg" aria-hidden="true">
+  <div class="photo a"></div><div class="photo b"></div>
+  <svg class="flags" preserveAspectRatio="none"><defs><pattern id="fl" width="240" height="40" patternUnits="userSpaceOnUse">
+    <path d="M0 0H60L30 30Z" fill="#2e8b9a"/><path d="M60 0H120L90 30Z" fill="#e0a42f"/><path d="M120 0H180L150 30Z" fill="#b5432a"/><path d="M180 0H240L210 30Z" fill="#fdfaf5"/></pattern></defs>
+    <rect width="100%" height="3" fill="#1e1208"/><rect width="100%" height="40" fill="url(#fl)" opacity=".7"/></svg>
+  <div class="keys"></div>
+</div>
+<div class="mock">MOCK PROTOTYPE · STAGE 1 · NOT FINAL · NOT AFFILIATED WITH TEQUILA CORRIDO</div>
+
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="box">
+    <h2 id="gateTitle">Hold up. Age check.</h2>
+    <p>Tell us if you're old enough to know better, but young enough to still enjoy a good time.</p>
+    <p><button class="btn" id="yes">Yes, I'm over 21</button> <button class="btn alt" id="no">No</button></p>
+    <small id="underMsg" class="hidden">Come back when you're 21. This training is for adults of legal drinking age.</small>
+  </div>
+</div>
+
+<header class="top">
+  <div class="logo" id="logo" role="button" tabindex="0" title="Back to the map" style="cursor:pointer"><span>Tequila Corrido</span><small>SALES ACADEMY</small></div>
+  <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button><button class="diffbtn" id="diffBtn" title="Change difficulty and answer style" aria-label="Change difficulty">Medium ▾</button></div>
+</header>
+
+<main id="app" tabindex="-1"></main>
+<footer class="foot" aria-label="Your stats">
+  <span class="pill" title="Days practiced in a row (not clickable)"><i aria-hidden="true">🔥</i><b id="stStreak">0</b><em>day streak</em></span>
+  <span class="pill lvl clickable" id="ftLvl" title="Open your dashboard" role="button" tabindex="0"><span id="stLvl">Lv 1</span><span class="xpbar" aria-hidden="true"><i id="xpFill"></i></span></span>
+  <span class="pill clickable" id="ftXp" title="Open your dashboard" role="button" tabindex="0"><i aria-hidden="true">⭐</i><b id="stXp">0</b><em>XP</em></span>
+  <button class="pill soundpill soundfab" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound is on. Click to mute." title="Turn sound on or off">🔊</button>
+  <span class="pill" id="stHearts" title="Hearts left in this mission (not clickable)">❤️❤️❤️</span>
+</footer>
+<dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
+
+<script src="sound.js"></script>
+<script src="scenarios.js"></script>
+<script src="progress.js"></script>
+<script src="criteria.js"></script>
+<script src="coach.js"></script>
+<script src="camera.js"></script>
+<script src="lessons.js"></script>
+<script src="dashboard.js"></script>
+<script src="onboarding.js"></script>
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const app = $("#app");
+let state = { hearts: 3, ...Progress.load() };   // saved progress: xp, done, stars, history, badges, streak, diff, mode
+
+const DIFF = {
+  easy:   { label: "Easy",   hearts: 5, hints: 99, win: 50, timer: 0,  meh: 0,  start: [50, 40, 40], xp: 1,   desc: "5 hearts, unlimited hints, a friendly customer, one obvious wrong answer." },
+  medium: { label: "Medium", hearts: 3, hints: 1,  win: 60, timer: 60, meh: 0,  start: [40, 30, 30], xp: 1.5, desc: "3 hearts, 1 hint per level, 60-second timer, a fair customer.", descType: "3 hearts, 1 hint per level, 2-minute timer (it pauses while you speak), a fair customer." },
+  hard:   { label: "Hard",   hearts: 2, hints: 0,  win: 70, timer: 30, meh: -5, start: [30, 20, 20], xp: 2,   desc: "2 hearts, no hints, 30-second timer, a tough customer.", descType: "2 hearts, no hints, 75-second timer (it pauses while you speak), a tough customer." },
+};
+const D = () => DIFF[state.diff];
+// Typing or speaking takes longer than tapping an answer, so typed missions get longer timers.
+const TYPED_TIMER = { easy: 0, medium: 120, hard: 75 };
+const timerSecs = () => (state.mode === "type" ? TYPED_TIMER[state.diff] : D().timer);
+
+$("#yes").focus();
+// Move keyboard focus to the new screen whenever the view changes.
+new MutationObserver(() => { if (!app.contains(document.activeElement)) app.focus({ preventScroll: true }); }).observe(app, { childList: true });
+$("#yes").onclick = () => { $("#gate").classList.add("hidden"); startFlow(); };
+$("#no").onclick = () => $("#underMsg").classList.remove("hidden");
+
+// ---------- helpers ----------
+const clamp = v => Math.max(0, Math.min(100, v));
+const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+const plumb = m => (m >= 60 ? "" : m >= 35 ? "mid" : "low");
+const hud = () => {
+  $("#stXp").textContent = state.xp;
+  $("#stStreak").textContent = state.streak || 0;
+  { const lv = levelOf(state.xp), nx = LEVELS[lv + 1], lo = LEVELS[lv][1];
+    $("#stLvl").innerHTML = `Lv ${lv + 1} <span class="lvname">${LEVELS[lv][0]}</span>`;
+    $("#xpFill").style.width = (nx ? Math.round((state.xp - lo) / (nx[1] - lo) * 100) : 100) + "%"; }
+  $("#diffBtn").textContent = "Difficulty: " + D().label + " ▾";
+  $("#stHearts").textContent = "❤️".repeat(state.hearts) + "🖤".repeat(Math.max(0, D().hearts - state.hearts));
+};
+let tmr = null, tmrS = null;
+const stopTimer = () => { clearInterval(tmr); tmr = null; tmrS = null; };
+function startTimer(sec, onEnd) {
+  stopTimer();
+  tmrS = { t0: Date.now(), paused: false, at: 0 };
+  tmr = setInterval(() => {
+    const el = $("#tm");
+    if (!el) return stopTimer();
+    if (tmrS.paused) return;
+    const f = 1 - (Date.now() - tmrS.t0) / 1000 / sec;
+    el.style.width = Math.max(0, f * 100) + "%";
+    if (f <= 0) { stopTimer(); onEnd(); }
+  }, 100);
+}
+// The timer waits while the rep is speaking into the mic.
+const pauseTimer = () => { if (tmrS && !tmrS.paused) { tmrS.paused = true; tmrS.at = Date.now(); } };
+const resumeTimer = () => { if (tmrS && tmrS.paused) { tmrS.t0 += Date.now() - tmrS.at; tmrS.paused = false; } };
+function stopAll() { stopTimer(); if (window.speechSynthesis) speechSynthesis.cancel(); }
+
+// ---------- difficulty dialog ----------
+function openDiff(go, stop) {
+  const dlg = $("#diffDlg"), lesson = !!(stop && stop.qs), settingsOnly = !go;
+  dlg.onclick = e => { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); };   // click outside to close
+  const secure = window.isSecureContext, hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  dlg.innerHTML = `<h2>${settingsOnly ? "Difficulty and answer style" : esc(stop.title)}</h2>
+    ${settingsOnly ? "" : `<p class="note2">${esc(stop.sub)} · ${lesson ? "lesson" : "mission"}</p>`}
+    ${settingsOnly ? "" : `<p class="sumline" id="sumline"></p>`}
+    ${settingsOnly ? "" : `<div class="dactions"><button class="btn" id="dstart" type="button">Start</button><button class="btn alt" id="dcancel" type="button">Cancel</button></div>`}
+    <details class="dcustom" id="dcustom" ${settingsOnly ? "open" : ""}><summary>${settingsOnly ? "Settings" : "Change difficulty or answer style"}</summary>
+    <h3 class="dh">Difficulty</h3><div class="dcards">${Object.entries(DIFF).map(([k, v]) =>
+    `<button type="button" class="dcard ${k === state.diff ? "on" : ""}" data-d="${k}" aria-pressed="${k === state.diff}"><b>${v.label}</b><span>${state.mode === "type" && !lesson ? v.descType : v.desc}</span><small>×${v.xp} XP</small></button>`).join("")}</div>
+    ${lesson ? `<p class="learn">This is a <b>lesson</b>, so it's multiple choice. Pick a <b>mission</b> (a customer conversation, like Marco's Bar) to type or speak your answers or use the camera coach.</p>` : `
+    <div class="grp"><h3 class="dh">Answer style</h3><div class="chips" id="modes">
+      <button type="button" class="chip2" data-m="choice">Pick an answer</button><button type="button" class="chip2" data-m="type">Type or speak</button></div>
+      <p class="note2" id="mnote"></p>
+      ${hasSR ? "" : '<p class="note2 warnnote">Voice input isn\'t available in this browser. Chrome or Edge have it. Typing still works.</p>'}</div>
+    <div class="grp"><label class="camopt"><input type="checkbox" id="camOn" ${state.cam ? "checked" : ""}> 📷 Camera coach (optional)</label>
+      <p class="note2 camnote ${state.cam ? "" : "hidden"}" id="camnote"><b>What happens:</b> your browser will ask to use the camera. Video stays on your device and is never recorded or uploaded. It rates eye contact, posture and smiling, and loads Google's free open-source face model.</p>
+      ${secure ? "" : '<p class="note2 warnnote">The camera and microphone only work on https or http://localhost. Open this from the local server address.</p>'}</div>`}
+    </details>
+    ${settingsOnly ? '<div class="dactions"><button class="btn" id="dcancel" type="button">Done</button></div>' : ""}`;
+  const sum = () => { const el = $("#sumline"); if (el) el.innerHTML = `<b>${DIFF[state.diff].label}</b> · ${lesson ? "Pick an answer" : state.mode === "type" ? "Type or speak" : "Pick an answer"}${!lesson && state.cam ? " · Camera on" : ""}`; };
+  const paintMode = () => { if (lesson) return; dlg.querySelectorAll("#modes .chip2").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.m === state.mode)));
+    $("#mnote").textContent = state.mode === "type" ? "Write (or say) your own answer. A free, built-in coach checks it against what a good answer needs. No account, no cost." : "Choose the best of a few answers. Quickest way to learn the moves."; };
+  if (!lesson) {
+    const paintDesc = () => dlg.querySelectorAll(".dcard").forEach(c => { c.querySelector("span").textContent = state.mode === "type" ? DIFF[c.dataset.d].descType : DIFF[c.dataset.d].desc; });
+    dlg.querySelectorAll("#modes .chip2").forEach(b => b.onclick = () => { state.mode = b.dataset.m; Progress.save(state); paintMode(); paintDesc(); sum(); });
+    paintMode();
+    $("#camOn").onchange = e => { state.cam = e.target.checked; $("#camnote").classList.toggle("hidden", !state.cam); sum(); };
+  }
+  // choosing a difficulty only selects it. Start begins the stop.
+  dlg.querySelectorAll(".dcard").forEach(b => b.onclick = () => {
+    state.diff = b.dataset.d; state.hearts = D().hearts; hud(); Progress.save(state);
+    dlg.querySelectorAll(".dcard").forEach(c => { c.classList.toggle("on", c === b); c.setAttribute("aria-pressed", String(c === b)); }); sum();
+  });
+  if ($("#dstart")) $("#dstart").onclick = () => { dlg.close(); if (go) go(); };
+  $("#dcancel").onclick = () => dlg.close();
+  sum();
+  dlg.showModal();
+  if ($("#dstart")) $("#dstart").focus({ preventScroll: true });
+}
+$("#diffBtn").onclick = () => { if ($(".map")) openDiff(null); };
+// Header buttons toggle: click again (or click outside, or press Escape) to close without using the in-page buttons.
+const closeCreator = () => { const d = $("#cdone"); if (d && !d.disabled) d.click(); else if ($("#cname")) $("#cname").focus(); };   // saves, since the name is required
+$("#charBtn").onclick = () => { if ($(".creator")) closeCreator(); else if ($(".map") || $(".dhead")) creator(home); };
+$("#dashBtn").onclick = () => ($(".dhead") ? home() : dashboard());
+// tapping your level or XP in the footer opens the dashboard, but only from the map so a mission is never interrupted
+["#ftLvl", "#ftXp"].forEach(id => { const el = $(id), go = () => { if ($(".map")) dashboard(); }; el.onclick = go; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } }; });
+const paintSound = () => { const b = $("#soundBtn"); b.innerHTML = Sound.on ? '🔊 <span>Sound on</span>' : '🔇 <span>Sound off</span>'; b.setAttribute("aria-pressed", String(Sound.on)); b.setAttribute("aria-label", Sound.on ? "Sound is on. Click to mute." : "Sound is off. Click to turn on."); };
+$("#soundBtn").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); };
+paintSound();
+const goHome = () => { if (!document.body.classList.contains("onboarding")) home(); };
+$("#logo").onclick = goHome;
+$("#logo").onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goHome(); } };
+const closePanel = () => { if (document.body.classList.contains("onboarding")) return; if ($(".dhead")) home(); else if ($(".creator")) closeCreator(); };
+document.addEventListener("click", e => { if (!e.target.isConnected || e.target.closest("header, footer, dialog, .sheet, #camBox, .gate, a")) return; closePanel(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("dialog[open]")) closePanel(); });
+
+// ---------- home / map ----------
+function home() {
+  stopAll(); Cam.stop(); Sound.stop(); document.body.classList.remove("onboarding");
+  state.hearts = D().hearts; hud();
+  const nodes = ALL_STOPS();
+  const GAP = 175, H = nodes.length * GAP + 20;
+  const xs = nodes.map((_, i) => (i % 2 ? 295 : 105)), ys = nodes.map((_, i) => 80 + i * GAP);
+  let roads = "", stops = "";
+  for (let i = 0; i < nodes.length - 1; i++) {
+    const d = `M${xs[i]} ${ys[i]} C${xs[i]} ${ys[i] + 95} ${xs[i + 1]} ${ys[i + 1] - 95} ${xs[i + 1]} ${ys[i + 1]}`;
+    const c = state.done[nodes[i].id] ? "done" : "";
+    roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>`;
+  }
+  const nextStop = nodes.find(x => !state.done[x.id]);
+  nodes.forEach((n, i) => {
+    const done = state.done[n.id], open = i === 0 || done || state.done[nodes[i - 1].id], cur = n === nodes.find(x => !state.done[x.id]);
+    const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`;
+    stops += `<div class="stop" style="${pos}">
+      <button class="node ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
+        ${cur ? '<span class="start">START</span>' : ""}${done ? "✓" : open ? n.icon : "🔒"}
+        ${done ? `<span class="stars">${"★".repeat(state.stars[n.id])}${"☆".repeat(3 - state.stars[n.id])}</span>` : ""}
+      </button><div class="lab">${n.title}<small>${open ? `${n.sub} · ${n.qs ? "lesson" : "mission"}` : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
+  });
+  app.innerHTML = `<section class="view">
+    <p class="lede">Pick your next stop, ${esc(repName())}</p>
+    <p class="legend">Lessons teach the brand. Missions are customer conversations, where you can type, speak or use the camera coach.</p>
+    ${nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
+    <p class="lockmsg hidden" id="lockmsg" role="status"></p>
+    <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${stops}</div></section>`;
+  const launch = st => openDiff(() => (st.qs ? quiz(st) : play(st)), st);
+  app.querySelectorAll(".node").forEach(b => b.onclick = () => {
+    if (b.getAttribute("aria-disabled")) {   // locked: say why instead of doing nothing
+      const m = $("#lockmsg"); m.textContent = `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`; m.classList.remove("hidden"); return;
+    }
+    launch(nodes.find(x => x.id === b.dataset.id));
+  });
+  if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
+}
+
+// ---------- lesson chrome (the quizzes live in lessons.js) ----------
+function lessonTop(p) {
+  return `<div class="lesson-top"><button class="x" id="exit" aria-label="Exit lesson">✕</button><div class="prog"><i style="width:${p * 100}%"></i></div><span class="hearts">❤️ ${state.hearts}</span><span class="chip">${D().label}</span></div>`;
+}
+function wireX() { $("#exit").onclick = home; }
+
+// ---------- illustrated people + bar scene (SVG) ----------
+// Swap for photos or video later. Each person is drawn in a 120x200 local box.
+// ---------- hands and body ----------
+const OUT = "#00000038";
+const capsule = (x1, y1, x2, y2, w, col, outline) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${outline ? OUT : col}" stroke-width="${outline ? w + 1.4 : w}" stroke-linecap="round"/>`;
+// A relaxed hand hanging from the wrist at (cx, cy): one tapered shape with fingertip bumps, finger lines and a thumb.
+// d = +1 when the thumb is on the right. sy squashes it for a hand lying on the bar.
+function hangHand(cx, cy, d, skin, sy = 1) {
+  const palm = "M-5.6 -1C-6.8 6-7.4 12-7 19C-6.8 24-5 27-3.2 27C-1.8 27.6-.6 27.1 0 26C.8 27.4 2.4 27.7 3.6 26.8C5.4 26 6.6 22 7 19C7.4 12 6.8 6 5.6 -1Z";
+  const t = (x, y) => `${(d * x).toFixed(1)} ${y}`;
+  const thumb = `M${t(5, 3)}C${t(8, 6)} ${t(9.4, 12)} ${t(8.6, 17)}C${t(8, 19.4)} ${t(5.8, 19.2)} ${t(5.6, 16.6)}C${t(5.4, 12)} ${t(4.6, 8)} ${t(4.6, 4)}Z`;
+  return `<g transform="translate(${cx} ${cy}) scale(1 ${sy})">
+    <path d="${palm}" fill="${skin}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M-2.5 17L-3 25.6M0 18L0 26M2.8 17.4L3.3 25.4" stroke="#0003" stroke-width=".8" fill="none" stroke-linecap="round"/>
+    <path d="${thumb}" fill="${skin}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>
+  </g>`;
+}
+// A human-shaped body. The garment is built around the arms, so skin never pokes out of the shirt:
+// sleeves are always wider than the arm inside them, and the torso skin sits fully under the garment.
+
+// Cloth for the space-dyed polo: heathered dark grey with the real embroidered logo on the left chest.
+function poloCloth(c, X, mir) {
+  const [lx0, ly0, lx1, ly1] = c.logo.box, S = 15 / (lx1 - lx0), cx = 76, cy = 128, mx = (lx0 + lx1) / 2, my = (ly0 + ly1) / 2;
+  return `<defs><filter id="heather" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.12"/></filter>
+      <clipPath id="plogo"><rect x="${cx - 8.5}" y="${cy - 5}" width="17" height="10"/></clipPath></defs>
+    <rect x="0" y="95" width="120" height="125" fill="${c.base}"/>
+    <rect x="0" y="95" width="120" height="125" filter="url(#heather)" opacity="${c.heather ?? .22}"/>
+    <g clip-path="url(#plogo)" style="mix-blend-mode:${c.logo.blend || "lighten"}"><image style="filter:brightness(${c.logo.dim || 1})" href="${c.logo.img}" x="${(cx - mx * S).toFixed(1)}" y="${(cy - my * S).toFixed(1)}" width="${S.toFixed(1)}" height="${S.toFixed(1)}" preserveAspectRatio="none"/></g>
+    <path d="M${X(24)} 118Q${X(20)} 150 ${X(22)} 160M${mir(X(24))} 118Q${mir(X(20))} 150 ${mir(X(22))} 160" stroke="#000" stroke-opacity="${c.heather < .1 && c.base > "#d0d0d0" ? .05 : .12}" stroke-width="2" fill="none"/>`;
+}
+// Collar wings, placket and buttons, drawn over the skin so the neck rises out of the open collar.
+function poloCollar(c, X, mir) {
+  const base = c.base, lum = [1, 3, 5].reduce((t, i) => t + parseInt(base.slice(i, i + 2), 16), 0) / 3, light = lum > 170;
+  const lite = light ? mixHex(base, "#000000", .07) : mixHex(base, "#ffffff", .1), dark = mixHex(base, "#000000", light ? .18 : .35), edge = mixHex(base, "#000000", light ? .4 : .7), btn = light ? "#8a8a88" : mixHex(base, "#ffffff", .3);
+  const wing = m => { const P = x => (m ? mir(x) : x), pts = [[X(43), 96.5], [X(52), 98], [60, 120.5], [X(52), 113]]; return `<path d="M${pts.map(q => P(q[0]) + " " + q[1]).join("L")}Z" fill="${lite}" stroke="${edge}" stroke-width=".9" stroke-linejoin="round"/>`; };
+  return `<path d="M${X(46)} 98L${mir(X(46))} 98L60 120.5Z" fill="${c.skin}"/><path d="M${X(50)} 112Q60 118 ${mir(X(50))} 112" stroke="#0002" stroke-width="1" fill="none"/>
+    ${wing(false)}${wing(true)}
+    <path d="M60 120.5V146" stroke="${dark}" stroke-width="4" stroke-linecap="butt"/><path d="M58 121V146M62 121V146" stroke="#0004" stroke-width=".6"/>
+    <circle cx="60" cy="126" r="1.2" fill="${btn}"/><circle cx="60" cy="134" r="1.2" fill="${btn}"/>`;
+}
+function humanBody(c) {
+  const f = c.F ? .86 : 1, X = x => +(60 + (x - 60) * f).toFixed(1), mir = x => +(120 - x).toFixed(1);
+  const sk = c.skin, hem = c.hem, se = 186, aw = c.F ? 13 : 16, fw = c.F ? 10.5 : 12.5, nw = c.F ? 18 : 22;
+  const A = { s: X(16), e: X(14), w: X(14) };           // left arm centre x at shoulder, elbow, wrist
+  const hs = aw / 2 + 3, cs = fw / 2 + 3.2, tl = X(23), tr = mir(tl);
+  const arm = (m, at) => { const P = m ? mir : x => x, s = at ? at[0] : P(A.s), e = at ? (at[0] + at[2]) / 2 : P(A.e), w = at ? at[2] : P(A.w), y0 = at ? at[1] : 118, y1 = at ? (at[1] + 174) / 2 : 150;
+    const wa = at ? Math.min(aw, fw + .5) : aw;   // under a photo sleeve the upper arm is no wider than the forearm, so it never pokes out of the opening
+    return capsule(s, y0, e, y1, wa, sk, true) + capsule(e, y1, w, 182, fw, sk, true) + capsule(s, y0, e, y1, wa, sk) + capsule(e, y1, w, 182, fw, sk) + hangHand(w, 180, m ? -1 : 1, sk); };
+  const neck = c.v ? `M${X(46)} 99L60 120L${X(74)} 99` : `M${X(42)} 99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99`;
+  const right = c.long
+    ? `L${mir(A.w - cs)} ${se}L${mir(A.w + cs)} ${se}L${tr} 152L${tr} ${hem}`
+    : `L${mir(A.e - hs)} 148L${mir(A.e + hs)} 148L${tr} 146L${tr} ${hem}`;
+  const left = c.long
+    ? `L${tl} ${hem}L${tl} 152L${A.w + cs} ${se}L${A.w - cs} ${se}L${A.s - hs} 124`
+    : `L${tl} ${hem}L${tl} 146L${A.e + hs} 148L${A.e - hs} 148L${A.s - hs} 124`;
+  // a polo drapes: sleeves hang a little open and the body curves in to a slightly flared hem
+  const dPolo = `${neck}L${mir(X(28))} 104Q${mir(A.s - hs - 2)} 106 ${mir(A.s - hs)} 126L${mir(A.e - hs - 1)} 151Q${mir(A.e)} 154 ${mir(A.e + hs - 1)} 149L${mir(X(24))} 151C${mir(X(24))} 172 ${mir(X(22))} 195 ${mir(X(23))} 212Q60 217 ${X(23)} 212C${X(22)} 195 ${X(24)} 172 ${X(24)} 151L${A.e + hs - 1} 149Q${A.e} 154 ${A.e - hs - 1} 151L${A.s - hs} 126Q${A.s - hs - 2} 106 ${X(28)} 104Z`;
+  const d = c.polo ? dPolo : `${neck}L${mir(X(28))} 104Q${mir(A.s - hs - 2)} 106 ${mir(A.s - hs)} 124${right}${left}Q${A.s - hs - 2} 106 ${X(28)} 104Z`;
+  const gw = (mir(A.s - hs) - (A.s - hs)), id = "rep";
+  const legs = `<path d="M${X(32)} 108L${mir(X(32))} 108L${tr} 200L${tl} 200Z" fill="${c.polo ? sk : c.base}" ${c.polo ? "" : `transform="translate(60 150) scale(.86 1) translate(-60 -150)"`}/><path d="M${tl} 194H${tr}L${mir(X(22))} 280H${X(22)}Z" fill="#2b3a55"/><rect x="${tl}" y="194" width="${(tr - tl).toFixed(1)}" height="7" fill="#3a2a1c"/><rect x="57" y="195" width="6" height="5" rx="1" fill="#e0a42f"/><path d="M60 201V280" stroke="#0004" stroke-width="1"/>`;
+  const skin = `<rect x="${60 - nw / 2}" y="76" width="${nw}" height="30" rx="8" fill="${sk}"/>${c.polo ? `<path d="M${X(40)} 98H${mir(X(40))}V124H${X(40)}Z" fill="${sk}"/>` : `<path d="M${60 - nw / 2} 90H${60 + nw / 2}Q${60 + nw / 2} 98 ${mir(X(41))} 101V128H${X(41)}V101Q${60 - nw / 2} 98 ${60 - nw / 2} 90Z" fill="${sk}"/>`}${c.polo ? `<path d="M${X(48)} 108Q60 112 ${mir(X(48))} 108" stroke="#0002" stroke-width="1.4" fill="none"/>` : ""}`;
+  // the photo is stretched so its hem always lands at HEM_Y, whatever the product's proportions
+  const HEM_Y = 212, W = gw * c.Wk, vsFit = c.polo ? 1 : (HEM_Y - 99) * (c.bbox[2] - c.bbox[0]) / ((c.bbox[3] - c.bbox[1]) * W);
+  const photo = c.polo ? poloCloth(c, X, mir) : placeImg(c.img, c.bbox, W, 99, false, vsFit);
+  const lumB = [1, 3, 5].reduce((t, i) => t + parseInt(c.base.slice(i, i + 2), 16), 0) / 3, K = lumB > 170 ? .3 : lumB > 110 ? .65 : 1;   // light cloth needs far less shading
+  const shade = `<linearGradient id="gs-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity="${(.3 * K).toFixed(2)}"/><stop offset=".2" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${(.3 * K).toFixed(2)}"/></linearGradient>`;
+  // A photo tee is the whole garment: the product photo is stretched over shoulders, sleeves and hem as it is, with only
+  // the neck opening cut out, so there is no second body shape behind it.
+  const cutout = `M-30 80H${X(42)}V99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99V80H150V320H-30Z`;
+  const garmentPhoto = `<defs><clipPath id="gm-${id}"><path d="${cutout}"/></clipPath></defs>
+    <g clip-path="url(#gm-${id})">${photo}</g>
+    <path d="${neck}" fill="none" stroke="${mixHex(c.base, "#000000", .14)}" stroke-width="1.5" stroke-linecap="round"/>`;
+  const garment = c.polo ? `<defs>${shade}<clipPath id="gm-${id}"><path d="${d}"/></clipPath></defs>
+    <path d="${d}" fill="${c.base}"/>
+    <g clip-path="url(#gm-${id})">${photo}
+      ${c.polo ? "" : `<rect x="0" y="95" width="120" height="${hem - 90}" fill="url(#gs-${id})"/>`}
+      <path d="M${X(34)} 146Q${X(30)} ${hem - 20} ${X(28)} ${hem}M${X(86)} 146Q${X(90)} ${hem - 20} ${X(92)} ${hem}" stroke="#000" stroke-opacity="${(.1 * K).toFixed(2)}" stroke-width="3" fill="none"/>
+      ${c.polo ? "" : `<ellipse cx="${tl}" cy="146" rx="5" ry="9" fill="#000" opacity="${(.16 * K).toFixed(2)}"/><ellipse cx="${tr}" cy="146" rx="5" ry="9" fill="#000" opacity="${(.16 * K).toFixed(2)}"/>`}</g>
+    <path d="${d}" fill="none" stroke="#000" stroke-opacity="${(.24 * Math.max(K, .45)).toFixed(2)}" stroke-width="1" stroke-linejoin="round"/>
+    `: garmentPhoto;
+  // A polo is drawn, not pasted: the product photo can't be bent around a neck, so the cloth, collar, placket and buttons
+  // are built to fit the body and only the real embroidered logo is cut from the photo.
+  const open = c.polo ? poloCollar(c, X, mir) : "";
+  // arms start below the sleeve, so no shoulder skin pokes out above a photo tee's sleeve
+  let atL = null, atR = null;
+  if (!c.polo && c.sl) {   // each photo's sleeves end in a different place, so the arms come out of the real sleeve openings
+    const [x0, y0, x1, y1] = c.bbox, S = W / (x1 - x0), px = f => +(60 + (f - (x0 + x1) / 2) * S).toFixed(1), py = f => +(99 + (f - y0) * S * vsFit).toFixed(1);
+    atL = [px(c.sl[0][0]), py(c.sl[0][1]) - 9, 0]; atR = [px(c.sl[1][0]), py(c.sl[1][1]) - 9, 0];
+    // below the sleeve the arm hangs against the side of the body, so there is no gap between arm and torso
+    atL[2] = Math.max(atL[0], px(c.sl[0][2]) - fw / 2 + 1.5); atR[2] = Math.min(atR[0], px(c.sl[1][2]) + fw / 2 - 1.5);
+  }
+  const arms = c.polo ? arm(false) + arm(true) : atL ? arm(false, atL) + arm(true, atR) : `<defs><clipPath id="armclip"><rect x="-30" y="134" width="180" height="200"/></clipPath></defs><g clip-path="url(#armclip)">${arm(false)}${arm(true)}</g>`;
+  return { torso: legs + arms + skin + garment + open };
+}
+
+const FACES = {
+  Oval: "M32 52C32 28 46 16 60 16S88 28 88 52C88 76 76 92 60 92S32 76 32 52Z",
+  Round: "M30 54C30 30 44 18 60 18S90 30 90 54C90 78 76 90 60 90S30 78 30 54Z",
+  Square: "M33 32C33 22 44 17 60 17S87 22 87 32V62C87 82 74 92 60 92S33 82 33 62Z",
+  Heart: "M31 44C31 26 46 16 60 16S89 26 89 44C89 66 74 92 60 92S31 66 31 44Z",
+  Long: "M34 50C34 26 46 12 60 12S86 26 86 50C86 76 75 96 60 96S34 76 34 50Z",
+};
+// Illustrated people (SVG), drawn in a 120x200 local box. Swap for photos or video later.
+function person(o) {
+  const face = o.face || FACES.Oval, id = o.id || "p", body = o.body || "M6 200C6 116 32 100 60 100S114 116 114 200Z";
+  const eye = o.eye || "#3b2a1c", brow = o.brow || o.hair;
+  const legacy = `<clipPath id="bd-${id}"><path d="${body}"/></clipPath>
+    <path d="${body}" fill="${o.shirt}"/>
+    <g clip-path="url(#bd-${id})">${o.front || ""}</g>
+    ${o.shirtImg || ""}
+    ${o.arms || ""}
+    <rect x="${60 - (o.neckW || 20) / 2}" y="82" width="${o.neckW || 20}" height="24" rx="8" fill="${o.skin}"/>`;
+  const eyeAt = x => `<ellipse cx="${x}" cy="54" rx="4.4" ry="4.2" fill="#fff"/><circle cx="${x}" cy="54.3" r="3" fill="${eye}"/><circle cx="${x}" cy="54.3" r="1.4" fill="#111"/><circle cx="${x + 1.3}" cy="52.8" r="1" fill="#fff"/>`;
+  return `${o.back || ""}
+    ${o.human ? o.torso : legacy}
+    <ellipse cx="${60 - (o.earX || 29)}" cy="56" rx="5" ry="8" fill="${o.skin}"/><ellipse cx="${60 + (o.earX || 29)}" cy="56" rx="5" ry="8" fill="${o.skin}"/>
+    ${o.ears || ""}
+    <clipPath id="fc-${id}"><path d="${face}"/></clipPath>
+    <path d="${face}" fill="${o.skin}"/>
+    ${o.blush === false ? "" : '<ellipse cx="42" cy="68" rx="6" ry="4" fill="#d9605533"/><ellipse cx="78" cy="68" rx="6" ry="4" fill="#d9605533"/>'}
+    ${o.hairFront}
+    <path d="M40 46Q47 42 54 46M66 46Q73 42 80 46" stroke="${brow}" stroke-width="${o.browW || 3}" fill="none" stroke-linecap="round"/>
+    <g class="eyes">${eyeAt(47)}${eyeAt(73)}${o.lashes || ""}</g>
+    ${o.hat || ""}
+    <path d="M60 56Q56 66 61 68" stroke="#0003" stroke-width="2" fill="none" stroke-linecap="round"/>
+    ${o.beard || ""}
+    ${o.over || ""}
+    <ellipse class="mouth" cx="60" cy="${o.my}" rx="6.5" ry="2" fill="${o.lip}"/>
+    ${o.glasses || ""}`;
+}
+const MARCO_LOOK = {
+  id: "m", skin: "#c58f64", hair: "#231710",
+  arms: '<g stroke-linecap="round" fill="none"><path d="M13 112L9 130M107 112L111 130" stroke="#3c4650" stroke-width="16"/><path d="M9 130L30 128M111 130L90 128" stroke="#0003" stroke-width="12.6"/><path d="M9 130L30 128M111 130L90 128" stroke="#c58f64" stroke-width="11"/></g>' + hangHand(31, 126, 1, "#c58f64", .6) + hangHand(89, 126, -1, "#c58f64", .6) + '<path d="M76 128L100 125L102 137L78 140Z" fill="#f2ebe0"/><path d="M78 133L101 130" stroke="#c9503a" stroke-width="2"/>',
+  front: '<path d="M42 118H78L86 200H34Z" fill="#23201e"/><path d="M47 104L43 120M73 104L77 120" stroke="#23201e" stroke-width="5" stroke-linecap="round"/>' +
+         '<path d="M82 104L102 120L94 138L76 120Z" fill="#f2ebe0"/><path d="M86 112L96 124" stroke="#c9503a" stroke-width="3"/>',
+  hairFront: '<path d="M30 54C25 24 44 9 62 10C82 11 95 28 90 54C89 44 85 34 79 30C66 38 46 36 36 29C32 35 30 44 30 54Z" fill="#231710"/><path d="M44 17C54 13 66 13 76 18" stroke="#4a3426" stroke-width="2" fill="none" stroke-linecap="round"/>',
+  beard: '<path d="M32 58C33 86 44 98 60 98C76 98 87 86 88 58C86 68 82 71 77 71C71 66 49 66 43 71C38 71 34 68 32 58Z" fill="#231710"/><path d="M46 71C52 65 68 65 74 71C68 74 52 74 46 71Z" fill="#231710"/>',
+};
+
+// ---------- customizable rep ----------
+// How each face shape changes the hair: horizontal scale, vertical scale, vertical shift (all about the top of the head) and ear position.
+const FACE_FIT = {
+  Oval: { sx: 1, sy: 1, dy: 0, ear: 29 },
+  Round: { sx: 1.07, sy: .97, dy: 2, ear: 31 },
+  Square: { sx: .97, sy: 1, dy: 1, ear: 28 },
+  Heart: { sx: 1.03, sy: 1, dy: 0, ear: 28 },
+  Long: { sx: .93, sy: 1.1, dy: -4, ear: 27 },
+};
+const SKINS = ["#f3d2b8", "#e5b08c", "#d19a6c", "#b57a50", "#8a5a3a", "#5e3b26"];
+const HAIRC = ["#1a1410", "#3b2418", "#6b4423", "#8a3a22", "#d9b35a", "#b5432a", "#9a9a9a", "#e6e6e6", "#2e8b9a"];
+const EYEC = ["#5a3a1e", "#1e2021", "#3a78b5", "#4a8a52", "#8a6a2a", "#7f8a90"];
+const FRAMEC = ["#1a1a1a", "#c9983a", "#7a4a26", "#b5432a"];
+const OUTC = ["#1f6a77", "#243a5e", "#7a2a3a", "#3a3f46", "#2f5f45", "#915f1b"];
+// Hair that grows from the head: a "cap" is the face outline (a little bigger) cut off at a hairline, so it stays attached on every face shape.
+// line = the hairline, as path commands from the right temple to the left temple. back/deco are fitted to the face by FACE_FIT.
+const cap = (c, face, line, vol = 1.07, y0 = 50) => `<clipPath id="hx"><path d="${face}" transform="translate(60 52) scale(${vol} ${vol}) translate(-60 -52)"/></clipPath><g clip-path="url(#hx)"><path d="M-20 -40H140V${y0}${line}L-20 ${y0}Z" fill="${c}"/></g>`;
+const LINE = {
+  buzz: "L89 48C86 36 78 30 60 30S34 36 31 48",
+  short: "L90 54C88 44 84 34 78 30C66 38 46 36 36 29C32 35 30 44 30 54",
+  slick: "L89 50C86 38 80 30 74 27C62 24 42 28 34 42L31 50",
+  center: "L91 52C88 40 78 30 61 26C42 30 32 40 29 52",
+  swept: "L90 52C86 40 80 30 70 25C60 35 42 35 32 49L30 52",
+  bangs: "L91 52L91 36C80 30 70 30 60 30S40 30 29 36L29 52",
+  pixie: "L91 54C89 42 84 32 76 28C70 36 54 32 34 40C32 44 30 48 29 52L29 54",
+  messy: "L90 52C90 40 86 32 80 30L76 41L70 30L64 41L58 30L52 41L46 31L40 41L36 32C32 38 30 44 29 52",
+  curtainsM: "L92 52C91 60 88 64 84 66C82 54 72 40 60 32C48 40 38 54 36 66C32 64 29 60 28 52",
+  curtains: "L92 56C91 66 88 72 84 76C82 60 72 42 60 32C48 42 38 60 36 76C32 72 29 66 28 56",
+  taper: "L90 52C90 42 86 34 78 31C66 36 48 34 40 33C34 35 31 42 30 52",
+  spiky: "L90 50C86 40 80 34 72 32C60 36 44 34 36 40C33 43 31 46 30 50",
+  curly: "L91 50C86 40 80 32 70 29H50C40 32 34 40 29 50",
+  low: "L91 48C85 36 74 30 60 30S35 36 29 48",
+};
+const PART = '<path d="M60 11L60 26" stroke="#000" stroke-opacity=".25" stroke-width="1.4"/>';
+const SHINE = '<path d="M44 18C54 12 70 12 80 20M40 24C52 17 70 17 84 26" stroke="#fff" stroke-opacity=".2" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+const LONGBACK = c => `<path d="M29 56C22 20 44 7 60 7S98 20 91 56C94 84 90 110 82 124L38 124C30 110 26 84 29 56Z" fill="${c}"/>`;
+const ring = (cx, cy, rx, ry, r, n, t0, t1) => Array.from({ length: n }, (_, i) => { const t = t0 + (t1 - t0) * i / (n - 1); return `<circle cx="${(cx + rx * Math.cos(t)).toFixed(1)}" cy="${(cy + ry * Math.sin(t)).toFixed(1)}" r="${r}"/>`; }).join("");
+const HAIRS = {
+  Bald: () => ({ back: "", front: "" }),
+  // ----- men
+  Buzz: (c, f) => ({ front: cap(c, f, LINE.buzz, 1.05, 48) }),
+  Short: (c, f) => ({ front: cap(c, f, LINE.short, 1.09, 54) }),
+  "Slick back": (c, f) => ({ front: cap(c, f, LINE.slick, 1.08), deco: SHINE }),
+  Messy: (c, f) => ({ front: cap(c, f, LINE.messy, 1.1, 52) }),
+  Curtains: (c, f) => ({ front: cap(c, f, LINE.curtainsM, 1.09, 52), deco: '<path d="M60 12L60 32" stroke="#000" stroke-opacity=".2" stroke-width="1.4"/>' }),
+  "Low taper fade": (c, f) => ({ front: cap(c, f, LINE.taper, 1.1, 52), deco: `<path d="M31 58C29 46 31 38 35 38L37 54ZM89 58C91 46 89 38 85 38L83 54Z" fill="${c}" opacity=".3"/><path d="M36 60C37 56 38 54 40 52M84 60C83 56 82 54 80 52" stroke="${c}" stroke-opacity=".4" stroke-width="1.2" fill="none"/>` }),
+  Spiky: (c, f) => ({ front: cap(c, f, LINE.spiky, 1.07), deco: `<path d="M30 50L27 33L34 36L31 17L42 27L45 7L54 24L60 3L66 24L75 7L78 27L89 17L86 36L93 33L90 50C86 40 80 34 72 32C60 36 44 34 36 40C33 43 31 46 30 50Z" fill="${c}"/><path d="M46 14L49 24M60 10L60 22M74 14L71 24" stroke="#fff" stroke-opacity=".18" stroke-width="1.6" stroke-linecap="round"/>` }),
+  "Flat top": (c, f) => ({ front: cap(c, f, LINE.buzz, 1.02, 48), deco: `<path d="M31 48L30 14C30 8 36 6 60 6S90 8 90 14L89 48C86 36 78 28 60 28S34 36 31 48Z" fill="${c}"/>` }),
+  Mullet: (c, f) => ({ back: `<path d="M27 58C22 80 26 106 34 120C44 114 54 112 60 112C66 112 76 114 86 120C94 106 98 80 93 58Z" fill="${c}"/>`, front: cap(c, f, LINE.short, 1.09, 54) }),
+  Dreadlocks: (c, f) => ({ back: `<g stroke="${c}" stroke-width="6.5" stroke-linecap="round" fill="none">${[[22, 70], [28, 92], [34, 104], [98, 70], [92, 92], [86, 104]].map(([x, y]) => `<path d="M${x} 36Q${x + (x < 60 ? -3 : 3)} ${y - 20} ${x} ${y}"/>`).join("")}</g>`, front: cap(c, f, LINE.low, 1.1) }),
+  Cornrows: (c, f) => ({ front: cap(c, f, LINE.buzz, 1.05, 48), deco: '<g stroke="#000" stroke-opacity=".35" stroke-width="1.3" fill="none" stroke-linecap="round"><path d="M42 30Q40 23 46 18M50 30Q49 22 53 17M60 30L60 16M70 30Q71 22 67 17M78 30Q80 23 74 18"/></g>' }),
+  "Man bun": (c, f) => ({ back: `<circle cx="60" cy="12" r="13" fill="${c}"/>`, front: cap(c, f, LINE.slick, 1.08) }),
+  Mohawk: c => ({ back: "", front: "", deco: `<path d="M32 50C30 30 38 18 50 16L50 46ZM88 50C90 30 82 18 70 16L70 46Z" fill="${c}" opacity=".2"/><path d="M52 36C48 24 50 8 54 4L58 14L60 1L64 14L68 4C72 8 72 24 68 36Z" fill="${c}"/>` }),
+  Curly: (c, f) => ({
+    back: `<g fill="${c}"><ellipse cx="60" cy="38" rx="36" ry="30"/>${ring(60, 40, 40, 34, 11, 18, Math.PI * .8, Math.PI * 2.2)}<circle cx="22" cy="58" r="9"/><circle cx="19" cy="68" r="7"/><circle cx="98" cy="58" r="9"/><circle cx="101" cy="68" r="7"/></g>`,
+    front: cap(c, f, LINE.curly, 1.08),
+    deco: `<g fill="${c}">${[36, 43, 50, 57, 64, 71, 78, 85].map((x, i) => `<circle cx="${x}" cy="${30 + (i % 2) * 2}" r="6.5"/>`).join("")}<circle cx="33" cy="42" r="5.5"/><circle cx="87" cy="42" r="5.5"/></g><g fill="#fff" opacity=".12"><circle cx="50" cy="20" r="3"/><circle cx="68" cy="18" r="3"/><circle cx="78" cy="26" r="2.5"/></g>`,
+  }),
+  Afro: (c, f) => ({ back: `<ellipse cx="60" cy="32" rx="46" ry="40" fill="${c}"/>`, front: cap(c, f, LINE.low, 1.06) }),
+  // ----- women
+  Pixie: (c, f) => ({ front: cap(c, f, LINE.pixie, 1.08, 54) }),
+  Bob: (c, f) => ({ back: `<path d="M27 50C22 18 46 6 60 6S98 18 93 50C95 70 91 90 83 98L37 98C29 90 25 70 27 50Z" fill="${c}"/>`, front: cap(c, f, LINE.bangs, 1.1, 52) }),
+  Long: (c, f) => ({ back: `<path d="M28 56C20 18 44 6 60 6C78 6 100 18 92 56C97 88 93 116 84 128L36 128C27 116 23 88 28 56Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  Wavy: (c, f) => ({ back: `<path d="M28 54C18 24 42 6 60 6S102 24 92 54C98 62 92 70 96 80C100 90 90 98 94 108C98 118 90 124 92 132L28 132C30 124 22 118 26 108C30 98 20 90 24 80C28 70 22 62 28 54Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  "Side swept": (c, f) => ({ back: LONGBACK(c), front: cap(c, f, LINE.swept, 1.09, 52) }),
+  "Curtain bangs": (c, f) => ({ back: LONGBACK(c), front: cap(c, f, LINE.curtains, 1.09, 56) }),
+  Ponytail: (c, f) => ({ back: `<path d="M86 34C106 34 112 68 100 98C94 80 94 62 84 52Z" fill="${c}"/>`, front: cap(c, f, LINE.slick, 1.08) }),
+  Pigtails: (c, f) => ({ back: `<g fill="${c}"><path d="M32 40C12 44 8 76 18 104C26 90 30 68 36 52Z"/><path d="M88 40C108 44 112 76 102 104C94 90 90 68 84 52Z"/></g><circle cx="30" cy="44" r="3" fill="#b5432a"/><circle cx="90" cy="44" r="3" fill="#b5432a"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  Bun: (c, f) => ({ back: `<circle cx="60" cy="14" r="12" fill="${c}"/>`, front: cap(c, f, LINE.slick, 1.08) }),
+  "Half-up": (c, f) => ({ back: LONGBACK(c) + `<circle cx="60" cy="12" r="9" fill="${c}"/>`, front: cap(c, f, LINE.slick, 1.08) }),
+  "Space buns": (c, f) => ({ back: `<circle cx="37" cy="15" r="11" fill="${c}"/><circle cx="83" cy="15" r="11" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  "Side braid": (c, f) => ({ back: `<path d="M28 56C22 20 44 7 60 7S98 20 92 56L92 66L28 66Z" fill="${c}"/><g fill="${c}" stroke="#000" stroke-opacity=".25" stroke-width=".8">${[0, 1, 2, 3, 4, 5, 6].map(i => `<ellipse cx="${90 + i * 1.4}" cy="${70 + i * 9}" rx="5.4" ry="5.6"/>`).join("")}</g>`, front: cap(c, f, LINE.swept, 1.09, 52) }),
+  Braids: (c, f) => ({ back: `<path d="M28 56C20 18 44 6 60 6C78 6 100 18 92 56L92 70L28 70Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART + `<g fill="${c}" stroke="#000" stroke-opacity=".25" stroke-width=".8">${[0, 1, 2, 3, 4, 5].map(i => `<ellipse cx="${30 - i * .4}" cy="${72 + i * 9}" rx="5" ry="5.2"/><ellipse cx="${90 + i * .4}" cy="${72 + i * 9}" rx="5" ry="5.2"/>`).join("")}</g>` }),
+};
+// Corrido merch: the real product photos (transparent PNG mockups) from ilovetequilacorrido.com, linked live. Names and prices are from their merch page.
+const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
+// bbox = [left, top, right, bottom] of the product inside its image (0 to 1). W = width on the character.
+const OUTFITS = {
+  "Mas Tequila Tee": { g: "u", price: "$29.75", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
+  "In My Tequila Era Tee": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
+    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2" },
+  "Tequila On My Mind Tee": { g: "u", price: "$29.00", base: "#d8cdb4", Wk: .97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_600x.png?v=1778981479", bbox: [.075, .037, .918, .96] },
+  "Corrido x adidas Polo": { g: "u", price: "$64.00", base: "#363635", Wk: 1, hem: 208, polo: true, v: true, bbox: [0, 0, 1, 1],
+    logo: { img: IMG + "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_600x.png?v=1767764185", box: [.556, .238, .652, .292], dim: .72 } },
+  "D.A.R.E. Oversized Tee": { g: "u", price: "$27.90", base: "#2c2c2a", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-washed-black-front-6a389845e4b64_600x.png", bbox: [0.075, 0.033, 0.925, 0.967] },
+  "Tequila Delivery 24/7 Oversized Tee": { g: "u", price: "$29.50", base: "#734449", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-washed-maroon-front-6a388f734527e_600x.png", bbox: [0.017, 0.068, 0.985, 0.925] },
+  "Corrido Classic Tee": { g: "u", price: "$19.00", base: "#4d1127", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-maroon-front-680fb818a608d_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Más Tequila Tee": { g: "u", price: "$25.00", base: "#e5ddd2", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-dust-front-695deb716782d_600x.png", bbox: [0.048, 0.028, 0.952, 0.972] },
+  "Mexico Es Chingón Tee": { g: "u", price: "$34.00", base: "#5c5a43", Wk: 0.97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-t-shirt-khaki-front-68c8c0635513f_600x.png", bbox: [0.075, 0.037, 0.92, 0.962] },
+  "Corrido Logo Tee": { g: "u", price: "$24.00", base: "#2e333f", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-navy-front-68c3a7b7c3e1e_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
+  "Worth the Shot Tee": { g: "u", price: "$36.00", base: "#f4f4f4", Wk: 1.06, hem: 208, img: IMG + "unisex-ringer-t-shirt-white-black-front-68c3a3cc5bc3d_600x.png", bbox: [0.068, 0.033, 0.932, 0.967] },
+  "Tequila Smuggler Tee": { g: "u", price: "$39.00", base: "#c8b394", Wk: 1.1, hem: 208, img: IMG + "oversized-faded-t-shirt-faded-khaki-front-680b21aec055b_600x.png", bbox: [0.04, 0.04, 0.958, 0.962] },
+  "Tequila Delivery Tee": { g: "u", price: "$24.50", base: "#497182", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-deep-teal-front-6a3895fe6f6f0_600x.png", bbox: [0.015, 0.058, 0.987, 0.96] },
+  "Legacy Tee": { g: "u", price: "$34.00", base: "#91918c", Wk: 1.06, hem: 208, img: IMG + "unisex-tri-blend-t-shirt-athletic-grey-triblend-front-6709aa94ccff0_600x.png", bbox: [0.128, 0.032, 0.885, 0.973] },
+  "Tequila On My Mind Tri-Blend Tee": { g: "u", price: "$34.00", base: "#d5cbb9", Wk: 1.06, hem: 208, img: IMG + "unisex-tri-blend-t-shirt-oatmeal-triblend-front-68c3ada5245e0_600x.png", bbox: [0.118, 0.052, 0.858, 0.957] },
+  "Corrido Sport Polo (Black)": { g: "u", price: "$49.00", base: "#1a1a1a", Wk: 1, hem: 208, polo: true, v: true, heather: .06, bbox: [0, 0, 1, 1],
+    logo: { img: IMG + "adidas-sport-polo-shirt-black-front-68c3b07fa1fa4_600x.png", box: [.553, .242, .678, .306] } },
+  "Corrido Sport Polo (Navy)": { g: "u", price: "$49.00", base: "#10264a", Wk: 1, hem: 208, polo: true, v: true, heather: .06, bbox: [0, 0, 1, 1],
+    logo: { img: IMG + "adidas-sport-polo-shirt-collegiate-navy-front-68c3b07fa308f_600x.png", box: [.553, .242, .678, .306] } },
+  "Corrido Sport Polo (White)": { g: "u", price: "$49.00", base: "#e9e9e8", Wk: 1, hem: 208, polo: true, v: true, heather: .06, bbox: [0, 0, 1, 1],
+    logo: { img: IMG + "adidas-sport-polo-shirt-white-front-68c3b21363d43_600x.png", box: [.553, .242, .678, .306], blend: "darken" } },
+  "Spirit Animal Tee": { g: "u", price: "$29.00", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-white-front-68c3a5c38d353_600x.png?v=1757653148", bbox: [.023, .042, .978, .958] },
+};
+// Where each product photo's sleeves end, as [left, right] = [sleeve centre x, sleeve bottom y, torso edge x] in fractions of the image.
+// Measured from the photos' transparent edges, so the arms line up with the sleeve openings.
+const SLEEVE = {
+  "Mas Tequila Tee": [[.188, .462, 0.222], [.809, .458, 0.775]], "In My Tequila Era Tee": [[.142, .437, 0.185], [.852, .432, 0.808]], "In My Tequila Era TeeF": [[.241, .448, 0.267], [.758, .448, 0.73]],
+  "Tequila On My Mind Tee": [[.227, .442, 0.24], [.768, .438, 0.757]], "D.A.R.E. Oversized Tee": [[.221, .415, 0.233], [.778, .415, 0.765]], "Tequila Delivery 24/7 Oversized Tee": [[.17, .447, 0.217], [.828, .447, 0.782]],
+  "Corrido Classic Tee": [[.142, .437, 0.185], [.852, .432, 0.808]], "Más Tequila Tee": [[.189, .418, 0.21], [.812, .418, 0.795]], "Mexico Es Chingón Tee": [[.227, .442, 0.24], [.768, .438, 0.757]],
+  "Corrido Logo Tee": [[.263, .46, 0.275], [.748, .47, 0.728]], "Worth the Shot Tee": [[.22, .473, 0.245], [.774, .473, 0.753]],
+  "Tequila Smuggler Tee": [[.237, .505, 0.26], [.762, .505, 0.738]], "Tequila Delivery Tee": [[.146, .455, 0.17], [.844, .457, 0.807]], "Legacy Tee": [[.22, .4, 0.232], [.777, .407, 0.767]],
+  "Tequila On My Mind Tri-Blend Tee": [[.251, .468, 0.263], [.742, .463, 0.727]], "Spirit Animal Tee": [[.182, .435, 0.208], [.819, .437, 0.79]],
+};
+// Product page on ilovetequilacorrido.com for each piece of merch, so a double-click in the creator opens the real item.
+const MERCH_URL = {
+  "Mas Tequila Tee": "mas-tequila-thick-tee", "In My Tequila Era Tee": "in-my-tequila-era-tee", "Tequila On My Mind Tee": "tequila-on-my-mind-organic-tee",
+  "Spirit Animal Tee": "tequila-is-my-spirit-animal-tee", "D.A.R.E. Oversized Tee": "d-a-r-e-oversized-tee", "Tequila Delivery 24/7 Oversized Tee": "unisex-oversized-t-shirt",
+  "Corrido Classic Tee": "corrido-classic-tee", "Más Tequila Tee": "mas-tequila-tee", "Mexico Es Chingón Tee": "mexico-es-chingon-tee", "Corrido Logo Tee": "tequila-corrido-logo-tee",
+  "Worth the Shot Tee": "worth-the-shot-ringer-tee", "Tequila Smuggler Tee": "tequila-smuggler-tee-1", "Tequila Delivery Tee": "tequila-delivery-tee", "Legacy Tee": "legacy-tee",
+  "Tequila On My Mind Tri-Blend Tee": "tequila-on-my-mind-tee", "Corrido x adidas Polo": "corrido-x-adidas-space-dyed-polo", "Corrido Sport Polo (Black)": "corrido-sport-polo",
+  "Corrido Sport Polo (Navy)": "corrido-sport-polo", "Corrido Sport Polo (White)": "corrido-sport-polo-1",
+  "Rebel Snapback": "tequila-rebel-snapback", "Trucker Cap": "tequila-corrido-trucker-cap", "Save Water Cap": "save-water-cap", "Drinking Corduroy Cap": "drinking-corduroy-cap",
+  "Pickleball Trucker Cap": "pickleball-trucker-cap", "Cuffed Beanie": "cuffed-beanie",
+};
+const HATS = {
+  "Rebel Snapback": { price: "$34.00", W: 63, vs: .7, img: IMG + "classic-snapback-natural-black-front-680925a92255f_600x.png?v=1745429936", bbox: [.085, .083, .908, .943] },
+  "Trucker Cap": { price: "$35.00", W: 63, vs: .75, img: IMG + "snapback-trucker-cap-charcoal-black-front-68c3b57080e74_600x.png?v=1757656443", bbox: [.112, .13, .885, .835] },
+  "Drinking Corduroy Cap": { price: "$34.00", W: 63, vs: .8, img: IMG + "vintage-corduroy-cap-brown-front-68dde58629ac6_600x.png", bbox: [.135, .118, .865, .87] },
+  "Pickleball Trucker Cap": { price: "$29.00", W: 63, vs: .75, img: IMG + "5-panel-trucker-cap-white-front-68c3b6d79ed4e_600x.png", bbox: [.043, .06, .957, .938] },
+  "Cuffed Beanie": { price: "$28.00", W: 62, vs: .62, img: IMG + "cuffed-beanie-dark-grey-front-6709b16b8be6a_600x.png", bbox: [.157, .038, .84, .927] },
+  "Save Water Cap": { price: "$29.00", W: 63, vs: .8, img: IMG + "vintage-cap-navy-front-68c8c480a4e2e_600x.png?v=1757987976", bbox: [.087, .08, .92, .918] },
+};
+// Place a product photo so its bounding box is W wide, centered on x = 60, with its top (or bottom) edge at y.
+// vs squashes the photo vertically (hats are photographed from above; squashing makes them sit on the head).
+const placeImg = (url, bbox, W, y, fromBottom, vs = 1) => {
+  const [x0, y0, x1, y1] = bbox, S = W / (x1 - x0), H = S * vs, top = fromBottom ? y - y1 * H : y - y0 * H;
+  return `<image href="${url}" x="${(60 - (x0 + x1) / 2 * S).toFixed(1)}" y="${top.toFixed(1)}" width="${S.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/>`;
+};
+const BODY = { Male: "M2 200C2 118 28 102 60 102S118 118 118 200Z", Female: "M14 200C14 120 38 103 60 103S106 120 106 200Z" };
+const HAIR_BY = { Male: ["Bald", "Buzz", "Short", "Slick back", "Messy", "Curtains", "Low taper fade", "Spiky", "Flat top", "Mullet", "Curly", "Afro", "Dreadlocks", "Cornrows", "Man bun", "Mohawk"], Female: ["Pixie", "Bob", "Long", "Wavy", "Side swept", "Curtain bangs", "Ponytail", "Pigtails", "Bun", "Half-up", "Space buns", "Side braid", "Braids", "Curly", "Afro", "Cornrows"] };
+const LIPC = ["#b05a55", "#c0302f", "#d96a8a", "#7a2a4a"];
+const FACIALS = (k, c, id) => {
+  const clip = inner => `<g clip-path="url(#fc-${id})">${inner}</g>`;
+  const must = `<path d="M44 71C50 64 56 67 60 69C64 67 70 64 76 71C70 73 64 71 60 72C56 71 50 73 44 71Z" fill="${c}"/>`;
+  if (k === "Stubble") return clip(`<path d="M30 58C34 72 46 77 60 77C74 77 86 72 90 58L90 100L30 100Z" fill="${c}" opacity=".28"/>`);
+  if (k === "Mustache") return must;
+  if (k === "Goatee") return clip(`<path d="M47 80C52 76 68 76 73 80C74 92 68 98 60 98C52 98 46 92 47 80Z" fill="${c}"/>`) + must;
+  if (k === "Beard") return clip(`<path d="M30 56C34 74 46 78 60 78C74 78 86 74 90 56L90 100L30 100Z" fill="${c}"/>`) + must;
+  return "";
+};
+const GLASSES = (k, c) => {
+  if (k === "Round") return `<circle cx="47" cy="54" r="8.5" fill="#fff" fill-opacity=".12" stroke="${c}" stroke-width="1.8"/><circle cx="73" cy="54" r="8.5" fill="#fff" fill-opacity=".12" stroke="${c}" stroke-width="1.8"/><path d="M55 53Q60 50 65 53M38.5 52L31 50M81.5 52L89 50" stroke="${c}" stroke-width="1.8" fill="none"/>`;
+  if (k === "Square") return `<rect x="38" y="47" width="17" height="13" rx="3" fill="#fff" fill-opacity=".12" stroke="${c}" stroke-width="1.8"/><rect x="65" y="47" width="17" height="13" rx="3" fill="#fff" fill-opacity=".12" stroke="${c}" stroke-width="1.8"/><path d="M55 52H65M38 51L31 49M82 51L89 49" stroke="${c}" stroke-width="1.8" fill="none"/>`;
+  if (k === "Sunglasses") return `<rect x="37" y="47" width="19" height="13" rx="5" fill="#111" fill-opacity=".92"/><rect x="64" y="47" width="19" height="13" rx="5" fill="#111" fill-opacity=".92"/><path d="M56 51H64M37 50L30 48M83 50L90 48" stroke="#111" stroke-width="2" fill="none"/><path d="M40 50L46 50M67 50L73 50" stroke="#fff" stroke-opacity=".4" stroke-width="1.5"/>`;
+  return "";
+};
+const GENDER_DEFAULTS = {
+  Male: { hairStyle: "Short", facial: "None", browW: 2, blush: false, earrings: false, lip: 0, outfit: "Mas Tequila Tee" },
+  Female: { hairStyle: "Long", facial: "None", browW: 1, blush: true, earrings: false, lip: 0, outfit: "Mas Tequila Tee" },
+};
+const DEFAULT_AVATAR = { name: "", gender: "Female", skin: 1, face: "Oval", hairStyle: "Long", hair: 1, eye: 0, brow: -1, browW: 1, facial: "None", glasses: "None", frame: 0, outfit: "Mas Tequila Tee", hat: "None", lip: 0, dimples: false, freckles: false, mole: false, earrings: false, blush: true };
+const outfitsFor = g => Object.keys(OUTFITS).filter(k => OUTFITS[k].g === "u" || OUTFITS[k].g === (g === "Female" ? "f" : "m"));
+function cleanAvatar(v) {
+  const A = { ...DEFAULT_AVATAR, ...v };
+  if (!GENDER_DEFAULTS[A.gender]) A.gender = "Female";
+  if (!HAIR_BY[A.gender].includes(A.hairStyle)) A.hairStyle = GENDER_DEFAULTS[A.gender].hairStyle;
+  if (!outfitsFor(A.gender).includes(A.outfit)) A.outfit = GENDER_DEFAULTS[A.gender].outfit;
+  if (A.hat !== "None" && !HATS[A.hat]) A.hat = "None";
+  if (A.gender === "Female") A.facial = "None";
+  A.frame = 0;   // frame color is no longer a choice
+  return A;
+}
+function loadAvatar() {
+  try { const v = JSON.parse(localStorage.getItem("csa_avatar") || "null"); if (v) return cleanAvatar(v); } catch { /* storage unavailable */ }
+  return null;
+}
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+state.avatar = loadAvatar() || { ...DEFAULT_AVATAR };
+state.avatarSaved = !!loadAvatar();
+const repName = () => (state.avatar.name || "").trim() || "Rep";
+
+const mixHex = (a, b, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - t) + parseInt(b.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join("");
+function repLook() {
+  const A = state.avatar, F = A.gender === "Female", hair = HAIRC[A.hair], h = HAIRS[A.hairStyle](hair, FACES[A.face]), ff = FACE_FIT[A.face],
+    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
+  const over = [
+    A.dimples ? '<path d="M41 72Q43 75 45 72M75 72Q77 75 79 72" stroke="#0004" stroke-width="1.5" fill="none" stroke-linecap="round"/>' : "",
+    A.freckles ? [[46, 63], [50, 66], [43, 66], [54, 64], [74, 63], [70, 66], [77, 66], [66, 64], [58, 62], [62, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a8683f" opacity=".7"/>`).join("") : "",
+    A.mole ? '<circle cx="71" cy="73" r="1.3" fill="#3a2418"/>' : "",
+  ].join("");
+  return {
+    id: "rep", skin: SKINS[A.skin], face: FACES[A.face], hair, back: fit(h.back), hairFront: (h.front || "") + fit(h.deco), earX: FACE_FIT[A.face].ear, eye: EYEC[A.eye],
+    brow: A.brow < 0 ? hair : HAIRC[A.brow], browW: [2, 3, 4.6][A.browW], beard: F ? "" : FACIALS(A.facial, hair, "rep"),
+    over, glasses: GLASSES(A.glasses, FRAMEC[A.frame]), blush: A.blush, my: 77,
+    lip: F ? LIPC[A.lip] : mixHex(SKINS[A.skin], "#7a3b30", .4),
+    lashes: F ? '<path d="M42 51L40 48.5M47 49.5V47M52 51L54 48.5M68 51L66 48.5M73 49.5V47M78 51L80 48.5" stroke="#111" stroke-width="1.3" stroke-linecap="round"/>' : "",
+    human: true, torso: out.torso, hat: A.hat !== "None" ? placeImg(HATS[A.hat].img, HATS[A.hat].bbox, HATS[A.hat].W * ff.sx, 38 + ff.dy, true, HATS[A.hat].vs) : "",
+    ears: A.earrings && F ? `<circle cx="${60 - ff.ear}" cy="65" r="2.4" fill="#e0a42f"/><circle cx="${60 + ff.ear}" cy="65" r="2.4" fill="#e0a42f"/>` : "",
+  };
+}
+
+// ---------- character creator ----------
+// Options depend on the chosen gender. Corrido merch supplies the shirts and hats.
+const swatchCol = (g, v) => (g.match ? (v === -1 ? "" : HAIRC[v]) : v);
+function groupsFor(A) {
+  const F = A.gender === "Female";
+  return [
+    { k: "gender", label: "Character", chips: ["Male", "Female"] },
+    { k: "skin", label: "Skin tone", sw: SKINS },
+    { k: "face", label: "Face shape", chips: Object.keys(FACES) },
+    { k: "hairStyle", label: "Hair style", chips: HAIR_BY[A.gender] },
+    { k: "hair", label: "Hair color", sw: HAIRC },
+    { k: "eye", label: "Eye color", sw: EYEC },
+    { k: "brow", label: "Eyebrow color", sw: [-1, ...HAIRC.map((_, i) => i)], match: true },
+    { k: "browW", label: "Eyebrow thickness", chips: ["Thin", "Normal", "Bold"], idx: true },
+    ...(F ? [{ k: "lip", label: "Lip color", sw: LIPC }] : [{ k: "facial", label: "Facial hair", chips: ["None", "Stubble", "Mustache", "Goatee", "Beard"] }]),
+    { k: "glasses", label: "Glasses", chips: ["None", "Round", "Square", "Sunglasses"] },
+    { k: "outfit", label: "T-shirt (Corrido merch)", chips: outfitsFor(A.gender).filter(n => !OUTFITS[n].polo) },
+    { k: "outfit", label: "Polo (Corrido merch)", chips: outfitsFor(A.gender).filter(n => OUTFITS[n].polo) },
+    { k: "hat", label: "Hat (Corrido merch)", chips: ["None", ...Object.keys(HATS)] },
+  ];
+}
+const togglesFor = A => [["dimples", "Dimples"], ["freckles", "Freckles"], ["mole", "Beauty mark"], ["blush", "Rosy cheeks"], ...(A.gender === "Female" ? [["earrings", "Earrings"]] : [])];
+
+function creator(onDone) {
+  const A = state.avatar;
+  const optsHtml = () => groupsFor(A).map(g => `<div class="grp"><h3>${g.label}</h3><div class="chips" data-g="${g.k}">${
+    g.sw ? g.sw.map((v, i) => `<button type="button" class="sw ${g.match && v === -1 ? "match" : ""}" style="${swatchCol(g, v) ? `background:${swatchCol(g, v)}` : ""}" data-v="${g.match ? v : i}" aria-label="${g.label} ${i + 1}${v === -1 ? " (match hair)" : ""}" title="${v === -1 ? "Match hair" : ""}"></button>`).join("")
+    : g.chips.map((c, i) => `<button type="button" class="chip2" data-v="${g.idx ? i : c}">${c}${(OUTFITS[c] || HATS[c]) ? ` <small>${(OUTFITS[c] || HATS[c]).price}</small>` : ""}</button>`).join("")}</div></div>`).join("")
+    + `<div class="grp"><h3>Features</h3><div class="chips">${togglesFor(A).map(([k, l]) => `<button type="button" class="chip2 tg" data-t="${k}">${l}</button>`).join("")}</div></div>`;
+  app.innerHTML = `<section class="view sheet creator">
+    <h1>Create your rep</h1>
+    <div class="cwrap">
+      <div class="cprev">
+        <div class="pframe"><svg viewBox="0 -24 120 232" id="cprev" role="img" aria-label="Your character preview"></svg></div>
+        <label class="nlab">Your name (required)<input id="cname" maxlength="14" value="${esc(A.name)}" placeholder="Type your name" autocomplete="off" required></label>
+        <button class="btn alt" id="crand" type="button">🎲 Randomize</button>
+        <div class="shoplinks" id="shoplinks" aria-live="polite"></div>
+      </div>
+      <div class="copts" id="copts"></div>
+    </div>
+    <p class="note2">Shirts and hats use the real Tequila Corrido merch photos from their website, linked live (needs internet). Double-click any one to see it on the shop.</p>
+    <p class="csavebar"><button class="btn" id="cdone" type="button">Save &amp; continue</button> <small id="nreq" class="nreq">Enter your name to continue.</small></p></section>`;
+  const paint = () => {
+    $("#cprev").innerHTML = person(repLook());
+    const shop = (label, name) => MERCH_URL[name] ? `<a class="shoplink" href="https://ilovetequilacorrido.com/products/${MERCH_URL[name]}" target="_blank" rel="noopener">${label}: ${esc(name)} <span aria-hidden="true">↗</span><span class="sr"> (opens the Tequila Corrido shop in a new tab)</span></a>` : "";
+    $("#shoplinks").innerHTML = shop(OUTFITS[A.outfit].polo ? "Polo" : "Shirt", A.outfit) + (A.hat !== "None" ? shop("Hat", A.hat) : "");
+    app.querySelectorAll(".chips[data-g]").forEach(box => {
+      const k = box.dataset.g;
+      box.querySelectorAll("[data-v]").forEach(b => b.setAttribute("aria-pressed", String(A[k]) === b.dataset.v));
+    });
+    app.querySelectorAll(".tg").forEach(b => b.setAttribute("aria-pressed", !!A[b.dataset.t]));
+  };
+  const wire = () => {
+    $("#copts").innerHTML = optsHtml();
+    app.querySelectorAll(".chips[data-g] [data-v]").forEach(b => b.onclick = () => {
+      const k = b.parentElement.dataset.g, cur = A[k];
+      const val = typeof cur === "number" ? Number(b.dataset.v) : b.dataset.v;
+      if (k === "gender" && val !== A.gender) { A.gender = val; Object.assign(A, GENDER_DEFAULTS[val]); wire(); } else A[k] = val;
+      paint();
+    });
+    app.querySelectorAll(".tg").forEach(b => b.onclick = () => { A[b.dataset.t] = !A[b.dataset.t]; paint(); });
+    // double-click a shirt, polo or hat to open that product on the real shop
+    app.querySelectorAll(".chips[data-g=outfit] [data-v], .chips[data-g=hat] [data-v]").forEach(b => {
+      const h = MERCH_URL[b.dataset.v];
+      if (!h) return;
+      b.title = "Double-click to see it on the Tequila Corrido shop";
+      b.ondblclick = () => window.open("https://ilovetequilacorrido.com/products/" + h, "_blank", "noopener");
+    });
+    paint();
+  };
+  const checkName = () => { const ok = A.name.trim().length > 0; $("#cdone").disabled = !ok; $("#nreq").classList.toggle("hidden", ok); $("#cname").setAttribute("aria-invalid", String(!ok)); };
+  $("#cname").oninput = e => { A.name = e.target.value; checkName(); };
+  $("#cname").onkeydown = e => { if (e.key === "Enter" && !$("#cdone").disabled) $("#cdone").click(); };
+  $("#crand").onclick = () => {
+    const pick = a => a[Math.floor(Math.random() * a.length)], idx = a => a.map((_, i) => i), keep = { name: A.name, gender: A.gender }, F = A.gender === "Female";
+    Object.assign(A, GENDER_DEFAULTS[A.gender], { skin: pick(idx(SKINS)), face: pick(Object.keys(FACES)), hairStyle: pick(HAIR_BY[A.gender]), hair: pick(idx(HAIRC)), eye: pick(idx(EYEC)), brow: -1, browW: pick([0, 1, 2]), facial: F ? "None" : pick(["None", "None", "Stubble", "Mustache", "Goatee", "Beard"]), glasses: pick(["None", "None", "Round", "Square", "Sunglasses"]), frame: 0, outfit: pick(outfitsFor(A.gender)), hat: pick(["None", ...Object.keys(HATS)]), lip: pick(idx(LIPC)), dimples: Math.random() < .4, freckles: Math.random() < .3, mole: Math.random() < .2, earrings: F && Math.random() < .4, blush: F ? Math.random() < .8 : Math.random() < .3 }, keep);
+    wire();
+  };
+  $("#cdone").onclick = () => {
+    A.name = (A.name || "").trim().slice(0, 14);
+    if (!A.name) return checkName();
+    state.avatarSaved = true;
+    try { localStorage.setItem("csa_avatar", JSON.stringify(A)); } catch { /* storage unavailable */ }
+    onDone();
+  };
+  wire();
+  checkName();
+  if (!A.name.trim()) $("#cname").focus();
+  window.scrollTo(0, 0);
+}
+
+// ---------- customers and scenes ----------
+const LASHES = '<path d="M42 51L40 48.5M47 49.5V47M52 51L54 48.5M68 51L66 48.5M73 49.5V47M78 51L80 48.5" stroke="#111" stroke-width="1.3" stroke-linecap="round"/>';
+const CLOTHES = {
+  blazer: '<path d="M60 102L46 134L60 200L74 134Z" fill="#fdfaf5"/><path d="M46 134L36 112M74 134L84 112" stroke="#0004" stroke-width="3" stroke-linecap="round"/>',
+  cardigan: '<path d="M60 102L48 200H72Z" fill="#f2ebe0"/><path d="M60 104L52 200M60 104L68 200" stroke="#0003" stroke-width="2"/><circle cx="56" cy="140" r="1.6" fill="#0005"/><circle cx="56" cy="158" r="1.6" fill="#0005"/>',
+  jacket: '<path d="M60 102L50 200H70Z" fill="#e9e2d2"/><path d="M60 104L60 200" stroke="#0003" stroke-width="1.5"/><path d="M50 108L44 130M70 108L76 130" stroke="#0004" stroke-width="3" stroke-linecap="round"/>',
+};
+// Arms resting on the counter, with the back of each hand on top.
+const restArms = (skin, sleeve) => `<g stroke-linecap="round" fill="none"><path d="M13 112L9 130M107 112L111 130" stroke="${sleeve}" stroke-width="16"/><path d="M9 130L30 128M111 130L90 128" stroke="#0003" stroke-width="12.6"/><path d="M9 130L30 128M111 130L90 128" stroke="${skin}" stroke-width="11"/></g>${hangHand(31, 126, 1, skin, .6)}${hangHand(89, 126, -1, skin, .6)}`;
+function custLook(sc) {
+  if (sc.id === "marco") return MARCO_LOOK;
+  const c = sc.cust.look, F = !sc.cust.male, h = HAIRS[c.hairStyle](c.hair, FACES.Oval);
+  const own = t => (t || "").replace(/hx/g, "hxc");   // the rep's hair uses clip id "hx"; keep the customer's separate
+  return { id: "m", skin: c.skin, hair: c.hair, shirt: c.shirt, face: FACES.Oval, back: own(h.back), hairFront: own(h.front) + own(h.deco),
+    lip: c.lip || mixHex(c.skin, "#7a3b30", .4), my: 78, lashes: F ? LASHES : "", blush: F,
+    beard: c.beard ? FACIALS(c.beard, c.hair, "m") : "", front: CLOTHES[c.top], arms: restArms(c.skin, c.shirt) };
+}
+
+const BOTTLE_COLS = ["#9c6a2a", "#cdbf98", "#2f5f45", "#7d3520", "#2a7482", "#b8952f", "#52283a", "#b9c4c2"];
+// bottle: k = 0 slim, 1 round-shouldered, 2 wide
+const bottle = (x, yb, c, h, k) => {
+  const w = [13, 17, 21][k], nh = [18, 12, 9][k], nw = [5, 6, 8][k], cx = x + w / 2;
+  return `<path d="M${x} ${yb}V${yb - h + 8}Q${x} ${yb - h} ${cx - nw / 2} ${yb - h - 2}V${yb - h - nh}H${cx + nw / 2}V${yb - h - 2}Q${x + w} ${yb - h} ${x + w} ${yb - h + 8}V${yb}Z" fill="${c}"/>
+    <rect x="${cx - nw / 2 - .5}" y="${yb - h - nh - 3}" width="${nw + 1}" height="4" rx="1" fill="#1a1208"/>
+    <rect x="${x + 2}" y="${yb - h * .62}" width="${w - 4}" height="${h * .3}" fill="#f2e8d2" opacity=".85"/>
+    <rect x="${x + 4}" y="${yb - h * .5}" width="${w - 8}" height="1.5" fill="#3a2a1a"/>
+    <rect x="${x + 2.2}" y="${yb - h + 8}" width="2" height="${h - 14}" fill="#fff" opacity=".3"/>`;
+};
+const bottleRow = (x0, x1, yb, off) => { let s = "", x = x0, n = 0; while (x < x1 - 24) { const k = (n + off) % 3; s += bottle(x, yb, BOTTLE_COLS[(n + off) % 8], 30 + ((n * 7 + off * 3) % 4) * 7, k); x += [13, 17, 21][k] + 7; n++; } return s; };
+const lamp = x => `<polygon points="${x - 10},40 ${x + 10},40 ${x + 70},250 ${x - 70},250" fill="url(#cone)"/>
+  <line x1="${x}" y1="0" x2="${x}" y2="22" stroke="#0c0c0c" stroke-width="2"/><path d="M${x - 14} 40L${x - 6} 22H${x + 6}L${x + 14} 40Z" fill="#161616"/>
+  <ellipse cx="${x}" cy="42" rx="30" ry="16" fill="url(#glow)"/><ellipse cx="${x}" cy="41" rx="9" ry="3" fill="#fff3c9"/>`;
+const NEON = t => `<text x="300" y="34" text-anchor="middle" font-family="Rye,serif" font-size="20" fill="#7fe3ef" filter="url(#neon)" letter-spacing="4">${t}</text>`;
+const box = (x, yb, w, h) => `<rect x="${x}" y="${yb - h}" width="${w}" height="${h}" fill="#b88a55" stroke="#0004"/><rect x="${x + w / 2 - 3}" y="${yb - h}" width="6" height="${h}" fill="#d9c08a" opacity=".7"/><rect x="${x + 3}" y="${yb - h + 4}" width="${w * .3}" height="4" fill="#0003"/>`;
+const rack = x0 => `<g>${[0, 90, 180].map(d => `<rect x="${x0 + d}" y="30" width="6" height="206" fill="#d9822b"/>`).join("")}${[120, 176, 232].map(y => `<rect x="${x0}" y="${y}" width="186" height="5" fill="#d9822b"/>`).join("")}
+  ${[[x0 + 10, 120, 38, 34], [x0 + 54, 120, 30, 26], [x0 + 100, 120, 40, 38], [x0 + 146, 120, 30, 30], [x0 + 12, 176, 34, 32], [x0 + 58, 176, 42, 28], [x0 + 110, 176, 32, 36], [x0 + 148, 176, 30, 24], [x0 + 14, 232, 40, 36], [x0 + 60, 232, 34, 30], [x0 + 104, 232, 44, 38], [x0 + 154, 232, 24, 28]].map(b => box(...b)).join("")}</g>`;
+const frame = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#2a1810" stroke="#c9983a" stroke-width="2"/><rect x="${x + 4}" y="${y + 4}" width="${w - 8}" height="${h - 8}" fill="#c9a76a" opacity=".55"/><circle cx="${x + w / 2}" cy="${y + h / 2}" r="${Math.min(w, h) / 4}" fill="#7a2a3a" opacity=".7"/>`;
+const SCENE_BACK = {
+  bar: () => ({
+    blur: `<rect width="600" height="250" fill="url(#brick)"/><rect width="600" height="250" fill="url(#wallshade)"/>
+      <rect x="4" y="52" width="196" height="146" fill="#150a04" opacity=".7"/><rect x="400" y="52" width="196" height="146" fill="#150a04" opacity=".7"/>
+      <rect x="206" y="46" width="188" height="150" rx="6" fill="#1c0f06"/><rect x="214" y="54" width="172" height="134" rx="3" fill="url(#mir)"/>
+      <g opacity=".35"><rect x="232" y="128" width="12" height="44" rx="3" fill="#c9a23a"/><rect x="250" y="116" width="12" height="56" rx="3" fill="#2f5f45"/><rect x="332" y="124" width="14" height="48" rx="3" fill="#7d3520"/><rect x="352" y="132" width="12" height="40" rx="3" fill="#cdbf98"/></g>
+      <path d="M252 54L228 188M302 54L278 188" stroke="#fff" stroke-opacity=".28" stroke-width="8"/>
+      ${[[124, 0], [180, 3]].map(([yb, o]) => bottleRow(12, 200, yb, o) + bottleRow(408, 596, yb, o + 4)).join("")}
+      <rect x="0" y="124" width="200" height="6" fill="#5a3a1c"/><rect x="0" y="180" width="200" height="6" fill="#5a3a1c"/><rect x="400" y="124" width="200" height="6" fill="#5a3a1c"/><rect x="400" y="180" width="200" height="6" fill="#5a3a1c"/>
+      <rect x="0" y="130" width="200" height="30" fill="url(#led)"/><rect x="0" y="186" width="200" height="30" fill="url(#led)"/><rect x="400" y="130" width="200" height="30" fill="url(#led)"/><rect x="400" y="186" width="200" height="30" fill="url(#led)"/>`,
+    over: NEON("OPEN") + [60, 150, 450, 540].map(lamp).join(""), label: "a busy cocktail bar" }),
+  warehouse: () => ({
+    blur: `<rect width="600" height="250" fill="#5d6368"/>${Array.from({ length: 50 }, (_, n) => `<line x1="${n * 12 + 6}" y1="0" x2="${n * 12 + 6}" y2="250" stroke="#000" stroke-opacity=".12" stroke-width="2"/>`).join("")}<rect width="600" height="250" fill="url(#wallshade)"/>
+      <rect x="214" y="46" width="172" height="160" fill="#8a9197"/>${Array.from({ length: 13 }, (_, n) => `<rect x="214" y="${46 + n * 12.3}" width="172" height="2" fill="#000" opacity=".25"/>`).join("")}${rack(8)}${rack(404)}`,
+    over: [150, 450].map(lamp).join("") + '<rect x="262" y="14" width="76" height="22" rx="3" fill="#e0a42f"/><text x="300" y="30" text-anchor="middle" font-family="Arimo,sans-serif" font-weight="700" font-size="11" fill="#1e2021">RECEIVING</text>', label: "a distribution warehouse" }),
+  shop: () => ({
+    blur: `<rect width="600" height="250" fill="#6e4b34"/>${Array.from({ length: 30 }, (_, n) => `<line x1="${n * 20 + 10}" y1="0" x2="${n * 20 + 10}" y2="250" stroke="#000" stroke-opacity=".14" stroke-width="1.5"/>`).join("")}<rect width="600" height="250" fill="url(#wallshade)"/>
+      ${[[100, 1], [150, 4], [200, 2]].map(([yb, o]) => `${bottleRow(10, 590, yb, o)}<rect x="0" y="${yb}" width="600" height="6" fill="#5a3a1c"/>`).join("")}
+      <rect x="236" y="8" width="128" height="66" fill="#1d2a26" stroke="#8a5a2a" stroke-width="4"/><text x="300" y="38" text-anchor="middle" font-family="Rye,serif" font-size="13" fill="#f2ebe0">NEW IN</text><text x="300" y="58" text-anchor="middle" font-family="Arimo,sans-serif" font-size="10" fill="#cfd8d6">ask us for a pick</text>`,
+    over: [60, 540].map(lamp).join(""), label: "a neighborhood bottle shop" }),
+  venue: () => ({
+    blur: `<rect width="600" height="250" fill="url(#navy)"/><rect width="46" height="250" fill="#2a1d3a"/><rect x="554" width="46" height="250" fill="#2a1d3a"/>
+      <path d="M200 40H400L388 66L400 92H200L212 66Z" fill="#7a2a3a"/><text x="300" y="75" text-anchor="middle" font-family="Rye,serif" font-size="22" fill="#e0a42f" letter-spacing="3">PARTY</text>
+      ${[[130, 200], [300, 212], [470, 200]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="58" ry="12" fill="#efe6d2"/><rect x="${x - 5}" y="${y}" width="10" height="40" fill="#cfc6b2"/><ellipse cx="${x}" cy="${y - 8}" rx="7" ry="5" fill="url(#glow)"/>`).join("")}
+      <path d="M0 22Q150 74 300 26T600 22" stroke="#0c0c14" stroke-width="2" fill="none"/>${Array.from({ length: 14 }, (_, n) => { const x = n * 44 + 10; const y = 22 + 40 * Math.sin(Math.PI * (x / 300)) * (x < 300 ? 1 : -1) * .0 + 28 * Math.abs(Math.sin(Math.PI * x / 300)); return `<circle cx="${x}" cy="${y.toFixed(0)}" r="5" fill="#ffe3a0"/><circle cx="${x}" cy="${y.toFixed(0)}" r="12" fill="url(#glow)"/>`; }).join("")}`,
+    over: [[90, 100, 14], [230, 130, 10], [410, 110, 15], [520, 140, 11]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ffd890" opacity=".22"/>`).join(""), label: "an event venue set up for a party" }),
+  lounge: () => ({
+    blur: `<rect width="600" height="250" fill="#17323a"/>${Array.from({ length: 24 }, (_, n) => `<line x1="${n * 25 + 12}" y1="0" x2="${n * 25 + 12}" y2="250" stroke="#000" stroke-opacity=".18" stroke-width="2"/>`).join("")}<rect width="600" height="250" fill="url(#wallshade)"/>
+      <rect x="196" y="36" width="208" height="130" rx="6" fill="#3a2a10" stroke="#c9983a" stroke-width="4"/><rect x="204" y="44" width="192" height="114" fill="url(#mir)"/><path d="M250 44L226 158M310 44L286 158" stroke="#fff" stroke-opacity=".25" stroke-width="8"/>
+      ${[[24, 150, 140], [436, 150, 140]].map(([x, y, w]) => `<rect x="${x}" y="${y}" width="${w}" height="66" rx="14" fill="#6a2f2a"/>${Array.from({ length: 5 }, (_, n) => `<circle cx="${x + 16 + n * 27}" cy="${y + 20}" r="2.2" fill="#00000055"/><circle cx="${x + 30 + n * 27}" cy="${y + 42}" r="2.2" fill="#00000055"/>`).join("")}`).join("")}
+      <ellipse cx="190" cy="214" rx="14" ry="4" fill="#1a1208"/><ellipse cx="410" cy="214" rx="14" ry="4" fill="#1a1208"/><ellipse cx="190" cy="204" rx="16" ry="12" fill="url(#glow)"/><ellipse cx="410" cy="204" rx="16" ry="12" fill="url(#glow)"/>`,
+    over: [100, 300, 500].map(lamp).join(""), label: "a hotel lounge" }),
+  restaurant: () => ({
+    blur: `<rect width="600" height="250" fill="#5a2222"/><rect y="130" width="600" height="120" fill="#3a1414"/>${Array.from({ length: 12 }, (_, n) => `<rect x="${n * 50 + 4}" y="136" width="42" height="106" rx="2" fill="#4a1a1a" stroke="#0004"/>`).join("")}<rect width="600" height="250" fill="url(#wallshade)"/>
+      ${frame(40, 40, 60, 48)}${frame(130, 34, 40, 60)}${frame(430, 34, 40, 60)}${frame(500, 40, 60, 48)}
+      <rect x="226" y="52" width="148" height="86" fill="#2a1208" stroke="#8a5a2a" stroke-width="3"/>${bottleRow(232, 368, 92, 2)}${bottleRow(232, 368, 132, 5)}<rect x="226" y="94" width="148" height="4" fill="#5a3a1c"/>
+      ${[[70, 190], [530, 190]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="44" ry="9" fill="#f4efe4"/><rect x="${x - 4}" y="${y}" width="8" height="40" fill="#cfc6b2"/><ellipse cx="${x}" cy="${y - 6}" rx="5" ry="4" fill="url(#glow)"/>`).join("")}`,
+    over: [100, 300, 500].map(lamp).join(""), label: "a busy restaurant" }),
+};
+
+function barScene(avg, sc) {
+  const T = SCENE_BACK[sc.theme](), look = custLook(sc);
+  const grain = Array.from({ length: 7 }, (_, n) => `<path d="M0 ${238 + n * 1.6}Q150 ${237 + n * 1.6} 300 ${238.5 + n * 1.6}T600 ${238 + n * 1.6}" stroke="#4a2c12" stroke-opacity=".45" fill="none"/>`).join("");
+  return `<svg viewBox="0 0 600 380" role="img" aria-label="${T.label}. ${sc.cust.name}, the ${sc.cust.role.toLowerCase()}, stands behind the counter and you, the rep, stand in front.">
+    <defs>
+      <pattern id="brick" width="48" height="24" patternUnits="userSpaceOnUse"><rect width="48" height="24" fill="#4b2a1a"/>
+        <rect x="1" y="1" width="22" height="10" fill="#6b3d27"/><rect x="25" y="1" width="22" height="10" fill="#62371f"/>
+        <rect x="-11" y="13" width="22" height="10" fill="#643820"/><rect x="13" y="13" width="22" height="10" fill="#6f4029"/><rect x="37" y="13" width="22" height="10" fill="#5e341e"/></pattern>
+      <linearGradient id="navy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#232b4a"/><stop offset="1" stop-color="#0f1426"/></linearGradient>
+      <linearGradient id="wallshade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0502" stop-opacity=".75"/><stop offset=".5" stop-color="#0a0502" stop-opacity=".2"/><stop offset="1" stop-color="#0a0502" stop-opacity=".6"/></linearGradient>
+      <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b07a40"/><stop offset=".4" stop-color="#8a5a2a"/><stop offset="1" stop-color="#6a4220"/></linearGradient>
+      <linearGradient id="front" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2210"/><stop offset="1" stop-color="#150a04"/></linearGradient>
+      <linearGradient id="mir" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6f8f93"/><stop offset=".5" stop-color="#b8cbcb"/><stop offset="1" stop-color="#5f7f84"/></linearGradient>
+      <linearGradient id="led" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd890" stop-opacity=".65"/><stop offset="1" stop-color="#ffd890" stop-opacity="0"/></linearGradient>
+      <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".22"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></linearGradient>
+      <radialGradient id="glow"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".95"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="vig" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>
+      <filter id="dof" x="-2%" y="-2%" width="104%" height="104%"><feGaussianBlur stdDeviation="1.1"/></filter>
+      <filter id="neon"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g filter="url(#dof)">${T.blur}</g>
+    ${T.over}
+    <g transform="translate(110 76) scale(1.15)"><g class="p" id="pc">${person(look)}</g></g>
+    <polygon id="pl" class="mood ${plumb(avg)}" points="179,34 189,48 179,64 169,48"/>
+    <rect y="236" width="600" height="14" fill="url(#wood)"/>${grain}<rect y="236" width="600" height="2.5" fill="#fff" opacity=".35"/>
+    ${[60, 150, 450, 540].map(x => `<ellipse cx="${x}" cy="243" rx="26" ry="2.6" fill="#ffe3a0" opacity=".35"/>`).join("")}
+    <rect y="250" width="600" height="130" fill="url(#front)"/><rect y="340" width="600" height="40" fill="#120a05"/>
+    ${Array.from({ length: 20 }, (_, n) => `<line x1="${n * 32 + 8}" y1="250" x2="${n * 32 + 8}" y2="340" stroke="#000" stroke-opacity=".35" stroke-width="2"/>`).join("")}
+    <rect y="262" width="600" height="5" fill="#b98a2f"/><rect y="262" width="600" height="1.5" fill="#fff0b0" opacity=".7"/>
+    <g><ellipse cx="45" cy="292" rx="22" ry="5" fill="#0c0603"/><rect x="43" y="292" width="4" height="88" fill="#0c0603"/>
+       <ellipse cx="572" cy="292" rx="22" ry="5" fill="#0c0603"/><rect x="570" y="292" width="4" height="88" fill="#0c0603"/></g>
+    <g><path d="M278 236L294 214L310 236Z" fill="#dff1f4" opacity=".75"/><ellipse cx="294" cy="215" rx="4" ry="1.2" fill="#b7d86a"/>
+       <rect x="318" y="220" width="20" height="16" rx="2" fill="#e8b25a" opacity=".6"/><rect x="318" y="220" width="20" height="3" fill="#fff" opacity=".4"/>
+       <ellipse cx="300" cy="238" rx="26" ry="2" fill="#000" opacity=".25"/></g>
+    <g transform="translate(350 96) scale(1.25)"><g class="p" id="pr">${person(repLook())}</g></g>
+    <rect width="600" height="380" fill="url(#vig)" pointer-events="none"/>
+  </svg>`;
+}
+
+let voiceOn = false;
+const spoken = t => (t.match(/"([^"]+)"/) || [0, t])[1].replace(/<[^>]+>/g, "");
+// Pick the most natural-sounding installed English voices. Premium, Enhanced and Neural voices sound best.
+let VOICES = [];
+const loadVoices = () => { VOICES = (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(v => /^en/i.test(v.lang)); };
+if (window.speechSynthesis) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(male, exclude) {
+  const want = male
+    ? ["Natural.*(Guy|Davis|Andrew|Brian|Christopher|Eric|Roger)", "Premium|Enhanced", "Google UK English Male", "Daniel", "Alex", "Aaron", "Reed", "Fred"]
+    : ["Natural.*(Aria|Jenny|Ava|Emma|Michelle|Sonia)", "Premium|Enhanced", "Google US English", "Samantha", "Ava", "Allison", "Karen", "Moira"];
+  const isMale = v => /(Daniel|Alex|Aaron|Reed|Fred|Guy|Davis|Andrew|Brian|Christopher|Eric|Roger|Male|Tom|Rishi|Arthur)/i.test(v.name);
+  const pool = VOICES.filter(v => v.name !== exclude && (male ? isMale(v) : !isMale(v)));
+  for (const w of want) { const v = pool.find(x => new RegExp(w, "i").test(x.name)); if (v) return v; }
+  return pool[0] || VOICES[0] || null;
+}
+function speak(text, who) {
+  const ms = Math.max(1400, text.length * 55);
+  return new Promise(res => {
+    const synth = window.speechSynthesis;
+    if (!voiceOn || !synth) return setTimeout(res, ms);
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const repMale = state.avatar.gender === "Male", custMale = state.sc ? state.sc.cust.male : true, repV = pickVoice(repMale);
+    const v = who === "rep" ? repV : pickVoice(custMale, custMale === repMale && repV ? repV.name : undefined);
+    if (v) u.voice = v;
+    u.rate = 0.98; u.pitch = 1; // natural defaults; extreme pitch is what sounds robotic
+    u.onend = res; u.onerror = res;
+    synth.speak(u);
+    setTimeout(res, ms + 5000);
+  });
+}
+async function talk(who, text) {
+  const el = $(who === "cust" ? "#pc" : "#pr");
+  if (!el) return;
+  const mouth = el.querySelector(".mouth"), base = mouth.getAttribute("ry");
+  el.classList.add("talking");
+  // small, natural open/close instead of a big stretch
+  const iv = setInterval(() => mouth.setAttribute("ry", [1.5, 3, 4.5, 2.5][Math.floor(Math.random() * 4)]), 140);
+  await speak(text, who);
+  clearInterval(iv);
+  mouth.setAttribute("ry", base);
+  el.classList.remove("talking");
+}
+
+// ---------- missions ----------
+// Build the answer choices for a step. Easy: one right, one obviously wrong and one near-miss.
+// Medium and Hard: the plainly worded right answer among three near-misses.
+// The wrong answers are all written to be about the same length as the right one.
+function optionsFor(st) {
+  const mk = (a, k, d) => ({ t: a[0], fb: a[1], k, d, skill: st.skill });
+  const wd = st.wd || [-10, -5, -5], plain = state.diff !== "easy";
+  const right = mk(plain && st.RH ? [st.RH, st.R[1]] : st.R, "best", st.rd || [15, 15, 10]);
+  const wrongs = state.diff === "easy" ? [st.E[0], st.H[0]] : st.H;
+  return shuffle([right, ...wrongs.map(w => mk(w, "bad", wd))]);
+}
+
+function play(sc) {
+  const [t, i, p] = D().start;
+  state.sc = sc; voiceUsed = false;
+  if (state.cam) { Cam.reset(); Cam.begin(); } else Cam.stop();
+  Sound.start(sc.theme);
+  state.hearts = D().hearts; hud();
+  step(0, { trust: t, interest: i, price: p }, [], D().hints);
+}
+const need = (name, v, id, tip) => `<div class="need" title="${tip}"><span>${name}</span><div class="bar" role="img" aria-label="${name}. ${tip}"><i id="n${id}" style="width:${v}%"></i></div></div>`;
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let voiceUsed = false;
+
+function step(i, M, log, hintsLeft) {
+  stopAll();
+  const sc = state.sc, S = sc.steps[i], cust = sc.cust, key = sc.id + ":" + i, K = CRITERIA[key];
+  const typed = state.mode === "type" && !!K;
+  const opts = typed ? [] : optionsFor(S);
+  const avg = (M.trust + M.interest) / 2;
+  let picked = false;
+  Cam.sampling = true;
+  const checklist = `<ul class="checks2" id="chk" aria-label="What a good answer includes">${K ? K.need.map(n => `<li>${n[1]}</li>`).join("") : ""}</ul>`;
+  const typedBox = `<div class="typed">
+      <p class="note2">Say it the way you would in person. The built-in coach checks your answer for what a good one needs. ${Coach.llm.key ? "A free AI judge is on." : ""}</p>
+      ${state.diff === "easy" ? checklist : '<div id="chkwrap"></div>'}
+      <label class="sr" for="ans">Your answer</label>
+      <textarea id="ans" rows="3" maxlength="600" placeholder="Type what you'd say. Ctrl+Enter sends." autocomplete="off"></textarea>
+      <div class="row2"><button type="button" class="btn alt" id="mic" ${SR ? "" : "hidden"}>🎙 Speak</button><span id="micMsg" class="note2" role="status"></span><button type="button" class="btn" id="send">Send</button><small id="cnt">0 / 600</small></div>
+      <details class="ai"><summary>Optional: free AI judge (Google Gemini)</summary>
+        <p class="note2">Paste a free key from Google AI Studio. It stays in this tab only and is never saved. Leave blank to use the built-in coach.</p>
+        <input id="llmKey" type="password" placeholder="Gemini API key (optional)" autocomplete="off" value="${esc(Coach.llm.key)}"><button type="button" class="btn alt" id="llmSave">Use key</button></details>
+    </div>`;
+  app.innerHTML = `<section class="view sheet">${lessonTop(i / sc.steps.length)}
+    <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, sc)}</div>
+    <div class="names"><span>${cust.name} · ${cust.role}</span><span>${esc(repName())} · Rep</span></div>
+    ${state.cam ? '<p class="camline" id="camLine" role="status">📷 ${esc(Cam.msg || "Starting camera…")}</p>' : ""}
+    <div class="bubble" id="bub" aria-live="polite">${S.line}</div>
+    <div class="needs">${need("Trust", M.trust, "t", "How much they believe you and like you.")}${need("Interest", M.interest, "i", "How curious they are about Tequila Corrido.")}${need(cust.meter, M.price, "p", `A bonus meter for this customer: ${cust.meter.toLowerCase()}. It does not decide the win.`)}</div>
+    <p class="note2 meterhint">Good answers fill the meters. Reach ${D().win}+ on Trust and Interest, with a heart left, to win.</p>
+    <div class="q">${S.q}</div>
+    ${timerSecs() ? '<div class="timer" aria-label="Time left"><i id="tm"></i></div>' : ""}
+    ${typed ? typedBox : `<div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o.t}</button>`).join("")}</div>`}
+    ${hintsLeft > 0 ? `<div class="hintrow"><button class="btn alt" id="hn">💡 Hint${hintsLeft < 90 ? " (" + hintsLeft + " left)" : ""}</button><div id="hb"></div></div>` : ""}
+    <div id="fb" aria-live="polite"></div></section>`;
+  wireX();
+  $("#vo").onclick = () => { voiceOn = !voiceOn; $("#vo").textContent = voiceOn ? "🔊 Voice on" : "🔇 Voice off"; if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel(); else talk("cust", spoken(S.line)); };
+  if ($("#hn")) $("#hn").onclick = () => {
+    if (picked || hintsLeft < 1 || $("#hb").textContent) return;
+    hintsLeft--; $("#hb").innerHTML = `<div class="hintbox">${S.hint}</div>`; $("#hn").disabled = true;
+    if (typed && $("#chkwrap")) $("#chkwrap").innerHTML = checklist;
+  };
+
+  async function pick(o, btn) {
+    if (picked) return;
+    picked = true; stopTimer(); Cam.sampling = false;
+    Sound.sfx(o.k === "best" ? "right" : "wrong");
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    app.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (opts[x.dataset.n].k === "best") x.classList.add("best"); });
+    if (typed) { $("#ans").disabled = true; $("#send").disabled = true; if ($("#mic")) $("#mic").disabled = true; }
+    if (btn) btn.classList.add(o.k);
+    $("#bub").innerHTML = `<b>${esc(repName())}:</b> ${o.typed ? esc(o.t) : o.t}`;
+    if (!o.timeout) await talk("rep", spoken(o.t)); else await new Promise(r => setTimeout(r, 900));
+    M.trust = clamp(M.trust + o.d[0]); M.interest = clamp(M.interest + o.d[1]); M.price = clamp(M.price + o.d[2]);
+    if (o.k === "bad") { state.hearts = Math.max(0, state.hearts - 1); hud(); }
+    const reply = S.reply[o.k];
+    log.push({ skill: o.skill, k: o.k, score: o.score != null ? o.score : (o.k === "best" ? 1 : 0), line: S.line, text: o.t, reply, fb: o.fb, typed: !!o.typed });
+    $("#pl").setAttribute("class", "mood " + plumb((M.trust + M.interest) / 2));
+    [M.trust, M.interest, M.price].forEach((v, n) => { $("#n" + "tip"[n]).style.width = v + "%"; });
+    $("#bub").innerHTML = `<b>${cust.name}:</b> ${reply}`;
+    await talk("cust", reply);
+    const lab = o.k === "best" ? "Great move! " : "Not quite. ";
+    const better = o.k === "best" ? "" : (typed ? S.R[0] : (opts.find(x => x.k === "best") || {}).t || S.R[0]).replace(/<[^>]+>/g, "");
+    if (log.length) log[log.length - 1].better = better;
+    const last = i === sc.steps.length - 1 || state.hearts === 0;
+    $("#fb").innerHTML = `<div class="feed ${o.k}"><span>${lab}${o.typed ? esc(o.fb) : o.fb}${better ? `<span class="better"><b>Try this instead:</b> <i>${esc(better)}</i></span>` : ""}</span><button class="btn" id="nx">${last ? "See results" : "Continue"}</button></div>`;
+    $("#nx").onclick = () => (last ? results(M, log) : step(i + 1, M, log, hintsLeft));
+    $("#nx").focus({ preventScroll: true });
+    $("#fb").scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  if (typed) {
+    const ans = $("#ans");
+    const refresh = () => {
+      $("#cnt").textContent = `${ans.value.length} / 600`;
+      const chk = $("#chk"); if (!chk) return;
+      const r = Coach.evaluate(key, ans.value, state.diff);
+      chk.querySelectorAll("li").forEach((li, j) => li.classList.toggle("ok", r.matched.includes(K.need[j][1])));
+    };
+    ans.oninput = refresh;
+    async function submitTyped() {
+      const text = ans.value.trim();
+      if (picked || !text) return;
+      $("#send").disabled = true;
+      const res = Coach.evaluate(key, text, state.diff);
+      let ok = res.ok, fb = Coach.feedback(res, S), ai = false;
+      if (Coach.llm.key) {
+        try { const j = await Coach.llmJudge(sc, S, text); ok = j.ok && !res.violations.length; fb = (j.feedback || fb) + (j.ok && res.violations.length ? " " + res.violations.join(" ") : ""); ai = true; }
+        catch (e) { fb += " (The AI judge was unavailable, so the built-in coach scored this.)"; }
+      }
+      pick({ t: text, typed: true, k: ok ? "best" : "bad", d: ok ? (S.rd || [15, 15, 10]) : (S.wd || [-10, -5, -5]), fb: fb + (ok ? "" : ` A strong answer might sound like: ${S.R[0]}`), skill: S.skill, score: ok ? 1 : res.score, ai }, null);
+    }
+    $("#send").onclick = submitTyped;
+    ans.onkeydown = e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitTyped(); } };
+    $("#llmSave").onclick = () => { Coach.llm.key = $("#llmKey").value.trim(); $("#llmSave").textContent = Coach.llm.key ? "Key set" : "Cleared"; };
+    if ($("#mic")) {
+      let rec = null, base = "";
+      $("#mic").onclick = () => {
+        if (rec) { rec.stop(); return; }
+        base = ans.value ? ans.value.trim() + " " : "";
+        rec = new SR(); rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false;
+        rec.onresult = e => { pauseTimer(); ans.value = (base + [...e.results].map(r => r[0].transcript).join(" ")).slice(0, 600); voiceUsed = true; refresh(); };
+        rec.onerror = e => { $("#micMsg").textContent = e.error === "not-allowed" || e.error === "service-not-allowed" ? "Microphone blocked. Allow it in the browser address bar, or just type." : e.error === "no-speech" ? "I didn't hear anything. Try again or type." : "Voice input had a problem. You can type instead."; };
+        rec.onend = () => { resumeTimer(); rec = null; $("#mic").classList.remove("rec"); $("#mic").textContent = "🎙 Speak"; };
+        pauseTimer(); $("#micMsg").textContent = ""; $("#mic").classList.add("rec"); $("#mic").textContent = "⏺ Listening… (click to stop)";
+        try { rec.start(); } catch { rec = null; }
+      };
+    }
+    setTimeout(() => ans.focus({ preventScroll: true }), 50);
+  } else {
+    app.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(opts[b.dataset.n], b));
+  }
+  talk("cust", spoken(S.line)).then(() => {
+    if (!picked && timerSecs()) startTimer(timerSecs(), () => pick({ t: "(You freeze and say nothing…)", k: "bad", d: [-10, -5, 0], skill: S.skill, fb: "Time's up! Dead air loses the room.", timeout: true }, null));
+  });
+}
+
+// ---------- results ----------
+function results(M, log) {
+  const sc = state.sc, skills = {};
+  sc.steps.forEach(st => { skills[st.skill] = 0; });
+  log.forEach(l => { skills[l.skill] = Math.round(l.score * 5 * 10) / 10; });
+  const n = sc.steps.length, bests = log.filter(l => l.k === "best").length, typed = state.mode === "type";
+  const won = M.trust >= D().win && M.interest >= D().win && state.hearts > 0;
+  const stars = won ? (bests === n ? 3 : bests >= n - 1 ? 2 : 1) : 0; // 3 stars = no mistakes
+  const xp = Math.round((bests * 12 + (won ? 30 : 0)) * D().xp * (typed ? 1.25 : 1));
+  const cam = Cam.scores(); Cam.stop();
+  finish(sc, stars, xp, skills, won ? sc.win : `${sc.lose} You needed ${D().win}+ Trust and Interest on ${D().label}. Review the coach notes and try again.`, sc.hidden, { log, mode: state.mode, voice: voiceUsed, sc, camera: !!cam, cameraScores: cam });
+}
+
+function coachSummary(skills) {
+  const rows = Object.entries(skills);
+  if (rows.length < 2) return "";
+  const hi = rows.reduce((a, b) => (b[1] > a[1] ? b : a)), lo = rows.reduce((a, b) => (b[1] < a[1] ? b : a));
+  if (hi[1] === lo[1]) return hi[1] >= 5 ? "Every part of this mission was solid. Try a harder difficulty or typing your answers." : "Review the notes below, then try again.";
+  return `Your strongest moment was <b>${hi[0]}</b>. Your biggest chance to improve is <b>${lo[0]}</b>. Check the note for that step below.`;
+}
+
+function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
+  stopAll();
+  state.xp += xp;
+  if (stars > 0) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
+  const pct = Math.round(Object.values(skills).reduce((a, b) => a + b, 0) / (Object.keys(skills).length * 5) * 100);
+  const { log, sc, ...meta } = extra;
+  const earned = Progress.record(state, { id: L.id, title: L.title, diff: state.diff, mode: L.qs ? "choice" : state.mode, pct, stars, won: stars > 0, xp, skills, lesson: !!L.qs, ...meta }, TOTAL_STOPS());
+  hud();
+  Sound.stop(); Sound.sfx(stars ? "win" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
+  const next = stars > 0 && ALL_STOPS()[ALL_STOPS().findIndex(x => x.id === L.id) + 1];
+  const deliver = meta.cameraScores ? `<div class="card"><h3>Delivery (camera coach)</h3>${[["Eye contact", "eye"], ["Posture", "posture"], ["Presence", "presence"], ["Expression", "smile"]].map(([l, k]) => `<div class="row"><span>${l}</span><div class="bar"><i style="width:${meta.cameraScores[k]}%"></i></div><b>${meta.cameraScores[k]}%</b></div>`).join("")}<ul class="tips">${Cam.tips(meta.cameraScores).map(t => `<li>${t}</li>`).join("")}</ul><p class="note2">Nothing was recorded. Only these percentages are kept.</p></div>` : "";
+  const transcript = log ? log.map(l => `${sc.cust.name}: ${l.line.replace(/<[^>]+>/g, "")}\n${repName()}: ${l.text.replace(/<[^>]+>/g, "")}\n${sc.cust.name}: ${l.reply}`).join("\n\n") : "";
+  const steps = log ? `<div class="card"><h3>Step by step</h3>${log.map((l, j) => `<div class="stepnote ${l.k}"><b>${j + 1}. ${l.skill}</b> <span>${l.k === "best" ? "✓" : "✗"}</span><p>${l.typed ? esc(l.fb) : l.fb}</p>${l.better ? `<p class="better"><b>Try this instead:</b> <i>${esc(l.better)}</i></p>` : ""}</div>`).join("")}<p class="note2">${coachSummary(skills)}</p></div>
+    <details class="card"><summary>Conversation transcript</summary><pre id="tx" class="tx">${esc(transcript)}</pre><button class="btn alt" id="cpy" type="button">Copy transcript</button></details>` : "";
+  app.innerHTML = `<section class="view result sheet">
+    <h1>${stars ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
+    <span class="chip">${D().label} · ${L.qs ? "Lesson" : state.mode === "type" ? "Typed" : "Pick an answer"} · ×${D().xp} XP</span>
+    <div class="bigstars" aria-label="${stars} of 3 stars">${"★".repeat(stars)}<span style="color:#bdb2a5">${"★".repeat(3 - stars)}</span></div>
+    <p>${summary}</p>
+    <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span><span class="rw">${pct}% score</span></div>
+    ${earned.length ? `<div class="rewards">${earned.map(k => `<span class="rw badge-new">🏅 New badge: ${BADGES[k][0]}</span>`).join("")}</div>` : ""}
+    <div class="card"><h3>Scorecard</h3>${Object.entries(skills).map(([k, v]) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v / 5 * 100}%"></i></div><b>${v}</b></div>`).join("")}</div>
+    ${deliver}
+    ${steps}
+    ${hidden ? `<div class="learn"><b>Hidden objection revealed:</b> ${hidden}</div>` : ""}
+    <div class="fact">💡 <b>Did you know?</b> ${FACTS[Math.floor(Math.random() * FACTS.length)]}</div>
+    <p><button class="btn" id="cont">${next ? "Back to the map" : "Continue"}</button> ${stars === 0 ? '<button class="btn alt" id="retry">Try again</button>' : ""}</p>
+  </section>`;
+  $("#cont").onclick = home;
+  if ($("#cpy")) $("#cpy").onclick = () => { navigator.clipboard?.writeText(transcript).then(() => { $("#cpy").textContent = "Copied"; }).catch(() => {}); };
+  if ($("#retry")) $("#retry").onclick = () => (L.qs ? quiz(L) : play(L));
+}
+
+const FACTS = [
+  "Tequila Corrido is celebrity-free. The site says it's not about flashy endorsements, so the tequila does the talking.",
+  "Tequila Corrido's lineup runs Blanco $44.99, Reposado $54.99, Overproof $56.99 and Añejo $89.99, all additive-free.",
+  "The brand's promise is only three ingredients and no fake flavors.",
+  "The tequila bears the stamp of one of the first female master distillers.",
+  "The name comes from the corrido, a traditional Mexican ballad.",
+  "Tequila Corrido is for guests 21 and over only.",
+];
+const ALL_STOPS = () => PATH.map(id => LESSONS.find(l => l.id === id) || SCENARIOS.find(m => m.id === id));
+const TOTAL_STOPS = () => ALL_STOPS().length;
+
+home();
+</script>
+</body>
+</html>

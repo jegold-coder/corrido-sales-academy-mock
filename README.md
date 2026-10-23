@@ -1,0 +1,96 @@
+# Corrido Sales Academy (solo mock)
+
+A playable mock of the "AI Sales Training Coach" from the CIS 591 project brief, built to give the team ideas.
+It is **not** the team's build, it is **not** in GitHub, and nothing in it is approved by Tequila Corrido.
+No input from Ken yet, so every script, rubric rule and score is a labeled draft.
+
+## Run it
+
+```bash
+cd "mock-prototype"
+python3 -m http.server 8766
+```
+
+Open http://localhost:8766/ (it needs a local server, not a double-click on `index.html`).
+
+## It is free
+
+No accounts, no API bills, nothing uploaded. Progress lives in your browser only (`localStorage`).
+What it loads from the internet:
+
+| What | From | When |
+|---|---|---|
+| Fonts | Google Fonts | always |
+| Tequila Corrido bottle, record and merch photos | the brand's own site (`ilovetequilacorrido.com`, linked live) | always. Needs internet. Swap for approved files from Ken before sharing outside the team. |
+| Face model for the camera coach | jsDelivr and Google storage (MediaPipe, open source) | only if you turn the camera coach on |
+| Gemini free tier | Google | only if you paste your own free key into the optional AI judge |
+
+## What it covers from the brief
+
+| Brief | In the mock |
+|---|---|
+| Personas with hidden objections | 10 missions, each customer has a hidden objection revealed on the scorecard |
+| Behavioral chat | Pick an answer, or type or speak your own (built-in free coach checks it) |
+| Live hints | Hint button, a live checklist on Easy, no help on Hard |
+| Post-session scorecard | Per-skill scores, step-by-step notes, transcript, hidden objection |
+| Edge-case library | Pricing pushback (Marco, Dana), competitor comparison (Ray), compliance (Jess), gatekeeper (Sam), product matching (Mia), a store owner who says no (Tony), reading the buyer (Rosa), a store robbery (Ben) |
+| LLM grading | Free rule-based coach by default. Optional free Gemini judge for typed answers (see limits) |
+| Voice input | Speak button in typed mode (browser speech recognition) |
+| Body-language rating (stretch) | Optional camera coach: eye contact, posture, presence, smile. Video never leaves the device |
+| Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 11 badges, daily streak, team board using share codes |
+| Rep dashboard | Skills, history, badges, before/after knowledge check |
+| "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty |
+
+Difficulty changes how obvious the right answer is. Easy has one obvious wrong answer and one believable one. Medium and Hard have three believable wrong answers, each sounding professional with one fatal flaw, and all about the same length as the right answer so length is no clue. Hard also has no hints and a 30-second timer.
+
+Three missions come from advice from the team's contact Jay. **The Hard No** (Tony): when an owner says no, find a way in by learning who he sells to and what appeals to them. **Know Your Buyer** (Rosa): fit the pitch to the buyer and stay honest. **Trouble at the Store** (Ben): a robbery. The right answers teach staying calm, complying, calling 911, staying with the owner and checking in later. They do not teach physically stopping the robber, because confronting an armed person can get people hurt. Confirm with Jay what he meant by "try to stop it".
+
+## Files
+
+| File | What it holds |
+|---|---|
+| `index.html` | the app: screens, characters, scenes, mission flow |
+| `scenarios.js` | mission scripts and answer options (edit here to change missions) |
+| `criteria.js` | what a good typed answer needs, per step (the draft rubric) |
+| `coach.js` | the free coach and the optional Gemini judge |
+| `lessons.js` | brand lessons, question bank, knowledge check |
+| `progress.js` | saving, levels, badges, streak, team codes |
+| `dashboard.js` | the rep dashboard |
+| `camera.js` | optional camera coach |
+| `tests/` | `coach`, `balance` and `camera` tests |
+
+## Tests
+
+```bash
+node tests/coach.test.js    # every scripted right answer passes, every wrong one fails, at all 3 difficulties
+node tests/balance.test.js  # right answer is not the longest option more than about half the time (Medium, Hard)
+node tests/camera.test.js   # face maths with fake landmarks
+```
+
+## Known limits (be honest about these in the pitch)
+
+- **The "AI" is mostly rules.** The built-in coach matches patterns in the rep's words. It is predictable and free, but it can be fooled by unusual phrasing. A real LLM would be better. The Gemini judge exists as a free option but was **not tested** (no key was available).
+- **The camera coach was never run on a real webcam.** The Browser pane blocked the camera. The maths is unit-tested with fake landmarks. Expect to tune thresholds.
+- **Voices** depend on what is installed on the computer. Premium Mac voices sound much better.
+- **Phone layout** was checked in an emulator at 375 px wide, not on a real phone.
+- **The team board** only updates when someone shares a new code. A real shared leaderboard needs a backend (free tiers exist, but they need an account).
+- **Merch and bottle photos** are the brand's own images, linked live. The merch is photographed flat, so it is trimmed onto the character, not draped.
+- **Content is draft.** Prices and tasting notes come from the public site. Margins, wholesale terms and sales numbers are not public, so right answers never invent them.
+
+## Ideas for the team
+
+1. Decide how real the AI should be: rules only (free, predictable), a free LLM tier, or a hosted model.
+2. Get a real "good pitch" from Ken and turn it into the rubric in `criteria.js`.
+3. Ask whether reps would use voice on the job, because that decides how much to invest in speech.
+4. Decide if the leaderboard needs to be live, which means picking a free backend.
+5. Replace hotlinked images with approved assets.
+6. Split work by skill: personas and prompts, rubric and grading, front end and gamification, voice and camera, content and QA.
+
+## Questions for Ken (nothing here blocks the mock)
+
+- Who are the typical customers, and which settings matter most (bars, restaurants, retail, distributors)?
+- What does a good pitch look like, and what are the top mistakes new reps make?
+- Which claims and wording are approved, and what must reps never say?
+- Is any real call data or role-play material available?
+- What can reps say about pricing, margins and samples?
+- Is "celebrity-free" approved wording? The homepage says "It's not about flashy endorsements", and the team described the brand as celebrity-free. The game uses "celebrity-free" in a lesson and in Ray's mission, so confirm the exact phrase.
