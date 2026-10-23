@@ -1,5 +1,5 @@
 "use strict";
-// First-run flow: age check (in index.html) -> character setup -> skippable tutorial -> knowledge check -> map.
+// First-run flow: age check (in index.html) -> character setup -> skippable tutorial -> map, where the required knowledge check must be done before any stop opens.
 // Returning players skip straight to the map after the age check. The tutorial can be replayed from the dashboard.
 
 function startFlow() {
@@ -7,7 +7,7 @@ function startFlow() {
   const veteran = state.history.length > 0;               // already played before this flow existed
   if (!state.avatarSaved) return creator(startFlow);
   if (!state.tutorialSeen && !veteran) return tutorial(() => { state.tutorialSeen = true; Progress.save(state); startFlow(); });
-  if (!state.pre && !veteran) return knowledgeCheck(startFlow);
+  // the knowledge check is no longer forced right after the tutorial: it waits on the map, which stays locked until it is done
   document.body.classList.remove("onboarding");
   home();
 }
@@ -18,7 +18,7 @@ const TUT = [
       <ul class="tutlist"><li>📚 <b>Learn</b> the brand in quick lessons</li><li>💬 <b>Practice</b> real conversations with customers who each hide a worry</li><li>🎯 <b>Get coached</b> on every answer</li></ul>` },
   { title: () => "Your map", icon: "🗺️", body: () => `
       <p>Follow the trail. Each stop unlocks when you pass the one before it. The glowing one is your next step.</p>
-      <ul class="tutlist"><li>🎶 <b>Lessons</b> are short brand quizzes</li><li>🍸 <b>Missions</b> are conversations with a customer</li><li>⭐ Earn up to three stars on each stop</li></ul>` },
+      <ul class="tutlist"><li>🎶 <b>Lessons</b> are short brand quizzes</li><li>🍸 <b>Missions</b> are conversations with a customer</li><li>⭐ Earn up to three stars on each stop</li><li>📝 The map starts locked. A short <b>knowledge check</b> opens it (more on that at the end).</li></ul>` },
   { title: () => "Inside a mission", icon: "🍸", demo: true, body: () => `
       <p>The customer speaks, and you answer. Watch the meters, because good answers raise <b>Trust</b> and <b>Interest</b>. A wrong answer costs a heart ❤️.</p>
       <div class="tutdemo" id="tutdemo"></div>` },
@@ -27,7 +27,7 @@ const TUT = [
       <p>On missions you can <b>pick an answer</b> or <b>type or speak</b> your own, and a free coach checks it. You can also turn on the optional <b>camera coach</b> for eye contact and posture. Your browser will ask permission, and video never leaves your device.</p>` },
   { title: () => "Level up", icon: "🏅", body: () => `
       <p>Earn XP, keep a daily streak and collect badges. Your <b>Dashboard</b> shows your skills and where to improve.</p>
-      <p>Next is a short <b>knowledge check</b>: ten quick questions so you can see how much you learn along the way.</p>` },
+      <p><b>Required next step:</b> you'll land on the map, where a short <b>knowledge check</b> (ten quick questions) is waiting. You have to finish it before the first stop opens. It sets your starting point, so you can see how much you learn along the way.</p>` },
 ];
 
 function tutorial(onDone, i = 0) {

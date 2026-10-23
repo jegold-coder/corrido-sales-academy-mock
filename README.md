@@ -38,7 +38,7 @@ What it loads from the internet:
 | Voice input | Speak button in typed mode (browser speech recognition) |
 | Body-language rating (stretch) | Optional camera coach: eye contact, posture, presence, smile. Video never leaves the device |
 | Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 11 badges, daily streak, team board using share codes |
-| Rep dashboard | Skills, history, badges, before/after knowledge check |
+| Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty |
 
 Difficulty changes how obvious the right answer is. Easy has one obvious wrong answer and one believable one. Medium and Hard have three believable wrong answers, each sounding professional with one fatal flaw, and all about the same length as the right answer so length is no clue. Hard also has no hints and a 30-second timer.

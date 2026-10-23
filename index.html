@@ -384,6 +384,9 @@ main:has(.creator){max-width:1120px}
 .csavebar{position:sticky;bottom:60px;z-index:6;background:linear-gradient(to top,var(--cream,#fdf6e7) 70%,transparent);padding:.6rem 0 .2rem;margin-top:.4rem}
 @media(max-width:900px){.creator .copts{column-count:1}main:has(.creator){max-width:760px}}
 @media(max-width:640px){.creator .cwrap{grid-template-columns:1fr}.creator .cprev .pframe svg{max-height:none;width:100%}}
+
+.checkgate{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;background:#fff4d6;border:3px solid var(--gold);border-radius:14px;padding:.8rem 1rem;margin:.4rem 0 .8rem}
+.checkgate p{margin:.2rem 0 0;font-size:.92rem}
 </style>
 </head>
 <body>
@@ -544,6 +547,9 @@ document.addEventListener("click", e => { if (!e.target.isConnected || e.target.
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("dialog[open]")) closePanel(); });
 
 // ---------- home / map ----------
+// The knowledge check is required before the map opens. People who already have progress from before this rule are let through.
+const needsCheck = () => !state.pre && !(state.history && state.history.length > 0);
+
 function home() {
   stopAll(); Cam.stop(); Sound.stop(); document.body.classList.remove("onboarding");
   state.hearts = D().hearts; hud();
@@ -556,30 +562,31 @@ function home() {
     const c = state.done[nodes[i].id] ? "done" : "";
     roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>`;
   }
-  const nextStop = nodes.find(x => !state.done[x.id]);
+  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck();
   nodes.forEach((n, i) => {
-    const done = state.done[n.id], open = i === 0 || done || state.done[nodes[i - 1].id], cur = n === nodes.find(x => !state.done[x.id]);
+    const done = state.done[n.id], open = !gated && (i === 0 || done || state.done[nodes[i - 1].id]), cur = !gated && n === nodes.find(x => !state.done[x.id]);
     const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`;
     stops += `<div class="stop" style="${pos}">
       <button class="node ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
         ${cur ? '<span class="start">START</span>' : ""}${done ? "✓" : open ? n.icon : "🔒"}
         ${done ? `<span class="stars">${"★".repeat(state.stars[n.id])}${"☆".repeat(3 - state.stars[n.id])}</span>` : ""}
-      </button><div class="lab">${n.title}<small>${open ? `${n.sub} · ${n.qs ? "lesson" : "mission"}` : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
+      </button><div class="lab">${n.title}<small>${open ? `${n.sub} · ${n.qs ? "lesson" : "mission"}` : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
   app.innerHTML = `<section class="view">
-    <p class="lede">Pick your next stop, ${esc(repName())}</p>
+    <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
     <p class="legend">Lessons teach the brand. Missions are customer conversations, where you can type, speak or use the camera coach.</p>
-    ${nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
+    ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${stops}</div></section>`;
   const launch = st => openDiff(() => (st.qs ? quiz(st) : play(st)), st);
   app.querySelectorAll(".node").forEach(b => b.onclick = () => {
     if (b.getAttribute("aria-disabled")) {   // locked: say why instead of doing nothing
-      const m = $("#lockmsg"); m.textContent = `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`; m.classList.remove("hidden"); return;
+      const m = $("#lockmsg"); m.textContent = gated ? "Locked. Take the knowledge check above first to open the map." : `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`; m.classList.remove("hidden"); return;
     }
     launch(nodes.find(x => x.id === b.dataset.id));
   });
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
+  if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------
