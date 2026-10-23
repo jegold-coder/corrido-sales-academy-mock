@@ -405,6 +405,17 @@ main:has(.creator){max-width:1120px}
 
 .sitelink{text-decoration:none;display:inline-block;text-align:center}
 .xsite{margin:.2rem 0 .8rem}.xsite small{color:#6e6458;margin-left:.4rem}
+
+.xlineup{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))!important}
+.xbottle{grid-template-columns:110px 1fr;align-items:center;gap:.7rem!important}
+.xbottle img{width:110px;height:140px;object-fit:contain;background:radial-gradient(circle at 50% 40%,#f3e6cf,#e6d3b3);border-radius:10px}
+.xbottle .xtext{display:grid;gap:.15rem}
+details.xmerch>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
+details.xmerch>summary::-webkit-details-marker{display:none}
+details.xmerch>summary h3{margin:0}
+details.xmerch>summary::after{content:"Show ▾";margin-left:auto;font-size:.8rem;font-weight:700;color:var(--teal)}
+details.xmerch[open]>summary::after{content:"Hide ▴"}
+@media(max-width:420px){.xbottle{grid-template-columns:84px 1fr}.xbottle img{width:84px;height:110px}}
 </style>
 </head>
 <body>
@@ -629,30 +640,31 @@ const SHOP_CATS = ["Tees and tops", "Polos", "Hoodies", "Hats", "Gear and access
 function explorer() {
   stopAll(); Cam.stop(); Sound.stop();
   const lineup = [
-    ["Blanco", "$44.99", "Citrus, fruity, floral agave and a slight crisp pepper.", "blanco"],
-    ["Reposado", "$54.99", "Vanilla, caramel, fruit and spice.", "reposado"],
-    ["Overproof", "$56.99", "Cooked agave, citrus, tropical hints and subtle spices.", "overproof"],
-    ["Añejo", "$89.99", "Coffee, agave and dried fruit.", "anejo"],
+    ["Blanco", "$44.99", "Citrus, fruity, floral agave and a slight crisp pepper.", "blanco", "Tequila_Corrido_Blanco_Additive-Free_1_400x.png"],
+    ["Reposado", "$54.99", "Vanilla, caramel, fruit and spice.", "reposado", "Tequila_Corrido_Reposado_Additive-Free_Tequila_Bottle_1_400x.png"],
+    ["Overproof", "$56.99", "Cooked agave, citrus, tropical hints and subtle spices.", "overproof", "Overproof_Bottle_Tequila_Corrido_Shadow_0507c1d7-9f43-42eb-9e1e-ec0e4de3bb56_400x.png"],
+    ["Añejo", "$89.99", "Coffee, agave and dried fruit.", "anejo", "Tequila_Corrido_Anejo_Additive-free_Tequila_400x.png"],
   ];
   app.innerHTML = `<section class="view sheet explore">
     <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Everything a new rep should know, in one place.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
     <p class="xsite"><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a> <small>Opens in a new tab, so you can come right back.</small></p>
     <div class="card"><h3>The promise</h3><p><b>Additive-free.</b> Only three ingredients and no fake flavors. That one line is what to say when someone asks what's in it.</p></div>
-    <div class="card"><h3>The lineup</h3><div class="xlineup">${lineup.map(([n, pr, notes, h]) => `<a class="xbottle" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>See it on the shop ↗</em></a>`).join("")}</div>
+    <div class="card"><h3>The lineup</h3><div class="xlineup">${lineup.map(([n, pr, notes, h, img]) => `<a class="xbottle" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><img src="${IMG}${img}" alt="A bottle of Tequila Corrido ${n}" loading="lazy"><div class="xtext"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>See it on the shop ↗</em></div></a>`).join("")}</div>
       <p class="note2">Prices are the public site prices. Wholesale pricing and margins aren't public, so a rep confirms those in writing.</p></div>
     <div class="card"><h3>The story</h3><ul class="xlist">
       <li><b>The name.</b> A corrido is a traditional Mexican ballad. The brand borrows its music-and-rebellion spirit, with vinyl records and piano keys all over the look.</li>
       <li><b>The maker.</b> The tequila bears the stamp of one of the first female master distillers.</li>
       <li><b>Celebrity-free.</b> The site says it's not about flashy endorsements. The tequila does the talking, so a rep never claims famous fans.</li>
       <li><b>The voice.</b> Bold, irreverent and a little rebellious, set against mass-produced, overpriced tequila.</li></ul></div>
-    <div class="card"><h3>Merch</h3><p>The shop sells a lot more than the tees, caps and polos you can wear on your character. Here is everything on the site, and every card opens the real product.</p>
-      ${SHOP_CATS.map(c => `<h4 class="xcat">${c}</h4><div class="xshop">${SHOP.filter(r => r[0] === c).map(([, n, h, pr, th]) => `<a class="xitem" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener">${th ? `<img src="${IMG}${th}" alt="" loading="lazy">` : ""}<b>${esc(n)}</b><span>${pr}</span></a>`).join("")}</div>`).join("")}
-      <p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></div>
+
     <div class="card"><h3>Selling it right</h3><ul class="xlist">
       <li><b>21 and over only.</b> Never encourage serving anyone under 21.</li>
       <li><b>Stick to the brand's own words.</b> No health, hangover, organic or low-calorie claims.</li>
       <li><b>Never invent numbers.</b> Prices, margins and sales figures get confirmed in writing, not guessed.</li>
       <li><b>Respect the other brand.</b> Name one real difference and invite a taste.</li></ul></div>
+    <details class="card xmerch"><summary><h3>Merch (just for reference)</h3></summary><p>You are selling the tequila, not the merch, so this is just for reference. The shop also sells more than the tees, caps and polos you can wear on your character, and every card opens the real product.</p>
+      ${SHOP_CATS.map(c => `<h4 class="xcat">${c}</h4><div class="xshop">${SHOP.filter(r => r[0] === c).map(([, n, h, pr, th]) => `<a class="xitem" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener">${th ? `<img src="${IMG}${th}" alt="" loading="lazy">` : ""}<b>${esc(n)}</b><span>${pr}</span></a>`).join("")}</div>`).join("")}
+      <p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></details>
     <p><button class="btn" id="xquiz" type="button">Test yourself with a lesson</button> <button class="btn alt" id="xmap" type="button">Back to the map</button></p></section>`;
   $("#xback").onclick = home; $("#xmap").onclick = home;
   $("#xquiz").onclick = () => { const l = LESSONS[0]; openDiff(() => quiz(l), l); };
