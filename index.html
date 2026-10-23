@@ -416,6 +416,7 @@ details.xmerch>summary h3{margin:0}
 details.xmerch>summary::after{content:"Show ▾";margin-left:auto;font-size:.8rem;font-weight:700;color:var(--teal)}
 details.xmerch[open]>summary::after{content:"Hide ▴"}
 @media(max-width:420px){.xbottle{grid-template-columns:84px 1fr}.xbottle img{width:84px;height:110px}}
+
 </style>
 </head>
 <body>
@@ -698,7 +699,6 @@ function home() {
   });
   app.innerHTML = `<section class="view">
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
-    <p class="legend">Lessons teach the brand. Missions are customer conversations, where you can type, speak or use the camera coach.</p>
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     <div class="maplinks"><button class="btn alt" id="goexplore" type="button">📖 Who is Tequila Corrido?</button><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a>${!gated && weakestSkill() ? `<button class="btn alt" id="gopractice" type="button">🎯 Practice: ${esc(weakestSkill())}</button>` : ""}${!gated && (state.mistakes || []).length ? `<button class="btn alt" id="goreview" type="button">📝 Review ${(state.mistakes || []).length} missed</button>` : ""}</div>
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
