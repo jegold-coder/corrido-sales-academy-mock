@@ -54,6 +54,8 @@ const Coach = {
     out.content = Math.max(0, Math.round((4 * out.hits.length / n - taken) * 10) / 10);
     out.tone = typeof Tone !== "undefined" ? Tone.score(t, ctx.tone, ctx.voice) : { pts: 1, notes: [], name: "" };
     out.score = Math.max(0, Math.min(5, Math.round((out.content + out.tone.pts) * 10) / 10));
+    // a health claim or a pressure tactic is a compliance miss (it loses a boss battle outright)
+    out.compliance = out.flags.some(f => /health claim/i.test(f.msg)) || out.tone.notes.some(x => !x.ok && /Pushy/.test(x.msg));
     return out;
   },
 

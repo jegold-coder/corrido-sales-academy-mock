@@ -389,8 +389,6 @@ main:has(.creator){max-width:1120px}
 .checkgate p{margin:.2rem 0 0;font-size:.92rem}
 
 /* ===== v22: practice, review and the Who is Corrido page ===== */
-.maplinks{display:flex;gap:.5rem;flex-wrap:wrap;margin:.2rem 0 .8rem}
-.maplinks .btn{padding:.35rem .8rem;font-size:.88rem}
 .xlineup{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem}
 .xbottle{display:grid;gap:.15rem;background:#fff;border:2px solid var(--gold);border-radius:12px;padding:.6rem .8rem;text-decoration:none;color:var(--ink)}
 .xbottle:hover{background:#fff4d6}.xbottle b{font:1.1rem Rye,serif;text-transform:uppercase;font-weight:400}.xbottle .xprice{font-weight:700;color:var(--brown)}.xbottle small{color:#4d443a}.xbottle em{font-style:normal;font-size:.8rem;color:var(--teal);font-weight:700}
@@ -398,10 +396,14 @@ main:has(.creator){max-width:1120px}
 .mistake{border-top:1px solid #e1d8cb;padding:.5rem 0}.mistake p{margin:.2rem 0}.mistake .bad{color:#8a2f2f}.mistake .better{color:#2d5f2d}
 .card h3 .btn{float:right;padding:.15rem .7rem;font-size:.8rem}
 
-.xcat{font:700 .85rem Arimo;letter-spacing:.08em;text-transform:uppercase;color:var(--brown);margin:.9rem 0 .3rem}
-.xshop{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.5rem}
-.xitem{display:grid;gap:.1rem;background:#fff;border:2px solid #e3d9c8;border-radius:10px;padding:.4rem;text-decoration:none;color:var(--ink);font-size:.8rem;align-content:start}
-.xitem:hover{border-color:var(--gold);background:#fff9ec}.xitem img{width:100%;aspect-ratio:1;object-fit:contain;background:#f3eee6;border-radius:6px}.xitem span{color:var(--brown);font-weight:700}
+.xtabs{display:flex;gap:.3rem;flex-wrap:wrap;margin:.2rem 0 .5rem}
+.xlist{display:grid;grid-template-columns:repeat(2,1fr);gap:.3rem .5rem}
+.xrow{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:.5rem;background:#fff;border:1px solid #e3d9c8;border-radius:8px;padding:.2rem .4rem .2rem .2rem;text-decoration:none;color:var(--ink);font-size:.8rem}
+.xrow[hidden]{display:none}
+.xrow:hover{border-color:var(--gold);background:#fff9ec}.xrow img{width:36px;height:36px;object-fit:contain;background:#f3eee6;border-radius:6px}
+.xn{line-height:1.2;font-weight:700}.xn em{display:inline-block;font:700 .66rem Arimo,sans-serif;font-style:normal;border-radius:99px;padding:0 .4rem;margin-left:.2rem;white-space:nowrap}.xn em.out{color:#8a2a14;background:#fbe6e0}
+.xp{color:var(--brown);font-weight:700;white-space:nowrap;font-size:.76rem}
+@media(max-width:560px){.xlist{grid-template-columns:1fr}}
 
 .sitelink{text-decoration:none;display:inline-block;text-align:center}
 .xsite{margin:.2rem 0 .8rem}.xsite small{color:#6e6458;margin-left:.4rem}
@@ -412,7 +414,7 @@ main:has(.creator){max-width:1120px}
 .xbottle .xtext{display:grid;gap:.15rem}
 details.xmerch>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
 details.xmerch>summary::-webkit-details-marker{display:none}
-details.xmerch>summary h3{margin:0}
+details.xmerch>summary h3{margin:0}details.xmerch>summary small{color:#6e6458}
 details.xmerch>summary::after{content:"Show ▾";margin-left:auto;font-size:.8rem;font-weight:700;color:var(--teal)}
 details.xmerch[open]>summary::after{content:"Hide ▴"}
 @media(max-width:420px){.xbottle{grid-template-columns:84px 1fr}.xbottle img{width:84px;height:110px}}
@@ -451,6 +453,163 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .split{display:flex;gap:1.2rem;flex-wrap:wrap;margin:.3rem 0;font-size:.9rem;color:#4d443a}
 .tonelist li.tonehead{font-weight:700;color:var(--brown)}.tonelist li.tonestats{color:#6e6458;font-size:.82rem}
 .playmine{padding:.2rem .8rem;font-size:.8rem;margin:.2rem 0}
+
+/* ===== v25: sign-in splash, boss nodes, merch locks, toast ===== */
+.gate.splash{z-index:50;background:radial-gradient(ellipse at 50% -10%,#7a4d22 0%,#33200f 55%,#1a0f06 100%);overflow:auto;place-items:start center;padding:1.2rem}
+.splashbox{width:100%;max-width:440px;text-align:center;color:var(--cream);padding:1rem 0 2rem}
+.bottleicon{width:46px;height:70px}
+.splashtitle{font:2.3rem Rye,serif;text-transform:none;margin:.3rem 0 0;color:#fff}
+.splashsub{font:700 .85rem Arimo;letter-spacing:.35em;color:var(--gold);margin:.1rem 0 .8rem}
+.splashtag{color:#eadfcc;margin:0 .5rem 1.2rem}
+.agecard{background:var(--cream);color:var(--ink);border-radius:18px;padding:1.1rem 1.2rem;text-align:left}
+.agecard h2{font-size:1.4rem;margin:0 0 .3rem}
+.agebtns{display:flex;gap:.6rem}.agebtns .btn{flex:1}.agebtns .btn.alt{flex:.45}
+.ageok{margin:0;font-weight:700;color:var(--green)}
+.signin{margin-top:1.2rem;text-align:left}.signin.off{opacity:.45;pointer-events:none}
+.signhead{font:700 .8rem Arimo;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);text-align:center;margin:0 0 .6rem}
+.guestbtn{width:100%;padding:.9rem;font-size:1rem}
+.or{margin:.9rem 0 .4rem;color:#eadfcc}
+.emailrow{display:flex;gap:.5rem}.emailrow input{flex:1;min-width:0;border:0;border-radius:10px;padding:.7rem .8rem;font:inherit}
+.signnote{font-size:.8rem;color:#d9ccb4;margin:.5rem 0 0}.signnote.bad{color:#ffb4a3}
+.splashfoot{font-size:.8rem;color:#cdbfa6;margin:1.6rem .5rem .4rem}
+.mgrlink{font-size:.85rem;margin:.2rem 0}.mgrlink a{color:var(--gold)}
+#toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);background:var(--deep);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:.6rem 1rem;max-width:90vw;z-index:60;opacity:0;pointer-events:none;transition:.25s}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===== v26: boss nodes, tier bar ===== */
+.node.boss{width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9532f,#8a2a14);border:4px solid var(--gold);border-bottom:10px solid #5a1a0a;font-size:2.6rem;box-shadow:0 0 0 6px #e0a42f33,0 0 24px #d9532f88!important}
+.node.boss.done{background:radial-gradient(circle at 35% 30%,#f1c25a,#b8851f);border-color:#fff1c4}
+.node.boss.locked{background:#c9bfb4;border-color:#a99d90;box-shadow:none!important}
+.bosstag{display:block;width:max-content;margin:0 auto .2rem;background:#8a2a14;color:#fff;font:700 .62rem Arimo;letter-spacing:.12em;text-transform:uppercase;padding:.08rem .55rem;border-radius:99px;border:1px solid var(--gold)}
+.vrow{display:flex;align-items:center;gap:.6rem;padding:.35rem 0;border-bottom:1px solid #e6ddd0;flex-wrap:wrap}.vrow>span:first-child{flex:1 1 140px}.vrow small{color:#6e6458}.vname{flex:1 1 150px;font-size:.88rem;color:var(--brown)}.vplay{padding:.2rem .7rem;font-size:.85rem}
+.unlockbox{margin:.5rem 0;padding:.5rem .7rem;background:#fff4d6;border:2px solid var(--gold);border-radius:10px;font-size:.92rem}.unlockbox.got{background:#e8f4e5;border-color:#8fc38a}
+.tierbar{background:#0000004d;border:1px solid #e0a42f66;border-radius:14px;padding:.6rem .8rem;margin:.2rem 0 .8rem;color:var(--cream)}
+.tierrow{display:flex;align-items:center;justify-content:center}.tl{flex:1;max-width:36px;height:2px;border-top:2px dashed #e0a42f88;margin:0 2px}
+.tierdot{width:34px;height:34px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold);font:1.05rem Rye,serif;flex:none}
+.tierdot.done{background:var(--gold);color:var(--deep)}.tierdot.now{background:#fff1c4;color:var(--deep);box-shadow:0 0 0 4px #e0a42f55}
+.tiernow{text-align:center;margin:.4rem 0 0;font-size:.9rem}.tiernow span{color:#eadfcc}
+
+.chip2.locked{opacity:.6;border-style:dashed;cursor:not-allowed}.chip2.locked .unlockhow{display:block;font-size:.68rem;color:#8a2a14;font-weight:700}
+.chip2 .unlockhow{display:none}.chip2.locked .unlockhow{display:block}
+
+/* ===== v27: boss battle screen, tier up, rewards ===== */
+.bossintro{background:radial-gradient(ellipse at 50% 30%,#6a2412 0%,#2b130a 60%,#1a0c06 100%);border-radius:18px;padding:1rem 1.1rem 1.4rem;color:var(--cream);text-align:center}
+.bi-top{display:flex;justify-content:space-between;align-items:center;font:700 .8rem Arimo;letter-spacing:.3em;color:var(--gold)}
+.bi-top .x{background:none;border:0;color:var(--cream);font-size:1.6rem}
+.bi-title{font:2.6rem Rye,serif;color:var(--gold);margin:.5rem 0 0}.bi-sub{margin:.1rem 0 1rem;color:#eadfcc}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:.4rem;align-items:center}
+.fighter b{display:block;font-size:1.05rem;margin-top:.4rem}.fighter small{color:#d9ccb4}
+.portrait{aspect-ratio:3/4;border-radius:16px;overflow:hidden;border:4px solid;display:grid;place-items:end center}
+.portrait.gold{border-color:var(--gold);background:#fdfaf5}.portrait.red{border-color:#c0452a;background:#e3dcd6}
+.portrait svg{width:100%;height:100%}.brainbig{font-size:5rem;align-self:center}
+.vsmark{font:2rem Rye,serif;color:var(--gold)}
+.rules{list-style:none;padding:.8rem .9rem;margin:1rem 0;text-align:left;background:#ffffff14;border:1px solid #e0a42f77;border-radius:14px}
+.rules li{position:relative;padding:.35rem 0 .35rem 1.8rem}.rules li::before{content:"🛡";position:absolute;left:0;color:var(--gold)}
+.tries{font-weight:700;margin:.4rem 0}.trydot{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid var(--gold);margin-left:.4rem;vertical-align:middle}
+.trydot.on{background:var(--gold)}.trynote{color:#d9ccb4;font-weight:400;font-size:.85rem}
+.goldbtn{background:var(--gold);color:#2b1a05;border-bottom-color:#a87a1a;width:100%;padding:1rem;font-size:1.1rem;margin-top:.6rem}
+.goldbtn:disabled{opacity:.5}
+.linkbtn{display:block;margin:.8rem auto 0;background:none;border:0;color:var(--gold);font-weight:700;text-decoration:underline;font-size:1rem}
+.bi-foot{color:#cdbfa6}
+.bosschip{background:#8a2a14;border:1px solid var(--gold)}
+.bossrule{background:#fff1ec;border-left:4px solid #b5432a;border-radius:6px;padding:.4rem .7rem;margin:.4rem 0;font-size:.9rem}
+.compmiss{background:#fde8e2;border-radius:8px;padding:.4rem .7rem;color:#8a2f2f;font-weight:700;margin:.4rem 0}
+.tierup{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 18%,#7a4d22 0%,#33200f 55%,#1a0f06 100%);border-radius:18px;padding:1.2rem 1.1rem 1.6rem;text-align:center;color:var(--cream);min-height:70vh}
+.tu-kicker{font:700 .85rem Arimo;letter-spacing:.3em;color:var(--gold);margin:.3rem 0}.tu-title{font:3rem Rye,serif;color:#fff;margin:.2rem 0 .8rem}
+.tu-ring{width:min(300px,70vw);aspect-ratio:1;margin:0 auto;border-radius:50%;background:#fdfaf5;border:10px solid var(--gold);box-shadow:0 0 0 14px #e0a42f33;overflow:hidden;display:grid;place-items:end center}
+.tu-ring.legend{border-color:#fff1c4;box-shadow:0 0 0 14px #e0a42f88,0 0 40px #f1c25a}
+.tu-ring svg{height:100%;width:auto;display:block}
+.tu-tier{font:700 .95rem Arimo;letter-spacing:.3em;color:var(--gold);margin:1.2rem 0 0}.tu-name{font:2.2rem Rye,serif;color:#fff;margin:.1rem 0 1rem}
+.tu-rewards{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem}
+.rwcard{background:var(--cream);color:var(--ink);border-radius:14px;padding:.6rem 1rem;min-width:140px}.rwcard small{display:block;font:700 .7rem Arimo;letter-spacing:.2em;color:var(--brown)}.rwcard b{font-size:1.1rem}
+.tu-legend{color:var(--gold);font-weight:700}
+.tealbtn{width:100%;padding:1rem;font-size:1.05rem}
+.tu-foot{color:#cdbfa6;margin-top:1rem}
+.confetto{position:absolute;top:-16px;width:10px;height:18px;border-radius:2px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{top:105%;transform:translateX(30px) rotate(540deg)}}
+.rewardcard{border:2px solid var(--gold);background:#fff9ec}.rwrow{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.3rem 0;border-top:1px solid #eadfcc}
+.wearbtn{padding:.2rem .8rem;font-size:.8rem}
+.bbquiz .q{margin:.8rem 0}
+
+/* ===== v28: manager mode ===== */
+body.mgr{background:#e3dcd6!important}
+body.mgr .bg,body.mgr header.top,body.mgr .foot,body.mgr #camBox{display:none!important}
+body.mgr .mock{background:#2b1a05}
+main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
+.mgrwrap{color:var(--ink)}
+.mgrbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:#915f1b;color:#fff;margin:0 -1.2rem 1rem;padding:.7rem 1.4rem;position:sticky;top:0;z-index:7}
+.mlogo{font:1.3rem Rye,serif;line-height:1}.mlogo small{display:block;font:700 .58rem Arimo;letter-spacing:.28em;margin-top:.25rem}
+.mnav{display:flex;gap:.3rem;flex-wrap:wrap}.mnavbtn{background:none;border:0;color:#fff;font-weight:700;padding:.45rem 1rem;border-radius:10px}
+.mnavbtn.on{background:#3a2410;color:var(--gold)}.mnavbtn:hover:not(.on){background:#ffffff22}
+.muser{display:flex;align-items:center;gap:.8rem;font-weight:700}.mback{background:#ffffff22;border:1px solid #ffffff66;color:#fff;border-radius:99px;padding:.25rem .8rem;font-weight:700}
+.mproto{background:#fff9ec;border:1px dashed #915f1b;border-radius:10px;padding:.4rem .8rem;font-size:.88rem;margin:0 0 1rem}
+.mhead{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.mtitle{font:2.2rem Rye,serif;color:#3a2410;margin:0}.msub{margin:.2rem 0 0;color:#5c5044}
+.mstep{font:700 .8rem Arimo;letter-spacing:.22em;color:#915f1b;margin:0}
+.mactions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}.mactions select{border:2px solid #cfc4b8;border-radius:10px;padding:.5rem .6rem;background:#fff;font:inherit}
+.mbtn{background:#1f6a77;color:#fff;border:0;border-radius:10px;padding:.6rem 1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.82rem}
+.mbtn.alt{background:#fff;color:#1f6a77;border:2px solid #1f6a77}.mbtn:disabled{opacity:.5;cursor:default}
+.mstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem;margin-bottom:1rem}
+.mstat,.mcard{background:#fdfaf5;border-radius:16px;padding:1rem 1.2rem;box-shadow:0 1px 0 #0001}
+.mstat b{display:block;font:2.1rem Rye,serif;color:#915f1b;font-weight:400}.mstat span{display:block;font-weight:700}.mstat small{color:#5c5044}
+.mrow2{display:grid;grid-template-columns:1.6fr 1fr;gap:1rem;margin-bottom:1rem}@media(max-width:820px){.mrow2{grid-template-columns:1fr}}
+.mcard h2{font:700 1rem Arimo;letter-spacing:.06em;text-transform:uppercase;margin:0 0 .7rem}
+.mchart{display:flex;align-items:flex-end;justify-content:space-around;gap:.4rem;min-height:210px}
+.mcol{display:flex;flex-direction:column;align-items:center;gap:.25rem;flex:1}.mcol b{font-size:1rem}.mcol i{display:block;width:100%;max-width:70px;background:#915f1b;border-radius:8px 8px 0 0}.mcol i.gold{background:var(--gold)}.mcol span{font-size:.72rem;font-weight:700;text-align:center}
+.mnudge{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:#f5eee3;border-radius:10px;padding:.6rem .8rem;margin-bottom:.5rem}.mnudge small{display:block;color:#5c5044}
+.mtablewrap{overflow-x:auto}.mtable{width:100%;border-collapse:collapse;min-width:640px}
+.mtable th{text-align:left;font:700 .72rem Arimo;letter-spacing:.12em;text-transform:uppercase;color:#5c5044;padding:.5rem .6rem;border-bottom:2px solid #e3dcd6}
+.mtable td{padding:.65rem .6rem;border-bottom:1px solid #eee6da}.mtable tr.you td{background:#fff4d6}
+.good{color:#2d7a3b;font-weight:700}.bad{color:#b5432a;font-weight:700}
+.minvgrid{display:grid;grid-template-columns:minmax(260px,1fr) 2fr;gap:1rem;margin-top:.6rem}@media(max-width:820px){.minvgrid{grid-template-columns:1fr}}
+.mlab{display:block;font-weight:700;margin:.8rem 0 .25rem}.minput{width:100%;border:2px solid #d8cdc0;border-radius:10px;padding:.6rem .7rem;font:inherit;background:#fff}
+.mjourney{border:2px solid var(--gold);background:#f5eee3;border-radius:10px;padding:.6rem .8rem}.mjourney small{display:block;color:#5c5044}
+.mdrop{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;border:2px dashed #915f1b;background:#f5eee3;border-radius:12px;padding:1rem}.mdrop.over{background:#fff4d6}.mdrop small{display:block;color:#5c5044}
+.mfilebtn{cursor:pointer}.linkbtn.dark{color:#915f1b;display:inline;margin:0;font-size:.9rem}
+.mfoot{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:1rem;border-top:1px solid #eadfcc;padding-top:.8rem}
+.mboard{list-style:none;padding:0;margin:0}.mboard li,.mteam{display:flex;align-items:center;gap:.8rem;padding:.55rem .3rem;border-bottom:1px solid #eee6da}.mboard li.you{background:#fff4d6;border-radius:8px}
+.mrank{width:2rem;text-align:center;font-size:1.2rem;font-weight:700}.mname,.mteam>span:nth-child(2){flex:1}.mname small,.mteam small{display:block;color:#5c5044}.mxp{font-weight:700;color:#915f1b}
+.protorow{display:block;margin:.4rem 0;font-size:.95rem}.tierrow.dark .tl{border-top-color:#915f1b88}.tierrow.dark .tierdot{border-color:#915f1b;color:#915f1b}.tierrow.dark .tierdot.done{background:#915f1b;color:#fff}.tierrow.dark .tierdot.now{background:var(--gold);color:var(--deep)}.tiercard .tiernow{color:var(--ink)}
+/* ===== v29: merch as one tabbed photo grid ===== */
+.creator .mgrp{column-span:all;margin:.4rem 0 .8rem}
+.mtabs{display:flex;gap:.35rem;flex-wrap:wrap;margin:.1rem 0 .35rem}
+.mtab{border:2px solid #cfc4b8;background:#fff;border-radius:99px;padding:.25rem .85rem;font-size:.88rem;color:var(--ink)}
+.mtab small{color:var(--brown);font-weight:400}
+.mtab[aria-selected=true]{background:var(--deep);border-color:var(--deep);color:#fff;font-weight:700}
+.mtab[aria-selected=true] small{color:#fff}
+.mname{margin:.1rem 0 .4rem;font-size:.86rem;color:var(--brown);min-height:1.3em}
+.chips.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:.35rem}
+.chips.tiles[hidden]{display:none}
+.tile{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;flex-direction:column;border:2px solid #cfc4b8;background:#fff;border-radius:10px;padding:2px;overflow:hidden;cursor:pointer;color:var(--ink)}
+.tile img,.tile>svg{width:100%;height:100%;object-fit:contain;display:block}
+.tile[aria-pressed=true]{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal) inset;background:#e6f3f5}
+.tile.locked{opacity:.55;border-style:dashed;cursor:not-allowed}
+.tile .lk{position:absolute;right:2px;top:1px;font-size:.78rem;font-style:normal}
+.tile.none span{font-size:1.2rem;line-height:1}
+.tile.none small{font-size:.68rem}
+@media(max-width:640px){.chips.tiles{grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:.3rem}}
+/* ===== v30: badge medals ===== */
+.badgehead{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.4rem}.badgehead .bar{flex:1 1 160px}
+.bsec{margin:1rem 0 .2rem;font:700 .85rem Arimo,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--brown)}
+.bossgrid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.bcard .bart svg{width:84px;height:auto;display:block;margin:0 auto .2rem}
+.bcard.big .bart svg{width:116px;filter:drop-shadow(0 4px 5px #0003)}
+.bcard:not(.on){opacity:.88}.bcard.big.on{background:linear-gradient(#fff8e6,#fbe6b0)}
+@media(max-width:520px){.bossgrid{grid-template-columns:1fr 1fr}.bcard.big .bart svg{width:96px}.bossrow .bmini svg{width:42px}}
+.bcard .btier{font-size:.76rem;font-weight:700;color:var(--brown)}
+.tiercard .tiernow span{color:#6e6458}
+.bossrow{display:flex;gap:.15rem;justify-content:space-between;margin:.5rem 0 .3rem}.bmini svg{width:50px;height:auto;display:block}.bmini:not(.on){opacity:.85}
+.tu-badges{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:.6rem 0}
+.tu-badge{text-align:center;color:#fff;animation:badgepop .7s .5s both cubic-bezier(.2,1.4,.4,1)}.tu-badge svg{width:128px;height:auto;filter:drop-shadow(0 6px 10px #0008)}
+.tu-badge small{display:block;color:var(--gold);letter-spacing:.14em;font-weight:700}.tu-badge b{font:1.05rem Rye,serif}
+@keyframes badgepop{0%{transform:scale(.3) rotate(-14deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.tu-badge{animation:none}}
+/* ===== v31: brand links live in the header ===== */
+.navsep{width:1px;align-self:stretch;background:#e0a42f77;margin:0 .1rem}
+a.diffbtn{text-decoration:none;display:inline-block}
+.brandbtn{background:transparent;color:var(--cream);border-color:#e0a42fcc}.brandbtn:hover{background:var(--deep);color:var(--gold)}
+.diffbtn .sm{display:none}
+@media(max-width:700px){.brandbtn .lg{display:none}.brandbtn .sm{display:inline}.navsep{display:none}.top .stats .diffbtn{padding:.1rem .45rem;font-size:.68rem;letter-spacing:.02em}.top .stats{gap:.35rem .4rem}}
 </style>
 </head>
 <body>
@@ -464,18 +623,33 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 </div>
 <div class="mock">MOCK PROTOTYPE · STAGE 1 · NOT FINAL · NOT AFFILIATED WITH TEQUILA CORRIDO</div>
 
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
-  <div class="box">
-    <h2 id="gateTitle">Hold up. Age check.</h2>
-    <p>Tell us if you're old enough to know better, but young enough to still enjoy a good time.</p>
-    <p><button class="btn" id="yes">Yes, I'm over 21</button> <button class="btn alt" id="no">No</button></p>
-    <small id="underMsg" class="hidden">Come back when you're 21. This training is for adults of legal drinking age.</small>
+<div class="gate splash" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="splashbox">
+    <svg class="bottleicon" viewBox="0 0 40 64" aria-hidden="true"><path d="M15 3h10v4h-2v7c6 4 10 10 10 18v26a4 4 0 0 1-4 4H11a4 4 0 0 1-4-4V32c0-8 4-14 10-18V7h-2z" fill="none" stroke="#e0a42f" stroke-width="3" stroke-linejoin="round"/><rect x="10" y="34" width="20" height="18" rx="2" fill="none" stroke="#e0a42f" stroke-width="3"/></svg>
+    <h1 class="splashtitle">Tequila Corrido</h1>
+    <p class="splashsub">SALES ACADEMY</p>
+    <p class="splashtag">Learn the brand. Pitch real buyers. Climb from Trainee to Seasoned Seller.</p>
+    <div class="agecard" id="agecard">
+      <h2 id="gateTitle">Hold up. Age check.</h2>
+      <p>Tell us if you're old enough to know better, but young enough to still enjoy a good time.</p>
+      <div class="agebtns"><button class="btn" id="yes" type="button">Yes, I'm 21+</button><button class="btn alt" id="no" type="button">No</button></div>
+      <small id="underMsg" class="hidden">Come back when you're 21. This training is for adults of legal drinking age.</small>
+    </div>
+    <div class="signin off" id="signin">
+      <h3 class="signhead">Then sign in</h3>
+      <button class="btn guestbtn" id="guest" type="button" disabled>Continue as guest</button>
+      <p class="or">Or sign in with your company email</p>
+      <div class="emailrow"><input id="email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Company email" disabled><button class="btn alt" id="sendlink" type="button" disabled>Continue</button></div>
+      <p class="signnote" id="emailnote">Company sign-in arrives with the company rollout. For now your email is saved on this device only, and you continue as a guest.</p>
+    </div>
+    <p class="splashfoot">For adults of legal drinking age. Your cohort invite will connect you to your class once company sign-in is live.</p>
+    <p class="mgrlink"><a href="#manager" id="mgrLink">Manager? Open the manager view</a></p>
   </div>
 </div>
 
 <header class="top">
   <div class="logo" id="logo" role="button" tabindex="0" title="Back to the map" style="cursor:pointer"><span>Tequila Corrido</span><small>SALES ACADEMY</small></div>
-  <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button></div>
+  <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button><span class="navsep" aria-hidden="true"></span><button class="diffbtn brandbtn" id="brandBtn" type="button" title="What Tequila Corrido is: the promise, the lineup and the story"><span class="lg">Who is Tequila Corrido?</span><span class="sm">Brand</span></button><a class="diffbtn brandbtn" id="siteBtn" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer" title="The real Tequila Corrido website (opens in a new tab)">Website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a></div>
 </header>
 
 <main id="app" tabindex="-1"></main>
@@ -488,17 +662,22 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js"></script>
-<script src="scenarios.js"></script>
-<script src="progress.js"></script>
-<script src="criteria.js"></script>
-<script src="tone.js"></script>
-<script src="coach.js"></script>
-<script src="camera.js"></script>
-<script src="lessons.js"></script>
-<script src="dashboard.js"></script>
-<script src="onboarding.js"></script>
-<script src="mission.js"></script>
+<script src="sound.js?v=2026-10-24d"></script>
+<script src="scenarios.js?v=2026-10-24d"></script>
+<script src="progress.js?v=2026-10-24d"></script>
+<script src="criteria.js?v=2026-10-24d"></script>
+<script src="tone.js?v=2026-10-24d"></script>
+<script src="coach.js?v=2026-10-24d"></script>
+<script src="camera.js?v=2026-10-24d"></script>
+<script src="lessons.js?v=2026-10-24d"></script>
+<script src="dashboard.js?v=2026-10-24d"></script>
+<script src="onboarding.js?v=2026-10-24d"></script>
+<script src="tiers.js?v=2026-10-24d"></script>
+<script src="badges.js?v=2026-10-24d"></script>
+<script src="voices.js?v=2026-10-24d"></script>
+<script src="mission.js?v=2026-10-24d"></script>
+<script src="boss.js?v=2026-10-24d"></script>
+<script src="manager.js?v=2026-10-24d"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -515,10 +694,28 @@ const D = () => DIFF[state.diff];
 // Typing or speaking takes longer than tapping an answer, so typed missions get longer timers.
 
 $("#yes").focus();
+const toast = msg => { let t = $("#toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); } t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3200); };
 // Move keyboard focus to the new screen whenever the view changes.
 new MutationObserver(() => { if (!app.contains(document.activeElement)) app.focus({ preventScroll: true }); }).observe(app, { childList: true });
-$("#yes").onclick = () => { $("#gate").classList.add("hidden"); startFlow(); };
+// Page 2 of the journey: age check, then sign in. Company sign-in is not live yet, so the options are "continue as guest" and an
+// email that is only saved on this device.
+const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
+$("#yes").onclick = () => {
+  $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>';
+  $("#signin").classList.remove("off"); ["#guest", "#email", "#sendlink"].forEach(x => { $(x).disabled = false; });
+  const p = state.profile || {};
+  if (p.email) { $("#email").value = p.email; $("#guest").textContent = "Continue as " + p.email; }
+  $("#guest").focus();
+};
 $("#no").onclick = () => $("#underMsg").classList.remove("hidden");
+$("#guest").onclick = () => { state.profile = { mode: "guest", email: (state.profile || {}).email || "" }; Progress.save(state); enterGame(); };
+$("#sendlink").onclick = () => {
+  const em = $("#email").value.trim();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { $("#emailnote").textContent = "That doesn't look like an email address. Try again, or continue as a guest."; $("#emailnote").classList.add("bad"); return; }
+  state.profile = { mode: "guest", email: em }; Progress.save(state); enterGame(); setTimeout(() => toast("Welcome! Company sign-in isn't live yet, so you're a guest. Your email is saved on this device only."), 300);
+};
+$("#email").onkeydown = e => { if (e.key === "Enter") $("#sendlink").click(); };
+$("#mgrLink").onclick = e => { e.preventDefault(); $("#gate").classList.add("hidden"); managerMode(); };
 
 // ---------- helpers ----------
 const clamp = v => Math.max(0, Math.min(100, v));
@@ -549,16 +746,18 @@ function startTimer(sec, onEnd) {
 // The timer waits while the rep is speaking into the mic.
 const pauseTimer = () => { if (tmrS && !tmrS.paused) { tmrS.paused = true; tmrS.at = Date.now(); } };
 const resumeTimer = () => { if (tmrS && tmrS.paused) { tmrS.t0 += Date.now() - tmrS.at; tmrS.paused = false; } };
-function stopAll() { stopTimer(); if (window.speechSynthesis) speechSynthesis.cancel(); }
+function stopAll() { stopTimer(); if (window.speechSynthesis) { Voices.halt(); speechSynthesis.cancel(); } }
 
 // ---------- difficulty dialog ----------
 // The popup before a stop. Lessons just start. Missions explain how they work and offer the camera coach, which is on by default.
 function openDiff(go, stop) {
   const dlg = $("#diffDlg"), lesson = !!(stop && stop.qs), L = MLEVEL[(stop && stop.level) || 2];
   dlg.onclick = e => { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); };   // click outside to close
+  const rw = !stop.practice && !stop.noReward && REWARDS[stop.id], got = rw && state.done[stop.id];
   const secure = window.isSecureContext, hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
   dlg.innerHTML = `<h2>${esc(stop.title)}</h2>
     <p class="note2">${esc(stop.sub)} · ${lesson ? "lesson" : stop.practice ? "practice round" : "Level " + stop.level + " · " + L.name}</p>
+    ${rw ? `<p class="unlockbox ${got ? "got" : ""}"><b>${got ? "✓ Already unlocked" : "🎁 Pass this to unlock"}:</b> ${rw.map(esc).join(", ")}</p>` : ""}
     ${lesson ? `<p>A quick brand quiz to learn the facts you'll use in the missions.</p>` : `
     <p>${stop.practice ? "A short mix of moments from different customers, picked to train one skill." : L.blurb}</p>
     <ul class="hirelist">
@@ -581,6 +780,8 @@ function openDiff(go, stop) {
 const closeCreator = () => { const d = $("#cdone"); if (d && !d.disabled) d.click(); else if ($("#cname")) $("#cname").focus(); };   // saves, since the name is required
 $("#charBtn").onclick = () => { if ($(".creator")) closeCreator(); else if ($(".map") || $(".dhead")) creator(home); };
 $("#dashBtn").onclick = () => ($(".dhead") ? home() : dashboard());
+// Click again to go back. In the middle of a mission it asks first, so answers aren't lost by accident.
+$("#brandBtn").onclick = () => { if ($(".explore")) return home(); if ($("#pc") && !confirm("Leave this mission? Your answers so far won't count.")) return; explorer(); };
 // tapping your level or XP in the footer opens the dashboard, but only from the map so a mission is never interrupted
 ["#ftLvl", "#ftXp"].forEach(id => { const el = $(id), go = () => { if ($(".map")) dashboard(); }; el.onclick = go; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } }; });
 const paintSound = () => { const b = $("#soundBtn"); b.innerHTML = Sound.on ? '🔊 <span>Sound on</span>' : '🔇 <span>Sound off</span>'; b.setAttribute("aria-pressed", String(Sound.on)); b.setAttribute("aria-label", Sound.on ? "Sound is on. Click to mute." : "Sound is off. Click to turn on."); };
@@ -614,7 +815,6 @@ function playPractice(skill) {
   if (document.body.classList.contains("onboarding")) return;
   openDiff(() => play(practiceScenario(skill)), { title: "Practice: " + skill, sub: "A few moments from different customers", practice: true, level: 2 });
 }
-const weakestSkill = () => { const w = Progress.skillAverages(state)[0]; return w ? w[0] : null; };
 
 // Every non-bottle product on ilovetequilacorrido.com: [category, name, shop handle, price, thumbnail]. Prices marked "from" rise with size.
 const SHOP = [
@@ -624,34 +824,36 @@ const SHOP = [
   ["Tees and tops", "In My Tequila Era Tee", "in-my-tequila-era-tee", "from $29.00", "unisex-classic-tee-charcoal-front-68c3a296d1ab2_300x.png"],
   ["Tees and tops", "Legacy Tee", "legacy-tee", "$34.00", "unisex-tri-blend-t-shirt-athletic-grey-triblend-front-6709aa94ccff0_300x.png"],
   ["Tees and tops", "Mas Tequila Thick Tee", "mas-tequila-thick-tee", "from $24.90", "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_300x.png"],
-  ["Tees and tops", "Mexico Es Chingón Tee", "mexico-es-chingon-tee", "from $34.00", "unisex-organic-ribbed-neck-t-shirt-khaki-back-68c8c06355e98_300x.png"],
+  ["Tees and tops", "Mexico Es Chingón Tee", "mexico-es-chingon-tee", "from $34.00", "unisex-organic-ribbed-neck-t-shirt-khaki-front-68c8c0635513f_300x.png"],
   ["Tees and tops", "Más Tequila Tee", "mas-tequila-tee", "from $25.00", "unisex-staple-t-shirt-heather-dust-front-695deb716782d_300x.png"],
   ["Tees and tops", "Pickleball Raglan", "pickleball-raglan", "$40.00", "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_300x.png"],
   ["Tees and tops", "Tequila Delivery 24/7 Oversized Tee", "unisex-oversized-t-shirt", "from $29.50", "unisex-oversized-garment-dyed-t-shirt-washed-charcoal-front-6a388f734581f_300x.png"],
-  ["Tees and tops", "Tequila Delivery Tee", "tequila-delivery-tee", "$24.50", "unisex-staple-t-shirt-heather-deep-teal-front-and-back-6a3895fe6dda5_300x.png"],
+  ["Tees and tops", "Tequila Delivery Tee", "tequila-delivery-tee", "$24.50", "unisex-staple-t-shirt-heather-deep-teal-front-6a3895fe6f6f0_300x.png"],
   ["Tees and tops", "Tequila Era Women’s Tee", "in-my-tequila-era-women-s-tee", "$29.00", "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_300x.png"],
   ["Tees and tops", "Tequila On My Mind Organic Tee", "tequila-on-my-mind-organic-tee", "$29.00", "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_300x.png"],
   ["Tees and tops", "Tequila On My Mind Tee", "tequila-on-my-mind-tee", "$34.00", "unisex-tri-blend-t-shirt-oatmeal-triblend-front-68c3ada5245e0_300x.png"],
   ["Tees and tops", "Tequila Smuggler Tee", "tequila-smuggler-tee-1", "from $39.00", "oversized-faded-t-shirt-faded-khaki-front-680b21aec055b_300x.png"],
-  ["Tees and tops", "Tequila Spirit Animal Tee", "tequila-is-my-spirit-animal-tee", "from $29.00", "unisex-classic-tee-white-front-and-back-68c3a5c38db7c_300x.png"],
+  ["Tees and tops", "Tequila Spirit Animal Tee", "tequila-is-my-spirit-animal-tee", "from $29.00", "unisex-classic-tee-white-front-68c3a5c38d353_300x.png"],
   ["Tees and tops", "Women’s Crop Top", "women-s-crop-top", "$31.00", "womens-crop-top-hazy-pink-front-6709a29a0e35c_300x.png"],
-  ["Tees and tops", "Worth the Shot Tee", "worth-the-shot-ringer-tee", "from $36.00", "unisex-ringer-t-shirt-white-black-back-68c3a3cc5b1d5_300x.png"],
+  ["Tees and tops", "Worth the Shot Tee", "worth-the-shot-ringer-tee", "from $36.00", "unisex-ringer-t-shirt-white-black-front-68c3a3cc5bc3d_300x.png"],
   ["Polos", "Corrido Sport Polo (Black or Navy)", "corrido-sport-polo", "from $49.00", "adidas-sport-polo-shirt-black-front-68c3b07fa1fa4_300x.png"],
   ["Polos", "Corrido Sport Polo (White)", "corrido-sport-polo-1", "from $49.00", "adidas-sport-polo-shirt-white-front-68c3b21363d43_300x.png"],
   ["Polos", "Corrido x adidas Space-Dyed Polo", "corrido-x-adidas-space-dyed-polo", "from $64.00", "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_300x.png"],
   ["Hoodies", "Crop Hoodie", "crop-hoodie", "$58.00", "womens-cropped-hoodie-military-green-front-6709b08357946_300x.png"],
-  ["Hoodies", "Tequila Delivery Hoodie", "tequila-delivery-hoodie", "from $61.00", "lane-seven-ls16001gd-i-urban-hoodie-garment-dyed-pigment-midnight-navy-back-6997f60b4444f_300x.png"],
+  ["Hoodies", "Tequila Delivery Hoodie", "tequila-delivery-hoodie", "from $61.00", "lane-seven-ls16001gd-i-urban-hoodie-garment-dyed-pigment-midnight-navy-front-6997f60b4561d_300x.png"],
   ["Hats", "Cuffed Beanie", "cuffed-beanie", "$28.00", "cuffed-beanie-dark-grey-front-6709b16b8be6a_300x.png"],
   ["Hats", "Drinking Corduroy Cap", "drinking-corduroy-cap", "$34.00", "vintage-corduroy-cap-brown-front-68dde58629ac6_300x.png"],
-  ["Hats", "Pickleball Trucker Cap", "pickleball-trucker-cap", "$29.00", "5-panel-trucker-cap-white-left-front-68c3b6d79fe76_300x.png"],
+  ["Hats", "Pickleball Trucker Cap", "pickleball-trucker-cap", "$29.00", "5-panel-trucker-cap-white-front-68c3b6d79ed4e_300x.png"],
   ["Hats", "Save Water Cap", "save-water-cap", "$29.00", "vintage-cap-navy-front-68c8c480a4e2e_300x.png"],
   ["Hats", "Tequila Rebel Snapback", "tequila-rebel-snapback", "$34.00", "classic-snapback-natural-black-front-680925a92255f_300x.png"],
   ["Hats", "Trucker Cap", "tequila-corrido-trucker-cap", "$35.00", "snapback-trucker-cap-charcoal-black-front-68c3b57080e74_300x.png"],
   ["Gear and accessories", "Corrido Denim Tote Bag", "denim-tote-bag", "$39.00", "organic-denim-tote-bag-denim-blue-front-6709a1834ea16_300x.png"],
   ["Gear and accessories", "Corrido Pickleball Paddle Set", "corrido-pickleball-paddle-set", "$59.00", "pickleball-paddle-_set_-wood-7.5-x-15.5-front-6998102d074e0_300x.png"],
-  ["Gear and accessories", "Not Water Travel Mug", "not-water-travel-mug", "from $29.50", "travel-mug-with-a-handle-white-25-oz-right-6a09155a10fd8_300x.png"],
+  ["Gear and accessories", "Not Water Travel Mug", "not-water-travel-mug", "from $29.50", "travel-mug-with-a-handle-white-25-oz-front-69b8f3c517f24_300x.png"],
 ];
 const SHOP_CATS = ["Tees and tops", "Polos", "Hoodies", "Hats", "Gear and accessories"];
+const SHOP_CHECKED = "24 Oct 2026";
+const SOLD_OUT = new Set(["denim-tote-bag"]);   // out of stock on the shop when it was checked
 
 // ---------- who is Tequila Corrido ----------
 // A read-only page for Ken's other goal: teach people who Corrido is. Only facts from the brand's own site.
@@ -680,19 +882,31 @@ function explorer() {
       <li><b>Stick to the brand's own words.</b> No health, hangover, organic or low-calorie claims.</li>
       <li><b>Never invent numbers.</b> Prices, margins and sales figures get confirmed in writing, not guessed.</li>
       <li><b>Respect the other brand.</b> Name one real difference and invite a taste.</li></ul></div>
-    <details class="card xmerch"><summary><h3>Merch</h3></summary><p>The shop sells more than the tees, caps and polos you can wear on your character. Every card opens the real product.</p>
-      ${SHOP_CATS.map(c => `<h4 class="xcat">${c}</h4><div class="xshop">${SHOP.filter(r => r[0] === c).map(([, n, h, pr, th]) => `<a class="xitem" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener">${th ? `<img src="${IMG}${th}" alt="" loading="lazy">` : ""}<b>${esc(n)}</b><span>${pr}</span></a>`).join("")}</div>`).join("")}
+    <details class="card xmerch"><summary><h3>Merch</h3><small>${SHOP.length} products</small></summary>
+      <p class="note2">What the real shop sells, as checked on ${SHOP_CHECKED}. Prices and stock change, so each one opens the live product page.</p>
+      <div class="xtabs" role="tablist">${["All", ...SHOP_CATS].map((c, i) => `<button type="button" role="tab" class="mtab" data-c="${c}" aria-selected="${i === 0}">${c === "Gear and accessories" ? "Gear" : c === "Tees and tops" ? "Tees" : c} <small>${i ? SHOP.filter(r => r[0] === c).length : SHOP.length}</small></button>`).join("")}</div>
+      <div class="xlist">${SHOP.map(([c, n, h, pr, th]) => `<a class="xrow" data-c="${c}" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><img src="${IMG}${th}" alt="" loading="lazy"><span class="xn">${esc(n)}${SOLD_OUT.has(h) ? " <em class=\"out\">Sold out</em>" : ""}</span><span class="xp">${pr}</span></a>`).join("")}</div>
       <p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></details>
     <p><button class="btn" id="xquiz" type="button">Test yourself with a lesson</button> <button class="btn alt" id="xmap" type="button">Back to the map</button></p></section>`;
   $("#xback").onclick = home; $("#xmap").onclick = home;
+  app.querySelectorAll(".xtabs .mtab").forEach(t => t.onclick = () => {
+    app.querySelectorAll(".xtabs .mtab").forEach(x => x.setAttribute("aria-selected", String(x === t)));
+    app.querySelectorAll(".xrow").forEach(r => { r.hidden = t.dataset.c !== "All" && r.dataset.c !== t.dataset.c; });
+  });
   $("#xquiz").onclick = () => { const l = LESSONS[0]; openDiff(() => quiz(l), l); };
 }
 
 // ---------- home / map ----------
+// Where the rep is on the six tiers, and which boss is next. Beating a boss is how you move up.
+function tierBar() {
+  const t = tierOf(), nb = nextBoss(), st = nb && ALL_STOPS().find(x => x.id === nb.id);
+  return `<div class="tierbar" aria-label="Your tier">
+    <div class="tierrow">${TIERS.map((n, i) => `<div class="tierdot ${i < t ? "done" : i === t ? "now" : ""}" title="Tier ${i}: ${n}"><b>${i}</b></div>`).join("<i class=\"tl\"></i>")}</div>
+    <p class="tiernow"><b>Tier ${t} · ${TIERS[t]}</b>${nb && st ? ` <span>Next boss: <b>${esc(st.title)}</b></span>` : ` <span>Season complete. You beat every boss.</span>`}</p></div>`;
+}
 // The knowledge check is required before the map opens. People who already have progress from before this rule are let through.
-// TEMPORARY: while the game is being tested, every stop is open and the knowledge check isn't required.
-// Set this to false to bring back the locked map and the required check.
-const UNLOCK_ALL = true;
+// While the game is being tested every stop is open and the knowledge check isn't required. The switch is in
+// Dashboard > Settings > Prototype tools (PROTO in tiers.js).
 const needsCheck = () => !state.pre && !(state.history && state.history.length > 0);
 
 function home() {
@@ -707,23 +921,23 @@ function home() {
     const c = state.done[nodes[i].id] ? "done" : "";
     roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>`;
   }
-  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck() && !UNLOCK_ALL;
+  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck() && !PROTO("unlockStops");
   nodes.forEach((n, i) => {
-    const done = state.done[n.id], open = UNLOCK_ALL || (!gated && (i === 0 || done || state.done[nodes[i - 1].id])), cur = !gated && n === nodes.find(x => !state.done[x.id]);
+    const done = state.done[n.id], open = PROTO("unlockStops") || (!gated && (i === 0 || done || state.done[nodes[i - 1].id])), cur = !gated && n === nodes.find(x => !state.done[x.id]);
     const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`;
     stops += `<div class="stop" style="${pos}">
-      <button class="node ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
+      <button class="node ${BOSS_BY[n.id] ? "boss" : ""} ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
         ${cur ? '<span class="start">START</span>' : ""}${done ? "✓" : open ? n.icon : "🔒"}
         ${done ? `<span class="stars">${"★".repeat(state.stars[n.id])}${"☆".repeat(3 - state.stars[n.id])}</span>` : ""}
-      </button><div class="lab">${n.title}<small>${open ? `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}` : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
+      </button><div class="lab">${BOSS_BY[n.id] ? `<span class="bosstag">Boss · Tier ${BOSS_BY[n.id].tier}</span>` : ""}${n.title}<small>${open ? (BOSS_BY[n.id] ? `Beat it to become ${aTier(Math.min(5, BOSS_BY[n.id].tier + 1))}` : `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}`) : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
   app.innerHTML = `<section class="view">
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
-    <div class="maplinks"><button class="btn alt" id="goexplore" type="button">📖 Who is Tequila Corrido?</button><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a>${!gated && weakestSkill() ? `<button class="btn alt" id="gopractice" type="button">🎯 Practice: ${esc(weakestSkill())}</button>` : ""}${!gated && (state.mistakes || []).length ? `<button class="btn alt" id="goreview" type="button">📝 Review ${(state.mistakes || []).length} missed</button>` : ""}</div>
+    ${tierBar()}
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${stops}</div></section>`;
-  const launch = st => openDiff(() => (st.qs ? quiz(st) : play(st)), st);
+  const launch = st => (BOSS_BY[st.id] ? bossIntro(st) : openDiff(() => (st.qs ? quiz(st) : play(st)), st));
   app.querySelectorAll(".node").forEach(b => b.onclick = () => {
     if (b.getAttribute("aria-disabled")) {   // locked: say why instead of doing nothing
       const m = $("#lockmsg"); m.textContent = gated ? "Locked. Take the knowledge check above first to open the map." : `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`; m.classList.remove("hidden"); return;
@@ -732,9 +946,6 @@ function home() {
   });
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
-  $("#goexplore").onclick = explorer;
-  if ($("#gopractice")) $("#gopractice").onclick = () => playPractice(weakestSkill());
-  if ($("#goreview")) $("#goreview").onclick = () => dashboard("review");
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------
@@ -874,8 +1085,7 @@ function person(o) {
     ${o.glasses || ""}`;
 }
 const MARCO_LOOK = {
-  id: "m", skin: "#c58f64", hair: "#231710",
-  arms: '<g stroke-linecap="round" fill="none"><path d="M13 112L9 130M107 112L111 130" stroke="#3c4650" stroke-width="16"/><path d="M9 130L30 128M111 130L90 128" stroke="#0003" stroke-width="12.6"/><path d="M9 130L30 128M111 130L90 128" stroke="#c58f64" stroke-width="11"/></g>' + hangHand(31, 126, 1, "#c58f64", .6) + hangHand(89, 126, -1, "#c58f64", .6) + '<path d="M76 128L100 125L102 137L78 140Z" fill="#f2ebe0"/><path d="M78 133L101 130" stroke="#c9503a" stroke-width="2"/>',
+  id: "m", skin: "#c58f64", hair: "#231710", my: 80, lip: "#6b3228",   // the mouth sits over the beard; without these it was drawn above his head
   front: '<path d="M42 118H78L86 200H34Z" fill="#23201e"/><path d="M47 104L43 120M73 104L77 120" stroke="#23201e" stroke-width="5" stroke-linecap="round"/>' +
          '<path d="M82 104L102 120L94 138L76 120Z" fill="#f2ebe0"/><path d="M86 112L96 124" stroke="#c9503a" stroke-width="3"/>',
   hairFront: '<path d="M30 54C25 24 44 9 62 10C82 11 95 28 90 54C89 44 85 34 79 30C66 38 46 36 36 29C32 35 30 44 30 54Z" fill="#231710"/><path d="M44 17C54 13 66 13 76 18" stroke="#4a3426" stroke-width="2" fill="none" stroke-linecap="round"/>',
@@ -965,18 +1175,18 @@ const HAIRS = {
 const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
 // bbox = [left, top, right, bottom] of the product inside its image (0 to 1). W = width on the character.
 const OUTFITS = {
-  "Mas Tequila Tee": { g: "u", price: "$24.90", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
-  "In My Tequila Era Tee": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
+  "Mas Tequila Tee (White)": { g: "u", price: "$24.90", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
+  "In My Tequila Era Tee (Charcoal)": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
     imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2" },
   "Tequila On My Mind Tee": { g: "u", price: "$29.00", base: "#d8cdb4", Wk: .97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_600x.png?v=1778981479", bbox: [.075, .037, .918, .96] },
   "Corrido x adidas Polo": { g: "u", price: "$64.00", base: "#363635", Wk: 1, hem: 208, polo: true, v: true, bbox: [0, 0, 1, 1],
     logo: { img: IMG + "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_600x.png?v=1767764185", box: [.556, .238, .652, .292], dim: .72 } },
   "D.A.R.E. Oversized Tee": { g: "u", price: "$27.90", base: "#2c2c2a", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-washed-black-front-6a389845e4b64_600x.png", bbox: [0.075, 0.033, 0.925, 0.967] },
-  "Tequila Delivery 24/7 Oversized Tee": { g: "u", price: "$29.50", base: "#734449", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-washed-maroon-front-6a388f734527e_600x.png", bbox: [0.017, 0.068, 0.985, 0.925] },
-  "Corrido Classic Tee": { g: "u", price: "$19.00", base: "#4d1127", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-maroon-front-680fb818a608d_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)": { g: "u", price: "$29.50", base: "#734449", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-washed-maroon-front-6a388f734527e_600x.png", bbox: [0.017, 0.068, 0.985, 0.925] },
+  "Corrido Classic Tee (Maroon)": { g: "u", price: "$19.00", base: "#4d1127", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-maroon-front-680fb818a608d_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
   "Más Tequila Tee": { g: "u", price: "$25.00", base: "#e5ddd2", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-dust-front-695deb716782d_600x.png", bbox: [0.048, 0.028, 0.952, 0.972] },
   "Mexico Es Chingón Tee": { g: "u", price: "$34.00", base: "#5c5a43", Wk: 0.97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-t-shirt-khaki-front-68c8c0635513f_600x.png", bbox: [0.075, 0.037, 0.92, 0.962] },
-  "Corrido Logo Tee": { g: "u", price: "$24.00", base: "#2e333f", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-navy-front-68c3a7b7c3e1e_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
+  "Corrido Logo Tee (Heather Navy)": { g: "u", price: "$24.00", base: "#2e333f", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-navy-front-68c3a7b7c3e1e_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
   "Worth the Shot Tee": { g: "u", price: "$36.00", base: "#f4f4f4", Wk: 1.06, hem: 208, img: IMG + "unisex-ringer-t-shirt-white-black-front-68c3a3cc5bc3d_600x.png", bbox: [0.068, 0.033, 0.932, 0.967] },
   "Tequila Smuggler Tee": { g: "u", price: "$39.00", base: "#c8b394", Wk: 1.1, hem: 208, img: IMG + "oversized-faded-t-shirt-faded-khaki-front-680b21aec055b_600x.png", bbox: [0.04, 0.04, 0.958, 0.962] },
   "Tequila Delivery Tee": { g: "u", price: "$24.50", base: "#497182", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-heather-deep-teal-front-6a3895fe6f6f0_600x.png", bbox: [0.015, 0.058, 0.987, 0.96] },
@@ -988,23 +1198,74 @@ const OUTFITS = {
     logo: { img: IMG + "adidas-sport-polo-shirt-collegiate-navy-front-68c3b07fa308f_600x.png", box: [.553, .242, .678, .306] } },
   "Corrido Sport Polo (White)": { g: "u", price: "$49.00", base: "#e9e9e8", Wk: 1, hem: 208, polo: true, v: true, heather: .06, bbox: [0, 0, 1, 1],
     logo: { img: IMG + "adidas-sport-polo-shirt-white-front-68c3b21363d43_600x.png", box: [.553, .242, .678, .306], blend: "darken" } },
+  "Corrido Classic Tee (Military Green)": { g: "u", price: "$19.00", base: "#737962", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-military-green-front-680fb818b9baf_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Black)": { g: "u", price: "$19.00", base: "#212121", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-black-front-680fb818a821d_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Navy)": { g: "u", price: "$19.00", base: "#272e3a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-navy-front-680fb818a9840_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Dark Chocolate)": { g: "u", price: "$19.00", base: "#4d423d", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-dark-chocolate-front-680fb818ab906_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Dark Heather)": { g: "u", price: "$19.00", base: "#565656", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-dark-heather-front-680fb818afcfd_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Charcoal)": { g: "u", price: "$19.00", base: "#6b6b68", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-680fb818b4c6b_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Graphite Heather)": { g: "u", price: "$19.00", base: "#6d6d6d", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-graphite-heather-front-680fb818bfa8f_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Corrido Classic Tee (Brown Savana)": { g: "u", price: "$19.00", base: "#998671", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-brown-savana-front-680fb818c6a95_600x.png", bbox: [0.023, 0.042, 0.98, 0.96] },
+  "Tequila Delivery 24/7 Oversized Tee (Washed Charcoal)": { g: "u", price: "$29.50", base: "#555047", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-washed-charcoal-front-6a388f734581f_600x.png", bbox: [0.017, 0.068, 0.983, 0.925] },
+  "Tequila Delivery 24/7 Oversized Tee (Light Washed Denim)": { g: "u", price: "$29.50", base: "#c2c9cd", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-light-washed-denim-front-6a388f73433bb_600x.png", bbox: [0.017, 0.068, 0.983, 0.925] },
+  "Tequila Delivery 24/7 Oversized Tee (Vintage White)": { g: "u", price: "$29.50", base: "#f4ede0", Wk: 1.1, hem: 208, img: IMG + "unisex-oversized-garment-dyed-t-shirt-vintage-white-front-6a388f7346c57_600x.png", bbox: [0.017, 0.068, 0.983, 0.925] },
+  "Mas Tequila Tee (Ivory)": { g: "u", price: "$24.90", base: "#f2e8d0", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-ivory-front-6997fa20d6c2f_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
+  "Mas Tequila Tee (Khaki)": { g: "u", price: "$24.90", base: "#aea78b", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-khaki-front-6a371a9822297_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
+  "Mas Tequila Tee (Bay)": { g: "u", price: "$24.90", base: "#b3b8a7", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-bay-front-6a371a9823a39_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
+  "In My Tequila Era Tee (Military Green)": { g: "u", price: "$29.00", base: "#6c715c", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-military-green-front-68c3a296d2cd2_600x.png", bbox: [0.038, 0.04, 0.962, 0.958] },
+  "Corrido Logo Tee (Dark Grey Heather)": { g: "u", price: "$24.00", base: "#343434", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-dark-grey-heather-front-68c3a7b7c3abb_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
+  "Pickleball Raglan": { g: "u", price: "$40.00", base: "#455262", Wk: 1.06, hem: 208, img: IMG + "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_600x.png", bbox: [0.015, 0.045, 0.982, 0.96] },
   "Spirit Animal Tee": { g: "u", price: "$29.00", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-white-front-68c3a5c38d353_600x.png?v=1757653148", bbox: [.023, .042, .978, .958] },
 };
 // Where each product photo's sleeves end, as [left, right] = [sleeve centre x, sleeve bottom y, torso edge x] in fractions of the image.
 // Measured from the photos' transparent edges, so the arms line up with the sleeve openings.
 const SLEEVE = {
-  "Mas Tequila Tee": [[.188, .462, 0.222], [.809, .458, 0.775]], "In My Tequila Era Tee": [[.142, .437, 0.185], [.852, .432, 0.808]], "In My Tequila Era TeeF": [[.241, .448, 0.267], [.758, .448, 0.73]],
-  "Tequila On My Mind Tee": [[.227, .442, 0.24], [.768, .438, 0.757]], "D.A.R.E. Oversized Tee": [[.221, .415, 0.233], [.778, .415, 0.765]], "Tequila Delivery 24/7 Oversized Tee": [[.17, .447, 0.217], [.828, .447, 0.782]],
-  "Corrido Classic Tee": [[.142, .437, 0.185], [.852, .432, 0.808]], "Más Tequila Tee": [[.189, .418, 0.21], [.812, .418, 0.795]], "Mexico Es Chingón Tee": [[.227, .442, 0.24], [.768, .438, 0.757]],
-  "Corrido Logo Tee": [[.263, .46, 0.275], [.748, .47, 0.728]], "Worth the Shot Tee": [[.22, .473, 0.245], [.774, .473, 0.753]],
+  "Mas Tequila Tee (White)": [[.188, .462, 0.222], [.809, .458, 0.775]], "In My Tequila Era Tee (Charcoal)": [[.142, .437, 0.185], [.852, .432, 0.808]], "In My Tequila Era Tee (Charcoal)F": [[.241, .448, 0.267], [.758, .448, 0.73]],
+  "Tequila On My Mind Tee": [[.227, .442, 0.24], [.768, .438, 0.757]], "D.A.R.E. Oversized Tee": [[.221, .415, 0.233], [.778, .415, 0.765]], "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)": [[.17, .447, 0.217], [.828, .447, 0.782]],
+  "Corrido Classic Tee (Maroon)": [[.142, .437, 0.185], [.852, .432, 0.808]], "Más Tequila Tee": [[.189, .418, 0.21], [.812, .418, 0.795]], "Mexico Es Chingón Tee": [[.227, .442, 0.24], [.768, .438, 0.757]],
+  "Corrido Logo Tee (Heather Navy)": [[.263, .46, 0.275], [.748, .47, 0.728]], "Worth the Shot Tee": [[.22, .473, 0.245], [.774, .473, 0.753]],
   "Tequila Smuggler Tee": [[.237, .505, 0.26], [.762, .505, 0.738]], "Tequila Delivery Tee": [[.146, .455, 0.17], [.844, .457, 0.807]], "Legacy Tee": [[.22, .4, 0.232], [.777, .407, 0.767]],
+  "Corrido Classic Tee (Military Green)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Black)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Navy)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Dark Chocolate)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Dark Heather)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Charcoal)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Graphite Heather)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Corrido Classic Tee (Brown Savana)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
+  "Tequila Delivery 24/7 Oversized Tee (Washed Charcoal)": [[0.17, 0.447, 0.217], [0.828, 0.447, 0.782]],
+  "Tequila Delivery 24/7 Oversized Tee (Light Washed Denim)": [[0.17, 0.447, 0.217], [0.828, 0.447, 0.782]],
+  "Tequila Delivery 24/7 Oversized Tee (Vintage White)": [[0.17, 0.447, 0.217], [0.828, 0.447, 0.782]],
+  "Mas Tequila Tee (Ivory)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
+  "Mas Tequila Tee (Khaki)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
+  "Mas Tequila Tee (Bay)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
+  "In My Tequila Era Tee (Military Green)": [[0.182, 0.435, 0.208], [0.819, 0.437, 0.79]],
+  "Corrido Logo Tee (Dark Grey Heather)": [[0.263, 0.46, 0.275], [0.748, 0.47, 0.728]],
+  "Pickleball Raglan": [[0.147, 0.588, 0.245], [0.813, 0.585, 0.757]],
   "Tequila On My Mind Tri-Blend Tee": [[.251, .468, 0.263], [.742, .463, 0.727]], "Spirit Animal Tee": [[.182, .435, 0.208], [.819, .437, 0.79]],
 };
 // Product page on ilovetequilacorrido.com for each piece of merch, so a double-click in the creator opens the real item.
 const MERCH_URL = {
-  "Mas Tequila Tee": "mas-tequila-thick-tee", "In My Tequila Era Tee": "in-my-tequila-era-tee", "Tequila On My Mind Tee": "tequila-on-my-mind-organic-tee",
-  "Spirit Animal Tee": "tequila-is-my-spirit-animal-tee", "D.A.R.E. Oversized Tee": "d-a-r-e-oversized-tee", "Tequila Delivery 24/7 Oversized Tee": "unisex-oversized-t-shirt",
-  "Corrido Classic Tee": "corrido-classic-tee", "Más Tequila Tee": "mas-tequila-tee", "Mexico Es Chingón Tee": "mexico-es-chingon-tee", "Corrido Logo Tee": "tequila-corrido-logo-tee",
+  "Corrido Classic Tee (Military Green)": "corrido-classic-tee",
+  "Corrido Classic Tee (Black)": "corrido-classic-tee",
+  "Corrido Classic Tee (Navy)": "corrido-classic-tee",
+  "Corrido Classic Tee (Dark Chocolate)": "corrido-classic-tee",
+  "Corrido Classic Tee (Dark Heather)": "corrido-classic-tee",
+  "Corrido Classic Tee (Charcoal)": "corrido-classic-tee",
+  "Corrido Classic Tee (Graphite Heather)": "corrido-classic-tee",
+  "Corrido Classic Tee (Brown Savana)": "corrido-classic-tee",
+  "Tequila Delivery 24/7 Oversized Tee (Washed Charcoal)": "unisex-oversized-t-shirt",
+  "Tequila Delivery 24/7 Oversized Tee (Light Washed Denim)": "unisex-oversized-t-shirt",
+  "Tequila Delivery 24/7 Oversized Tee (Vintage White)": "unisex-oversized-t-shirt",
+  "Mas Tequila Tee (Ivory)": "mas-tequila-thick-tee",
+  "Mas Tequila Tee (Khaki)": "mas-tequila-thick-tee",
+  "Mas Tequila Tee (Bay)": "mas-tequila-thick-tee",
+  "In My Tequila Era Tee (Military Green)": "in-my-tequila-era-tee",
+  "Corrido Logo Tee (Dark Grey Heather)": "tequila-corrido-logo-tee",
+  "Pickleball Raglan": "pickleball-raglan",
+  "Mas Tequila Tee (White)": "mas-tequila-thick-tee", "In My Tequila Era Tee (Charcoal)": "in-my-tequila-era-tee", "Tequila On My Mind Tee": "tequila-on-my-mind-organic-tee",
+  "Spirit Animal Tee": "tequila-is-my-spirit-animal-tee", "D.A.R.E. Oversized Tee": "d-a-r-e-oversized-tee", "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)": "unisex-oversized-t-shirt",
+  "Corrido Classic Tee (Maroon)": "corrido-classic-tee", "Más Tequila Tee": "mas-tequila-tee", "Mexico Es Chingón Tee": "mexico-es-chingon-tee", "Corrido Logo Tee (Heather Navy)": "tequila-corrido-logo-tee",
   "Worth the Shot Tee": "worth-the-shot-ringer-tee", "Tequila Smuggler Tee": "tequila-smuggler-tee-1", "Tequila Delivery Tee": "tequila-delivery-tee", "Legacy Tee": "legacy-tee",
   "Tequila On My Mind Tri-Blend Tee": "tequila-on-my-mind-tee", "Corrido x adidas Polo": "corrido-x-adidas-space-dyed-polo", "Corrido Sport Polo (Black)": "corrido-sport-polo",
   "Corrido Sport Polo (Navy)": "corrido-sport-polo", "Corrido Sport Polo (White)": "corrido-sport-polo-1",
@@ -1044,17 +1305,23 @@ const GLASSES = (k, c) => {
   return "";
 };
 const GENDER_DEFAULTS = {
-  Male: { hairStyle: "Short", facial: "None", browW: 2, blush: false, earrings: false, lip: 0, outfit: "Mas Tequila Tee" },
-  Female: { hairStyle: "Long", facial: "None", browW: 1, blush: true, earrings: false, lip: 0, outfit: "Mas Tequila Tee" },
+  Male: { hairStyle: "Short", facial: "None", browW: 2, blush: false, earrings: false, lip: 0, outfit: "Spirit Animal Tee" },
+  Female: { hairStyle: "Long", facial: "None", browW: 1, blush: true, earrings: false, lip: 0, outfit: "Spirit Animal Tee" },
 };
-const DEFAULT_AVATAR = { name: "", gender: "Female", skin: 1, face: "Oval", hairStyle: "Long", hair: 1, eye: 0, brow: -1, browW: 1, facial: "None", glasses: "None", frame: 0, outfit: "Mas Tequila Tee", hat: "None", lip: 0, dimples: false, freckles: false, mole: false, earrings: false, blush: true };
+const DEFAULT_AVATAR = { name: "", gender: "Female", skin: 1, face: "Oval", hairStyle: "Long", hair: 1, eye: 0, brow: -1, browW: 1, facial: "None", glasses: "None", frame: 0, outfit: "Spirit Animal Tee", hat: "None", lip: 0, dimples: false, freckles: false, mole: false, earrings: false, blush: true };
 const outfitsFor = g => Object.keys(OUTFITS).filter(k => OUTFITS[k].g === "u" || OUTFITS[k].g === (g === "Female" ? "f" : "m"));
+// Shirts that now have colourway siblings were renamed. A saved avatar keeps working.
+const LEGACY_MERCH = { "Corrido Classic Tee": "Corrido Classic Tee (Maroon)", "Tequila Delivery 24/7 Oversized Tee": "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)", "Mas Tequila Tee": "Mas Tequila Tee (White)", "In My Tequila Era Tee": "In My Tequila Era Tee (Charcoal)", "Corrido Logo Tee": "Corrido Logo Tee (Heather Navy)" };
 function cleanAvatar(v) {
   const A = { ...DEFAULT_AVATAR, ...v };
+  if (LEGACY_MERCH[A.outfit]) A.outfit = LEGACY_MERCH[A.outfit];
   if (!GENDER_DEFAULTS[A.gender]) A.gender = "Female";
   if (!HAIR_BY[A.gender].includes(A.hairStyle)) A.hairStyle = GENDER_DEFAULTS[A.gender].hairStyle;
   if (!outfitsFor(A.gender).includes(A.outfit)) A.outfit = GENDER_DEFAULTS[A.gender].outfit;
   if (A.hat !== "None" && !HATS[A.hat]) A.hat = "None";
+  // merch has to be earned: a piece you haven't unlocked yet falls back to the starter shirt or no hat
+  if (!merchUnlocked(A.outfit)) A.outfit = STARTER_MERCH[0];
+  if (A.hat !== "None" && !merchUnlocked(A.hat)) A.hat = "None";
   if (A.gender === "Female") A.facial = "None";
   A.frame = 0;   // frame color is no longer a choice
   return A;
@@ -1091,6 +1358,8 @@ function repLook() {
 // ---------- character creator ----------
 // Options depend on the chosen gender. Corrido merch supplies the shirts and hats.
 const swatchCol = (g, v) => (g.match ? (v === -1 ? "" : HAIRC[v]) : v);
+// What you can wear comes first, so the locked pieces never push your options down the page.
+const unlockedFirst = list => [...list.filter(merchUnlocked), ...list.filter(n => !merchUnlocked(n))];
 function groupsFor(A) {
   const F = A.gender === "Female";
   return [
@@ -1104,18 +1373,41 @@ function groupsFor(A) {
     { k: "browW", label: "Eyebrow thickness", chips: ["Thin", "Normal", "Bold"], idx: true },
     ...(F ? [{ k: "lip", label: "Lip color", sw: LIPC }] : [{ k: "facial", label: "Facial hair", chips: ["None", "Stubble", "Mustache", "Goatee", "Beard"] }]),
     { k: "glasses", label: "Glasses", chips: ["None", "Round", "Square", "Sunglasses"] },
-    { k: "outfit", label: "T-shirt (Corrido merch)", chips: outfitsFor(A.gender).filter(n => !OUTFITS[n].polo) },
-    { k: "outfit", label: "Polo (Corrido merch)", chips: outfitsFor(A.gender).filter(n => OUTFITS[n].polo) },
-    { k: "hat", label: "Hat (Corrido merch)", chips: ["None", ...Object.keys(HATS)] },
+    { k: "outfit", merch: "tee", label: "T-shirts", chips: unlockedFirst(outfitsFor(A.gender).filter(n => !OUTFITS[n].polo)) },
+    { k: "outfit", merch: "polo", label: "Polos", chips: unlockedFirst(outfitsFor(A.gender).filter(n => OUTFITS[n].polo)) },
+    { k: "hat", merch: "hat", label: "Hats", chips: ["None", ...unlockedFirst(Object.keys(HATS))] },
   ];
 }
 const togglesFor = A => [["dimples", "Dimples"], ["freckles", "Freckles"], ["mole", "Beauty mark"], ["blush", "Rosy cheeks"], ...(A.gender === "Female" ? [["earrings", "Earrings"]] : [])];
 
+// Merch is one tabbed grid of small photos (T-shirts, Polos, Hats) instead of a long list of buttons. Every piece is still there.
+const thumb = u => u.replace(/_\d+x\.png/, "_300x.png");
+// Polos are drawn in code (there is no flat photo to trim), so their tile is a small polo in the same colour.
+const poloIcon = c => `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 7L5 14l5 9 6-3v22h16V20l6 3 5-9-12-7-5 4h-6z" fill="${c}" stroke="#0005" stroke-width="1.4" stroke-linejoin="round"/><path d="M19 7l5 9 5-9M24 16v9" fill="none" stroke="#0006" stroke-width="1.4" stroke-linecap="round"/></svg>`;
 function creator(onDone) {
   const A = state.avatar;
-  const optsHtml = () => groupsFor(A).map(g => `<div class="grp"><h3>${g.label}</h3><div class="chips" data-g="${g.k}">${
+  let mtab = "tee";
+  const merchTile = c => {
+    if (c === "None") return `<button type="button" class="tile none" data-v="None" data-cap="No hat" aria-label="No hat"><span aria-hidden="true">✕</span><small>None</small></button>`;
+    const m = OUTFITS[c] || HATS[c], lock = !merchUnlocked(c), cap = `${c} · ${m.price}${lock ? " · " + merchHow(c) : ""}`;
+    return `<button type="button" class="tile ${lock ? "locked" : ""}" data-v="${esc(c)}" data-cap="${esc(cap)}" title="${esc(cap)}" ${lock ? 'aria-disabled="true"' : ""} aria-label="${esc(cap)}${lock ? ". Locked" : ""}">${m.img ? `<img src="${thumb(m.img)}" alt="" loading="lazy">` : poloIcon(m.base)}${lock ? '<i class="lk" aria-hidden="true">🔒</i>' : ""}</button>`;
+  };
+  const merchHtml = () => {
+    const gs = groupsFor(A).filter(g => g.merch);
+    return `<div class="grp mgrp"><h3>Corrido merch</h3>
+      <div class="mtabs" role="tablist">${gs.map(g => { const items = g.chips.filter(c => c !== "None"); return `<button type="button" role="tab" class="mtab" data-m="${g.merch}" aria-selected="${g.merch === mtab}">${g.label} <small>${items.filter(merchUnlocked).length}/${items.length}</small></button>`; }).join("")}</div>
+      <p class="mname" id="mname" aria-live="polite"></p>
+      ${gs.map(g => `<div class="chips tiles" data-g="${g.k}" data-m="${g.merch}" ${g.merch === mtab ? "" : "hidden"}>${g.chips.map(merchTile).join("")}</div>`).join("")}</div>`;
+  };
+  const capText = () => {
+    const polo = !!OUTFITS[A.outfit].polo;
+    if (mtab === "hat") return A.hat === "None" ? "No hat. Pick one to try it on." : `${A.hat} · ${HATS[A.hat].price}`;
+    return (mtab === "polo") === polo ? `${A.outfit} · ${OUTFITS[A.outfit].price}` : `Pick a ${mtab === "polo" ? "polo" : "T-shirt"} to swap out the ${polo ? "polo" : "shirt"}.`;
+  };
+  const optsHtml = () => groupsFor(A).filter(g => !g.merch).map(g => `<div class="grp"><h3>${g.label}</h3><div class="chips" data-g="${g.k}">${
     g.sw ? g.sw.map((v, i) => `<button type="button" class="sw ${g.match && v === -1 ? "match" : ""}" style="${swatchCol(g, v) ? `background:${swatchCol(g, v)}` : ""}" data-v="${g.match ? v : i}" aria-label="${g.label} ${i + 1}${v === -1 ? " (match hair)" : ""}" title="${v === -1 ? "Match hair" : ""}"></button>`).join("")
-    : g.chips.map((c, i) => `<button type="button" class="chip2" data-v="${g.idx ? i : c}">${c}${(OUTFITS[c] || HATS[c]) ? ` <small>${(OUTFITS[c] || HATS[c]).price}</small>` : ""}</button>`).join("")}</div></div>`).join("")
+    : g.chips.map((c, i) => `<button type="button" class="chip2" data-v="${g.idx ? i : c}">${c}</button>`).join("")}</div></div>`).join("")
+    + merchHtml()
     + `<div class="grp"><h3>Features</h3><div class="chips">${togglesFor(A).map(([k, l]) => `<button type="button" class="chip2 tg" data-t="${k}">${l}</button>`).join("")}</div></div>`;
   app.innerHTML = `<section class="view sheet creator">
     <h1>Create your rep</h1>
@@ -1139,11 +1431,13 @@ function creator(onDone) {
       box.querySelectorAll("[data-v]").forEach(b => b.setAttribute("aria-pressed", String(A[k]) === b.dataset.v));
     });
     app.querySelectorAll(".tg").forEach(b => b.setAttribute("aria-pressed", !!A[b.dataset.t]));
+    if ($("#mname")) $("#mname").textContent = capText();
   };
   const wire = () => {
     $("#copts").innerHTML = optsHtml();
     app.querySelectorAll(".chips[data-g] [data-v]").forEach(b => b.onclick = () => {
       const k = b.parentElement.dataset.g, cur = A[k];
+      if (b.getAttribute("aria-disabled")) { toast(`${b.dataset.v} is locked. ${merchHow(b.dataset.v)}.`); return; }
       const val = typeof cur === "number" ? Number(b.dataset.v) : b.dataset.v;
       if (k === "gender" && val !== A.gender) { A.gender = val; Object.assign(A, GENDER_DEFAULTS[val]); wire(); } else A[k] = val;
       paint();
@@ -1153,8 +1447,18 @@ function creator(onDone) {
     app.querySelectorAll(".chips[data-g=outfit] [data-v], .chips[data-g=hat] [data-v]").forEach(b => {
       const h = MERCH_URL[b.dataset.v];
       if (!h) return;
-      b.title = "Double-click to see it on the Tequila Corrido shop";
+      b.title = (b.title ? b.title + " · " : "") + "double-click to see it on the Tequila Corrido shop";
       b.ondblclick = () => window.open("https://ilovetequilacorrido.com/products/" + h, "_blank", "noopener");
+    });
+    app.querySelectorAll(".mtab").forEach(t => t.onclick = () => {
+      mtab = t.dataset.m;
+      app.querySelectorAll(".mtab").forEach(x => x.setAttribute("aria-selected", String(x === t)));
+      app.querySelectorAll(".tiles").forEach(x => { x.hidden = x.dataset.m !== mtab; });
+      paint();
+    });
+    app.querySelectorAll(".tile").forEach(t => {
+      const show = () => { $("#mname").textContent = t.dataset.cap; }, back = () => { $("#mname").textContent = capText(); };
+      t.onmouseenter = show; t.onfocus = show; t.onmouseleave = back; t.onblur = back;
     });
     paint();
   };
@@ -1163,7 +1467,7 @@ function creator(onDone) {
   $("#cname").onkeydown = e => { if (e.key === "Enter" && !$("#cdone").disabled) $("#cdone").click(); };
   $("#crand").onclick = () => {
     const pick = a => a[Math.floor(Math.random() * a.length)], idx = a => a.map((_, i) => i), keep = { name: A.name, gender: A.gender }, F = A.gender === "Female";
-    Object.assign(A, GENDER_DEFAULTS[A.gender], { skin: pick(idx(SKINS)), face: pick(Object.keys(FACES)), hairStyle: pick(HAIR_BY[A.gender]), hair: pick(idx(HAIRC)), eye: pick(idx(EYEC)), brow: -1, browW: pick([0, 1, 2]), facial: F ? "None" : pick(["None", "None", "Stubble", "Mustache", "Goatee", "Beard"]), glasses: pick(["None", "None", "Round", "Square", "Sunglasses"]), frame: 0, outfit: pick(outfitsFor(A.gender)), hat: pick(["None", ...Object.keys(HATS)]), lip: pick(idx(LIPC)), dimples: Math.random() < .4, freckles: Math.random() < .3, mole: Math.random() < .2, earrings: F && Math.random() < .4, blush: F ? Math.random() < .8 : Math.random() < .3 }, keep);
+    Object.assign(A, GENDER_DEFAULTS[A.gender], { skin: pick(idx(SKINS)), face: pick(Object.keys(FACES)), hairStyle: pick(HAIR_BY[A.gender]), hair: pick(idx(HAIRC)), eye: pick(idx(EYEC)), brow: -1, browW: pick([0, 1, 2]), facial: F ? "None" : pick(["None", "None", "Stubble", "Mustache", "Goatee", "Beard"]), glasses: pick(["None", "None", "Round", "Square", "Sunglasses"]), frame: 0, outfit: pick(outfitsFor(A.gender).filter(merchUnlocked)), hat: pick(["None", ...Object.keys(HATS).filter(merchUnlocked)]), lip: pick(idx(LIPC)), dimples: Math.random() < .4, freckles: Math.random() < .3, mole: Math.random() < .2, earrings: F && Math.random() < .4, blush: F ? Math.random() < .8 : Math.random() < .3 }, keep);
     wire();
   };
   $("#cdone").onclick = () => {
@@ -1186,8 +1490,28 @@ const CLOTHES = {
   cardigan: '<path d="M60 102L48 200H72Z" fill="#f2ebe0"/><path d="M60 104L52 200M60 104L68 200" stroke="#0003" stroke-width="2"/><circle cx="56" cy="140" r="1.6" fill="#0005"/><circle cx="56" cy="158" r="1.6" fill="#0005"/>',
   jacket: '<path d="M60 102L50 200H70Z" fill="#e9e2d2"/><path d="M60 104L60 200" stroke="#0003" stroke-width="1.5"/><path d="M50 108L44 130M70 108L76 130" stroke="#0004" stroke-width="3" stroke-linecap="round"/>',
 };
-// Arms resting on the counter, with the back of each hand on top.
-const restArms = (skin, sleeve) => `<g stroke-linecap="round" fill="none"><path d="M13 112L9 130M107 112L111 130" stroke="${sleeve}" stroke-width="16"/><path d="M9 130L30 128M111 130L90 128" stroke="#0003" stroke-width="12.6"/><path d="M9 130L30 128M111 130L90 128" stroke="${skin}" stroke-width="11"/></g>${hangHand(31, 126, 1, skin, .6)}${hangHand(89, 126, -1, skin, .6)}`;
+// A hand lying flat on the counter, seen from above and in front: wrist at (wx, wy), fingers pointing toward the middle
+// (d = +1 when they point right). Back of the hand, four fingers of different lengths, and a thumb on top.
+function restHand(wx, wy, d, skin) {
+  const edge = mixHex(skin, "#2b160c", .4), fingers = [[-3.9, 19.6], [-1.3, 20.8], [1.3, 19.4], [3.9, 16.4]];
+  const line = (w, col) => fingers.map(([y, len]) => `<path d="M11 ${y}L${len} ${y + (y < 0 ? -.3 : .3)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`).join("") + `<path d="M3 -4.6L9.6 -8.6" stroke="${col}" stroke-width="${w + .5}" stroke-linecap="round"/>`;
+  return `<g transform="translate(${wx} ${wy}) scale(${d * 1.1} 1.1) rotate(4)">
+    ${line(4.1, edge)}<path d="M0 -4.8C4 -6.2 9 -6 12 -5.4L12 5.6C9 6.2 4 6.2 0 4.8Z" fill="${edge}" transform="scale(1.06)"/>
+    <path d="M0 -4.8C4 -6.2 9 -6 12 -5.4L12 5.6C9 6.2 4 6.2 0 4.8Z" fill="${skin}"/>${line(2.8, skin)}
+    <path d="M5 -2.2L10.4 -2.6M5 .4L10.4 .2M5 2.8L10.4 3" stroke="#0000001a" stroke-width=".7" fill="none" stroke-linecap="round"/></g>`;
+}
+// Arms resting on the counter: a sleeve from the shoulder to the elbow, a sleeve along the forearm with a lighter cuff, and a hand
+// lying flat at the end of each one. s = +1 for the left of the picture.
+const restArms = (skin, sleeve) => [1, -1].map(s => {
+  const X = x => (s > 0 ? x : 120 - x), edge = mixHex(sleeve, "#000000", .38), cuff = mixHex(sleeve, "#ffffff", .8);
+  const sh = `${X(22)} 110`, el = `${X(15)} 134`, wr = `${X(31)} 137`;
+  return `<g stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M${sh}L${el}" stroke="${edge}" stroke-width="17.4"/><path d="M${el}L${wr}" stroke="${edge}" stroke-width="14.6"/>
+    <path d="M${sh}L${el}" stroke="${sleeve}" stroke-width="15.6"/><path d="M${el}L${wr}" stroke="${sleeve}" stroke-width="12.8"/>
+    <path d="M${X(28)} 136.7L${X(29.8)} 136.9" stroke="${edge}" stroke-width="13.6"/><path d="M${X(28)} 136.7L${X(29.8)} 136.9" stroke="${cuff}" stroke-width="12"/></g>` + restHand(X(30.6), 136.9, s, skin);
+}).join("");
+// Marco rests his right hand on a bar towel.
+MARCO_LOOK.arms = '<path d="M68 132L100 129L102 141L70 143Z" fill="#f2ebe0"/><path d="M70 137L101 134" stroke="#c9503a" stroke-width="2"/>' + restArms("#c58f64", "#3c4650");
 function custLook(sc) {
   if (sc.id === "marco") return MARCO_LOOK;
   const c = sc.cust.look, F = !sc.cust.male, h = HAIRS[c.hairStyle](c.hair, FACES.Oval);
@@ -1310,35 +1634,6 @@ function pickVoice(male, exclude) {
   for (const w of want) { const v = pool.find(x => new RegExp(w, "i").test(x.name)); if (v) return v; }
   return pool[0] || VOICES[0] || null;
 }
-function speak(text, who) {
-  const ms = Math.max(1400, text.length * 55);
-  return new Promise(res => {
-    const synth = window.speechSynthesis;
-    if (!voiceOn || !synth) return setTimeout(res, ms);
-    synth.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    const repMale = state.avatar.gender === "Male", custMale = state.sc ? state.sc.cust.male : true, repV = pickVoice(repMale);
-    const v = who === "rep" ? repV : pickVoice(custMale, custMale === repMale && repV ? repV.name : undefined);
-    if (v) u.voice = v;
-    u.rate = 0.98; u.pitch = 1; // natural defaults; extreme pitch is what sounds robotic
-    u.onend = res; u.onerror = res;
-    synth.speak(u);
-    setTimeout(res, ms + 5000);
-  });
-}
-async function talk(who, text) {
-  const el = $(who === "cust" ? "#pc" : "#pr");
-  if (!el) return;
-  const mouth = el.querySelector(".mouth"), base = mouth.getAttribute("ry");
-  el.classList.add("talking");
-  // small, natural open/close instead of a big stretch
-  const iv = setInterval(() => mouth.setAttribute("ry", [1.5, 3, 4.5, 2.5][Math.floor(Math.random() * 4)]), 140);
-  await speak(text, who);
-  clearInterval(iv);
-  mouth.setAttribute("ry", base);
-  el.classList.remove("talking");
-}
-
 function coachSummary(skills) {
   const rows = Object.entries(skills);
   if (rows.length < 2) return "";
@@ -1350,10 +1645,12 @@ function coachSummary(skills) {
 function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
   stopAll();
   state.xp += xp;
+  const newItems = stars > 0 && !L.practice && !state.done[L.id] ? (REWARDS[L.id] || []) : [];   // first pass of a lesson unlocks its merch
   if (stars > 0 && !L.practice) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
   const pct = Math.round(Object.values(skills).reduce((a, b) => a + b, 0) / (Object.keys(skills).length * 5) * 100);
   const { log, sc, ...meta } = extra;
   const earned = Progress.record(state, { id: L.id, title: L.title, diff: state.diff, mode: L.qs ? "choice" : state.mode, pct, stars, won: stars > 0, xp, skills, lesson: !!L.qs, ...meta }, TOTAL_STOPS());
+  syncBadges().forEach(k => { if (!earned.includes(k)) earned.push(k); });
   hud();
   Sound.stop(); Sound.sfx(stars ? "win" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
   const next = stars > 0 && ALL_STOPS()[ALL_STOPS().findIndex(x => x.id === L.id) + 1];
@@ -1368,6 +1665,7 @@ function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
     <p>${summary}</p>
     <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span><span class="rw">${pct}% score</span></div>
     ${earned.length ? `<div class="rewards">${earned.map(k => `<span class="rw badge-new">🏅 New badge: ${BADGES[k][0]}</span>`).join("")}</div>` : ""}
+    ${rewardChips(newItems)}
     <div class="card"><h3>Scorecard</h3>${Object.entries(skills).map(([k, v]) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v / 5 * 100}%"></i></div><b>${v}</b></div>`).join("")}</div>
     ${deliver}
     ${steps}
@@ -1376,6 +1674,7 @@ function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
     <p><button class="btn" id="cont">${next ? "Back to the map" : "Continue"}</button> ${stars === 0 ? '<button class="btn alt" id="retry">Try again</button>' : ""}</p>
   </section>`;
   $("#cont").onclick = home;
+  wireRewardChips();
   if ($("#cpy")) $("#cpy").onclick = () => { navigator.clipboard?.writeText(transcript).then(() => { $("#cpy").textContent = "Copied"; }).catch(() => {}); };
   if ($("#retry")) $("#retry").onclick = () => (L.qs ? quiz(L) : play(L));
 }
@@ -1388,10 +1687,10 @@ const FACTS = [
   "The name comes from the corrido, a traditional Mexican ballad.",
   "Tequila Corrido is for guests 21 and over only.",
 ];
-const ALL_STOPS = () => PATH.map(id => LESSONS.find(l => l.id === id) || SCENARIOS.find(m => m.id === id));
+const ALL_STOPS = () => PATH.map(id => LESSONS.find(l => l.id === id) || SCENARIOS.find(m => m.id === id) || EXTRA_STOPS[id]);
 const TOTAL_STOPS = () => ALL_STOPS().length;
 
-home();
+if (location.hash === "#manager") { $("#gate").classList.add("hidden"); managerMode(); } else home();
 </script>
 </body>
 </html>

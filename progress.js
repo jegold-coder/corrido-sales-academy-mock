@@ -22,7 +22,7 @@ const BADGES = {
 
 const Progress = {
   KEY: "csa_progress_v1",
-  blank: () => ({ xp: 0, done: {}, stars: {}, history: [], badges: [], lastDay: null, streak: 0, diff: "medium", mode: "choice", pre: null, post: null, team: {}, llmKey: "", tutorialSeen: false, mistakes: [], opener: {}, camPref: true, voiceOff: false }),
+  blank: () => ({ xp: 0, done: {}, stars: {}, history: [], badges: [], lastDay: null, streak: 0, diff: "medium", mode: "choice", pre: null, post: null, team: {}, llmKey: "", tutorialSeen: false, mistakes: [], opener: {}, camPref: true, voiceOff: false, proto: {}, bossTries: {}, profile: { mode: "", email: "" }, cohorts: [], nudged: {}, mgrName: "Manager" }),
   load() {
     try { return { ...Progress.blank(), ...JSON.parse(localStorage.getItem(Progress.KEY) || "{}") }; } catch { return Progress.blank(); }
   },

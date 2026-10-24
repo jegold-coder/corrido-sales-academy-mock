@@ -18,7 +18,7 @@ const TUT = [
       <ul class="tutlist"><li>📚 <b>Learn</b> the brand in quick lessons</li><li>🎤 <b>Practice</b> real sales conversations out loud</li><li>🎯 <b>Get scored</b> on what you said, out of 5</li></ul>` },
   { title: () => "Your map", icon: "🗺️", body: () => `
       <p>Follow the trail. Each stop unlocks when you pass the one before it. The glowing one is your next step.</p>
-      <ul class="tutlist"><li>🎶 <b>Lessons</b> are short brand quizzes</li><li>🍸 <b>Missions</b> are customer conversations. They start <b>easy</b> and get <b>harder</b> as you go</li><li>⭐ Earn up to three stars on each stop</li><li>📝 The map starts locked. A short <b>knowledge check</b> opens it (more on that at the end).</li></ul>` },
+      <ul class="tutlist"><li>🎶 <b>Lessons</b> are short brand quizzes</li><li>🍸 <b>Missions</b> are customer conversations. They start <b>easy</b> and get <b>harder</b> as you go</li><li>⭐ Earn up to three stars on each stop</li><li>🎁 <b>Beat a level to unlock real Corrido merch</b> for your character</li><li>⚔️ <b>Boss battles</b> end each tier. Win to move up from Trainee toward Seasoned Seller</li></ul>` },
   { title: () => "How a mission works", icon: "🎤", body: () => `
       <ol class="tutlist"><li>The customer says something and you get a <b>question</b>.</li><li><b>Record your answer out loud</b>, like a recorded interview. You can type it instead.</li><li>Your <b>avatar plays your answer back in your own voice</b>, and the <b>customer replies</b> to what you actually said.</li><li>Nothing is scored until the end. Then you get a <b>score out of 5</b> for every answer.</li></ol>` },
   { title: () => "How you're scored", icon: "📊", body: () => `
@@ -27,7 +27,7 @@ const TUT = [
       <p>The scorecard shows what you did right and what to improve, with a stronger answer to compare to.</p>
       <p>📷 The <b>camera coach</b> is optional but <b>highly recommended</b>. It scores your eye contact, posture and smile, and gives 25% more XP. Your browser will ask permission, and video never leaves your device.</p>` },
   { title: () => "Level up", icon: "🏅", body: () => `
-      <p>Earn XP, keep a daily streak and collect badges. Your <b>Dashboard</b> shows your skills and where to improve.</p>
+      <p>Earn XP, keep a daily streak and collect badges. Your <b>Dashboard</b> shows your tier, your skills and where to improve.</p>
       <p><b>Required next step:</b> you'll land on the map, where a short <b>knowledge check</b> (ten quick questions) is waiting. You have to finish it before the first stop opens. It sets your starting point, so you can see how much you learn along the way.</p>` },
 ];
 
