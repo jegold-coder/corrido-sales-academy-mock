@@ -107,8 +107,10 @@ function speechChunks(text, base, mood) {
   });
 }
 
-// Speak chunk after chunk. onWord(word) fires as each word starts (it drives the mouth). Resolves when everything is said.
-// Starting anything new, or calling Voices.halt(), ends the one in progress.
+// Speak chunk after chunk. onWord(word) fires as each word starts (it drives the mouth). Starting anything new, or calling
+// Voices.halt(), ends the one in progress. The promise gives { spoke, fellBack, issue }: spoke is false if no sound ever started.
+// Browsers are fussy about speech, so this is careful: it waits for the voice list to load, never calls speak() in the same
+// breath as cancel() (Chrome can drop the speech), and if a chosen voice stays silent it tries the browser's own default.
 const Voices = (() => {
   let token = 0, cache = null, cacheKey = "";
   const synth = () => (typeof window !== "undefined" ? window.speechSynthesis : null);
@@ -121,33 +123,57 @@ const Voices = (() => {
     cache = assignVoices(vs, SCENARIOS.map(s => ({ id: s.id, male: s.cust.male })), avoid); cacheKey = key;
     return cache;
   };
+  // Some browsers fill in their voice list a moment after the page loads. Wait for it, but not for long.
+  const ready = () => new Promise(res => {
+    const sy = synth(); if (!sy || sy.getVoices().length) return res();
+    let done = false; const fin = () => { if (done) return; done = true; res(); };
+    if (sy.addEventListener) sy.addEventListener("voiceschanged", fin, { once: true });
+    setTimeout(fin, 1500);
+  });
   return {
     profile: sc => VOICE_FOR[custId(sc)] || VOICE_DEFAULT,
     voice: sc => table().get(custId(sc)) || (typeof pickVoice === "function" ? pickVoice(sc.cust.male) : null),
     table,
+    count: () => all().filter(v => /^en/i.test(v.lang) && !VOICE_NOVELTY.test(v.name)).length,
     halt() { token++; },
     say(text, voice, o = {}) {
       const sy = synth(), mine = ++token;
       const chunks = speechChunks(prepareSpeech(text, o.mood || "flat", o.opener), { pitch: o.pitch || 1, rate: o.rate || 1, pause: o.pause }, o.mood || "flat");
-      if (!sy || !chunks.length) return Promise.resolve();
+      if (!sy || !chunks.length) return Promise.resolve({ spoke: false, fellBack: false, issue: sy ? "nothing to say" : "this browser can't speak" });
       return new Promise(res => {
-        let i = 0, over = false, safety = null;
-        const end = () => { if (over) return; over = true; clearTimeout(safety); res(); };
+        let i = 0, over = false, started = false, fell = false, issue = "", safety = null, watchdog = null, v = voice, cur = null;
+        const end = () => { if (over) return; over = true; clearTimeout(safety); clearTimeout(watchdog); res({ spoke: started, fellBack: fell, issue }); };
         const next = () => {
           if (over || mine !== token) return end();
           if (i >= chunks.length) return end();
-          const c = chunks[i++], u = new SpeechSynthesisUtterance(c.text);
-          if (voice) { u.voice = voice; u.lang = voice.lang; }
+          const c = chunks[i++], u = new SpeechSynthesisUtterance(c.text); cur = u;
+          if (v) { try { u.voice = v; u.lang = v.lang; } catch { v = null; } }
           u.rate = c.rate; u.pitch = c.pitch;
-          u.onboundary = e => { if (mine === token && o.onWord && (!e.name || e.name === "word")) o.onWord((c.text.slice(e.charIndex).match(/^\S+/) || [""])[0]); };
-          if (i === 1 && o.onStart) u.onstart = o.onStart;
-          u.onend = () => setTimeout(next, c.pause);
-          u.onerror = e => { if (e && /cancel|interrupt/i.test(e.error || "")) end(); else next(); };
+          u.onboundary = e => { if (u === cur && mine === token && o.onWord && (!e.name || e.name === "word")) o.onWord((c.text.slice(e.charIndex).match(/^\S+/) || [""])[0]); };
+          u.onstart = () => { if (u !== cur) return; started = true; clearTimeout(watchdog); if (i === 1 && o.onStart) o.onStart(); };
+          u.onend = () => { if (u === cur) setTimeout(next, c.pause); };
+          u.onerror = e => {
+            if (u !== cur) return;   // an utterance we already gave up on
+            const er = (e && e.error) || "";
+            if (/cancel|interrupt/i.test(er)) return end();
+            issue = er || "error"; if (/not-allowed/.test(er)) return end();
+            next();
+          };
+          if (i === 1 && !started) {   // the first line should start quickly; if it stays silent, try the browser's default voice once
+            clearTimeout(watchdog);
+            watchdog = setTimeout(() => {
+              if (started || over || mine !== token) return;
+              if (v && !fell) { fell = true; v = null; i = 0; cur = null; sy.cancel(); setTimeout(next, 200); } else { issue = issue || "no sound started"; end(); }
+            }, 3000);
+          }
           sy.speak(u);
         };
-        sy.cancel();
-        safety = setTimeout(end, Math.max(5000, chunks.reduce((n, c) => n + c.text.length * 140 + c.pause, 3000)));   // if the browser never says it finished
-        next();
+        const go = () => { try { sy.resume(); } catch { /* not paused */ } next(); };
+        safety = setTimeout(end, Math.max(9000, chunks.reduce((n, c) => n + c.text.length * 140 + c.pause, 6000)));   // if the browser never says it finished
+        ready().then(() => {
+          if (mine !== token) return end();
+          if (sy.speaking || sy.pending) { sy.cancel(); setTimeout(go, 120); } else go();   // cancel and speak a beat apart, not in the same instant
+        });
       });
     },
   };

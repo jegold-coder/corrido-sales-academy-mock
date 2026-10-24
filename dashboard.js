@@ -134,7 +134,8 @@ function dashSettings(el) {
       ${[["unlockStops", "Every stop is open (no need to beat the one before)"], ["unlockMerch", "Every piece of merch is unlocked"], ["unlimitedTries", "Unlimited boss tries (otherwise 3 a day per boss)"]].map(([k, l]) => `<label class="protorow"><input type="checkbox" data-p="${k}" ${PROTO(k) ? "checked" : ""}> ${l}</label>`).join("")}
       <button class="btn alt" id="gomgr2" type="button">Open manager mode</button></div>
     <div class="card"><h3>Customer voices</h3><p class="note2">Every customer has their own voice and accent, picked from the voices installed in this browser, and speaks a little warmer or colder depending on how you did. Press play to hear each one.</p>
-      <div class="vlist">${SCENARIOS.map((sc, i) => { const v = Voices.voice(sc); return `<div class="vrow"><span><b>${esc(sc.cust.name)}</b> <small>${esc(sc.cust.role)}</small></span><span class="vname">${v ? esc(voiceLabel(v)) : "Browser default"}</span><button class="btn alt vplay" data-i="${i}" type="button" aria-label="Hear ${esc(sc.cust.name)}">▶ Play</button></div>`; }).join("")}</div>
+      <div class="vlist">${SCENARIOS.map((sc, i) => { const v = Voices.voice(sc); return `<div class="vrow"><span><b>${esc(sc.cust.name)}</b> <small>${esc(sc.cust.role)}</small></span><span class="vname">${v ? esc(voiceLabel(v)) : "Browser default"}</span><button class="btn alt vplay" data-i="${i}" type="button" aria-label="Hear ${esc(sc.cust.name)}">▶ Play</button><span class="vstat" role="status"></span></div>`; }).join("")}</div>
+      <p class="note2" id="vcount">${Voices.count() ? `Your browser lists ${Voices.count()} English voices.${Voices.count() < 6 ? " That is not many, so some customers may sound alike." : ""}` : "Your browser hasn't listed any voices yet. If this stays empty it can't speak, so try Chrome, Edge or Safari."}</p>
       <p class="note2">For the most human sound use Microsoft Edge (its free "Natural" voices) or, on a Mac, add a Premium voice in System Settings, Accessibility, Spoken Content, then reload this page.</p></div>
     <div class="card"><h3>Help</h3><button class="btn alt" id="replay" type="button">Replay the tutorial</button></div>
     <div class="card"><h3>Your data</h3><p class="note2">Everything is saved only in this browser, and nothing is uploaded. Clearing browser data erases it, so download a backup now and then.</p>
@@ -146,6 +147,16 @@ function dashSettings(el) {
   $("#snd").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); dashboard("settings"); };
   el.querySelectorAll("[data-p]").forEach(c => c.onchange = () => { state.proto = { ...(state.proto || {}), [c.dataset.p]: c.checked }; Progress.save(state); state.avatar = cleanAvatar(state.avatar); hud(); });
   $("#gomgr2").onclick = () => managerMode();
+  el.querySelectorAll(".vplay").forEach(b => b.onclick = async () => {
+    const sc = SCENARIOS[Number(b.dataset.i)], p = Voices.profile(sc), line = spoken(sc.steps[0].line).slice(0, 220), stat = b.parentElement.querySelector(".vstat");
+    el.querySelectorAll(".vstat").forEach(x => { x.textContent = ""; });
+    stat.textContent = "Playing…";
+    const r = await Voices.say(line, Voices.voice(sc), { pitch: p.pitch, rate: p.rate, mood: "flat", pause: p.rate > 1.05 ? .85 : 1 });
+    if (!stat.isConnected) return;
+    stat.textContent = !r.spoke ? "Nothing played. Check the sound isn't muted or turned down, then try again." : r.fellBack ? "That voice wouldn't start, so the browser's own voice was used." : "";
+  });
+  // some browsers list their voices a moment late: redraw this card once they arrive
+  if (!Voices.count() && window.speechSynthesis && speechSynthesis.addEventListener) speechSynthesis.addEventListener("voiceschanged", () => { if ($("#vcount")) dashboard("settings"); }, { once: true });
   $("#replay").onclick = () => tutorial(() => dashboard("settings"));
   $("#exp").onclick = exportProgress;
   $("#imp").onchange = e => { const f = e.target.files[0]; if (f) importProgress(f, ok => { $("#smsg").textContent = ok ? "Backup restored." : "That file isn't a Corrido Academy backup."; if (ok) dashboard("settings"); }); };

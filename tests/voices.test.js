@@ -45,4 +45,9 @@ ok("a cold customer sounds lower and slower than a warm one", cold[0].pitch < wa
 ok("a very long sentence is broken up", V.speechChunks("This is a long sentence, " + "with many small parts, ".repeat(12) + "and an end.", { pitch: 1, rate: 1 }, "flat").length >= 2);
 const hm = V.prepareSpeech("Hm. I was hoping for a simpler answer.", "cold", true);
 ok("a line that already starts with a filler gets no second one", hm === "Hm. I was hoping for a simpler answer.");
+
+// the Settings page wires its Play buttons (an over-eager clean-up once deleted the handler and every button went silent)
+const dash = fs.readFileSync(path.join(__dirname, "..", "dashboard.js"), "utf8");
+ok("every Play button in Settings has a click handler that speaks", /querySelectorAll\("\.vplay"\)\.forEach\(b => b\.onclick/.test(dash) && /Voices\.say\(/.test(dash.slice(dash.indexOf('.vplay"'))));
+ok("a failed Play says so instead of staying silent", /Nothing played/.test(dash));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);
