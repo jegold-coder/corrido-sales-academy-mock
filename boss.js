@@ -144,7 +144,7 @@ function tierUp(ctx) {
   const rewardBlock = items.length
     ? `<div class="rwcard"><small>UNLOCKED</small><b>${items.length > 2 ? `${esc(items[0])} +${items.length - 1} more` : items.map(esc).join(", ")}</b></div>` : "";
   const badgeBlock = (ctx.badges || []).length
-    ? `<div class="tu-badges">${ctx.badges.map(k => `<div class="tu-badge"><div class="bart">${badgeSVG(k, true)}</div><small>NEW BADGE</small><b>${esc(BADGES[k][0])}</b></div>`).join("")}</div>` : "";
+    ? `<div class="tu-badges">${ctx.badges.map(k => `<div class="tu-badge"><div class="bart">${badgeSVG(k, true)}</div><small>NEW BADGE${BADGE_ART[k].kind === "boss" ? " · TIER " + BADGE_ART[k].tier + " BOSS" : ""}</small><b>${esc(BADGES[k][0])}</b></div>`).join("")}</div>` : "";
   app.innerHTML = `<section class="view tierup" id="tierup">
     <p class="tu-kicker">BOSS BEATEN · ${esc(ctx.avgText)}</p>
     <h1 class="tu-title">${final ? "Season complete!" : "Tier up!"}</h1>

@@ -19,6 +19,9 @@ ok("badge names are all different", ev("new Set(Object.values(BADGES).map(b => b
 ok("every badge has art in a real metal", ev("Object.keys(BADGES).every(k => BADGE_ART[k] && METALS[BADGE_ART[k].metal] && BADGE_ART[k].ico || BADGE_ART[k] && BADGE_ART[k].kind === 'boss' && METALS[BADGE_ART[k].metal])"));
 ok("each boss badge shows that boss's face (a mission) or an emblem (the quiz)", ev("BOSSES.every(b => b.quiz ? !!BADGE_ART['boss-' + b.id].ico : !!SCENARIOS.find(s => s.id === b.id))"));
 ok("the boss metals get richer tier by tier", ev("BOSSES.map(b => BADGE_ART['boss-' + b.id].metal).join()") === "bronze,silver,gold,emerald,ruby,diamond");
+ok("each boss badge shows its boss's own tier, matching the map", ev("BOSSES.every(b => BADGE_ART['boss-' + b.id].plate === 'TIER ' + b.tier && BADGE_ART['boss-' + b.id].tier === b.tier)"));
+ok("the six boss badges cover tiers 0 to 5, one each", ev("BOSSES.map(b => BADGE_ART['boss-' + b.id].tier).join()") === "0,1,2,3,4,5");
+ok("each boss badge says which tier beating it reaches", ev("BOSSES.every(b => BADGE_ART['boss-' + b.id].tierTo === Math.min(5, b.tier + 1))"));
 ok("boss badges are never earned by finishing an ordinary mission", ev("Object.keys(BADGES).filter(k => k.startsWith('boss')).every(k => BADGES[k][2]({ won: true, id: 'quiet', stars: 3 }, { streak: 9, done: {} }, 16) === false)"));
 
 ok("awarding a badge saves it once", ev("awardBadges(['boss-priya']).length === 1 && awardBadges(['boss-priya']).length === 0 && state.badges.filter(k => k === 'boss-priya').length === 1"));

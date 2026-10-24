@@ -9,14 +9,15 @@ const METALS = {
   amethyst: ["#ead6ff", "#9a5fe0", "#41207f"], lock: ["#e5e0d8", "#b3aca2", "#7a7369"],
 };
 
-// One badge per boss. tier is the tier the boss moves you up to.
+// One badge per boss. The tier on the medal is the boss's own tier, the same number the map and the boss screen show: the Tier 3
+// boss gives the Tier 3 badge, and beating that boss is what moves you up to Tier 4.
 const BOSS_BADGES = {
-  brandbrain: { name: "Brain Trust", how: "Beat the Brand Brain quiz", ico: "🧠", metal: "bronze", plate: "TIER 1" },
-  priya: { name: "Shelf Starter", how: "Beat Priya at her bottle shop", metal: "silver", plate: "TIER 2" },
-  mia: { name: "Lounge Charmer", how: "Beat Mia at the hotel lounge", metal: "gold", plate: "TIER 3" },
-  buyer: { name: "Room Reader", how: "Beat Rafael by reading the room", metal: "emerald", plate: "TIER 4" },
-  dana: { name: "Margin Master", how: "Beat Dana at the warehouse", metal: "ruby", plate: "TIER 5" },
-  mean: { name: "Cool Under Fire", how: "Beat the Bad-Tempered Owner", metal: "diamond", plate: "FINAL BOSS" },
+  brandbrain: { name: "Brain Trust", how: "Beat the Brand Brain quiz", ico: "🧠", metal: "bronze" },
+  priya: { name: "Shelf Starter", how: "Beat Priya at her bottle shop", metal: "silver" },
+  mia: { name: "Lounge Charmer", how: "Beat Mia at the hotel lounge", metal: "gold" },
+  buyer: { name: "Room Reader", how: "Beat Rafael by reading the room", metal: "emerald" },
+  dana: { name: "Margin Master", how: "Beat Dana at the warehouse", metal: "ruby" },
+  mean: { name: "Cool Under Fire", how: "Beat the Bad-Tempered Owner", metal: "diamond" },
 };
 const BADGE_ART = {
   first: { ico: "🎤", metal: "bronze" }, closer: { ico: "🤝", metal: "silver" }, flawless: { ico: "⭐", metal: "gold" }, hard: { ico: "🔥", metal: "ruby" },
@@ -26,7 +27,8 @@ const BADGE_ART = {
 };
 Object.entries(BOSS_BADGES).forEach(([id, b]) => {
   BADGES["boss-" + id] = [b.name, b.how, () => false];   // awarded when the boss is beaten (awardBadges), never by a finished mission
-  BADGE_ART["boss-" + id] = { ...b, kind: "boss", boss: id, tierTo: Math.min(5, BOSSES.findIndex(x => x.id === id) + 1) };
+  const tier = BOSS_BY[id].tier;
+  BADGE_ART["boss-" + id] = { ...b, kind: "boss", boss: id, tier, plate: "TIER " + tier, tierTo: Math.min(5, tier + 1) };
 });
 BADGES.bossperfect = ["Flawless Victory", "Win a boss battle with 4.8 out of 5 or better (or every Brand Brain answer right)", () => false];
 BADGES.bossall = ["Season Complete", "Beat all six bosses", () => false];
@@ -83,7 +85,7 @@ function badgeSVG(key, on) {
 // One card for the Badges tab and one row of small medals for the Progress tab.
 function badgeCard(k) {
   const b = BADGES[k], on = state.badges.includes(k), a = BADGE_ART[k], big = a.kind !== "mission";
-  const sub = a.kind === "boss" ? `<span class="btier">${on ? "Reached" : "Beat it to reach"}: ${a.boss === "mean" ? "Season complete" : TIERS[a.tierTo]}</span>` : "";
+  const sub = a.kind === "boss" ? `<span class="btier">Tier ${a.tier} boss · ${TIERS[a.tier]}</span><span class="btier2">${on ? "Reached" : "Beat it to reach"}: ${a.boss === "mean" ? "Season complete" : "Tier " + a.tierTo + " · " + TIERS[a.tierTo]}</span>` : "";
   return `<div class="bcard ${big ? "big" : ""} ${on ? "on" : ""}" data-k="${k}"><div class="bart">${badgeSVG(k, on)}</div><b>${esc(b[0])}</b>${sub}<small>${esc(b[1])}</small></div>`;
 }
-const bossBadgeRow = () => `<div class="bossrow" aria-label="Boss badges">${BOSSES.map(b => `<span class="bmini ${state.badges.includes("boss-" + b.id) ? "on" : ""}" title="${esc(BADGES["boss-" + b.id][0])}">${badgeSVG("boss-" + b.id, state.badges.includes("boss-" + b.id))}</span>`).join("")}</div>`;
+const bossBadgeRow = () => `<div class="bossrow" aria-label="Boss badges">${BOSSES.map(b => `<span class="bmini ${state.badges.includes("boss-" + b.id) ? "on" : ""}" title="Tier ${b.tier} boss · ${esc(BADGES["boss-" + b.id][0])}">${badgeSVG("boss-" + b.id, state.badges.includes("boss-" + b.id))}</span>`).join("")}</div>`;

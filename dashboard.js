@@ -98,7 +98,7 @@ function dashBadges(el) {
   const keys = Object.keys(BADGES), have = keys.filter(k => state.badges.includes(k)).length;
   const special = keys.filter(k => BADGE_ART[k].kind !== "mission"), plain = keys.filter(k => BADGE_ART[k].kind === "mission");
   el.innerHTML = `<div class="badgehead"><b>${have} of ${keys.length} badges earned</b><div class="bar" aria-hidden="true"><i style="width:${Math.round(have / keys.length * 100)}%"></i></div></div>
-    <h3 class="bsec">Boss badges</h3><p class="note2">One for every boss, with that boss's face on the medal. The metal gets richer with every tier. Beat all six to finish the season.</p>
+    <h3 class="bsec">Boss badges</h3><p class="note2">One for every boss, with that boss's face on the medal. Each medal carries its boss's tier, the same number you see on the map and the boss screen, and the metal gets richer with every tier. Beat all six to finish the season.</p>
     <div class="badgegrid bossgrid">${special.map(badgeCard).join("")}</div>
     <h3 class="bsec">Mission badges</h3><div class="badgegrid">${plain.map(badgeCard).join("")}</div>`;
 }
