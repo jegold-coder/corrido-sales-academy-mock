@@ -14,17 +14,18 @@ function startFlow() {
 
 const TUT = [
   { title: () => `Welcome, ${esc(repName())}!`, icon: "🎶", body: () => `
-      <p>You'll practice selling <b>Tequila Corrido</b> to bar owners, shop owners, distributors and more, before you meet them for real.</p>
-      <ul class="tutlist"><li>📚 <b>Learn</b> the brand in quick lessons</li><li>💬 <b>Practice</b> real conversations with customers who each hide a worry</li><li>🎯 <b>Get coached</b> on every answer</li></ul>` },
+      <p>You'll practice selling <b>Tequila Corrido</b> to bar owners, shop owners, a confused gas-station clerk and a very bad-tempered owner, before you meet anyone for real.</p>
+      <ul class="tutlist"><li>📚 <b>Learn</b> the brand in quick lessons</li><li>🎤 <b>Practice</b> real sales conversations out loud</li><li>🎯 <b>Get scored</b> on what you said, out of 5</li></ul>` },
   { title: () => "Your map", icon: "🗺️", body: () => `
       <p>Follow the trail. Each stop unlocks when you pass the one before it. The glowing one is your next step.</p>
-      <ul class="tutlist"><li>🎶 <b>Lessons</b> are short brand quizzes</li><li>🍸 <b>Missions</b> are conversations with a customer</li><li>⭐ Earn up to three stars on each stop</li><li>📝 The map starts locked. A short <b>knowledge check</b> opens it (more on that at the end).</li></ul>` },
-  { title: () => "Inside a mission", icon: "🍸", demo: true, body: () => `
-      <p>The customer speaks, and you answer. Watch the meters, because good answers raise <b>Trust</b> and <b>Interest</b>. A wrong answer costs a heart ❤️.</p>
-      <div class="tutdemo" id="tutdemo"></div>` },
-  { title: () => "Make it yours", icon: "🎚️", body: () => `
-      <ul class="tutlist"><li><b>Easy:</b> hints, extra hearts, obvious wrong answers</li><li><b>Medium:</b> fair customer, believable wrong answers</li><li><b>Hard:</b> tough customer, no hints, a timer</li></ul>
-      <p>On missions you can <b>pick an answer</b> or <b>type or speak</b> your own, and a free coach checks it. You can also turn on the optional <b>camera coach</b> for eye contact and posture. Your browser will ask permission, and video never leaves your device.</p>` },
+      <ul class="tutlist"><li>🎶 <b>Lessons</b> are short brand quizzes</li><li>🍸 <b>Missions</b> are customer conversations. They start <b>easy</b> and get <b>harder</b> as you go</li><li>⭐ Earn up to three stars on each stop</li><li>📝 The map starts locked. A short <b>knowledge check</b> opens it (more on that at the end).</li></ul>` },
+  { title: () => "How a mission works", icon: "🎤", body: () => `
+      <ol class="tutlist"><li>The customer says something and you get a <b>question</b>.</li><li><b>Record your answer out loud</b>, like a recorded interview. You can type it instead.</li><li>Your <b>avatar plays your answer back in your own voice</b>, and the <b>customer replies</b> to what you actually said.</li><li>Nothing is scored until the end. Then you get a <b>score out of 5</b> for every answer.</li></ol>` },
+  { title: () => "How you're scored", icon: "📊", body: () => `
+      <p>Each answer is worth <b>5 points</b>: <b>4 for what you say</b> and <b>1 for tone</b>. You <b>earn points</b> for each key thing you mention and <b>lose points</b> for things you miss or get wrong, like hype, health claims or running down another brand.</p>
+      <p>🎭 <b>Tone depends on the situation.</b> A nervous shop owner needs a slow, warm voice. A rude bar owner needs you calm and steady, not snapping and not grovelling. Your pace, volume and the life in your voice count, along with your words.</p>
+      <p>The scorecard shows what you did right and what to improve, with a stronger answer to compare to.</p>
+      <p>📷 The <b>camera coach</b> is optional but <b>highly recommended</b>. It scores your eye contact, posture and smile, and gives 25% more XP. Your browser will ask permission, and video never leaves your device.</p>` },
   { title: () => "Level up", icon: "🏅", body: () => `
       <p>Earn XP, keep a daily streak and collect badges. Your <b>Dashboard</b> shows your skills and where to improve.</p>
       <p><b>Required next step:</b> you'll land on the map, where a short <b>knowledge check</b> (ten quick questions) is waiting. You have to finish it before the first stop opens. It sets your starting point, so you can see how much you learn along the way.</p>` },
@@ -42,21 +43,6 @@ function tutorial(onDone, i = 0) {
   $("#tback").onclick = () => tutorial(onDone, i - 1);
   $("#tnext").onclick = () => (last ? onDone() : tutorial(onDone, i + 1));
   $("#tnext").focus({ preventScroll: true });
-  if (t.demo) tutorialDemo();
-}
-
-// A tiny practice moment using Marco's opening, with no scoring.
-function tutorialDemo() {
-  const st = SCENARIOS[0].steps[0], box = $("#tutdemo");
-  const opts = shuffle([[st.R[0], "best", st.R[1]], [st.E[0][0], "bad", st.E[0][1]], [st.H[0][0], "bad", st.H[0][1]]]);
-  box.innerHTML = `<div class="bubble">${st.line}</div><div class="q">Try it: how do you open?</div>
-    <div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o[0]}</button>`).join("")}</div><div id="tutfb" aria-live="polite"></div>`;
-  box.querySelectorAll(".opt").forEach(b => b.onclick = () => {
-    const o = opts[b.dataset.n];
-    box.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (opts[x.dataset.n][1] === "best") x.classList.add("best"); });
-    b.classList.add(o[1]);
-    $("#tutfb").innerHTML = `<div class="feed ${o[1]}"><span>${o[1] === "best" ? "Great move! " : "Not quite. "}${o[2]} <i>(Just practice: nothing is scored here.)</i></span></div>`;
-  });
 }
 
 // Shown after the first knowledge check.

@@ -345,3 +345,94 @@ const CRITERIA = {
            [/(robbery|security|introduce him)/i, "Off topic, and it reopens a wound."],
            [/(discount|special bond)/i, "An unauthorized discount cheapens the trust."]] },
 };
+
+// ---------------- Added for the sales-script missions ----------------
+// need = things the answer should mention (equal shares of the 5 points). bad = mistakes that knock points off.
+Object.assign(CRITERIA, {
+  // ---- The Quiet Bar ----
+  "quiet:0": {
+    need: [[/(corrid[oae]|carrid[oa]|corred[oa])/i, "say who you're with: Tequila Corrido"],
+           [/(additive|three ingredients|no fake|brand|company|we make|we sell|i sell|we'?re a|we are a|premium|new tequila|a tequila)/i, "say what you sell"],
+           [/(minute|moment|chat|talk|quick|good time|bit of your|mind if|can i|could i|would you|if now)/i, "ask for a few minutes"]],
+    bad: [[/(you need|you have to|you must|today only|buy (a|some) (case|bottle))/i, "Pushy. Ask for time instead of telling her what to do."]] },
+  "quiet:1": {
+    need: [[/(crowd|guests?|customers?|regulars|who (comes|usually|'?s)|people|clientele|patrons)/i, "ask about her guests"],
+           [/(order|drink|pour|margarita|usually|favorite|popular|sell|buying)/i, "ask what they order"],
+           [/\?|tell me|walk me|what|who|how/i, "ask an open question"]],
+    bad: [[/(you should|you need to|you have to)\b.*(stock|switch|upgrade|carry|buy|order)/i, "Don't tell her what to do before you learn about her bar."],
+          [/(four (expressions|tequilas)|whole lineup|three ingredients)/i, "Ask about her guests before you pitch."]] },
+  "quiet:2": {
+    need: [[/(additive|three ingredients|3 ingredients|no fake)/i, "say additive-free, three ingredients or no fake flavors"],
+           [/(margarita|shots?|cocktail|your (guests|customers|crowd)|weeknight|clean)/i, "tie it to her margaritas or guests"],
+           [/(master distiller|female|first female|ballad|corrido (is|means|comes)|story|celebrity.?free)/i, "share the story behind it"]],
+    bad: [[/(just better|simply better|smoother than|the best)/i, "Vague. Give one true, specific difference."],
+          [/(celebrit(y|ies) (drink|love|endorse|own)|famous (people|actors|singers))/i, "Don't claim celebrity fans. Corrido is celebrity-free."]] },
+  "quiet:3": {
+    need: [[/(bottle|sample|tasting|taste|pour|try)/i, "offer a tasting or a bottle"],
+           [/(thursday|monday|tuesday|wednesday|friday|saturday|sunday|tomorrow|this week|next week|\d ?(am|pm)|afternoon|morning)/i, "give a specific day or time"],
+           [/(small|first order|start with|one (bottle|case)|trial|if you like)/i, "keep the first order small"]],
+    bad: [[/(six cases|a case|cases|large order|big order|full lineup|all four|order today|opening order)/i, "Too big, too soon. Start with a tasting."],
+          [/(email you|send you|let me know|whenever|sometime|next month|no rush)/i, "Too vague. Name a day."]] },
+  // ---- The Gas Station ----
+  "gas:0": {
+    need: [[/(corrido|tequila)/i, "say you're with Tequila Corrido"],
+           [/(not the|i'?m not|isn'?t|not here to|don'?t deliver|not delivering|no,? i'?m)/i, "clear up who you aren't"],
+           [/(whoever|who (decides|orders|handles|buys)|the (owner|manager)|decision|the person)/i, "ask for the person who decides"]],
+    bad: [[/(just (give|sell|put)|take me to|where'?s the (owner|manager)|give me a spot)/i, "Wes can't decide that. Don't push him."],
+          [/(deliver|delivery)/i, "That isn't why you're here and it adds to the confusion."]] },
+  "gas:1": {
+    need: [[/(who (places|orders|decides|handles|buys)|which one|the (owner|manager)|owner or)/i, "ask who orders"],
+           [/(when|what time|what day|which day|best time|come back|stop by|swing by|in on)/i, "ask when they're in"],
+           [/(card|number|contact|leave my|leave you)/i, "leave your card"]],
+    bad: [[/(cell|home address|where does (he|she) live|personal number|his number|her number)/i, "Don't ask a clerk for personal details."],
+          [/(wait here|wait until|camp|however long)/i, "Waiting around makes it awkward. Leave a card and come back."],
+          [/(leave|drop off) (a|the|one) bottle/i, "Don't leave alcohol with staff."]] },
+  "gas:2": {
+    need: [[/(three ingredients|3 ingredients|no fake|nothing (added|extra)|just (agave|simple))/i, "explain it plainly: three ingredients, no fake flavors"],
+           [/(cheap|price|premium|pricey|cost|not the cheapest|more than)/i, "be honest that it isn't the cheapest"],
+           [/(gift|treat|special|occasion|celebrat|weekend|party|someone who)/i, "say who it's for"]],
+    bad: [[/(better than the (red|big)|that (brand|one) is (bad|worse|junk))/i, "Don't put the other brand down."],
+          [/(fancy word|just a word|marketing|basically the same|same as)/i, "That's dismissive and not accurate. Use the brand's plain words."]] },
+  "gas:3": {
+    need: [[/(can'?t|shouldn'?t|won'?t|not going to|rather not|don'?t leave|not leave|no bottle)/i, "politely decline to leave alcohol"],
+           [/(license|licence|owner|manager|confirm|rules|laws?|legal|check with)/i, "send the license question to the owner"],
+           [/(card|come back|bring|sample|tasting|when (he|she|the owner|they))/i, "offer a card or a tasting with the owner there"]],
+    bad: [[/(don'?t need (a )?(license|licence)|no (license|licence)|you'?re fine|nobody checks|no one checks)/i, "Never guess about licensing."],
+          [/(back room|don'?t tell|keep it quiet|sure,? i'?ll leave|here you go|take this bottle)/i, "Don't leave alcohol behind or hide it."]] },
+  "gas:4": {
+    need: [[/(thursday|noon|12)/i, "confirm Thursday at noon"],
+           [/(thank|thanks|appreciate)/i, "thank Wes"],
+           [/(card|price sheet|one.?page|info sheet|short|brief|quick)/i, "say what you'll bring and keep it short"]],
+    bad: [[/(sometime|whenever|maybe|probably|see what my schedule)/i, "Don't be vague about the day."]] },
+  // ---- The Bad-Tempered Owner ----
+  "mean:0": {
+    need: [[/(fair|understood|i'?ll be quick|quick|won'?t take long|respect your time|thirty seconds|30 seconds|got it)/i, "respect his time without grovelling"],
+           [/(corrido|tequila)/i, "say who you're with in one line"],
+           [/(guests?|customers?|crowd|game|ordering|orders|selling|moving|pour|your bar)/i, "ask about his bar"]],
+    bad: [[/(rude|jerk|attitude|calm down|relax|excuse me|how dare|that'?s not nice|your tone)/i, "Don't snap back or lecture him."],
+          [/(so sorry|i'?m sorry to bother|sorry to bother|if it'?s okay|please,? sir|i know you hate)/i, "Don't grovel. He'll walk all over you."]] },
+  "mean:1": {
+    need: [[/(makes sense|fair|i hear you|understand|good point|you know your|got it)/i, "acknowledge his point"],
+           [/(birthday|celebrat|win|party|group|occasion|special|margarita|game day|sip|round)/i, "name a moment where tequila fits"],
+           [/\?|(what|when|how often|which)/i, "ask a question about his guests"]],
+    bad: [[/(you'?re wrong|that'?s wrong|you (just )?don'?t understand|you'?re missing out|tequila (outsells|is better)|better than whiskey)/i, "Don't argue with him about his crowd."]] },
+  "mean:2": {
+    need: [[/(understand|fair|i hear you|makes sense|premium|sticker)/i, "acknowledge the price concern"],
+           [/(additive|three ingredients|no fake|44\.99|\$\d)/i, "give honest value: the real price and what it is"],
+           [/(per.?pour|math|numbers|in writing|wholesale|confirm|work out)/i, "offer per-pour numbers in writing"]],
+    bad: [[/(discount|cheaper|lower the price|cut it|half|deal for you|special price)/i, "Don't offer a discount you can't back up."],
+          [/(worth every penny|you get what you pay for|everyone pays|steal)/i, "That's hype. Give him numbers he can check."]] },
+  "mean:3": {
+    need: [[/(you (told|said|mentioned)|beer|whiskey|game night|birthday|wings)/i, "repeat back something he told you"],
+           [/(one bottle|a bottle|small|start|test|try|pilot|trial)/i, "propose one small test"],
+           [/(see if it|if it (doesn'?t|sits|moves)|see how|your call|you decide|take it back|nothing for)/i, "let results decide, and keep it limited"]],
+    bad: [[/(great bar|best bar|love your bar|amazing (bar|place)|awesome (bar|place)|great guy)/i, "Flattery is the opposite of proof."],
+          [/(full lineup|all four|whole lineup|every bottle)/i, "A big ask that ignores what he told you."]] },
+  "mean:4": {
+    need: [[/(thursday|monday|tuesday|wednesday|friday|saturday|sunday|tomorrow|before open|\d ?(am|pm))/i, "give a specific day and time"],
+           [/(ten minutes|10 minutes|quick|short|brief|five minutes|5 minutes)/i, "keep it short"],
+           [/(thank|thanks|appreciate)/i, "thank him without grovelling"]],
+    bad: [[/(whenever|sometime|maybe|probably|any day)/i, "Don't be vague with him."],
+          [/(so sorry|sorry for the trouble|if you don'?t mind)/i, "Don't grovel."]] },
+});
+if (typeof module !== "undefined") module.exports = { CRITERIA };

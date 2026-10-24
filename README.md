@@ -29,20 +29,24 @@ What it loads from the internet:
 
 | Brief | In the mock |
 |---|---|
-| Personas with hidden objections | 10 missions, each customer has a hidden objection revealed on the scorecard |
-| Behavioral chat | Pick an answer, or type or speak your own (built-in free coach checks it) |
-| Live hints | Hint button, a live checklist on Easy, no help on Hard |
-| Post-session scorecard | Per-skill scores, step-by-step notes, transcript, hidden objection |
+| Personas with hidden objections | 13 missions, each customer hides a worry that is revealed on the scorecard |
+| Behavioral chat | Spoken sales-script conversations: the customer talks, you answer out loud (or type), your avatar plays your answer back in your own recorded voice with its mouth moving with the sound, and the customer replies to what you said |
+| Hints | On Level 1 and 2 missions you see what a strong answer should mention before you record. Later levels hide it |
+| Post-session scorecard | Every answer scored out of 5 at the end: 4 points for what you said (what you mentioned, what you missed, what knocked points off) and 1 for tone, with a stronger answer to compare to and a button to hear yourself again. Plus a delivery score from the camera |
 | Edge-case library | Pricing pushback (Marco, Dana), competitor comparison (Ray), compliance (Jess), gatekeeper (Sam), product matching (Mia), a store owner who says no (Tony), reading the buyer (Rosa), a store robbery (Ben) |
-| LLM grading | Free rule-based coach by default. Optional free Gemini judge for typed answers (see limits) |
-| Voice input | Speak button in typed mode (browser speech recognition) |
-| Body-language rating (stretch) | Optional camera coach: eye contact, posture, presence, smile. Video never leaves the device |
+| Grading | A free rule-based rubric (see `criteria.js`) scores each answer. No account, no cost. The old optional Gemini judge is still in `coach.js` but is not wired into the new flow |
+| Voice input | Record button in every mission (browser speech recognition, Chrome or Edge). Typing always works |
+| Body-language rating (stretch) | Camera coach is on by default and highly recommended: eye contact, posture, presence and smile, scored out of 5. Video never leaves the device |
 | Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 11 badges, daily streak, team board using share codes |
 | Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules |
 | Practice and review | A Review tab collects every wrong answer with a stronger one, and a Practice button replays one weak skill across different customers. Missions also open with a different line on replay |
 
-Difficulty changes how obvious the right answer is. Easy has one obvious wrong answer and one believable one. Medium and Hard have three believable wrong answers, each sounding professional with one fatal flaw, and all about the same length as the right answer so length is no clue. Hard also has no hints and a 30-second timer.
+Missions get harder as you go. Each has a level from 1 (Easy) to 5 (Expert) that sets the pass mark, how long an answer can be, how warm the customer starts and whether you see what a strong answer should mention. The ladder runs from an empty bar and a friendly new shop owner, through a gatekeeper, a hotel lounge, a buyer you have to read and a confused gas-station clerk, up to a price-focused distributor, a skeptical bar owner, a crisis, a compliance trap, a flat "no" and finally a bad-tempered bar owner. Brand lessons stay as short quizzes.
+
+How scoring works: each answer is worth 5 points. Four are for what you say, split equally across the things it should mention (for example "give a specific day"), with a point knocked off for each mistake (hype, a health claim, running down another brand, being vague). One point is for **tone**, judged for the situation: a nervous shop owner needs a slow, warm voice, a rude bar owner needs you calm and steady (no snapping, no grovelling), a distributor wants confidence. Tone looks at your words (warmth, pushiness, jargon, hedging) and, when you speak, your voice (pace, long pauses, volume and how flat or lively you sound). Scores are shown only at the end, like a recorded interview.
+
+Your voice is recorded on your device with the browser's MediaRecorder so your avatar can play it back and so the tone can be analysed. The recording stays in memory, is never saved or uploaded, and is gone when you leave the results page. If the browser can't record, or you typed, the avatar reads your words aloud and tone is judged from your words only. The pitch and pace checks were tested on synthetic audio, not on real voices, so treat those notes as guidance.
 
 Three missions come from advice from the team's contact Jay. **The Hard No** (Tony): when an owner says no, find a way in by learning who he sells to and what appeals to them. **Know Your Buyer** (Rosa): fit the pitch to the buyer and stay honest. **Trouble at the Store** (Ben): a robbery. The right answers teach staying calm, complying, calling 911, staying with the owner and checking in later. They do not teach physically stopping the robber, because confronting an armed person can get people hurt. Confirm with Jay what he meant by "try to stop it".
 
@@ -51,20 +55,22 @@ Three missions come from advice from the team's contact Jay. **The Hard No** (To
 | File | What it holds |
 |---|---|
 | `index.html` | the app: screens, characters, scenes, mission flow |
-| `scenarios.js` | mission scripts and answer options (edit here to change missions) |
-| `criteria.js` | what a good typed answer needs, per step (the draft rubric) |
-| `coach.js` | the free coach and the optional Gemini judge |
+| `scenarios.js` | mission scripts, levels and the three replies a customer can give (edit here to change missions) |
+| `mission.js` | the spoken mission flow: recording, avatar playback with lip movement, customer reply and the scorecard |
+| `criteria.js` | the rubric for each question: what to mention and what costs points (draft) |
+| `coach.js` | the scoring (`Coach.score`: 4 content points plus 1 tone point) and the old optional Gemini judge |
+| `tone.js` | how tone is judged from your words and your voice, for the situation |
 | `lessons.js` | brand lessons, question bank, knowledge check |
 | `progress.js` | saving, levels, badges, streak, team codes |
 | `dashboard.js` | the rep dashboard |
 | `camera.js` | optional camera coach |
-| `tests/` | `coach`, `balance` and `camera` tests |
+| `tests/` | `scoring`, `tone` and `camera` tests |
 
 ## Tests
 
 ```bash
-node tests/coach.test.js    # every scripted right answer passes, every wrong one fails, at all 3 difficulties
-node tests/balance.test.js  # right answer is not the longest option more than about half the time (Medium, Hard)
+node tests/scoring.test.js  # every model answer scores 4.2+ out of 5, every weak example scores clearly lower
+node tests/tone.test.js     # tone rules on words, and voice maths on synthetic audio
 node tests/camera.test.js   # face maths with fake landmarks
 ```
 

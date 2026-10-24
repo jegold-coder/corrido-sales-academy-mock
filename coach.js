@@ -31,6 +31,32 @@ const Coach = {
     return out;
   },
 
+  // HireVue-style score out of 5 for one spoken (or typed) answer: 4 points for what you said and 1 for how you said it.
+  // The 4 content points are split equally across the things the answer should mention, so each missing item costs its
+  // share. Each mistake (hype, a health claim, bashing another brand, being vague) knocks a point off. The 1 tone point
+  // depends on the situation (see Tone in tone.js and TONE_FOR in scenarios.js). Nothing is shown to the rep until the end.
+  // ctx = { tone: the mission's tone profile, voice: analysed recording or null }.
+  // Returns { score, content, tone, words, hits, misses, flags:[{msg, pts}], per }.
+  score(key, text, level = 3, ctx = {}) {
+    const K = CRITERIA[key], t = (text || "").trim(), words = t ? t.split(/\s+/).length : 0;
+    const out = { score: 0, content: 0, tone: { pts: 0, notes: [], name: "" }, words, hits: [], misses: [], flags: [], per: 0 };
+    if (!K) return out;
+    const n = K.need.length; out.per = n ? Math.round(4 / n * 10) / 10 : 0;
+    if (words < 4) { out.misses = K.need.map(x => x[1]); out.flags.push({ msg: "Too short to score. Give a full answer in a few sentences.", pts: 0 }); return out; }
+    K.need.forEach(([re, label]) => (re.test(t) ? out.hits : out.misses).push(label));
+    const mult = level >= 5 ? 1.25 : 1, pen = [];
+    Coach.GLOBAL.forEach(([re, msg]) => { if (re.test(t)) pen.push({ msg, pts: 1 }); });
+    if (Coach.HEALTH.test(t) && !Coach.REFUSAL.test(t)) pen.push({ msg: "Don't make health claims.", pts: 1.5 });
+    K.bad.forEach(([re, msg]) => { if (re.test(t)) pen.push({ msg, pts: 1 }); });
+    if (words > 160) pen.push({ msg: "Rambling. Keep each answer to the point.", pts: .5 });
+    const seen = new Set(); out.flags = pen.filter(f => !seen.has(f.msg) && seen.add(f.msg)).map(f => ({ msg: f.msg, pts: Math.round(f.pts * mult * 10) / 10 }));
+    const taken = Math.min(3, out.flags.reduce((a, f) => a + f.pts, 0));
+    out.content = Math.max(0, Math.round((4 * out.hits.length / n - taken) * 10) / 10);
+    out.tone = typeof Tone !== "undefined" ? Tone.score(t, ctx.tone, ctx.voice) : { pts: 1, notes: [], name: "" };
+    out.score = Math.max(0, Math.min(5, Math.round((out.content + out.tone.pts) * 10) / 10));
+    return out;
+  },
+
   // A short coaching sentence built from the result.
   feedback(res, step) {
     if (res.ok) return `Strong answer. ${res.matched.length ? "It covered: " + res.matched.join("; ") + "." : ""}`;

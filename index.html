@@ -417,6 +417,40 @@ details.xmerch>summary::after{content:"Show ▾";margin-left:auto;font-size:.8re
 details.xmerch[open]>summary::after{content:"Hide ▴"}
 @media(max-width:420px){.xbottle{grid-template-columns:84px 1fr}.xbottle img{width:84px;height:110px}}
 
+
+/* ===== v24: spoken, scored-at-the-end missions ===== */
+.hirelist{padding-left:1.1rem;margin:.3rem 0}.hirelist li{margin:.25rem 0}
+.camopt .recommend{color:var(--red);font-weight:700}
+.qhead{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}.lvlchip{background:var(--brown)}
+.qprompt{font:1.15rem Rye,serif;text-transform:uppercase;margin:.6rem 0 .3rem}
+.tipbox{background:#fff9ec;border-left:4px solid var(--gold);border-radius:6px;padding:.4rem .7rem;margin:.4rem 0;font-size:.9rem}
+.tipbox ul{margin:.2rem 0 0}
+.camnudge{background:#fff;border:2px dashed var(--teal);border-radius:10px;padding:.4rem .7rem;font-size:.9rem}
+.camnudge .btn{padding:.15rem .7rem;font-size:.8rem;margin-left:.4rem}
+.recpanel{display:grid;gap:.5rem;margin:.6rem 0}
+.rrow{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.rtimer{height:8px;background:#d8cdc0;border-radius:9px;overflow:hidden}.rtimer i{display:block;height:100%;width:0;background:var(--red);transition:width .25s linear}
+.btn.recbtn{background:var(--red);border-bottom-color:#7f2c1a;color:#fff}.btn.recbtn.on{animation:pulse 1.2s infinite}
+.rtime{font-weight:700;color:var(--brown);font-variant-numeric:tabular-nums}
+#ans{width:100%;border:2px solid #cfc4b8;border-radius:10px;padding:.6rem;font:inherit;resize:vertical}
+.bigscore{display:flex;align-items:baseline;justify-content:center;gap:.3rem;margin:.4rem 0}.bigscore b{font:3.2rem Rye,serif;font-weight:400}.bigscore span{font-size:1.2rem;color:#6e6458}
+.bigscore.hi b,.score.hi{color:var(--green)}.bigscore.mid b,.score.mid{color:#b9801a}.bigscore.lo b,.score.lo{color:var(--red)}
+.sechead{margin:1rem 0 .2rem}
+.acard{background:#fff;border:2px solid #e3d9c8;border-left-width:6px;border-radius:12px;padding:.7rem .9rem;margin:.6rem 0}
+.acard.hi{border-left-color:var(--green)}.acard.mid{border-left-color:var(--gold)}.acard.lo{border-left-color:var(--red)}
+.ahead{display:flex;justify-content:space-between;align-items:center;gap:.6rem}.score{font:700 1.1rem Arimo}
+.acard .aq{font-size:.88rem;color:#4d443a;margin:.4rem 0}.acard .aq small{color:var(--brown);font-weight:700}
+.acard ul{list-style:none;padding:0;margin:.3rem 0}.acard li{margin:.15rem 0;font-size:.92rem}
+.acard li.ok{color:#2d5f2d}.acard li.no{color:#8a2f2f}.acard .flags li{color:#8a5a00}
+.acard .said{background:#f6f1e8;border-radius:8px;padding:.5rem .7rem;font-style:italic}
+.acard .better{background:#eef6ee;border-radius:8px;padding:.4rem .7rem;margin:.4rem 0 0;font-size:.9rem}
+.card.nudge{border:2px dashed var(--teal)}
+.tipsl{margin:.3rem 0;padding-left:1.1rem}
+
+.tonecue{margin:.4rem 0 0;font-size:.88rem}.tonecue small{color:#6e6458}
+.split{display:flex;gap:1.2rem;flex-wrap:wrap;margin:.3rem 0;font-size:.9rem;color:#4d443a}
+.tonelist li.tonehead{font-weight:700;color:var(--brown)}.tonelist li.tonestats{color:#6e6458;font-size:.82rem}
+.playmine{padding:.2rem .8rem;font-size:.8rem;margin:.2rem 0}
 </style>
 </head>
 <body>
@@ -441,7 +475,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 
 <header class="top">
   <div class="logo" id="logo" role="button" tabindex="0" title="Back to the map" style="cursor:pointer"><span>Tequila Corrido</span><small>SALES ACADEMY</small></div>
-  <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button><button class="diffbtn" id="diffBtn" title="Change difficulty and answer style" aria-label="Change difficulty">Medium ▾</button></div>
+  <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button></div>
 </header>
 
 <main id="app" tabindex="-1"></main>
@@ -450,7 +484,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
   <span class="pill lvl clickable" id="ftLvl" title="Open your dashboard" role="button" tabindex="0"><span id="stLvl">Lv 1</span><span class="xpbar" aria-hidden="true"><i id="xpFill"></i></span></span>
   <span class="pill clickable" id="ftXp" title="Open your dashboard" role="button" tabindex="0"><i aria-hidden="true">⭐</i><b id="stXp">0</b><em>XP</em></span>
   <button class="pill soundpill soundfab" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound is on. Click to mute." title="Turn sound on or off">🔊</button>
-  <span class="pill" id="stHearts" title="Hearts left in this mission (not clickable)">❤️❤️❤️</span>
+  <span class="pill" id="stHearts" title="Hearts left in this lesson (not clickable)">❤️❤️❤️</span>
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
@@ -458,16 +492,19 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 <script src="scenarios.js"></script>
 <script src="progress.js"></script>
 <script src="criteria.js"></script>
+<script src="tone.js"></script>
 <script src="coach.js"></script>
 <script src="camera.js"></script>
 <script src="lessons.js"></script>
 <script src="dashboard.js"></script>
 <script src="onboarding.js"></script>
+<script src="mission.js"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
 const app = $("#app");
-let state = { hearts: 3, ...Progress.load() };   // saved progress: xp, done, stars, history, badges, streak, diff, mode
+let state = { hearts: 3, ...Progress.load() };
+state.cam = state.camPref !== false;   // the camera coach is on by default and the choice is remembered   // saved progress: xp, done, stars, history, badges, streak, diff, mode
 
 const DIFF = {
   easy:   { label: "Easy",   hearts: 5, hints: 99, win: 50, timer: 0,  meh: 0,  start: [50, 40, 40], xp: 1,   desc: "5 hearts, unlimited hints, a friendly customer, one obvious wrong answer." },
@@ -476,8 +513,6 @@ const DIFF = {
 };
 const D = () => DIFF[state.diff];
 // Typing or speaking takes longer than tapping an answer, so typed missions get longer timers.
-const TYPED_TIMER = { easy: 0, medium: 120, hard: 75 };
-const timerSecs = () => (state.mode === "type" ? TYPED_TIMER[state.diff] : D().timer);
 
 $("#yes").focus();
 // Move keyboard focus to the new screen whenever the view changes.
@@ -495,8 +530,7 @@ const hud = () => {
   { const lv = levelOf(state.xp), nx = LEVELS[lv + 1], lo = LEVELS[lv][1];
     $("#stLvl").innerHTML = `Lv ${lv + 1} <span class="lvname">${LEVELS[lv][0]}</span>`;
     $("#xpFill").style.width = (nx ? Math.round((state.xp - lo) / (nx[1] - lo) * 100) : 100) + "%"; }
-  $("#diffBtn").textContent = "Difficulty: " + D().label + " ▾";
-  $("#stHearts").textContent = "❤️".repeat(state.hearts) + "🖤".repeat(Math.max(0, D().hearts - state.hearts));
+    $("#stHearts").textContent = "❤️".repeat(state.hearts) + "🖤".repeat(Math.max(0, D().hearts - state.hearts));
 };
 let tmr = null, tmrS = null;
 const stopTimer = () => { clearInterval(tmr); tmr = null; tmrS = null; };
@@ -518,48 +552,31 @@ const resumeTimer = () => { if (tmrS && tmrS.paused) { tmrS.t0 += Date.now() - t
 function stopAll() { stopTimer(); if (window.speechSynthesis) speechSynthesis.cancel(); }
 
 // ---------- difficulty dialog ----------
+// The popup before a stop. Lessons just start. Missions explain how they work and offer the camera coach, which is on by default.
 function openDiff(go, stop) {
-  const dlg = $("#diffDlg"), lesson = !!(stop && stop.qs), settingsOnly = !go;
+  const dlg = $("#diffDlg"), lesson = !!(stop && stop.qs), L = MLEVEL[(stop && stop.level) || 2];
   dlg.onclick = e => { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); };   // click outside to close
   const secure = window.isSecureContext, hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
-  dlg.innerHTML = `<h2>${settingsOnly ? "Difficulty and answer style" : esc(stop.title)}</h2>
-    ${settingsOnly ? "" : `<p class="note2">${esc(stop.sub)} · ${lesson ? "lesson" : "mission"}</p>`}
-    ${settingsOnly ? "" : `<p class="sumline" id="sumline"></p>`}
-    ${settingsOnly ? "" : `<div class="dactions"><button class="btn" id="dstart" type="button">Start</button><button class="btn alt" id="dcancel" type="button">Cancel</button></div>`}
-    <details class="dcustom" id="dcustom" ${settingsOnly ? "open" : ""}><summary>${settingsOnly ? "Settings" : "Change difficulty or answer style"}</summary>
-    <h3 class="dh">Difficulty</h3><div class="dcards">${Object.entries(DIFF).map(([k, v]) =>
-    `<button type="button" class="dcard ${k === state.diff ? "on" : ""}" data-d="${k}" aria-pressed="${k === state.diff}"><b>${v.label}</b><span>${state.mode === "type" && !lesson ? v.descType : v.desc}</span><small>×${v.xp} XP</small></button>`).join("")}</div>
-    ${lesson ? `<p class="learn">This is a <b>lesson</b>, so it's multiple choice. Pick a <b>mission</b> (a customer conversation, like Marco's Bar) to type or speak your answers or use the camera coach.</p>` : `
-    <div class="grp"><h3 class="dh">Answer style</h3><div class="chips" id="modes">
-      <button type="button" class="chip2" data-m="choice">Pick an answer</button><button type="button" class="chip2" data-m="type">Type or speak</button></div>
-      <p class="note2" id="mnote"></p>
-      ${hasSR ? "" : '<p class="note2 warnnote">Voice input isn\'t available in this browser. Chrome or Edge have it. Typing still works.</p>'}</div>
-    <div class="grp"><label class="camopt"><input type="checkbox" id="camOn" ${state.cam ? "checked" : ""}> 📷 Camera coach (optional)</label>
-      <p class="note2 camnote ${state.cam ? "" : "hidden"}" id="camnote"><b>What happens:</b> your browser will ask to use the camera. Video stays on your device and is never recorded or uploaded. It rates eye contact, posture and smiling, and loads Google's free open-source face model.</p>
-      ${secure ? "" : '<p class="note2 warnnote">The camera and microphone only work on https or http://localhost. Open this from the local server address.</p>'}</div>`}
-    </details>
-    ${settingsOnly ? '<div class="dactions"><button class="btn" id="dcancel" type="button">Done</button></div>' : ""}`;
-  const sum = () => { const el = $("#sumline"); if (el) el.innerHTML = `<b>${DIFF[state.diff].label}</b> · ${lesson ? "Pick an answer" : state.mode === "type" ? "Type or speak" : "Pick an answer"}${!lesson && state.cam ? " · Camera on" : ""}`; };
-  const paintMode = () => { if (lesson) return; dlg.querySelectorAll("#modes .chip2").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.m === state.mode)));
-    $("#mnote").textContent = state.mode === "type" ? "Write (or say) your own answer. A free, built-in coach checks it against what a good answer needs. No account, no cost." : "Choose the best of a few answers. Quickest way to learn the moves."; };
-  if (!lesson) {
-    const paintDesc = () => dlg.querySelectorAll(".dcard").forEach(c => { c.querySelector("span").textContent = state.mode === "type" ? DIFF[c.dataset.d].descType : DIFF[c.dataset.d].desc; });
-    dlg.querySelectorAll("#modes .chip2").forEach(b => b.onclick = () => { state.mode = b.dataset.m; Progress.save(state); paintMode(); paintDesc(); sum(); });
-    paintMode();
-    $("#camOn").onchange = e => { state.cam = e.target.checked; $("#camnote").classList.toggle("hidden", !state.cam); sum(); };
-  }
-  // choosing a difficulty only selects it. Start begins the stop.
-  dlg.querySelectorAll(".dcard").forEach(b => b.onclick = () => {
-    state.diff = b.dataset.d; state.hearts = D().hearts; hud(); Progress.save(state);
-    dlg.querySelectorAll(".dcard").forEach(c => { c.classList.toggle("on", c === b); c.setAttribute("aria-pressed", String(c === b)); }); sum();
-  });
-  if ($("#dstart")) $("#dstart").onclick = () => { dlg.close(); if (go) go(); };
+  dlg.innerHTML = `<h2>${esc(stop.title)}</h2>
+    <p class="note2">${esc(stop.sub)} · ${lesson ? "lesson" : stop.practice ? "practice round" : "Level " + stop.level + " · " + L.name}</p>
+    ${lesson ? `<p>A quick brand quiz to learn the facts you'll use in the missions.</p>` : `
+    <p>${stop.practice ? "A short mix of moments from different customers, picked to train one skill." : L.blurb}</p>
+    <ul class="hirelist">
+      <li><b>The customer speaks</b> and you get a question.</li>
+      <li><b>You answer out loud</b>, like a recorded interview, or type it.</li>
+      <li><b>Your avatar plays your answer back in your own voice</b>, and the customer replies to what you said.</li>
+      <li><b>Scores come at the end:</b> each answer out of 5. Four points are for what you say and one is for <b>tone</b>, judged for the situation. You see what you mentioned and what to improve.</li></ul>
+    <div class="grp"><label class="camopt"><input type="checkbox" id="camOn" ${state.cam ? "checked" : ""}> 📷 Camera coach <span class="recommend">(highly recommended)</span></label>
+      <p class="note2 camnote" id="camnote"><b>Why:</b> you get a delivery score out of 5 for eye contact, posture and smiling, and 25% more XP. Your browser will ask to use the camera. Video stays on your device and is never recorded or uploaded.</p>
+      ${secure ? "" : '<p class="note2 warnnote">The camera and microphone only work on https or http://localhost.</p>'}
+      ${hasSR ? "" : '<p class="note2 warnnote">Voice recording isn\'t available in this browser. Chrome or Edge have it. You can still type your answers.</p>'}</div>`}
+    <div class="dactions"><button class="btn" id="dstart" type="button">Start</button><button class="btn alt" id="dcancel" type="button">Cancel</button></div>`;
+  if ($("#camOn")) $("#camOn").onchange = e => { state.cam = e.target.checked; state.camPref = state.cam; Progress.save(state); };
+  $("#dstart").onclick = () => { dlg.close(); if (go) go(); };
   $("#dcancel").onclick = () => dlg.close();
-  sum();
   dlg.showModal();
-  if ($("#dstart")) $("#dstart").focus({ preventScroll: true });
+  $("#dstart").focus({ preventScroll: true });
 }
-$("#diffBtn").onclick = () => { if ($(".map")) openDiff(null); };
 // Header buttons toggle: click again (or click outside, or press Escape) to close without using the in-page buttons.
 const closeCreator = () => { const d = $("#cdone"); if (d && !d.disabled) d.click(); else if ($("#cname")) $("#cname").focus(); };   // saves, since the name is required
 $("#charBtn").onclick = () => { if ($(".creator")) closeCreator(); else if ($(".map") || $(".dhead")) creator(home); };
@@ -590,12 +607,12 @@ function practiceScenario(skill) {
   if (picks.length < 4) picks = picks.concat(shuffle(pool.filter(p => !picks.includes(p))).slice(0, 4 - picks.length));
   picks = picks.slice(0, 5);
   const first = picks[0].src;
-  return { id: "practice", practice: true, title: "Practice: " + skill, sub: "Mixed customers", icon: "🎯", theme: first.theme, cust: first.cust, hidden: "",
+  return { id: "practice", practice: true, level: 2, title: "Practice: " + skill, sub: "Mixed customers", icon: "🎯", theme: first.theme, cust: first.cust, hidden: "",
     win: `Nice practice. Each round you replay the moments that trip you up, and the skill scores on your Dashboard follow.`, lose: `Not this time. Practice rounds don't cost you anything, so try another.`, steps: picks };
 }
 function playPractice(skill) {
   if (document.body.classList.contains("onboarding")) return;
-  openDiff(() => play(practiceScenario(skill)), { title: "Practice: " + skill, sub: "A few moments from different customers" });
+  openDiff(() => play(practiceScenario(skill)), { title: "Practice: " + skill, sub: "A few moments from different customers", practice: true, level: 2 });
 }
 const weakestSkill = () => { const w = Progress.skillAverages(state)[0]; return w ? w[0] : null; };
 
@@ -673,6 +690,9 @@ function explorer() {
 
 // ---------- home / map ----------
 // The knowledge check is required before the map opens. People who already have progress from before this rule are let through.
+// TEMPORARY: while the game is being tested, every stop is open and the knowledge check isn't required.
+// Set this to false to bring back the locked map and the required check.
+const UNLOCK_ALL = true;
 const needsCheck = () => !state.pre && !(state.history && state.history.length > 0);
 
 function home() {
@@ -687,15 +707,15 @@ function home() {
     const c = state.done[nodes[i].id] ? "done" : "";
     roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>`;
   }
-  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck();
+  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck() && !UNLOCK_ALL;
   nodes.forEach((n, i) => {
-    const done = state.done[n.id], open = !gated && (i === 0 || done || state.done[nodes[i - 1].id]), cur = !gated && n === nodes.find(x => !state.done[x.id]);
+    const done = state.done[n.id], open = UNLOCK_ALL || (!gated && (i === 0 || done || state.done[nodes[i - 1].id])), cur = !gated && n === nodes.find(x => !state.done[x.id]);
     const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`;
     stops += `<div class="stop" style="${pos}">
       <button class="node ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
         ${cur ? '<span class="start">START</span>' : ""}${done ? "✓" : open ? n.icon : "🔒"}
         ${done ? `<span class="stars">${"★".repeat(state.stars[n.id])}${"☆".repeat(3 - state.stars[n.id])}</span>` : ""}
-      </button><div class="lab">${n.title}<small>${open ? `${n.sub} · ${n.qs ? "lesson" : "mission"}` : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
+      </button><div class="lab">${n.title}<small>${open ? `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}` : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
   app.innerHTML = `<section class="view">
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
@@ -718,8 +738,8 @@ function home() {
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------
-function lessonTop(p) {
-  return `<div class="lesson-top"><button class="x" id="exit" aria-label="Exit lesson">✕</button><div class="prog"><i style="width:${p * 100}%"></i></div><span class="hearts">❤️ ${state.hearts}</span><span class="chip">${D().label}</span></div>`;
+function lessonTop(p, mission) {
+  return `<div class="lesson-top"><button class="x" id="exit" aria-label="Exit">✕</button><div class="prog"><i style="width:${p * 100}%"></i></div>${mission ? "" : `<span class="hearts">❤️ ${state.hearts}</span><span class="chip">${D().label}</span>`}</div>`;
 }
 function wireX() { $("#exit").onclick = home; }
 
@@ -1317,173 +1337,6 @@ async function talk(who, text) {
   clearInterval(iv);
   mouth.setAttribute("ry", base);
   el.classList.remove("talking");
-}
-
-// ---------- missions ----------
-// Build the answer choices for a step. Easy: one right, one obviously wrong and one near-miss.
-// Medium and Hard: the plainly worded right answer among three near-misses.
-// The wrong answers are all written to be about the same length as the right one.
-function optionsFor(st) {
-  const mk = (a, k, d) => ({ t: a[0], fb: a[1], k, d, skill: st.skill });
-  const wd = st.wd || [-10, -5, -5], plain = state.diff !== "easy";
-  const right = mk(plain && st.RH ? [st.RH, st.R[1]] : st.R, "best", st.rd || [15, 15, 10]);
-  const wrongs = state.diff === "easy" ? [st.E[0], st.H[Math.floor(Math.random() * st.H.length)]] : st.H;
-  return shuffle([right, ...wrongs.map(w => mk(w, "bad", wd))]);
-}
-
-// A mission can open in a few different ways, so a replay doesn't start with the same line. Never the same one twice in a row.
-function withOpener(sc) {
-  const alts = OPENERS[sc.id];
-  if (!alts) return sc;
-  const all = [sc.steps[0].line, ...alts], last = (state.opener || {})[sc.id];
-  const pool = all.map((_, n) => n).filter(n => n !== last), n = pool[Math.floor(Math.random() * pool.length)];
-  state.opener = { ...(state.opener || {}), [sc.id]: n };
-  return n === 0 ? sc : { ...sc, steps: [{ ...sc.steps[0], line: all[n] }, ...sc.steps.slice(1)] };
-}
-
-function play(sc) {
-  const [t, i, p] = D().start;
-  sc = sc.practice ? sc : withOpener(sc);
-  state.sc = sc; voiceUsed = false;
-  if (state.cam) { Cam.reset(); Cam.begin(); } else Cam.stop();
-  Sound.start(sc.theme);
-  state.hearts = D().hearts; hud();
-  step(0, { trust: t, interest: i, price: p }, [], D().hints);
-}
-const need = (name, v, id, tip) => `<div class="need" title="${tip}"><span>${name}</span><div class="bar" role="img" aria-label="${name}. ${tip}"><i id="n${id}" style="width:${v}%"></i></div></div>`;
-
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let voiceUsed = false;
-
-function step(i, M, log, hintsLeft) {
-  stopAll();
-  const sc = state.sc, S = sc.steps[i], view = S.src || sc, cust = view.cust, key = S.ckey || sc.id + ":" + i, K = CRITERIA[key];
-  const typed = state.mode === "type" && !!K;
-  const opts = typed ? [] : optionsFor(S);
-  const avg = (M.trust + M.interest) / 2;
-  let picked = false;
-  Cam.sampling = true;
-  const checklist = `<ul class="checks2" id="chk" aria-label="What a good answer includes">${K ? K.need.map(n => `<li>${n[1]}</li>`).join("") : ""}</ul>`;
-  const typedBox = `<div class="typed">
-      <p class="note2">Say it the way you would in person. The built-in coach checks your answer for what a good one needs. ${Coach.llm.key ? "A free AI judge is on." : ""}</p>
-      ${state.diff === "easy" ? checklist : '<div id="chkwrap"></div>'}
-      <label class="sr" for="ans">Your answer</label>
-      <textarea id="ans" rows="3" maxlength="600" placeholder="Type what you'd say. Ctrl+Enter sends." autocomplete="off"></textarea>
-      <div class="row2"><button type="button" class="btn alt" id="mic" ${SR ? "" : "hidden"}>🎙 Speak</button><span id="micMsg" class="note2" role="status"></span><button type="button" class="btn" id="send">Send</button><small id="cnt">0 / 600</small></div>
-      <details class="ai"><summary>Optional: free AI judge (Google Gemini)</summary>
-        <p class="note2">Paste a free key from Google AI Studio. It stays in this tab only and is never saved. Leave blank to use the built-in coach.</p>
-        <input id="llmKey" type="password" placeholder="Gemini API key (optional)" autocomplete="off" value="${esc(Coach.llm.key)}"><button type="button" class="btn alt" id="llmSave">Use key</button></details>
-    </div>`;
-  app.innerHTML = `<section class="view sheet">${lessonTop(i / sc.steps.length)}
-    <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, view)}</div>
-    <div class="names"><span>${cust.name} · ${cust.role}</span><span>${esc(repName())} · Rep</span></div>
-    ${state.cam ? '<p class="camline" id="camLine" role="status">📷 ${esc(Cam.msg || "Starting camera…")}</p>' : ""}
-    <div class="bubble" id="bub" aria-live="polite">${S.line}</div>
-    <div class="needs">${need("Trust", M.trust, "t", "How much they believe you and like you.")}${need("Interest", M.interest, "i", "How curious they are about Tequila Corrido.")}${need(cust.meter, M.price, "p", `A bonus meter for this customer: ${cust.meter.toLowerCase()}. It does not decide the win.`)}</div>
-    <p class="note2 meterhint">Good answers fill the meters. Reach ${D().win}+ on Trust and Interest, with a heart left, to win.</p>
-    <div class="q">${S.q}</div>
-    ${timerSecs() ? '<div class="timer" aria-label="Time left"><i id="tm"></i></div>' : ""}
-    ${typed ? typedBox : `<div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o.t}</button>`).join("")}</div>`}
-    ${hintsLeft > 0 ? `<div class="hintrow"><button class="btn alt" id="hn">💡 Hint${hintsLeft < 90 ? " (" + hintsLeft + " left)" : ""}</button><div id="hb"></div></div>` : ""}
-    <div id="fb" aria-live="polite"></div></section>`;
-  wireX();
-  $("#vo").onclick = () => { voiceOn = !voiceOn; $("#vo").textContent = voiceOn ? "🔊 Voice on" : "🔇 Voice off"; if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel(); else talk("cust", spoken(S.line)); };
-  if ($("#hn")) $("#hn").onclick = () => {
-    if (picked || hintsLeft < 1 || $("#hb").textContent) return;
-    hintsLeft--; $("#hb").innerHTML = `<div class="hintbox">${S.hint}</div>`; $("#hn").disabled = true;
-    if (typed && $("#chkwrap")) $("#chkwrap").innerHTML = checklist;
-  };
-
-  async function pick(o, btn) {
-    if (picked) return;
-    picked = true; stopTimer(); Cam.sampling = false;
-    Sound.sfx(o.k === "best" ? "right" : "wrong");
-    if (window.speechSynthesis) speechSynthesis.cancel();
-    app.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (opts[x.dataset.n].k === "best") x.classList.add("best"); });
-    if (typed) { $("#ans").disabled = true; $("#send").disabled = true; if ($("#mic")) $("#mic").disabled = true; }
-    if (btn) btn.classList.add(o.k);
-    $("#bub").innerHTML = `<b>${esc(repName())}:</b> ${o.typed ? esc(o.t) : o.t}`;
-    if (!o.timeout) await talk("rep", spoken(o.t)); else await new Promise(r => setTimeout(r, 900));
-    M.trust = clamp(M.trust + o.d[0]); M.interest = clamp(M.interest + o.d[1]); M.price = clamp(M.price + o.d[2]);
-    if (o.k === "bad") { state.hearts = Math.max(0, state.hearts - 1); hud(); }
-    const reply = S.reply[o.k];
-    log.push({ cname: cust.name, skill: o.skill, k: o.k, score: o.score != null ? o.score : (o.k === "best" ? 1 : 0), line: S.line, text: o.t, reply, fb: o.fb, typed: !!o.typed });
-    $("#pl").setAttribute("class", "mood " + plumb((M.trust + M.interest) / 2));
-    [M.trust, M.interest, M.price].forEach((v, n) => { $("#n" + "tip"[n]).style.width = v + "%"; });
-    $("#bub").innerHTML = `<b>${cust.name}:</b> ${reply}`;
-    await talk("cust", reply);
-    const lab = o.k === "best" ? "Great move! " : "Not quite. ";
-    const better = o.k === "best" ? "" : (typed ? S.R[0] : (opts.find(x => x.k === "best") || {}).t || S.R[0]).replace(/<[^>]+>/g, "");
-    if (log.length) log[log.length - 1].better = better;
-    // keep a running list of moments to review. Getting the same moment right later clears it.
-    const plain = t => String(t || "").replace(/<[^>]+>/g, "");
-    state.mistakes = (state.mistakes || []).filter(m => m.ck !== key);
-    if (o.k !== "best") state.mistakes.unshift({ ck: key, mid: view.id, mission: view.title, skill: S.skill, line: plain(S.line), text: plain(o.t), better, fb: plain(o.fb), date: Progress.today() });
-    state.mistakes = state.mistakes.slice(0, 80); Progress.save(state);
-    const last = i === sc.steps.length - 1 || state.hearts === 0;
-    $("#fb").innerHTML = `<div class="feed ${o.k}"><span>${lab}${o.typed ? esc(o.fb) : o.fb}${better ? `<span class="better"><b>Try this instead:</b> <i>${esc(better)}</i></span>` : ""}</span><button class="btn" id="nx">${last ? "See results" : "Continue"}</button></div>`;
-    $("#nx").onclick = () => (last ? results(M, log) : step(i + 1, M, log, hintsLeft));
-    $("#nx").focus({ preventScroll: true });
-    $("#fb").scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }
-
-  if (typed) {
-    const ans = $("#ans");
-    const refresh = () => {
-      $("#cnt").textContent = `${ans.value.length} / 600`;
-      const chk = $("#chk"); if (!chk) return;
-      const r = Coach.evaluate(key, ans.value, state.diff);
-      chk.querySelectorAll("li").forEach((li, j) => li.classList.toggle("ok", r.matched.includes(K.need[j][1])));
-    };
-    ans.oninput = refresh;
-    async function submitTyped() {
-      const text = ans.value.trim();
-      if (picked || !text) return;
-      $("#send").disabled = true;
-      const res = Coach.evaluate(key, text, state.diff);
-      let ok = res.ok, fb = Coach.feedback(res, S), ai = false;
-      if (Coach.llm.key) {
-        try { const j = await Coach.llmJudge(sc, S, text); ok = j.ok && !res.violations.length; fb = (j.feedback || fb) + (j.ok && res.violations.length ? " " + res.violations.join(" ") : ""); ai = true; }
-        catch (e) { fb += " (The AI judge was unavailable, so the built-in coach scored this.)"; }
-      }
-      pick({ t: text, typed: true, k: ok ? "best" : "bad", d: ok ? (S.rd || [15, 15, 10]) : (S.wd || [-10, -5, -5]), fb: fb + (ok ? "" : ` A strong answer might sound like: ${S.R[0]}`), skill: S.skill, score: ok ? 1 : res.score, ai }, null);
-    }
-    $("#send").onclick = submitTyped;
-    ans.onkeydown = e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitTyped(); } };
-    $("#llmSave").onclick = () => { Coach.llm.key = $("#llmKey").value.trim(); $("#llmSave").textContent = Coach.llm.key ? "Key set" : "Cleared"; };
-    if ($("#mic")) {
-      let rec = null, base = "";
-      $("#mic").onclick = () => {
-        if (rec) { rec.stop(); return; }
-        base = ans.value ? ans.value.trim() + " " : "";
-        rec = new SR(); rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false;
-        rec.onresult = e => { pauseTimer(); ans.value = (base + [...e.results].map(r => r[0].transcript).join(" ")).slice(0, 600); voiceUsed = true; refresh(); };
-        rec.onerror = e => { $("#micMsg").textContent = e.error === "not-allowed" || e.error === "service-not-allowed" ? "Microphone blocked. Allow it in the browser address bar, or just type." : e.error === "no-speech" ? "I didn't hear anything. Try again or type." : "Voice input had a problem. You can type instead."; };
-        rec.onend = () => { resumeTimer(); rec = null; $("#mic").classList.remove("rec"); $("#mic").textContent = "🎙 Speak"; };
-        pauseTimer(); $("#micMsg").textContent = ""; $("#mic").classList.add("rec"); $("#mic").textContent = "⏺ Listening… (click to stop)";
-        try { rec.start(); } catch { rec = null; }
-      };
-    }
-    setTimeout(() => ans.focus({ preventScroll: true }), 50);
-  } else {
-    app.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(opts[b.dataset.n], b));
-  }
-  talk("cust", spoken(S.line)).then(() => {
-    if (!picked && timerSecs()) startTimer(timerSecs(), () => pick({ t: "(You freeze and say nothing…)", k: "bad", d: [-10, -5, 0], skill: S.skill, fb: "Time's up! Dead air loses the room.", timeout: true }, null));
-  });
-}
-
-// ---------- results ----------
-function results(M, log) {
-  const sc = state.sc, skills = {};
-  sc.steps.forEach(st => { skills[st.skill] = 0; });
-  log.forEach(l => { skills[l.skill] = Math.round(l.score * 5 * 10) / 10; });
-  const n = sc.steps.length, bests = log.filter(l => l.k === "best").length, typed = state.mode === "type";
-  const won = M.trust >= D().win && M.interest >= D().win && state.hearts > 0;
-  const stars = won ? (bests === n ? 3 : bests >= n - 1 ? 2 : 1) : 0; // 3 stars = no mistakes
-  const xp = Math.round((bests * 12 + (won ? 30 : 0)) * D().xp * (typed ? 1.25 : 1));
-  const cam = Cam.scores(); Cam.stop();
-  finish(sc, stars, xp, skills, won ? sc.win : `${sc.lose} You needed ${D().win}+ Trust and Interest on ${D().label}. Review the coach notes and try again.`, sc.hidden, { log, mode: state.mode, voice: voiceUsed, sc, camera: !!cam, cameraScores: cam });
 }
 
 function coachSummary(skills) {

@@ -52,23 +52,23 @@ function dashProgress(el) {
   const skills = Progress.skillAverages(state);
   const weak = skills[0];
   const done = ALL_STOPS().filter(x => state.done[x.id]).length;
-  const rec = !H.length ? "Start with Meet Corrido, then Marco's Bar."
+  const rec = !H.length ? "Start with the two lessons, Meet Corrido and Know the Lineup, then The Quiet Bar."
     : weak ? `Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). <button class="btn" id="pweak" type="button">Practice ${weak[0]}</button> A short mix of moments from different customers, picked to train it.` : "";
   const wirePractice = () => { if ($("#pweak")) $("#pweak").onclick = () => playPractice(weak[0]); };
-  el.innerHTML = `<div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? avg + "%" : "–"}</b><span>average score</span></div></div>
+  el.innerHTML = `<div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
     <p class="learn">${rec}</p>
     <div class="card"><h3>Skills</h3>${skills.length ? skills.map(([k, v, n], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
     ${cameraDash(H)}
-    <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)} · ${h.mode === "type" ? "typed" : "choice"}</td><td>${h.pct}%</td><td>${"★".repeat(h.stars)}${"☆".repeat(3 - h.stars)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
+    <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${"★".repeat(h.stars)}${"☆".repeat(3 - h.stars)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
   wirePractice();
 }
 
 function dashReview(el) {
   const list = state.mistakes || [];
-  if (!list.length) { el.innerHTML = `<div class="card"><h3>Nothing to review</h3><p class="note2">When you pick a wrong answer in a mission it lands here, with a stronger answer next to it. Get the same moment right later and it clears itself.</p></div>`; return; }
+  if (!list.length) { el.innerHTML = `<div class="card"><h3>Nothing to review</h3><p class="note2">Any answer that scores under 3.5 out of 5 lands here, with what you missed and a stronger answer next to it. Score 3.5 or more on the same moment later and it clears itself.</p></div>`; return; }
   const by = {}; list.forEach(m => (by[m.skill] = by[m.skill] || []).push(m));
   el.innerHTML = `<p class="note2">${list.length} moment${list.length === 1 ? "" : "s"} to review, grouped by skill. Practice a skill to clear them.</p>` +
-    Object.entries(by).sort((a, b) => b[1].length - a[1].length).map(([sk, ms]) => `<div class="card"><h3>${esc(sk)} <span class="chip">${ms.length}</span><button class="btn alt pskill" data-s="${esc(sk)}" type="button">Practice this</button></h3>${ms.map(m => `<div class="mistake"><small>${esc(m.mission)} · ${esc(m.date)}</small><p><b>Customer:</b> ${esc(m.line)}</p><p class="bad"><b>You said:</b> ${esc(m.text)}</p><p class="better"><b>Try this instead:</b> <i>${esc(m.better)}</i></p><p class="note2">${esc(m.fb)}</p></div>`).join("")}</div>`).join("") +
+    Object.entries(by).sort((a, b) => b[1].length - a[1].length).map(([sk, ms]) => `<div class="card"><h3>${esc(sk)} <span class="chip">${ms.length}</span><button class="btn alt pskill" data-s="${esc(sk)}" type="button">Practice this</button></h3>${ms.map(m => `<div class="mistake"><small>${esc(m.mission)} · ${esc(m.date)}</small><p><b>Customer:</b> ${esc(m.line)}</p><p class="bad"><b>You said</b> (${(+m.score || 0).toFixed(1)} / 5): ${esc(m.text)}</p>${(m.missed || []).length ? `<p class="note2"><b>You missed:</b> ${m.missed.map(esc).join("; ")}.</p>` : ""}${(m.flags || []).length ? `<p class="note2"><b>Knocked points off:</b> ${m.flags.map(esc).join(" ")}</p>` : ""}<p class="better"><b>A stronger answer:</b> <i>${esc(m.better)}</i></p></div>`).join("")}</div>`).join("") +
     `<p><button class="btn alt" id="clrrev" type="button">Clear the whole list</button></p>`;
   el.querySelectorAll(".pskill").forEach(b => b.onclick = () => playPractice(b.dataset.s));
   $("#clrrev").onclick = () => { if (confirm("Clear every moment from your review list?")) { state.mistakes = []; Progress.save(state); dashboard("review"); } };

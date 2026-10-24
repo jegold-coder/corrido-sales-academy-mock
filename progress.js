@@ -8,11 +8,11 @@ const levelOf = xp => { let i = 0; LEVELS.forEach((l, n) => { if (xp >= l[1]) i 
 // Each badge: [name, how to earn it, test(session, P)]. session = the mission that was just finished.
 const BADGES = {
   first: ["First Pitch", "Finish any mission", () => true],
-  closer: ["Closer", "Win a mission", s => s.won && s.id !== "brand"],
+  closer: ["Closer", "Pass a mission", s => s.won && s.id !== "brand"],
   flawless: ["Flawless", "Earn 3 stars on a mission", s => s.stars === 3],
-  hard: ["Hard Mode Hero", "Win a mission on Hard", s => s.won && s.diff === "hard"],
-  typed: ["Straight Talker", "Win a mission by typing or speaking your answers", s => s.won && s.mode === "type"],
-  voice: ["Say It Out Loud", "Use voice input in a mission", s => s.voice],
+  hard: ["Tough Crowd", "Pass a Level 4 or 5 mission", s => s.won && /Level [45]/.test(s.diff || "")],
+  typed: ["Perfect Answer", "Score 5 out of 5 on a single answer", s => s.perfect],
+  voice: ["Say It Out Loud", "Answer a mission question by speaking", s => s.voice],
   brain: ["Brand Brain", "Get every question right in a brand lesson", s => s.lesson && s.stars === 3],
   comply: ["Clean Hands", "Earn 3 stars in the Compliance Trap", s => s.id === "comply" && s.stars === 3],
   camera: ["On Camera", "Finish a mission with the camera coach", s => s.camera],
@@ -22,7 +22,7 @@ const BADGES = {
 
 const Progress = {
   KEY: "csa_progress_v1",
-  blank: () => ({ xp: 0, done: {}, stars: {}, history: [], badges: [], lastDay: null, streak: 0, diff: "medium", mode: "choice", pre: null, post: null, team: {}, llmKey: "", tutorialSeen: false, mistakes: [], opener: {} }),
+  blank: () => ({ xp: 0, done: {}, stars: {}, history: [], badges: [], lastDay: null, streak: 0, diff: "medium", mode: "choice", pre: null, post: null, team: {}, llmKey: "", tutorialSeen: false, mistakes: [], opener: {}, camPref: true, voiceOff: false }),
   load() {
     try { return { ...Progress.blank(), ...JSON.parse(localStorage.getItem(Progress.KEY) || "{}") }; } catch { return Progress.blank(); }
   },

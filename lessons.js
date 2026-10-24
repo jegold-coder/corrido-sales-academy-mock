@@ -37,14 +37,15 @@ const BANK = [
 ];
 const Q = id => BANK.find(q => q.id === id);
 
+// Two lessons, six questions each. They come first on the map, before any mission, so reps have the background they need.
+// The compliance questions (21+, health claims, margins) stay in the knowledge-check pool and are practiced in the missions.
 const LESSONS = [
-  { id: "brand", title: "Meet Corrido", sub: "Learn the brand", icon: "🎶", qs: ["name", "promise", "priciest"] },
-  { id: "lineup", title: "Know the Lineup", sub: "Notes and prices", icon: "🍾", qs: ["count", "noteBlanco", "noteRepo", "noteAnejo", "noteOver", "overproofPrice"] },
-  { id: "story", title: "Story & Spirit", sub: "Who Corrido is", icon: "🎸", qs: ["distiller", "imagery", "voice", "contrast", "endorse", "celebfree"] },
-  { id: "rules", title: "Rules of the Road", sub: "Stay compliant", icon: "📋", qs: ["age", "safeClaim", "teen", "margin", "leave", "bash"] },
+  { id: "brand", title: "Meet Corrido", sub: "The brand and its story", icon: "🎶", qs: ["name", "promise", "distiller", "voice", "endorse", "contrast"] },
+  { id: "lineup", title: "Know the Lineup", sub: "Tasting notes and prices", icon: "🍾", qs: ["noteBlanco", "noteRepo", "noteAnejo", "noteOver", "priciest", "blancoPrice"] },
 ];
 // Path order on the map: lessons are mixed in between missions.
-const PATH = ["brand", "lineup", "marco", "sam", "story", "dana", "hardno", "priya", "buyer", "rules", "mia", "comply", "stickup", "ray"];
+// Both lessons come first, then missions from easiest to hardest (see LEVEL_OF in scenarios.js).
+const PATH = ["brand", "lineup", "quiet", "priya", "sam", "mia", "buyer", "gas", "dana", "marco", "ray", "stickup", "comply", "hardno", "mean"];
 
 // Answer choices for a question at the current difficulty (state.diff): 3 options on Easy and Medium, 4 on Hard.
 function choicesFor(q, diff) {
