@@ -864,27 +864,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25u"></script>
-<script src="sound.js?v=2026-10-25u"></script>
-<script src="scenarios.js?v=2026-10-25u"></script>
-<script src="progress.js?v=2026-10-25u"></script>
-<script src="criteria.js?v=2026-10-25u"></script>
-<script src="tone.js?v=2026-10-25u"></script>
-<script src="coach.js?v=2026-10-25u"></script>
-<script src="camera.js?v=2026-10-25u"></script>
-<script src="lessons.js?v=2026-10-25u"></script>
-<script src="dashboard.js?v=2026-10-25u"></script>
-<script src="grader.js?v=2026-10-25u"></script>
-<script src="onboarding.js?v=2026-10-25u"></script>
-<script src="tiers.js?v=2026-10-25u"></script>
-<script src="badges.js?v=2026-10-25u"></script>
-<script src="voices.js?v=2026-10-25u"></script>
-<script src="mission.js?v=2026-10-25u"></script>
-<script src="boss.js?v=2026-10-25u"></script>
-<script src="auth.js?v=2026-10-25u"></script>
-<script src="manager.js?v=2026-10-25u"></script>
-<script src="callcard.js?v=2026-10-25u"></script>
-<script src="presenter.js?v=2026-10-25u"></script>
+<script src="config.js?v=2026-10-25y"></script>
+<script src="sound.js?v=2026-10-25y"></script>
+<script src="scenarios.js?v=2026-10-25y"></script>
+<script src="progress.js?v=2026-10-25y"></script>
+<script src="criteria.js?v=2026-10-25y"></script>
+<script src="tone.js?v=2026-10-25y"></script>
+<script src="coach.js?v=2026-10-25y"></script>
+<script src="camera.js?v=2026-10-25y"></script>
+<script src="lessons.js?v=2026-10-25y"></script>
+<script src="dashboard.js?v=2026-10-25y"></script>
+<script src="grader.js?v=2026-10-25y"></script>
+<script src="onboarding.js?v=2026-10-25y"></script>
+<script src="tiers.js?v=2026-10-25y"></script>
+<script src="badges.js?v=2026-10-25y"></script>
+<script src="voices.js?v=2026-10-25y"></script>
+<script src="mission.js?v=2026-10-25y"></script>
+<script src="boss.js?v=2026-10-25y"></script>
+<script src="auth.js?v=2026-10-25y"></script>
+<script src="manager.js?v=2026-10-25y"></script>
+<script src="callcard.js?v=2026-10-25y"></script>
+<script src="presenter.js?v=2026-10-25y"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1292,7 +1292,9 @@ function humanBody(c) {
   const d = c.polo ? dPolo : `${neck}L${mir(X(28))} 104Q${mir(A.s - hs - 2)} 106 ${mir(A.s - hs)} 124${right}${left}Q${A.s - hs - 2} 106 ${X(28)} 104Z`;
   const gw = (mir(A.s - hs) - (A.s - hs)), id = "rep";
   const legs = `<path d="M${X(32)} 108L${mir(X(32))} 108L${tr} 200L${tl} 200Z" fill="${c.polo ? sk : c.base}" ${c.polo ? "" : `transform="translate(60 150) scale(.86 1) translate(-60 -150)"`}/><path d="M${tl} 194H${tr}L${mir(X(22))} 280H${X(22)}Z" fill="#2b3a55"/><rect x="${tl}" y="194" width="${(tr - tl).toFixed(1)}" height="7" fill="#3a2a1c"/><rect x="57" y="195" width="6" height="5" rx="1" fill="#e0a42f"/><path d="M60 201V280" stroke="#0004" stroke-width="1"/>`;
-  const skin = `<rect x="${60 - nw / 2}" y="76" width="${nw}" height="30" rx="8" fill="${sk}"/>${c.polo ? `<path d="M${X(44)} 99.5H${mir(X(44))}L60 123Z" fill="${sk}"/>` : `<path d="M${60 - nw / 2} 90H${60 + nw / 2}Q${60 + nw / 2} 98 ${mir(X(41))} 101V128H${X(41)}V101Q${60 - nw / 2} 98 ${60 - nw / 2} 90Z" fill="${sk}"/>`}${c.polo ? `<path d="M${X(48)} 108Q60 112 ${mir(X(48))} 108" stroke="#0002" stroke-width="1.4" fill="none"/>` : ""}`;
+  // The skin under a shirt only shows through the neck opening: cut to that opening, so no corner of it can stick out beside the collar on any shirt.
+  const holeD = `M${X(42)} 80V99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99V80Z`;
+  const skin = `<rect x="${60 - nw / 2}" y="76" width="${nw}" height="30" rx="8" fill="${sk}"/>${c.polo ? `<path d="M${X(44)} 99.5H${mir(X(44))}L60 123Z" fill="${sk}"/>` : `<defs><clipPath id="nk-${id}"><path d="${holeD}"/></clipPath></defs><g clip-path="url(#nk-${id})"><path d="M${60 - nw / 2} 90H${60 + nw / 2}Q${60 + nw / 2} 98 ${mir(X(41))} 101V128H${X(41)}V101Q${60 - nw / 2} 98 ${60 - nw / 2} 90Z" fill="${sk}"/></g>`}${c.polo ? `<path d="M${X(48)} 108Q60 112 ${mir(X(48))} 108" stroke="#0002" stroke-width="1.4" fill="none"/>` : ""}`;
   // the photo is stretched so its hem always lands at HEM_Y, whatever the product's proportions
   const HEM_Y = 212, W = gw * c.Wk, vsFit = c.polo ? 1 : (HEM_Y - 99) * (c.bbox[2] - c.bbox[0]) / ((c.bbox[3] - c.bbox[1]) * W);
   const photo = c.polo ? poloCloth(c, X, mir) : placeImg(c.img, c.bbox, W, 99, false, vsFit);
@@ -1305,7 +1307,8 @@ function humanBody(c) {
   const cutout = `M-30 80H${X(42)}V99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99V80H150V320H-30Z`;
   // the raglan keeps the photo from the shoulder seams down the torso; the flared photo sleeves are cut off (the drawn sleeves cover that edge)
   const D = c.dsl, xt = D ? [px(D.torso[0]), px(D.torso[1])] : null, ay = D ? py(D.armpit) : 0;
-  const rcut = D ? `M${X(42)} 99L${X(28)} 104L${A.s - hs + 1} 116L${xt[0]} ${ay}L${xt[0]} 320L${xt[1]} 320L${xt[1]} ${ay}L${mir(A.s - hs + 1)} 116L${mir(X(28))} 104L${mir(X(42))} 99C${mir(X(42))} 110 ${mir(X(49))} 114 60 114C${X(49)} 114 ${X(42)} 110 ${X(42)} 99Z` : "";
+  const xh = D ? (D.hem || D.torso).map(px) : null, yh = D ? Math.min(py(D.hemY || .96), 280) : 0;   // a relaxed tee flares from the armpit to the hem
+  const rcut = D ? `M${X(42)} 99L${X(28)} 104L${A.s - hs + 1} 116L${xt[0]} ${ay}L${xh[0]} ${yh}L${xh[0]} 320L${xh[1]} 320L${xh[1]} ${yh}L${xt[1]} ${ay}L${mir(A.s - hs + 1)} 116L${mir(X(28))} 104L${mir(X(42))} 99C${mir(X(42))} 110 ${mir(X(49))} 114 60 114C${X(49)} 114 ${X(42)} 110 ${X(42)} 99Z` : "";
   const garmentPhoto = `<defs><clipPath id="gm-${id}"><path d="${D ? rcut : cutout}"/></clipPath></defs>
     <g clip-path="url(#gm-${id})">${photo}</g>
     <path d="${neck}" fill="none" stroke="${mixHex(c.base, "#000000", .14)}" stroke-width="1.5" stroke-linecap="round"/>`;
@@ -1327,21 +1330,23 @@ function humanBody(c) {
     // below the sleeve the arm hangs against the side of the body, so there is no gap between arm and torso
     atL[2] = Math.max(atL[0], px(c.sl[0][2]) - fw / 2 + 1.5); atR[2] = Math.min(atR[0], px(c.sl[1][2]) + fw / 2 - 1.5);
   }
-  // A drawn sleeve hangs from the shoulder over the arm and ends at the photo's 3/4 cuff; the forearm and hand show below it, against the torso edge.
-  // Its top follows the slope of the raglan shoulder (outer corner low, inner corner up by the yoke), and it is cut as snug as the photo's sleeve.
+  // A drawn sleeve hangs from the shoulder over the arm and ends at the photo's cuff (3/4 on the raglan, above the elbow on a short-sleeve tee); the forearm
+  // and hand show below it, against the torso edge. Its top follows the slope of the shoulder (outer corner low, inner corner up by the collar).
   let sleeves = "";
   if (D) {
-    const cy = py(D.cuff), ya = 132, y1 = (ya + 174) / 2, w0 = aw + 2, w1 = aw - .5, w2 = fw + 1.5, f1 = n => +n.toFixed(1);
-    atL = [A.s, ya, xt[0] - fw / 2 + 1.5]; atR = [mir(A.s), ya, xt[1] + fw / 2 - 1.5];
+    const cy = py(D.cuff), ya = 132, y1 = (ya + 174) / 2, short = cy <= y1 + 2, shade = D.shade ?? .3, f1 = n => +n.toFixed(1);
+    const w0 = aw + 2, w1 = aw - .5, w2 = short ? aw + 8 : fw + 1.5, xe = (D.edge || D.torso).map(px);   // a short sleeve starts narrow at the shoulder and flares out to its cuff; xe: where the torso edge is at hand height
+    atL = [A.s, ya, xe[0] - fw / 2 + 1.5]; atR = [mir(A.s), ya, xe[1] + fw / 2 - 1.5];
     const sleeve = at => {
-      const s = at[0], dir = s < 60 ? -1 : 1, e = (at[0] + at[2]) / 2, cx = e + (at[2] - e) * (cy - y1) / (182 - y1);   // the arm bends at y1 and ends at y 182
+      const s = at[0], dir = s < 60 ? -1 : 1, e = (at[0] + at[2]) / 2;
+      const cx = short ? s + (e - s) * (cy - ya) / (y1 - ya) : e + (at[2] - e) * (cy - y1) / (182 - y1);   // the arm bends at y1 and ends at y 182
       const O = [f1(s + dir * w0 / 2), 126], I = [f1(s - dir * w0 / 2), 114.5], C = [f1(s + dir * (w0 / 2 - 5)), 112.5];   // outer and inner shoulder corners, and the curve's pull
       const inEl = [f1(e - dir * w1 / 2), y1], outEl = [f1(e + dir * w1 / 2), y1], inCf = [f1(cx - dir * w2 / 2), cy], outCf = [f1(cx + dir * w2 / 2), cy];
-      const down = `L${inEl}L${inCf}L${outCf}L${outEl}`;
-      return `<path d="M${O}Q${C} ${I}${down}Z" fill="${D.sleeve}"/><path d="M${O}Q${C} ${I}${down}Z" fill="url(#rsh)"/>
-        <path d="M${I}${down}L${O}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1" stroke-linejoin="round"/>`;
+      const down = short ? `L${inCf}L${outCf}` : `L${inEl}L${inCf}L${outCf}L${outEl}`;
+      return `<path d="M${O}Q${C} ${I}${down}Z" fill="${D.sleeve}"/><path d="M${O}Q${C} ${I}${down}Z" fill="url(#rsh${Math.round(shade * 100)})"/>
+        <path d="M${I}${down}L${O}" fill="none" stroke="#000" stroke-opacity="${shade < .2 ? .2 : .3}" stroke-width="1" stroke-linejoin="round"/>`;
     };
-    sleeves = `<defs><linearGradient id="rsh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".3"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs>${sleeve(atL)}${sleeve(atR)}`;
+    sleeves = `<defs><linearGradient id="rsh${Math.round(shade * 100)}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity="${shade}"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${shade}"/></linearGradient></defs>${sleeve(atL)}${sleeve(atR)}`;
   }
   const arms = c.polo ? arm(false) + arm(true) : atL ? arm(false, atL) + arm(true, atR) : `<defs><clipPath id="armclip"><rect x="-30" y="134" width="180" height="200"/></clipPath></defs><g clip-path="url(#armclip)">${arm(false)}${arm(true)}</g>`;
   return { torso: legs + arms + skin + garment + open + sleeves };
@@ -1435,7 +1440,17 @@ const OUTC = ["#1f6a77", "#243a5e", "#7a2a3a", "#3a3f46", "#2f5f45", "#915f1b"];
 // Every hair cap gets its own clip id. A shared id made a second person on the page (a customer next to the rep, or a grid of
 // previews) borrow the first person's head shape, which is what made some hair look wrong on other face shapes.
 let capSeq = 0;
-const cap = (c, face, line, vol = 1.07, y0 = 50) => { const id = "hx" + (++capSeq); return `<clipPath id="${id}"><path d="${face}" transform="translate(60 52) scale(${vol} ${vol}) translate(-60 -52)"/></clipPath><g clip-path="url(#${id})"><path d="M-20 -40H140V${y0}${line}L-20 ${y0}Z" fill="${c}"/></g>`; };
+// The hairline can start further out than a narrow face is wide, which left a white sliver between the hair and the head. So the thin band between the
+// face and the slightly larger cap, from the top down to the hairline's lowest point, is always hair too: the hair is attached on every face shape.
+const cap = (c, face, line, vol = 1.07, y0 = 50) => {
+  const id = "hx" + (++capSeq), grow = `translate(60 52) scale(${vol} ${vol}) translate(-60 -52)`;
+  return `<clipPath id="${id}"><path d="${face}" transform="${grow}"/></clipPath><clipPath id="${id}y"><rect x="-20" y="-40" width="160" height="${40 + y0}"/></clipPath>
+    <mask id="${id}m"><path d="${face}" transform="${grow}" fill="#fff"/><path d="${face}" fill="#000"/></mask>
+    <g clip-path="url(#${id})"><path d="M-20 -40H140V${y0}${line}L-20 ${y0}Z" fill="${c}"/></g>
+    <g clip-path="url(#${id}y)"><rect x="-20" y="-40" width="160" height="200" fill="${c}" mask="url(#${id}m)"/></g>`;
+};
+// Marks that belong on the hair (a parting, a shine, cornrow lines) are cut off at the head's outline, so none sticks out above a narrow or tall head.
+const onHead = (face, marks, vol = 1.09) => { const id = "hd" + (++capSeq); return `<clipPath id="${id}"><path d="${face}" transform="translate(60 52) scale(${vol} ${vol}) translate(-60 -52)"/></clipPath><g clip-path="url(#${id})">${marks}</g>`; };
 const LINE = {
   buzz: "L89 48C86 36 78 30 60 30S34 36 31 48",
   short: "L90 54C88 44 84 34 78 30C66 38 46 36 36 29C32 35 30 44 30 54",
@@ -1462,16 +1477,16 @@ const HAIRS = {
   // ----- men
   Buzz: (c, f) => ({ front: cap(c, f, LINE.buzz, 1.05, 48) }),
   Short: (c, f) => ({ front: cap(c, f, LINE.short, 1.09, 54) }),
-  "Slick back": (c, f) => ({ front: cap(c, f, LINE.slick, 1.08), deco: SHINE }),
+  "Slick back": (c, f) => ({ front: cap(c, f, LINE.slick, 1.08), deco: SHINE, clip: true }),
   Messy: (c, f) => ({ front: cap(c, f, LINE.messy, 1.1, 52) }),
-  Curtains: (c, f) => ({ front: cap(c, f, LINE.curtainsM, 1.09, 52), deco: '<path d="M60 12L60 32" stroke="#000" stroke-opacity=".2" stroke-width="1.4"/>' }),
+  Curtains: (c, f) => ({ front: cap(c, f, LINE.curtainsM, 1.09, 52), deco: '<path d="M60 12L60 32" stroke="#000" stroke-opacity=".2" stroke-width="1.4"/>', clip: true }),
   // the faded sides are clipped to this person's own face, so they stay on the head whatever its shape
   "Low taper fade": (c, f) => { const id = "fd" + (++capSeq); return { front: cap(c, f, LINE.taper, 1.1, 52) + `<clipPath id="${id}"><path d="${f}"/></clipPath><g clip-path="url(#${id})"><path d="M26 66V40H37L40 56ZM94 66V40H83L80 56Z" fill="${c}" opacity=".32"/><path d="M36 62C37 57 38 54 40 52M84 62C83 57 82 54 80 52" stroke="${c}" stroke-opacity=".4" stroke-width="1.2" fill="none"/></g>` }; },
   Spiky: (c, f) => ({ front: cap(c, f, LINE.spiky, 1.07), deco: `<path d="M30 50L27 33L34 36L31 17L42 27L45 7L54 24L60 3L66 24L75 7L78 27L89 17L86 36L93 33L90 50C86 40 80 34 72 32C60 36 44 34 36 40C33 43 31 46 30 50Z" fill="${c}"/><path d="M46 14L49 24M60 10L60 22M74 14L71 24" stroke="#fff" stroke-opacity=".18" stroke-width="1.6" stroke-linecap="round"/>` }),
   "Flat top": (c, f) => ({ front: cap(c, f, LINE.buzz, 1.02, 48), deco: `<path d="M31 48L30 14C30 8 36 6 60 6S90 8 90 14L89 48C86 36 78 28 60 28S34 36 31 48Z" fill="${c}"/>` }),
   Mullet: (c, f) => ({ back: `<path d="M27 58C22 80 26 106 34 120C44 114 54 112 60 112C66 112 76 114 86 120C94 106 98 80 93 58Z" fill="${c}"/>`, front: cap(c, f, LINE.short, 1.09, 54) }),
   Dreadlocks: (c, f) => ({ back: `<g stroke="${c}" stroke-width="6.5" stroke-linecap="round" fill="none">${[[22, 70], [28, 92], [34, 104], [98, 70], [92, 92], [86, 104]].map(([x, y]) => `<path d="M${x} 36Q${x + (x < 60 ? -3 : 3)} ${y - 20} ${x} ${y}"/>`).join("")}</g>`, front: cap(c, f, LINE.low, 1.1) }),
-  Cornrows: (c, f) => ({ front: cap(c, f, LINE.buzz, 1.05, 48), deco: '<g stroke="#000" stroke-opacity=".35" stroke-width="1.3" fill="none" stroke-linecap="round"><path d="M42 30Q40 23 46 18M50 30Q49 22 53 17M60 30L60 16M70 30Q71 22 67 17M78 30Q80 23 74 18"/></g>' }),
+  Cornrows: (c, f) => ({ front: cap(c, f, LINE.buzz, 1.05, 48), deco: '<g stroke="#000" stroke-opacity=".35" stroke-width="1.3" fill="none" stroke-linecap="round"><path d="M42 30Q40 23 46 18M50 30Q49 22 53 17M60 30L60 16M70 30Q71 22 67 17M78 30Q80 23 74 18"/></g>', clip: true }),
   "Man bun": (c, f) => ({ back: `<circle cx="60" cy="12" r="13" fill="${c}"/>`, front: cap(c, f, LINE.slick, 1.08) }),
   Mohawk: (c, f) => ({ back: "", front: `<g opacity=".28">${cap(c, f, LINE.low, 1.0, 50)}</g>`, deco: `<path d="M52 36C48 24 50 8 54 4L58 14L60 1L64 14L68 4C72 8 72 24 68 36Z" fill="${c}"/>` }),
   Curly: (c, f) => ({
@@ -1483,17 +1498,17 @@ const HAIRS = {
   // ----- women
   Pixie: (c, f) => ({ front: cap(c, f, LINE.pixie, 1.08, 54) }),
   Bob: (c, f) => ({ back: `<path d="M27 50C22 18 46 6 60 6S98 18 93 50C95 70 91 90 83 98L37 98C29 90 25 70 27 50Z" fill="${c}"/>`, front: cap(c, f, LINE.bangs, 1.1, 52) }),
-  Long: (c, f) => ({ back: `<path d="M28 56C20 18 44 6 60 6C78 6 100 18 92 56C97 88 93 116 84 128L36 128C27 116 23 88 28 56Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
-  Wavy: (c, f) => ({ back: `<path d="M28 54C18 24 42 6 60 6S102 24 92 54C98 62 92 70 96 80C100 90 90 98 94 108C98 118 90 124 92 132L28 132C30 124 22 118 26 108C30 98 20 90 24 80C28 70 22 62 28 54Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  Long: (c, f) => ({ back: `<path d="M28 56C20 18 44 6 60 6C78 6 100 18 92 56C97 88 93 116 84 128L36 128C27 116 23 88 28 56Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART, clip: true }),
+  Wavy: (c, f) => ({ back: `<path d="M28 54C18 24 42 6 60 6S102 24 92 54C98 62 92 70 96 80C100 90 90 98 94 108C98 118 90 124 92 132L28 132C30 124 22 118 26 108C30 98 20 90 24 80C28 70 22 62 28 54Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART, clip: true }),
   "Side swept": (c, f) => ({ back: LONGBACK(c), front: cap(c, f, LINE.swept, 1.09, 52) }),
   "Curtain bangs": (c, f) => ({ back: LONGBACK(c), front: cap(c, f, LINE.curtains, 1.09, 56) }),
   Ponytail: (c, f) => ({ back: `<path d="M86 34C106 34 112 68 100 98C94 80 94 62 84 52Z" fill="${c}"/>`, front: cap(c, f, LINE.updo, 1.08) }),
-  Pigtails: (c, f) => ({ back: `<g fill="${c}"><path d="M32 40C12 44 8 76 18 104C26 90 30 68 36 52Z"/><path d="M88 40C108 44 112 76 102 104C94 90 90 68 84 52Z"/></g><circle cx="30" cy="44" r="3" fill="#b5432a"/><circle cx="90" cy="44" r="3" fill="#b5432a"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  Pigtails: (c, f) => ({ back: `<g fill="${c}"><path d="M32 40C12 44 8 76 18 104C26 90 30 68 36 52Z"/><path d="M88 40C108 44 112 76 102 104C94 90 90 68 84 52Z"/></g><circle cx="30" cy="44" r="3" fill="#b5432a"/><circle cx="90" cy="44" r="3" fill="#b5432a"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART, clip: true }),
   Bun: (c, f) => ({ back: `<circle cx="60" cy="14" r="12" fill="${c}"/>`, front: cap(c, f, LINE.updo, 1.08) }),
   "Half-up": (c, f) => ({ back: LONGBACK(c) + `<circle cx="60" cy="12" r="9" fill="${c}"/>`, front: cap(c, f, LINE.updo, 1.08) }),
-  "Space buns": (c, f) => ({ back: `<circle cx="37" cy="15" r="11" fill="${c}"/><circle cx="83" cy="15" r="11" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART }),
+  "Space buns": (c, f) => ({ back: `<circle cx="37" cy="15" r="11" fill="${c}"/><circle cx="83" cy="15" r="11" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART, clip: true }),
   "Side braid": (c, f) => ({ back: `<path d="M28 56C22 20 44 7 60 7S98 20 92 56C92 62 91 66 88 68L32 68C29 66 28 62 28 56Z" fill="${c}"/><g fill="${c}" stroke="#000" stroke-opacity=".25" stroke-width=".8">${[0, 1, 2, 3, 4, 5, 6].map(i => `<ellipse cx="${90 + i * 1.4}" cy="${70 + i * 9}" rx="5.4" ry="5.6"/>`).join("")}</g>`, front: cap(c, f, LINE.swept, 1.09, 52) }),
-  Braids: (c, f) => ({ back: `<path d="M28 56C20 18 44 6 60 6C78 6 100 18 92 56C92 64 91 70 88 72L32 72C29 70 28 64 28 56Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART + `<g fill="${c}" stroke="#000" stroke-opacity=".25" stroke-width=".8">${[0, 1, 2, 3, 4, 5].map(i => `<ellipse cx="${30 - i * .4}" cy="${72 + i * 9}" rx="5" ry="5.2"/><ellipse cx="${90 + i * .4}" cy="${72 + i * 9}" rx="5" ry="5.2"/>`).join("")}</g>` }),
+  Braids: (c, f) => ({ back: `<path d="M28 56C20 18 44 6 60 6C78 6 100 18 92 56C92 64 91 70 88 72L32 72C29 70 28 64 28 56Z" fill="${c}"/>`, front: cap(c, f, LINE.center, 1.09, 52), deco: PART + `<g fill="${c}" stroke="#000" stroke-opacity=".25" stroke-width=".8">${[0, 1, 2, 3, 4, 5].map(i => `<ellipse cx="${30 - i * .4}" cy="${72 + i * 9}" rx="5" ry="5.2"/><ellipse cx="${90 + i * .4}" cy="${72 + i * 9}" rx="5" ry="5.2"/>`).join("")}</g>`, clip: true }),
 };
 // Corrido merch: the real product photos (transparent PNG mockups) from ilovetequilacorrido.com, linked live. Names and prices are from their merch page.
 const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
@@ -1501,7 +1516,9 @@ const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
 const OUTFITS = {
   "Mas Tequila Tee (White)": { g: "u", price: "$24.90", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
   "In My Tequila Era Tee (Charcoal)": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
-    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2", nameF: "Tequila Era Women’s Tee", urlF: "in-my-tequila-era-women-s-tee" },
+    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2", nameF: "Tequila Era Women’s Tee", urlF: "in-my-tequila-era-women-s-tee",
+    // the women's relaxed tee: its photo sleeves flare out sideways, so the body comes from the photo and short sleeves are drawn over the arms (see the raglan)
+    dslF: { sleeve: "#eeeeec", shade: .12, torso: [0.285, 0.713], edge: [0.255, 0.745], hem: [0.24, 0.76], armpit: 0.47, cuff: 0.448 } },
   "Tequila On My Mind Tee": { g: "u", price: "$29.00", base: "#d8cdb4", Wk: .97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_600x.png?v=1778981479", bbox: [.075, .037, .918, .96] },
   "Corrido x adidas Polo": { g: "u", price: "$64.00", base: "#363635", Wk: 1, hem: 208, polo: true, v: true, bbox: [0, 0, 1, 1],
     logo: { img: IMG + "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_600x.png?v=1767764185", box: [.556, .238, .652, .292], dim: .72 } },
@@ -1547,7 +1564,7 @@ const OUTFITS = {
 // Where each product photo's sleeves end, as [left, right] = [sleeve centre x, sleeve bottom y, torso edge x] in fractions of the image.
 // Measured from the photos' transparent edges, so the arms line up with the sleeve openings.
 const SLEEVE = {
-  "Mas Tequila Tee (White)": [[.188, .462, 0.222], [.809, .458, 0.775]], "In My Tequila Era Tee (Charcoal)": [[.142, .437, 0.185], [.852, .432, 0.808]], "In My Tequila Era Tee (Charcoal)F": [[.241, .448, 0.267], [.758, .448, 0.73]],
+  "Mas Tequila Tee (White)": [[.188, .462, 0.222], [.809, .458, 0.775]], "In My Tequila Era Tee (Charcoal)": [[.142, .437, 0.185], [.852, .432, 0.808]],
   "Tequila On My Mind Tee": [[.227, .442, 0.24], [.768, .438, 0.757]], "D.A.R.E. Oversized Tee": [[.221, .415, 0.233], [.778, .415, 0.765]], "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)": [[.17, .447, 0.217], [.828, .447, 0.782]],
   "Corrido Classic Tee (Maroon)": [[.142, .437, 0.185], [.852, .432, 0.808]], "Más Tequila Tee": [[.189, .418, 0.21], [.812, .418, 0.795]], "Mexico Es Chingón Tee": [[.227, .442, 0.24], [.768, .438, 0.757]],
   "Corrido Logo Tee (Heather Navy)": [[.263, .46, 0.275], [.748, .47, 0.728]], "Worth the Shot Tee": [[.22, .473, 0.245], [.774, .473, 0.753]],
@@ -1670,14 +1687,14 @@ const repName = () => (state.avatar.name || "").trim() || "Rep";
 const mixHex = (a, b, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - t) + parseInt(b.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join("");
 function repLook() {
   const A = state.avatar, F = A.gender === "Female", hair = HAIRC[A.hair], h = HAIRS[A.hairStyle](hair, FACES[A.face]), ff = FACE_FIT[A.face],
-    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: O.dsl, sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
+    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: useF ? O.dslF : O.dsl, sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
   const over = [
     A.dimples ? '<path d="M41 72Q43 75 45 72M75 72Q77 75 79 72" stroke="#0004" stroke-width="1.5" fill="none" stroke-linecap="round"/>' : "",
     A.freckles ? [[46, 63], [50, 66], [43, 66], [54, 64], [74, 63], [70, 66], [77, 66], [66, 64], [58, 62], [62, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a8683f" opacity=".7"/>`).join("") : "",
     A.mole ? '<circle cx="71" cy="73" r="1.3" fill="#3a2418"/>' : "",
   ].join("");
   return {
-    id: "rep", skin: SKINS[A.skin], face: FACES[A.face], hair, back: fit(h.back), hairFront: (h.front || "") + fit(h.deco), earX: FACE_FIT[A.face].ear, eye: EYEC[A.eye],
+    id: "rep", skin: SKINS[A.skin], face: FACES[A.face], hair, back: fit(h.back), hairFront: (h.front || "") + (h.clip && h.deco ? onHead(FACES[A.face], fit(h.deco)) : fit(h.deco)), earX: FACE_FIT[A.face].ear, eye: EYEC[A.eye],
     brow: A.brow < 0 ? hair : HAIRC[A.brow], browW: [2, 3, 4.6][A.browW], beard: F ? "" : FACIALS(A.facial, hair, "rep"),
     over, glasses: GLASSES(A.glasses, FRAMEC[A.frame]), blush: A.blush, my: 77, smile: A.smile && A.smile !== "Neutral" ? A.smile : "",
     lip: F ? LIPC[A.lip] : mixHex(SKINS[A.skin], "#7a3b30", .4),

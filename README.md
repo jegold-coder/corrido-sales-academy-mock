@@ -118,7 +118,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits` and `skills` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills` and `hair` tests |
 
 ## Tests
 
@@ -143,8 +143,9 @@ node tests/globals.test.js  # no two scripts declare the same name (a clash stop
 node tests/camera.test.js   # face maths with fake landmarks
 node tests/learning.test.js # coach mode defaults, the hint costs 5 XP, every customer's second lines keep the same facts and alternate
 node tests/a11y.test.js     # colour contrast of the key pairs, page headings, focus rings, tap size, no tiny text
-node tests/outfits.test.js  # the Pickleball Raglan (photo body, drawn 3/4 sleeves over the arms, no gap beside the torso) and the polos (no neck skin beside the collar)
+node tests/outfits.test.js  # the Pickleball Raglan and the women's Era tee (photo body, drawn sleeves over the arms, no gap beside the torso), the polos, and the neck skin on every shirt
 node tests/skills.test.js   # the Skills chart: every skill is in one family, no radar label overlaps another, every skill is still listed
+node tests/hair.test.js     # every hairstyle is attached to every head shape (no gap at the temples), and parting or shine lines stay on the head
 ```
 
 ## Known limits (be honest about these in the pitch)

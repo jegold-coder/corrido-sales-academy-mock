@@ -13,7 +13,7 @@ const body = (extra = {}, F = false) => vm.runInContext(`humanBody(${JSON.string
 
 ok("the raglan has what it needs to be drawn: the sleeve colour, the torso edges, the armpit and the cuff", O.dsl && /^#[0-9a-f]{6}$/.test(O.dsl.sleeve) && O.dsl.torso[0] < O.dsl.torso[1] && O.dsl.armpit > 0.2 && O.dsl.armpit < O.dsl.cuff && O.dsl.cuff < 0.7);
 ok("it no longer uses the flared photo sleeves as the arm openings", !/"Pickleball Raglan": \[\[/.test(html));
-ok("the creator passes the raglan's data on to the body", /dsl: O\.dsl, sl: SLEEVE/.test(html));
+ok("the creator passes the drawn-sleeve data on to the body (the women's cut has its own)", /dsl: useF \? O\.dslF : O\.dsl, sl: SLEEVE/.test(html));
 
 for (const [label, F] of [["a male build", false], ["a female build", true]]) {
   const out = body({}, F), plain = body({ dsl: undefined }, F);
@@ -30,6 +30,30 @@ for (const [label, F] of [["a male build", false], ["a female build", true]]) {
   ok(`${label}: the sleeves end at the same height on both sides, partway down the forearm`, L[9] === R[9] && L[9] > 150 && L[9] < 180, "cuff y " + L[9]);
   ok(`${label}: the forearm and hand are drawn below the sleeve (skin shows under the cuff)`, (out.match(/<line [^>]*stroke="#e0b090"/g) || []).length >= 4 && (out.match(/<path [^>]*fill="#e0b090"/g) || []).length >= 4);
   ok(`${label}: other photo tees are drawn exactly as before (no navy sleeves, the old clip)`, !/#262c39/.test(plain) && !/url\(#rsh\)/.test(plain));
+}
+
+// the neck: on every photo shirt the skin behind it is cut to the neck opening, so no corner of it can show beside the collar
+const holeOf = out => out.match(/<clipPath id="nk-rep"><path d="([^"]+)"/);
+for (const [label, F] of [["a male build", false], ["a female build", true]]) {
+  const out = body({}, F), hole = holeOf(out), cut = out.match(/<clipPath id="gm-rep"><path d="([^"]+)"/)[1], plainOut = body({ dsl: undefined }, F), plainCut = plainOut.match(/<clipPath id="gm-rep"><path d="([^"]+)"/)[1];
+  ok(`${label}: the skin patch under a photo shirt sits inside a clip`, !!hole && /<g clip-path="url\(#nk-rep\)"><path d="M[^"]*" fill="#e0b090"\/><\/g>/.test(out));
+  ok(`${label}: the clip is exactly the neck opening that is cut out of the shirt photo`, hole && /V99(C[^V]+)V80Z$/.test(hole[1]) && hole[1].match(/V99(C[^V]+)V80Z$/)[1] === (plainCut.match(/V99(C[^V]+)V80H/) || [])[1], hole ? hole[1] : "no clip");
+  ok(`${label}: no skin patch is left outside that clip`, !/V128H/.test(out.replace(/<g clip-path="url\(#nk-rep\)">[\s\S]*?<\/g>/, "")));
+}
+
+// the women's Tequila Era tee: its photo sleeves flare out sideways, so short sleeves are drawn over the arms and the hands come out of them
+const era = vm.runInContext("(" + html.match(/  "In My Tequila Era Tee \(Charcoal\)": (\{[\s\S]*?dslF: \{[^}]*\} \}),/)[1].replace(/IMG \+ ("[^"]*")/g, "$1") + ")", ctx);
+const womens = (extra = {}) => vm.runInContext(`humanBody(${JSON.stringify({ F: true, skin: "#e0b090", base: era.baseF, img: era.imgF, bbox: era.bboxF, Wk: era.Wk, long: false, hem: era.hem, v: false, polo: false, dsl: era.dslF, ...extra })}).torso`, ctx);
+{
+  const out = womens(), sleeves = [...out.matchAll(/<path d="(M[^"]+Z)" fill="#eeeeec"\/>/g)].map(m => m[1]), nums = d => [...d.matchAll(/-?\d+(?:\.\d+)?/g)].map(m => +m[0]);
+  ok("women's Era tee has what it needs to be drawn: sleeve colour, torso edges, the flare to the hem, armpit and cuff", era.dslF && era.dslF.torso[0] > era.dslF.hem[0] && era.dslF.edge[0] <= era.dslF.torso[0] && era.dslF.cuff > era.dslF.armpit - 0.1 && era.dslF.cuff < era.dslF.armpit);
+  ok("two short sleeves are drawn, one per arm, and they end at the same height", sleeves.length === 2 && nums(sleeves[0])[7] === nums(sleeves[1])[7], "cuff y " + (sleeves[0] ? nums(sleeves[0])[7] : "none"));
+  const [L] = sleeves.map(nums);
+  ok("a short sleeve ends above the elbow (it has no elbow corner) and flares out from the shoulder to the cuff", L.length === 10 && L[7] > 135 && L[7] < 156 && Math.abs(L[6] - L[8]) > Math.abs(L[0] - L[4]), `top ${Math.abs(L[0] - L[4]).toFixed(1)} cuff ${Math.abs(L[6] - L[8]).toFixed(1)} at y ${L[7]}`);
+  const cut = out.match(/<clipPath id="gm-rep"><path d="([^"]+)"/)[1], pts = [...cut.matchAll(/L(-?[\d.]+) (-?[\d.]+)/g)].map(m => [+m[1], +m[2]]);
+  ok("the photo is cut along the torso, which flares from the armpit to the hem, so the photo sleeves are gone and the hem is whole", pts[3][0] < pts[2][0] && pts[3][1] > pts[2][1] + 30, `armpit ${pts[2]} hem ${pts[3]}`);
+  ok("the forearms and hands are drawn under the sleeves", (out.match(/<line [^>]*stroke="#e0b090"/g) || []).length >= 4 && (out.match(/<path [^>]*fill="#e0b090"/g) || []).length >= 4);
+  ok("the men's Era tee and every other shirt are drawn as before", !/#eeeeec/.test(body({ dsl: undefined }, false)));
 }
 
 // polos: the neck skin behind the V never pokes out beside the collar wings
