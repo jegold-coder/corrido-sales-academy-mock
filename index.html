@@ -610,6 +610,36 @@ a.diffbtn{text-decoration:none;display:inline-block}
 .brandbtn{background:transparent;color:var(--cream);border-color:#e0a42fcc}.brandbtn:hover{background:var(--deep);color:var(--gold)}
 .diffbtn .sm{display:none}
 @media(max-width:700px){.brandbtn .lg{display:none}.brandbtn .sm{display:inline}.navsep{display:none}.top .stats .diffbtn{padding:.1rem .45rem;font-size:.68rem;letter-spacing:.02em}.top .stats{gap:.35rem .4rem}}
+/* ===== v33: customer reactions, the grader page, and tidy checkboxes ===== */
+.dash input[type=checkbox]{width:1.15rem;height:1.15rem;flex:none;margin:.12rem 0 0;padding:0;border:0;background:none;border-radius:4px;accent-color:var(--teal)}
+.protorow{display:flex!important;align-items:flex-start;gap:.6rem;margin:.55rem 0!important;line-height:1.35;cursor:pointer}
+.brow,.blush{transform-box:fill-box;transform-origin:center;transition:transform .4s}
+.xm path{display:none}
+[data-x=pleased]:not(.talking) .xm-smile,[data-x=delighted]:not(.talking) .xm-grin,[data-x=unsure]:not(.talking) .xm-flat,[data-x=annoyed]:not(.talking) .xm-frown{display:inline}
+[data-x=pleased]:not(.talking) .mouth,[data-x=delighted]:not(.talking) .mouth,[data-x=unsure]:not(.talking) .mouth,[data-x=annoyed]:not(.talking) .mouth{opacity:0}
+[data-x=pleased] .brow{transform:translateY(-1.2px)}[data-x=delighted] .brow{transform:translateY(-2.6px)}
+[data-x=unsure] .bl{transform:translateY(-3.2px) rotate(-5deg)}[data-x=unsure] .br{transform:translateY(1px) rotate(2deg)}
+[data-x=annoyed] .bl{transform:translateY(1.2px) rotate(15deg)}[data-x=annoyed] .br{transform:translateY(1.2px) rotate(-15deg)}
+[data-x=pleased] .blush,[data-x=delighted] .blush{transform:scale(1.3)}[data-x=annoyed] .blush{fill:#d9302055}
+.rxpop{opacity:0;pointer-events:none;transform-box:fill-box;transform-origin:center}.rxpop.go{animation:rxpop 1.9s ease-out}
+@keyframes rxpop{0%{opacity:0;transform:translateY(8px) scale(.6)}15%{opacity:1;transform:translateY(0) scale(1.2)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:translateY(-12px)}}
+@media(prefers-reduced-motion:reduce){.rxpop.go{animation:none;opacity:1}.brow,.blush{transition:none}}
+.grader .grow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.4rem 0}
+.grader label{display:grid;gap:.2rem;font-size:.8rem;font-weight:700;color:var(--brown)}
+.grader select,.grader textarea{font:inherit;font-weight:400;color:var(--ink);padding:.5rem .6rem;border:2px solid #cfc4b8;border-radius:10px;background:#fff;width:100%}
+.grader textarea{resize:vertical;min-height:5.5rem}
+.gr-says{margin:.5rem 0;padding:.5rem .7rem;background:#f6efe2;border-radius:10px}
+.gr-btns{display:flex;gap:.4rem;flex-wrap:wrap;margin:.5rem 0}.gr-btns .btn{padding:.35rem .8rem;font-size:.85rem}
+.gr-why{font-size:.85rem;color:var(--brown);margin:.2rem 0 0}
+.gr-top{display:grid;grid-template-columns:150px 1fr;gap:1rem;align-items:center}
+.gr-face{background:#e9dcc6;border-radius:14px;overflow:hidden}.gr-face svg{display:block;width:100%}
+.gr-score{font:2.4rem Rye,serif;line-height:1}.gr-score small{font:700 .9rem Arimo,sans-serif;color:var(--brown)}
+.gr-score.hi{color:#2d6a3a}.gr-score.mid{color:#9a6a12}.gr-score.lo{color:#9a2f2f}
+.gr-math{width:100%;border-collapse:collapse;font-size:.88rem;margin:.3rem 0}.gr-math td{padding:.2rem .3rem;border-bottom:1px solid #eadfcd}.gr-math td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.gr-list{list-style:none;margin:.3rem 0;padding:0;font-size:.88rem}.gr-list li{padding:.2rem 0 .2rem 1.5rem;position:relative}.gr-list li::before{position:absolute;left:0;font-weight:700}
+.gr-list .yes::before{content:"✓";color:#2d6a3a}.gr-list .no::before{content:"✗";color:#9a2f2f}.gr-list .neu::before{content:"•";color:var(--brown)}
+.gr-reply{border-left:4px solid var(--gold);padding:.3rem .7rem;margin:.5rem 0;background:#fff8e6;border-radius:0 8px 8px 0}
+@media(max-width:560px){.gr-top{grid-template-columns:110px 1fr}}
 </style>
 </head>
 <body>
@@ -662,22 +692,23 @@ a.diffbtn{text-decoration:none;display:inline-block}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24f"></script>
-<script src="scenarios.js?v=2026-10-24f"></script>
-<script src="progress.js?v=2026-10-24f"></script>
-<script src="criteria.js?v=2026-10-24f"></script>
-<script src="tone.js?v=2026-10-24f"></script>
-<script src="coach.js?v=2026-10-24f"></script>
-<script src="camera.js?v=2026-10-24f"></script>
-<script src="lessons.js?v=2026-10-24f"></script>
-<script src="dashboard.js?v=2026-10-24f"></script>
-<script src="onboarding.js?v=2026-10-24f"></script>
-<script src="tiers.js?v=2026-10-24f"></script>
-<script src="badges.js?v=2026-10-24f"></script>
-<script src="voices.js?v=2026-10-24f"></script>
-<script src="mission.js?v=2026-10-24f"></script>
-<script src="boss.js?v=2026-10-24f"></script>
-<script src="manager.js?v=2026-10-24f"></script>
+<script src="sound.js?v=2026-10-24h"></script>
+<script src="scenarios.js?v=2026-10-24h"></script>
+<script src="progress.js?v=2026-10-24h"></script>
+<script src="criteria.js?v=2026-10-24h"></script>
+<script src="tone.js?v=2026-10-24h"></script>
+<script src="coach.js?v=2026-10-24h"></script>
+<script src="camera.js?v=2026-10-24h"></script>
+<script src="lessons.js?v=2026-10-24h"></script>
+<script src="dashboard.js?v=2026-10-24h"></script>
+<script src="grader.js?v=2026-10-24h"></script>
+<script src="onboarding.js?v=2026-10-24h"></script>
+<script src="tiers.js?v=2026-10-24h"></script>
+<script src="badges.js?v=2026-10-24h"></script>
+<script src="voices.js?v=2026-10-24h"></script>
+<script src="mission.js?v=2026-10-24h"></script>
+<script src="boss.js?v=2026-10-24h"></script>
+<script src="manager.js?v=2026-10-24h"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -696,7 +727,14 @@ const D = () => DIFF[state.diff];
 $("#yes").focus();
 const toast = msg => { let t = $("#toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); } t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3200); };
 // Move keyboard focus to the new screen whenever the view changes.
-new MutationObserver(() => { if (!app.contains(document.activeElement)) app.focus({ preventScroll: true }); }).observe(app, { childList: true });
+// The room's background music belongs to a mission scene. Whatever way you leave (the X, the logo, the header, anything else), the
+// moment the screen is no longer a mission it stops.
+new MutationObserver(() => {
+  if (!app.contains(document.activeElement)) app.focus({ preventScroll: true });
+  if (Sound.theme && !app.querySelector("#pc")) Sound.stop();
+}).observe(app, { childList: true });
+// and it goes quiet while the page is hidden (another tab or window) instead of playing on in the background
+document.addEventListener("visibilitychange", () => { if (document.hidden) Sound.pause(); else Sound.resume(); });
 // Page 2 of the journey: age check, then sign in. Company sign-in is not live yet, so the options are "continue as guest" and an
 // email that is only saved on this device.
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
@@ -1073,16 +1111,24 @@ function person(o) {
     ${o.ears || ""}
     <clipPath id="fc-${id}"><path d="${face}"/></clipPath>
     <path d="${face}" fill="${o.skin}"/>
-    ${o.blush === false ? "" : '<ellipse cx="42" cy="68" rx="6" ry="4" fill="#d9605533"/><ellipse cx="78" cy="68" rx="6" ry="4" fill="#d9605533"/>'}
+    ${o.blush === false ? "" : '<ellipse class="blush" cx="42" cy="68" rx="6" ry="4" fill="#d9605533"/><ellipse class="blush" cx="78" cy="68" rx="6" ry="4" fill="#d9605533"/>'}
     ${o.hairFront}
-    <path d="M40 46Q47 42 54 46M66 46Q73 42 80 46" stroke="${brow}" stroke-width="${o.browW || 3}" fill="none" stroke-linecap="round"/>
+    <path class="brow bl" d="M40 46Q47 42 54 46" stroke="${brow}" stroke-width="${o.browW || 3}" fill="none" stroke-linecap="round"/><path class="brow br" d="M66 46Q73 42 80 46" stroke="${brow}" stroke-width="${o.browW || 3}" fill="none" stroke-linecap="round"/>
     <g class="eyes">${eyeAt(47)}${eyeAt(73)}${o.lashes || ""}</g>
     ${o.hat || ""}
     <path d="M60 56Q56 66 61 68" stroke="#0003" stroke-width="2" fill="none" stroke-linecap="round"/>
     ${o.beard || ""}
     ${o.over || ""}
     <ellipse class="mouth" cx="60" cy="${o.my}" rx="6.5" ry="2" fill="${o.lip}"/>
+    ${faceMouths(o)}
     ${o.glasses || ""}`;
+}
+// Mouths for the customer's reactions (smile, grin, flat, frown). All are hidden until a customer's face is set (see data-x in the CSS).
+function faceMouths(o) {
+  const y = Number(o.my) || 78, lip = /^#[0-9a-f]{6}$/i.test(o.lip || "") ? o.lip : "#7a3b30", c = o.beard ? mixHex(lip, "#ffffff", .55) : mixHex(lip, "#000000", .25);
+  return `<g class="xm" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path class="xm-smile" d="M52.5 ${y - 1.5}Q60 ${y + 5} 67.5 ${y - 1.5}"/><path class="xm-grin" d="M50.5 ${y - 2}Q60 ${y + 9.5} 69.5 ${y - 2}Z" fill="#fff" stroke-width="1.5"/>
+    <path class="xm-flat" d="M53.5 ${y + .6}L66 ${y - .4}"/><path class="xm-frown" d="M52.5 ${y + 2.2}Q60 ${y - 3.6} 67.5 ${y + 2.2}"/></g>`;
 }
 const MARCO_LOOK = {
   id: "m", skin: "#c58f64", hair: "#231710", my: 80, lip: "#6b3228",   // the mouth sits over the beard; without these it was drawn above his head
@@ -1603,7 +1649,7 @@ function barScene(avg, sc) {
     <g filter="url(#dof)">${T.blur}</g>
     ${T.over}
     <g transform="translate(110 76) scale(1.15)"><g class="p" id="pc">${person(look)}</g></g>
-    <polygon id="pl" class="mood ${plumb(avg)}" points="179,34 189,48 179,64 169,48"/>
+    <polygon id="pl" class="mood ${plumb(avg)}" points="179,34 189,48 179,64 169,48"/><text id="rxpop" class="rxpop" x="219" y="74" font-size="24" text-anchor="middle" aria-hidden="true"></text>
     <rect y="236" width="600" height="14" fill="url(#wood)"/>${grain}<rect y="236" width="600" height="2.5" fill="#fff" opacity=".35"/>
     ${[60, 150, 450, 540].map(x => `<ellipse cx="${x}" cy="243" rx="26" ry="2.6" fill="#ffe3a0" opacity=".35"/>`).join("")}
     <rect y="250" width="600" height="130" fill="url(#front)"/><rect y="340" width="600" height="40" fill="#120a05"/>

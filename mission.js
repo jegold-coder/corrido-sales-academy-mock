@@ -39,6 +39,18 @@ function play(sc) {
   question(0, { trust: L.start[0], interest: L.start[1], price: L.start[2] }, []);
 }
 
+// ---------- the customer's face follows how it is going ----------
+// delighted, pleased, (neutral), unsure or annoyed. data-x on the customer sets the brows, mouth and cheeks (CSS in index.html),
+// and after each answer a small reaction pops up beside their head. The running mood decides the resting face.
+const moodFace = M => { const a = (M.trust + M.interest) / 2; return a >= 68 ? "pleased" : a >= 40 ? "" : a >= 28 ? "unsure" : "annoyed"; };
+const REACT_POP = { delighted: "😄", unsure: "🤔", annoyed: "😠" };
+function setFace(x, pop) {
+  const el = $("#pc"); if (!el) return;
+  if (x) el.dataset.x = x; else delete el.dataset.x;
+  const t = $("#rxpop");
+  if (t && pop && REACT_POP[x]) { t.textContent = REACT_POP[x]; t.classList.remove("go"); void t.getBoundingClientRect(); t.classList.add("go"); }
+}
+
 // ---------- the avatar's voice, with the mouth moving to the words ----------
 function voiceFor(who, custMale) {
   const repMale = state.avatar.gender === "Male", repV = pickVoice(repMale);
@@ -235,6 +247,7 @@ function question(i, M, log) {
     $("#pl").setAttribute("class", "mood " + plumb((M.trust + M.interest) / 2));
     [M.trust, M.interest, M.price].forEach((v, k) => { $("#n" + "tip"[k]).style.width = v + "%"; });
     $("#bub").innerHTML = `<b>${cust.name}:</b> ${reply}`;
+    setFace(tier === "best" ? "delighted" : tier === "bad" ? "annoyed" : "unsure", true);
     await lipTalk("cust", spoken(reply), cust.male, { reply: true, mood: tier === "best" ? "warm" : tier === "bad" ? "cold" : "flat" });
     log.push({ cname: cust.name, skill: S.skill, q: S.q, line: S.line, text, res, blob, reply, model: S.R[0].replace(/^"|"$/g, ""), mid: view.id, mission: view.title, ck: key });
     // a running list of moments to review. Scoring well on the same moment later clears it.
@@ -249,6 +262,7 @@ function question(i, M, log) {
   }
 
   refresh();
+  setFace(moodFace(M));
   lipTalk("cust", spoken(S.line), cust.male);   // the customer says their line while you read the question
 }
 

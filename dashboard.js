@@ -8,7 +8,7 @@ function dashboard(tab = dashTab) {
   dashTab = tab;
   const lv = levelOf(state.xp), cur = LEVELS[lv][1], nxt = LEVELS[lv + 1];
   const pctNext = nxt ? Math.round((state.xp - cur) / (nxt[1] - cur) * 100) : 100;
-  const tabs = [["progress", "Progress"], ["badges", "Badges"], ["team", "Team"], ["review", "Review" + ((state.mistakes || []).length ? ` (${state.mistakes.length})` : "")], ["check", "Knowledge check"], ["settings", "Settings"]];
+  const tabs = [["progress", "Progress"], ["badges", "Badges"], ["team", "Team"], ["review", "Review" + ((state.mistakes || []).length ? ` (${state.mistakes.length})` : "")], ["check", "Knowledge check"], ["grader", "Grader"], ["settings", "Settings"]];
   app.innerHTML = `<section class="view sheet dash">
     <div class="dhead">
       <div class="dav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div>
@@ -21,7 +21,7 @@ function dashboard(tab = dashTab) {
   $("#dback").onclick = home;
   app.querySelectorAll(".tab").forEach(b => b.onclick = () => dashboard(b.dataset.t));
   const body = $("#dbody");
-  ({ progress: dashProgress, badges: dashBadges, team: dashTeam, review: dashReview, check: dashCheck, settings: dashSettings })[tab](body);
+  ({ progress: dashProgress, badges: dashBadges, team: dashTeam, review: dashReview, check: dashCheck, grader: dashGrader, settings: dashSettings })[tab](body);
   if (tab === "progress") {
     body.insertAdjacentHTML("afterbegin", `<div class="savenote"><span><b>Your progress is saved only in this browser.</b> Clearing browser data, or opening the game on another computer, starts you over. Download a backup to keep it safe.</span><button class="btn alt" id="bak" type="button">Download backup</button></div>`);
     $("#bak").onclick = exportProgress;

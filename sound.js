@@ -6,7 +6,7 @@
 // Sound starts only after the first click, as browsers require.
 
 const Sound = {
-  ctx: null, master: null, on: true, theme: null, nodes: [], timers: [], noise: null, plucks: {},
+  ctx: null, master: null, on: true, paused: false, theme: null, nodes: [], timers: [], noise: null, plucks: {},
 
   init() {
     if (this.ctx) { if (this.ctx.state === "suspended") this.ctx.resume(); return !!this.ctx; }
@@ -91,7 +91,7 @@ const Sound = {
   CHORDS: [[110, 164.81, 220, 261.63, 329.63], [98, 146.83, 196, 246.94, 293.66], [87.31, 130.81, 174.61, 220, 261.63], [82.41, 123.47, 164.81, 207.65, 246.94]],
   start(theme) {
     this.theme = theme;
-    if (!this.on || !this.init()) return;
+    if (!this.on || this.paused || !this.init()) return;
     this.stopAmbience();
     const c = this.ctx, R = this.ROOM[theme] || this.ROOM.bar, t = c.currentTime;
     const out = c.createGain(); out.gain.value = 0; out.gain.linearRampToValueAtTime(1, t + 1.5); out.connect(this.master); this.nodes.push(out);
@@ -127,6 +127,9 @@ const Sound = {
     this.nodes.forEach(n => { try { if (n.stop) n.stop(); n.disconnect(); } catch { /* already stopped or not started */ } }); this.nodes = [];
   },
   stop() { this.theme = null; this.stopAmbience(); },
+  // The page is hidden (another tab or window): go quiet, and pick the room back up when it returns, only if the mission is still on.
+  pause() { this.paused = true; this.stopAmbience(); },
+  resume() { if (!this.paused) return; this.paused = false; if (this.theme && this.on) this.start(this.theme); },
 
   // ----- effects -----
   SFX: {
@@ -145,6 +148,6 @@ const Sound = {
     // two clinks and a sparkle of high piano-like notes
     badge: s => { s.clink(0, 0.18); s.clink(0.14, 0.14); [1318.5, 1568, 2093].forEach((f, i) => s.tone(f, 0.3, "sine", 0.1, null, 0.25 + i * 0.09)); },
   },
-  sfx(name) { if (this.on && this.init() && this.SFX[name]) this.SFX[name](this); },
+  sfx(name) { if (this.on && !this.paused && this.init() && this.SFX[name]) this.SFX[name](this); },
 };
 Sound.load();

@@ -41,6 +41,8 @@ What it loads from the internet:
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
 | Sign-in (journey page 2) | Age check, then "continue as guest" or an email that is only saved on this device. Company sign-in comes with the rollout |
 | Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a CSV invite page and leaderboards. Uses sample data. See below |
+| Customer reactions | The customer's face follows the conversation: brows, mouth and cheeks go from delighted to pleased, plain, unsure or annoyed, and a small reaction pops up beside them after each answer. Harder levels start the customer more guarded |
+| Test the grader (Dashboard > Grader) | Type any answer to any question and see the score, the arithmetic behind it, what it covered, the mistakes and the tone notes, plus how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
 | Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules (reached from the header on every screen, next to a link to the real website that opens in a new tab) |
 | Practice and review | The Dashboard's Review tab (with a count) collects every wrong answer with a stronger one, and its Progress tab has a Practice button that replays your weakest skill across different customers. Neither is on the map. Missions also open with a different line on replay |
@@ -82,8 +84,9 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `badges.js` | the badge medals (boss faces, metals, ribbons), awarding boss badges |
 | `voices.js` | giving each customer a distinct voice and accent, and speaking like a person |
 | `dashboard.js` | the rep dashboard |
+| `grader.js` | the Grader tab: score any answer and see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `globals` and `camera` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `globals` and `camera` tests |
 
 ## Tests
 
@@ -93,6 +96,8 @@ node tests/tone.test.js     # tone rules on words, and voice maths on synthetic 
 node tests/tiers.test.js    # every piece of merch is unlocked once, bosses are in order and on the map
 node tests/badges.test.js   # a badge for every boss, awarded once, caught up from earlier progress
 node tests/voices.test.js   # each customer gets a different voice, lines are paced like speech
+node tests/reactions.test.js # customer faces react to the conversation, and the grader's arithmetic adds up
+node tests/sound.test.js    # room music only plays during a mission, and goes quiet when the page is hidden
 node tests/globals.test.js  # no two scripts declare the same name (a clash stops a file loading)
 node tests/camera.test.js   # face maths with fake landmarks
 ```
