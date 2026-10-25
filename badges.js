@@ -47,7 +47,7 @@ function syncBadges() {
   const keys = BOSSES.filter(b => state.done[b.id]).map(b => "boss-" + b.id);
   if (state.pre) keys.push("check");   // the knowledge check was finished at least once
   if (BOSSES.every(b => state.done[b.id])) keys.push("bossall");
-  if (merchEarned().size >= Object.keys(OUTFITS).length + Object.keys(HATS).length) keys.push("closet");
+  if (merchEarned().size >= merchTotal()) keys.push("closet");
   return awardBadges(keys);
 }
 

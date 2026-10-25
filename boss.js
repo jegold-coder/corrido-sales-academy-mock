@@ -30,7 +30,7 @@ function bossIntro(stop) {
   Sound.start("boss");   // the boss theme plays on this screen only: it stops when you go back, go anywhere else, or start the battle
   const boss = BOSS_BY[stop.id], tier = boss.tier, quiz = !!boss.quiz, sc = quiz ? null : SCENARIOS.find(m => m.id === stop.id);
   const next = tier >= 5 ? "complete the season" : `become ${aTier(tier + 1)}`, L = sc ? MLEVEL[sc.level] : null;
-  const left = bossTriesLeft(stop.id), rewards = REWARDS[stop.id] || [], reward = rewards.join(", ");
+  const left = bossTriesLeft(stop.id), rewards = stopRewards(stop.id), reward = rewards.join(", ");
   const rules = quiz
     ? [`${boss.count} questions, ${boss.secs} seconds each`, `Score ${Math.round(boss.pass * 100)}% or better to win`, "A question you run out of time on counts as wrong", `Win unlocks Tier ${tier + 1}${reward ? ". Also unlocks " + reward : ""}`]
     : [`Score ${boss.pass.toFixed(1)} / 5 or better across the conversation`,
@@ -117,7 +117,7 @@ function brandBrain(stop, boss, rehearsal) {
 // A first win is a tier up. A practice win just says so. (Mission bosses call bossApplyWin from mission.js.)
 // Apply a first-time boss win: mark it done, add the XP bonus, wear the reward. Returns what the tier-up screen shows.
 function bossApplyWin({ boss, stop, first, stars, perfect }) {
-  const tierFrom = tierOf(), items = REWARDS[stop.id] || [], bonus = 100 * (boss.tier + 3);
+  const tierFrom = tierOf(), items = stopRewards(stop.id), bonus = 100 * (boss.tier + 3);
   if (first) { state.done[stop.id] = true; state.stars[stop.id] = Math.max(state.stars[stop.id] || 0, stars || 1); state.xp += bonus; wearFirst(items); Progress.save(state); hud(); }
   const badges = awardBadges(["boss-" + stop.id, ...(perfect ? ["bossperfect"] : [])]).concat(syncBadges());
   return { tierFrom, tierTo: tierOf(), items: first ? items : [], bonus: first ? bonus : 0, first, badges };

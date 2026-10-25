@@ -84,7 +84,7 @@ function dashReview(el) {
 // Where the rep is on the six tiers, the bosses beaten and how much merch is unlocked.
 // The tier ladder: six steps, each with the medal for its boss (in colour once that boss is beaten), and where you stand now.
 function tierCard() {
-  const t = tierOf(), got = merchEarned().size, total = Object.keys(OUTFITS).length + Object.keys(HATS).length, nb = nextBoss(), st = nb && ALL_STOPS().find(x => x.id === nb.id);
+  const t = tierOf(), got = merchEarned().size, total = merchTotal(), nb = nextBoss(), st = nb && ALL_STOPS().find(x => x.id === nb.id);
   const steps = TIERS.map((n, i) => {
     const boss = BOSSES[i], earned = !!state.done[boss.id], cls = i < t ? "past" : i === t ? "now" : "next";
     return `<li class="lstep ${cls}"><span class="lnum">TIER ${i}</span><b>${n}</b><span class="lmedal">${badgeSVG("boss-" + boss.id, earned)}</span><small>${earned ? (i === 5 ? "Season complete" : "Boss beaten") : i === t ? "You are here" : "Ahead"}</small></li>`;

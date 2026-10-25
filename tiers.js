@@ -49,8 +49,19 @@ const REWARDS = {
   hardno: ["Tequila Delivery 24/7 Oversized Tee (Vintage White)"],
   mean: ["Rebel Snapback"],
 };
-const MERCH_SOURCE = {};
-Object.entries(REWARDS).forEach(([stop, items]) => items.forEach(i => { MERCH_SOURCE[i] = stop; }));
+// The Military Green Era tee is the men's cut only (a woman has the Women's Tee, which is the Charcoal piece), so a female rep never sees it. At the
+// stop that would have unlocked it she gets a different shirt instead, and the stop that shirt came from gives one piece fewer. Every piece a rep
+// can wear is still unlocked exactly once.
+const REWARDS_F = {
+  priya: ["Corrido Logo Tee (Dark Grey Heather)", "Tequila Smuggler Tee"],
+  mia: ["Mas Tequila Tee (Khaki)"],
+};
+const curGender = () => (typeof state !== "undefined" && state.avatar && state.avatar.gender) || "";
+const rewardsFor = gender => (gender === "Female" ? { ...REWARDS, ...REWARDS_F } : REWARDS);
+const stopRewards = stop => rewardsFor(curGender())[stop] || [];   // what passing this stop unlocks for the rep playing now
+const merchStop = name => (Object.entries(rewardsFor(curGender())).find(([, items]) => items.includes(name)) || [])[0];
+// How many pieces this rep can collect: everything cut for their gender (the Military Green Era tee is men's only), plus the hats.
+const merchTotal = (gender = curGender()) => Object.values(OUTFITS).filter(o => !o.g || o.g === "u" || o.g === (gender === "Female" ? "f" : "m")).length + Object.keys(HATS).length;
 
 // Prototype switches (Dashboard, Settings). Each stop stays locked until the one before it is done; boss tries are unlimited while the game is being tested.
 const PROTO_DEFAULTS = { unlockStops: false, unlockMerch: false, unlimitedTries: true };
@@ -64,13 +75,13 @@ const nextBoss = () => BOSSES.find(b => !state.done[b.id]) || null;
 
 const merchEarned = () => {
   const s = new Set(STARTER_MERCH);
-  Object.entries(REWARDS).forEach(([stop, items]) => { if (state.done[stop]) items.forEach(i => s.add(i)); });
+  Object.entries(rewardsFor(curGender())).forEach(([stop, items]) => { if (state.done[stop]) items.forEach(i => s.add(i)); });
   return s;
 };
 const merchUnlocked = name => PROTO("unlockMerch") || merchEarned().has(name);
 // Where to find a locked piece: "Beat The Quiet Bar to unlock".
 const merchHow = name => {
-  const stop = MERCH_SOURCE[name], st = stop && (typeof ALL_STOPS === "function" ? ALL_STOPS().find(x => x.id === stop) : null);
+  const stop = merchStop(name), st = stop && (typeof ALL_STOPS === "function" ? ALL_STOPS().find(x => x.id === stop) : null);
   return st ? `Beat ${st.title} to unlock` : "Locked";
 };
 

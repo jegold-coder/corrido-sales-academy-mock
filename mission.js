@@ -323,7 +323,7 @@ function missionResults(M, log) {
   stopAll(); state.xp += xp;
   // beating a regular level unlocks its merch. A boss win is handled by the tier-up (it also moves you up a tier).
   const counts = !sc.practice && !sc.rehearsal && !boss, firstTime = !state.done[sc.id];
-  const newItems = counts && won && firstTime ? (REWARDS[sc.id] || []) : [];
+  const newItems = counts && won && firstTime ? stopRewards(sc.id) : [];
   if (counts && won) { state.done[sc.id] = true; state.stars[sc.id] = Math.max(state.stars[sc.id] || 0, stars); }
   const tierInfo = boss && won && !sc.rehearsal ? bossApplyWin({ boss, stop: sc, first: firstTime, stars, perfect: avg >= 4.8 }) : null;
   const earned = Progress.record(state, { id: sc.id, title: sc.title, diff: `Level ${lvl}`, mode: voiceUsed ? "speak" : "type", pct, stars, won, xp, skills, lesson: false, voice: voiceUsed, camera: !!cam, cameraScores: cam, perfect }, TOTAL_STOPS());

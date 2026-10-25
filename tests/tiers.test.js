@@ -7,6 +7,9 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const names = src => [...src.matchAll(/^  "([^"]+)": \{/gm)].map(m => m[1]);
 const outfits = names(html.slice(html.indexOf("const OUTFITS = {"), html.indexOf("const SLEEVE = {")));
 const hats = names(html.slice(html.indexOf("const HATS = {"), html.indexOf("const BODY = ")));
+// the pieces with the gender each one is cut for, which is all the merch totals need
+const cut = Object.fromEntries([...html.slice(html.indexOf("const OUTFITS = {"), html.indexOf("const SLEEVE = {")).matchAll(/^  "([^"]+)": \{ g: "(\w)"/gm)].map(m => [m[1], { g: m[2] }]));
+ctx.OUTFITS = cut; ctx.HATS = Object.fromEntries(hats.map(n => [n, {}]));
 for (const f of ["scenarios.js", "lessons.js"]) vm.runInContext(fs.readFileSync(path.join(root, f), "utf8").replace(/^"use strict";/, ""), ctx);
 vm.runInContext(fs.readFileSync(path.join(root, "tiers.js"), "utf8").replace(/^"use strict";/, "").replace(/if \(typeof module[^\n]*/, ""), ctx);
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
@@ -25,4 +28,27 @@ const LV = vm.runInContext("LEVEL_OF", ctx);
 ok("each boss is the last stop of its difficulty level", R.BOSSES.filter(b => !b.quiz).every(b => R.PATH.slice(R.PATH.indexOf(b.id) + 1).every(id => LV[id] !== LV[b.id])));
 ok("each tier boss ends its own level, one level per tier", R.BOSSES.filter(b => !b.quiz).every(b => LV[b.id] === b.tier));
 ok("boss pass marks only go up", R.BOSSES.filter(b => !b.quiz).every((b, i, a) => !i || b.pass >= a[i - 1].pass));
+
+// the Military Green Era tee is the men's cut only: a woman never sees it, and gets a different shirt at that stop instead
+const MG = "In My Tequila Era Tee (Military Green)", men = outfits.filter(n => !new RegExp(`"${n.replace(/[()]/g, "\\$&")}": \\{ g: "f"`).test(html));
+ok("the Military Green Era tee is marked men's only, and sits right behind the grey one in the picker", new RegExp(`"${MG.replace(/[()]/g, "\\$&")}": \\{ g: "m", after: "In My Tequila Era Tee \\(Charcoal\\)"`).test(html));
+// the picker's order: unlocked pieces first, but a piece that asks to sit behind another one does, whether it is locked or not
+const order = html.match(/const unlockedFirst = list => \{[\s\S]*?\n\};/)[0];
+const pick = vm.createContext({ OUTFITS: { "A": {}, "In My Tequila Era Tee (Charcoal)": {}, "B": {}, "C": {}, [MG]: { after: "In My Tequila Era Tee (Charcoal)" } }, merchUnlocked: n => unlocked.has(n) });
+let unlocked = new Set(["A", "In My Tequila Era Tee (Charcoal)", "B"]);
+vm.runInContext(order, pick);
+const list = ["A", "In My Tequila Era Tee (Charcoal)", "B", "C", MG];
+ok("a locked piece that asks for it sits right behind its sibling, and the other locked pieces still go last", vm.runInContext(`unlockedFirst(${JSON.stringify(list)})`, pick).join() === ["A", "In My Tequila Era Tee (Charcoal)", MG, "B", "C"].join());
+unlocked = new Set([...unlocked, MG]);
+ok("once it is unlocked it stays behind the grey one", vm.runInContext(`unlockedFirst(${JSON.stringify(list)})`, pick).join() === ["A", "In My Tequila Era Tee (Charcoal)", MG, "B", "C"].join());
+ok("for a woman (no Military Green in her list) the order is unchanged", vm.runInContext(`unlockedFirst(${JSON.stringify(list.filter(n => n !== MG))})`, pick).join() === ["A", "In My Tequila Era Tee (Charcoal)", "B", "C"].join());
+const F = vm.runInContext("({ f: rewardsFor('Female'), m: rewardsFor('Male'), unknown: rewardsFor(''), total: g => merchTotal(g) })", ctx);
+const givenF = Object.values(F.f).flat(), onceF = [...R.STARTER_MERCH, ...givenF], allF = all.filter(m => m !== MG);
+ok("men still get Military Green at Priya's stop, as before", F.m.priya.includes(MG) && F.m === R.REWARDS && F.unknown === R.REWARDS);
+ok("women do not get it: they get another shirt at that stop", !givenF.includes(MG) && F.f.priya.length === 2 && F.f.priya[1] !== MG && all.includes(F.f.priya[1]));
+ok("for women every piece they can wear is still unlocked exactly once (the swapped shirt is taken out of the stop it came from)", allF.every(m => onceF.filter(x => x === m).length === 1) && !onceF.includes(MG), allF.filter(m => onceF.filter(x => x === m).length !== 1).join(", "));
+ok("the same stops give something to women as to men, so no stop is left empty", Object.keys(R.REWARDS).every(id => F.f[id].length >= 1));
+ok("the merch total is 42 for a man and 41 for a woman, so 'Full Closet' can still be earned", F.total("Male") === 42 && F.total("Female") === 41, `${F.total("Male")} / ${F.total("Female")}`);
+const earnedF = vm.runInContext("(() => { state.avatar = { gender: 'Female' }; state.done = Object.fromEntries(Object.keys(REWARDS).map(k => [k, true])); const n = merchEarned().size, has = merchEarned().has('In My Tequila Era Tee (Military Green)'); state.avatar = { gender: 'Male' }; const m = merchEarned().size; state.avatar = undefined; state.done = {}; return { n, m, has }; })()", ctx);
+ok("a woman who finishes every stop has all 41 of her pieces and not the men's tee; a man has all 42", earnedF.n === 41 && !earnedF.has && earnedF.m === 42, JSON.stringify(earnedF));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

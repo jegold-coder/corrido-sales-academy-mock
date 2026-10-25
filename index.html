@@ -864,27 +864,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25s"></script>
-<script src="sound.js?v=2026-10-25s"></script>
-<script src="scenarios.js?v=2026-10-25s"></script>
-<script src="progress.js?v=2026-10-25s"></script>
-<script src="criteria.js?v=2026-10-25s"></script>
-<script src="tone.js?v=2026-10-25s"></script>
-<script src="coach.js?v=2026-10-25s"></script>
-<script src="camera.js?v=2026-10-25s"></script>
-<script src="lessons.js?v=2026-10-25s"></script>
-<script src="dashboard.js?v=2026-10-25s"></script>
-<script src="grader.js?v=2026-10-25s"></script>
-<script src="onboarding.js?v=2026-10-25s"></script>
-<script src="tiers.js?v=2026-10-25s"></script>
-<script src="badges.js?v=2026-10-25s"></script>
-<script src="voices.js?v=2026-10-25s"></script>
-<script src="mission.js?v=2026-10-25s"></script>
-<script src="boss.js?v=2026-10-25s"></script>
-<script src="auth.js?v=2026-10-25s"></script>
-<script src="manager.js?v=2026-10-25s"></script>
-<script src="callcard.js?v=2026-10-25s"></script>
-<script src="presenter.js?v=2026-10-25s"></script>
+<script src="config.js?v=2026-10-25u"></script>
+<script src="sound.js?v=2026-10-25u"></script>
+<script src="scenarios.js?v=2026-10-25u"></script>
+<script src="progress.js?v=2026-10-25u"></script>
+<script src="criteria.js?v=2026-10-25u"></script>
+<script src="tone.js?v=2026-10-25u"></script>
+<script src="coach.js?v=2026-10-25u"></script>
+<script src="camera.js?v=2026-10-25u"></script>
+<script src="lessons.js?v=2026-10-25u"></script>
+<script src="dashboard.js?v=2026-10-25u"></script>
+<script src="grader.js?v=2026-10-25u"></script>
+<script src="onboarding.js?v=2026-10-25u"></script>
+<script src="tiers.js?v=2026-10-25u"></script>
+<script src="badges.js?v=2026-10-25u"></script>
+<script src="voices.js?v=2026-10-25u"></script>
+<script src="mission.js?v=2026-10-25u"></script>
+<script src="boss.js?v=2026-10-25u"></script>
+<script src="auth.js?v=2026-10-25u"></script>
+<script src="manager.js?v=2026-10-25u"></script>
+<script src="callcard.js?v=2026-10-25u"></script>
+<script src="presenter.js?v=2026-10-25u"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -983,7 +983,7 @@ const stopMinutes = st => (st.practice ? 6 : st.qs ? Math.max(2, Math.round(st.q
 function openDiff(go, stop) {
   const dlg = $("#diffDlg"), lesson = !!(stop && stop.qs), L = MLEVEL[(stop && stop.level) || 2];
   dlg.onclick = e => { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); };   // click outside to close
-  const rw = !stop.practice && !stop.noReward && REWARDS[stop.id], got = rw && state.done[stop.id];
+  const rw = !stop.practice && !stop.noReward && stopRewards(stop.id), got = rw && state.done[stop.id];
   const coachOnDefault = state.coachPref === true || state.coachPref === false ? state.coachPref : ((stop && stop.level) || 2) <= 2;
   const secure = window.isSecureContext, hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
   dlg.innerHTML = `<h2>${esc(stop.title)}</h2>
@@ -1156,7 +1156,7 @@ const needsCheck = () => false;
 let mapSeen = null;
 // A boss's face for its stop on the map (the Brand Brain quiz has no face, so it keeps its icon).
 const bossFace = n => { const sc = BOSS_BY[n.id] && SCENARIOS.find(s => s.id === n.id); return sc ? `<span class="bface" aria-hidden="true"><svg viewBox="20 -4 80 80">${person(custLook(sc))}</svg></span>` : null; };
-const pieceThumb = nm => { const m = OUTFITS[nm] || HATS[nm]; return m ? (m.img ? `<img src="${thumb(m.img)}" alt="" loading="lazy">` : poloIcon(m.base)) : ""; };
+const pieceThumb = nm => { const m = OUTFITS[nm] || HATS[nm], v = merchView(nm, state.avatar.gender); return m ? (v.img ? `<img src="${thumb(v.img)}" alt="" loading="lazy">` : poloIcon(m.base)) : ""; };
 
 function home() {
   stopAll(); Cam.stop(); Sound.stop(); document.body.classList.remove("onboarding");
@@ -1184,15 +1184,15 @@ function home() {
       </button><div class="lab">${BOSS_BY[n.id] ? `<span class="bosstag">Boss · Tier ${BOSS_BY[n.id].tier}</span>` : ""}${n.title}<small>${open ? (BOSS_BY[n.id] ? `Beat it to become ${aTier(Math.min(5, BOSS_BY[n.id].tier + 1))}` : `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}`) : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
   const lv = levelOf(state.xp), lcur = LEVELS[lv][1], lnxt = LEVELS[lv + 1], lpct = lnxt ? Math.round((state.xp - lcur) / (lnxt[1] - lcur) * 100) : 100;
-  const gotMerch = merchEarned().size, allMerch = Object.keys(OUTFITS).length + Object.keys(HATS).length;
-  const rewardStop = nextStop && nodes.slice(nodes.indexOf(nextStop)).find(n => (REWARDS[n.id] || []).length), rewardItems = rewardStop ? REWARDS[rewardStop.id] : [];
+  const gotMerch = merchEarned().size, allMerch = merchTotal();
+  const rewardStop = nextStop && nodes.slice(nodes.indexOf(nextStop)).find(n => stopRewards(n.id).length), rewardItems = rewardStop ? stopRewards(rewardStop.id) : [];
   const nb = nextBoss(), nbStop = nb && nodes.find(n => n.id === nb.id), nbIdx = nbStop ? nodes.indexOf(nbStop) : -1, nbSc = nbStop && SCENARIOS.find(x => x.id === nbStop.id);
   const nbOpen = nbStop && (PROTO("unlockStops") || (!gated && (nbIdx === 0 || state.done[nodes[nbIdx - 1].id])));
   const sideLeft = `<aside class="mside" aria-label="Your rep">
     <div class="sidecard repcard go" data-go="progress" role="link" tabindex="0" title="Open your progress"><div class="rav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div><b class="rn">${esc(repName())}</b><span class="rt">Tier ${tNow} · ${TIERS[tNow]}</span>
       <div class="bar" aria-hidden="true"><i style="width:${lpct}%"></i></div><small>Level ${lv + 1}: ${LEVELS[lv][0]}${lnxt ? ` · ${lnxt[1] - state.xp} XP to ${lnxt[0]}` : ""}</small>
       <div class="sidestats"><span title="Day streak">🔥 ${state.streak || 0}</span><span title="XP">⭐ ${state.xp}</span><span title="Merch unlocked">👕 ${gotMerch}/${allMerch}</span></div><em class="goto">Your progress ›</em></div>
-    ${rewardStop ? `<div class="sidecard go" data-go="creator" role="link" tabindex="0" title="Open the character creator"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(nm)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(rewardItems[0])}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small><em class="goto">Your outfits ›</em></div>` : ""}</aside>`;
+    ${rewardStop ? `<div class="sidecard go" data-go="creator" role="link" tabindex="0" title="Open the character creator"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(merchView(nm, state.avatar.gender).label)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(merchView(rewardItems[0], state.avatar.gender).label)}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small><em class="goto">Your outfits ›</em></div>` : ""}</aside>`;
   const sideRight = `<aside class="mside" aria-label="Next boss and badges">
     ${nb && nbStop ? `<div class="sidecard bosscard"><h3>Next boss</h3><div class="bigface">${bossFace(nbStop) || '<span class="bface brain">🧠</span>'}</div><b class="rn">${nbSc ? esc(nbSc.cust.name) : "Brand Brain"}</b><span class="rt">${nbSc ? esc(nbSc.cust.role) : "Ten timed questions"}</span>
       <p>Tier ${nb.tier} boss. Win to become ${aTier(Math.min(5, nb.tier + 1))}.</p><small>${nb.quiz ? `${Math.round(nb.pass * 100)}% or better to win` : `${nb.pass.toFixed(1)} out of 5 on average to win${nb.voice ? ", voice only" : ""}`}</small>
@@ -1501,7 +1501,7 @@ const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
 const OUTFITS = {
   "Mas Tequila Tee (White)": { g: "u", price: "$24.90", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
   "In My Tequila Era Tee (Charcoal)": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
-    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2" },
+    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2", nameF: "Tequila Era Women’s Tee", urlF: "in-my-tequila-era-women-s-tee" },
   "Tequila On My Mind Tee": { g: "u", price: "$29.00", base: "#d8cdb4", Wk: .97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_600x.png?v=1778981479", bbox: [.075, .037, .918, .96] },
   "Corrido x adidas Polo": { g: "u", price: "$64.00", base: "#363635", Wk: 1, hem: 208, polo: true, v: true, bbox: [0, 0, 1, 1],
     logo: { img: IMG + "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_600x.png?v=1767764185", box: [.556, .238, .652, .292], dim: .72 } },
@@ -1536,7 +1536,7 @@ const OUTFITS = {
   "Mas Tequila Tee (Ivory)": { g: "u", price: "$24.90", base: "#f2e8d0", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-ivory-front-6997fa20d6c2f_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
   "Mas Tequila Tee (Khaki)": { g: "u", price: "$24.90", base: "#aea78b", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-khaki-front-6a371a9822297_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
   "Mas Tequila Tee (Bay)": { g: "u", price: "$24.90", base: "#b3b8a7", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-bay-front-6a371a9823a39_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
-  "In My Tequila Era Tee (Military Green)": { g: "u", price: "$29.00", base: "#6c715c", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-military-green-front-68c3a296d2cd2_600x.png", bbox: [0.038, 0.04, 0.962, 0.958] },
+  "In My Tequila Era Tee (Military Green)": { g: "m", after: "In My Tequila Era Tee (Charcoal)", price: "$29.00", base: "#6c715c", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-military-green-front-68c3a296d2cd2_600x.png", bbox: [0.038, 0.04, 0.962, 0.958] },
   "Corrido Logo Tee (Dark Grey Heather)": { g: "u", price: "$24.00", base: "#343434", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-dark-grey-heather-front-68c3a7b7c3abb_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
   "Pickleball Raglan": { g: "u", price: "$40.00", base: "#455262", Wk: 1.06, hem: 208, img: IMG + "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_600x.png", bbox: [0.015, 0.045, 0.982, 0.96],
     // The photo's sleeves flare out sideways, so only its body (shoulder seams included) is used and the navy 3/4 sleeves are drawn hanging over the arms.
@@ -1635,6 +1635,11 @@ const GENDER_DEFAULTS = {
   Female: { hairStyle: "Long", facial: "None", browW: 1, blush: true, earrings: false, lip: 0, outfit: "Spirit Animal Tee" },
 };
 const DEFAULT_AVATAR = { name: "", gender: "Female", skin: 1, face: "Oval", hairStyle: "Long", hair: 1, eye: 0, brow: -1, browW: 1, facial: "None", glasses: "None", frame: 0, outfit: "Spirit Animal Tee", hat: "None", lip: 0, smile: "Neutral", dimples: false, freckles: false, mole: false, earrings: false, blush: true };
+// A piece with a women's cut (its own photo, name and shop page) shows that cut to a female rep, in the tiles, the captions and the shop link.
+const merchView = (name, gender) => {
+  const m = OUTFITS[name] || HATS[name] || {}, f = gender === "Female" && m.imgF;
+  return { img: f ? m.imgF : m.img, label: f && m.nameF ? m.nameF : name, url: f && m.urlF ? m.urlF : MERCH_URL[name] };
+};
 const outfitsFor = g => Object.keys(OUTFITS).filter(k => OUTFITS[k].g === "u" || OUTFITS[k].g === (g === "Female" ? "f" : "m"));
 // Shirts that now have colourway siblings were renamed. A saved avatar keeps working.
 const LEGACY_MERCH = { "Corrido Classic Tee": "Corrido Classic Tee (Maroon)", "Tequila Delivery 24/7 Oversized Tee": "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)", "Mas Tequila Tee": "Mas Tequila Tee (White)", "In My Tequila Era Tee": "In My Tequila Era Tee (Charcoal)", "Corrido Logo Tee": "Corrido Logo Tee (Heather Navy)" };
@@ -1686,7 +1691,12 @@ function repLook() {
 // Options depend on the chosen gender. Corrido merch supplies the shirts and hats.
 const swatchCol = (g, v) => (g.match ? (v === -1 ? "" : HAIRC[v]) : v);
 // What you can wear comes first, so the locked pieces never push your options down the page.
-const unlockedFirst = list => [...list.filter(merchUnlocked), ...list.filter(n => !merchUnlocked(n))];
+const unlockedFirst = list => {
+  const ord = [...list.filter(merchUnlocked), ...list.filter(n => !merchUnlocked(n))];
+  // a piece can ask to sit right behind another one (a colourway next to its sibling), even if one is locked and the other is not
+  ord.filter(n => OUTFITS[n] && OUTFITS[n].after && ord.includes(OUTFITS[n].after)).forEach(n => { ord.splice(ord.indexOf(n), 1); ord.splice(ord.indexOf(OUTFITS[n].after) + 1, 0, n); });
+  return ord;
+};
 function groupsFor(A) {
   const F = A.gender === "Female";
   return [
@@ -1718,8 +1728,8 @@ function creator(onDone, opts = {}) {
   let mtab = "tee";
   const merchTile = c => {
     if (c === "None") return `<button type="button" class="tile none" data-v="None" data-cap="No hat" aria-label="No hat"><span aria-hidden="true">✕</span><small>None</small></button>`;
-    const m = OUTFITS[c] || HATS[c], lock = !merchUnlocked(c), cap = `${c} · ${m.price}${lock ? " · " + merchHow(c) : ""}`;
-    return `<button type="button" class="tile ${lock ? "locked" : ""}" data-v="${esc(c)}" data-cap="${esc(cap)}" title="${esc(cap)}" ${lock ? 'aria-disabled="true"' : ""} aria-label="${esc(cap)}${lock ? ". Locked" : ""}">${m.img ? `<img src="${thumb(m.img)}" alt="" loading="lazy">` : poloIcon(m.base)}${lock ? '<i class="lk" aria-hidden="true">🔒</i>' : ""}</button>`;
+    const m = OUTFITS[c] || HATS[c], v = merchView(c, A.gender), lock = !merchUnlocked(c), cap = `${v.label} · ${m.price}${lock ? " · " + merchHow(c) : ""}`;
+    return `<button type="button" class="tile ${lock ? "locked" : ""}" data-v="${esc(c)}" data-cap="${esc(cap)}" title="${esc(cap)}" ${lock ? 'aria-disabled="true"' : ""} aria-label="${esc(cap)}${lock ? ". Locked" : ""}">${v.img ? `<img src="${thumb(v.img)}" alt="" loading="lazy">` : poloIcon(m.base)}${lock ? '<i class="lk" aria-hidden="true">🔒</i>' : ""}</button>`;
   };
   const merchHtml = () => {
     const gs = groupsFor(A).filter(g => g.merch);
@@ -1731,7 +1741,7 @@ function creator(onDone, opts = {}) {
   const capText = () => {
     const polo = !!OUTFITS[A.outfit].polo;
     if (mtab === "hat") return A.hat === "None" ? "No hat. Pick one to try it on." : `${A.hat} · ${HATS[A.hat].price}`;
-    return (mtab === "polo") === polo ? `${A.outfit} · ${OUTFITS[A.outfit].price}` : `Pick a ${mtab === "polo" ? "polo" : "T-shirt"} to swap out the ${polo ? "polo" : "shirt"}.`;
+    return (mtab === "polo") === polo ? `${merchView(A.outfit, A.gender).label} · ${OUTFITS[A.outfit].price}` : `Pick a ${mtab === "polo" ? "polo" : "T-shirt"} to swap out the ${polo ? "polo" : "shirt"}.`;
   };
   const optsHtml = () => groupsFor(A).filter(g => !g.merch).map(g => `<div class="grp"><h3>${g.label}</h3><div class="chips" data-g="${g.k}">${
     g.sw ? g.sw.map((v, i) => `<button type="button" class="sw ${g.match && v === -1 ? "match" : ""}" style="${swatchCol(g, v) ? `background:${swatchCol(g, v)}` : ""}" data-v="${g.match ? v : i}" aria-label="${g.label} ${i + 1}${v === -1 ? " (match hair)" : ""}" title="${v === -1 ? "Match hair" : ""}"></button>`).join("")
@@ -1753,7 +1763,7 @@ function creator(onDone, opts = {}) {
     <p class="csavebar"><button class="btn" id="cdone" type="button">Save &amp; continue</button> <small id="nreq" class="nreq">Enter your name to continue.</small></p></section>`;
   const paint = () => {
     $("#cprev").innerHTML = person(repLook());
-    const shop = (label, name) => MERCH_URL[name] ? `<a class="shoplink" href="https://ilovetequilacorrido.com/products/${MERCH_URL[name]}" target="_blank" rel="noopener">${label}: ${esc(name)} <span aria-hidden="true">↗</span><span class="sr"> (opens the Tequila Corrido shop in a new tab)</span></a>` : "";
+    const shop = (label, name) => merchView(name, A.gender).url ? `<a class="shoplink" href="https://ilovetequilacorrido.com/products/${merchView(name, A.gender).url}" target="_blank" rel="noopener">${label}: ${esc(merchView(name, A.gender).label)} <span aria-hidden="true">↗</span><span class="sr"> (opens the Tequila Corrido shop in a new tab)</span></a>` : "";
     $("#shoplinks").innerHTML = shop(OUTFITS[A.outfit].polo ? "Polo" : "Shirt", A.outfit) + (A.hat !== "None" ? shop("Hat", A.hat) : "");
     app.querySelectorAll(".chips[data-g]").forEach(box => {
       const k = box.dataset.g;
@@ -1766,7 +1776,7 @@ function creator(onDone, opts = {}) {
     $("#copts").innerHTML = optsHtml();
     app.querySelectorAll(".chips[data-g] [data-v]").forEach(b => b.onclick = () => {
       const k = b.parentElement.dataset.g, cur = A[k];
-      if (b.getAttribute("aria-disabled")) { toast(`${b.dataset.v} is locked. ${merchHow(b.dataset.v)}.`); return; }
+      if (b.getAttribute("aria-disabled")) { toast(`${merchView(b.dataset.v, A.gender).label} is locked. ${merchHow(b.dataset.v)}.`); return; }
       const val = typeof cur === "number" ? Number(b.dataset.v) : b.dataset.v;
       if (k === "gender" && val !== A.gender) { A.gender = val; Object.assign(A, GENDER_DEFAULTS[val]); wire(); } else A[k] = val;
       paint();
@@ -1774,7 +1784,7 @@ function creator(onDone, opts = {}) {
     app.querySelectorAll(".tg").forEach(b => b.onclick = () => { A[b.dataset.t] = !A[b.dataset.t]; paint(); });
     // double-click a shirt, polo or hat to open that product on the real shop
     app.querySelectorAll(".chips[data-g=outfit] [data-v], .chips[data-g=hat] [data-v]").forEach(b => {
-      const h = MERCH_URL[b.dataset.v];
+      const h = merchView(b.dataset.v, A.gender).url;
       if (!h) return;
       b.title = (b.title ? b.title + " · " : "") + "double-click to see it on the Tequila Corrido shop";
       b.ondblclick = () => window.open("https://ilovetequilacorrido.com/products/" + h, "_blank", "noopener");
@@ -1982,7 +1992,7 @@ function finish(L, passed, xp, skills, summary, hidden, extra = {}) {
   stopAll();
   state.xp += xp;
   const pct = Math.round(Object.values(skills).reduce((a, b) => a + b, 0) / (Object.keys(skills).length * 5) * 100), stars = starsFor(pct);   // stars follow the score; passing is its own test
-  const newItems = passed && !L.practice && !state.done[L.id] ? (REWARDS[L.id] || []) : [];   // first pass of a lesson unlocks its merch
+  const newItems = passed && !L.practice && !state.done[L.id] ? stopRewards(L.id) : [];   // first pass of a lesson unlocks its merch
   if (passed && !L.practice) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
   const { log, sc, ...meta } = extra;
   const earned = Progress.record(state, { id: L.id, title: L.title, diff: state.diff, mode: L.qs ? "choice" : state.mode, pct, stars, won: passed, xp, skills, lesson: !!L.qs, ...meta }, TOTAL_STOPS());
