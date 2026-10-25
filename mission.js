@@ -305,15 +305,22 @@ function missionResults(M, log) {
       : `${sc.lose} Your average was <b>${fmt(avg)} out of 5</b>, and this ${L.name} mission needed ${fmt(pass)}. Read what knocked points off below, then try again.`;
     const toneAvg = log.reduce((a, l) => a + l.res.tone.pts, 0) / n;
     const toneLine = `<p class="note2">Your tone across this mission: <b>${fmt(toneAvg)} out of 1</b> per answer${toneAvg < .75 ? ". Tone is where you lost the most. Read the tone notes on each answer." : "."}</p>`;
-    const focus = log.length > 1 && best.skill !== worst.skill ? `<p class="note2">Your strongest answer was <b>${esc(best.skill)}</b> (${fmt(best.res.score)}). Your biggest chance to improve is <b>${esc(worst.skill)}</b> (${fmt(worst.res.score)}).</p>` : "";
+    const hiS = best.res.score, loS = worst.res.score;   // when every answer scores the same there is no "strongest" and no "weakest"
+    const focus = log.length < 2 ? "" : hiS - loS < 0.05 ? (hiS >= 4.8 ? '<p class="note2"><b>Every answer was a strong one.</b> There is nothing to fix.</p>' : `<p class="note2">All your answers scored about the same (<b>${fmt(hiS)}</b> out of 5), so the notes under each one show what to work on.</p>`)
+      : best.skill !== worst.skill ? `<p class="note2">Your strongest answer was <b>${esc(best.skill)}</b> (${fmt(best.res.score)}). Your biggest chance to improve is <b>${esc(worst.skill)}</b> (${fmt(worst.res.score)}).</p>` : "";
+    // the customer you were talking to, looking how the conversation left them, with their last words
+    const lastL = log[log.length - 1], view = SCENARIOS.find(x => x.id === (lastL && lastL.mid)) || sc, faceX = avg >= 4 ? "delighted" : won ? "pleased" : avg >= 2.5 ? "unsure" : "annoyed";
+    const custBlock = lastL ? `<div class="resline"><div class="resface" data-x="${faceX}"><svg viewBox="14 -2 92 112" aria-hidden="true">${person(custLook(view))}</svg></div><div class="restxt"><p class="reslast"><b>${esc(lastL.cname)}:</b> “${esc(spoken(lastL.reply))}”</p><p>${summary}</p></div></div>` : `<p>${summary}</p>`;
+    // each answer is a row you can open: the score and one line on top, everything else underneath. The ones that need work start open.
+    const oneLine = r => r.score >= 4.8 ? "Nothing to fix" : r.misses[0] ? `Missing: ${r.misses[0]}` : r.flags[0] ? r.flags[0].msg : (r.tone.notes.find(x => !x.ok) || {}).msg || "A little wording or tone to polish";
     const cards = log.map((l, j) => {
-      const r = l.res, per = r.per;
-      return `<div class="acard ${band(r.score)}">
-        <div class="ahead"><b>${j + 1}. ${esc(l.skill)}</b><span class="score ${band(r.score)}">${fmt(r.score)} / 5</span></div>
-        <div class="bar" aria-hidden="true"><i style="width:${r.score / 5 * 100}%"></i></div>
+      const r = l.res, per = r.per, short = oneLine(r);
+      return `<details class="acard ${band(r.score)}"${r.score < 3.5 ? " open" : ""}>
+        <summary><span class="ahead"><b>${j + 1}. ${esc(l.skill)}</b><span class="score ${band(r.score)}">${fmt(r.score)} / 5</span></span><span class="abar" aria-hidden="true"><i style="width:${r.score / 5 * 100}%"></i></span><span class="aone">${esc(short.length > 90 ? short.slice(0, 88) + "…" : short)}</span></summary>
+        <div class="abody">
         ${boss && l.res.compliance ? '<p class="compmiss">⛔ Compliance miss: a health claim or a pressure tactic loses a boss battle.</p>' : ""}
         <p class="aq"><small>${esc(l.cname)} said:</small> ${esc(l.line.replace(/<[^>]+>/g, ""))}<br><small>You were asked:</small> ${esc(l.q)}</p>
-        <details><summary>What you said</summary><p class="said">${esc(l.text)}</p></details>
+        <p class="said"><small>What you said:</small> ${esc(l.text)}</p>
         ${l.blob ? `<button class="btn alt playmine" type="button" data-i="${j}">▶ Hear yourself</button>` : ""}
         <p class="split"><span>What you said: <b>${fmt(r.content)} / 4</b></span><span>Tone: <b>${fmt(r.tone.pts)} / 1</b></span></p>
         ${r.hits.length ? `<ul class="hits">${r.hits.map(h => `<li class="ok">✓ ${esc(h)} <b>+${fmt(per)}</b></li>`).join("")}</ul>` : ""}
@@ -321,24 +328,26 @@ function missionResults(M, log) {
         <ul class="tonelist"><li class="tonehead">🎭 Tone for this customer: ${esc(r.tone.name)}${r.tone.voiceUsed ? "" : " <small>(judged from your words, no voice recording)</small>"}</li>${r.tone.notes.map(x => `<li class="${x.ok ? "ok" : "no"}">${x.ok ? "✓" : "✗"} ${esc(x.msg)} ${x.ok ? "" : `<b>−${fmt(x.pts)}</b>`}</li>`).join("")}${r.tone.stats && r.tone.stats.wpm ? `<li class="tonestats">Pace ${r.tone.stats.wpm} words a minute · ${r.tone.stats.pauses} long pauses · volume ${r.tone.stats.db} dB</li>` : ""}</ul>
         ${r.flags.length ? `<ul class="flags">${r.flags.map(f => `<li>⚠ ${esc(f.msg)} ${f.pts ? `<b>−${fmt(f.pts)}</b>` : ""}</li>`).join("")}</ul>` : ""}
         ${r.score < 5 ? `<p class="better"><b>A stronger answer might sound like:</b> <i>${esc(l.model)}</i></p>` : `<p class="better"><b>Nothing to fix here.</b> That answer hit everything.</p>`}
-      </div>`;
+        </div>
+      </details>`;
     }).join("");
     const deliver = cam
       ? `<div class="card"><h3>Delivery (camera coach)</h3><div class="ahead"><span>Overall delivery</span><span class="score ${band(delivery)}">${fmt(delivery)} / 5</span></div>${[["Eye contact", "eye"], ["Posture", "posture"], ["Presence", "presence"], ["Expression", "smile"]].map(([lab, k]) => `<div class="row"><span>${lab}</span><div class="bar"><i style="width:${cam[k]}%"></i></div><b>${cam[k]}%</b></div>`).join("")}<ul class="tipsl">${Cam.tips(cam).map(t => `<li>${t}</li>`).join("")}</ul><p class="note2">Measured on your device. The video was never recorded or uploaded.</p></div>`
-      : `<div class="card nudge"><h3>Camera coach</h3><p>You didn't use the camera this time. With it on you get a delivery score out of 5 for eye contact, posture and smiling, plus 25% more XP. It's optional, but it's the closest thing here to a real meeting, so we highly recommend it.</p></div>`;
+      : `<p class="camnudge">📷 <b>No camera this time.</b> With it on you get a delivery score for eye contact, posture and smiling, plus 25% more XP. Optional, but highly recommended.</p>`;
     const transcript = log.map(l => `${l.cname}: ${l.line.replace(/<[^>]+>/g, "")}\n${repName()}: ${l.text}\n${l.cname}: ${spoken(l.reply)}\n(Score ${fmt(l.res.score)} / 5: ${fmt(l.res.content)} content, ${fmt(l.res.tone.pts)} tone)`).join("\n\n");
     app.innerHTML = `<section class="view result sheet">
-      <h1>${won ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
-      <span class="chip">${boss ? `Boss battle · Tier ${boss.tier}` : `Level ${lvl} · ${L.name}`} · ${esc(sc.title)}</span>
-      <div class="bigscore ${band(avg)}" aria-label="Average score ${fmt(avg)} out of 5"><b>${fmt(avg)}</b><span>/ 5</span></div>
-      <div class="bigstars" aria-label="${stars} of 3 stars">${"★".repeat(stars)}<span style="color:#bdb2a5">${"★".repeat(3 - stars)}</span></div>
-      <p>${summary}</p>
+      <div class="reshead"><div class="resleft">
+        <h1>${won ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
+        <span class="chip">${boss ? `Boss battle · Tier ${boss.tier}` : `Level ${lvl} · ${L.name}`} · ${esc(sc.title)}</span>
+        <div class="bigscore ${band(avg)}" aria-label="Average score ${fmt(avg)} out of 5"><b>${fmt(avg)}</b><span>/ 5</span></div>
+        ${starRow(stars)}</div>
+      ${custBlock}</div>
       <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span>${cam ? '<span class="rw">📷 +25% camera bonus</span>' : ""}</div>
-      ${earned.length ? `<div class="rewards">${earned.map(k => `<span class="rw badge-new">🏅 New badge: ${BADGES[k][0]}</span>`).join("")}</div>` : ""}
+      ${badgeMedals(earned)}
       ${rewardChips(newItems)}
-      ${focus}${toneLine}
-      <h3 class="sechead">Your answers</h3>
-      <p class="note2">Each answer is worth 5 points: <b>4 for what you said</b> and <b>1 for tone</b>, judged for the situation. You earn points for each thing you mentioned and lose points for what you missed, got wrong or said in the wrong tone.</p>
+      <div class="resnotes">${focus}${toneLine}</div>
+      <div class="reshow"><h3 class="sechead">Your answers</h3><button class="linkbtn dark" id="toggleAll" type="button">Open all</button></div>
+      <p class="note2">Each answer is worth 5: <b>4 for what you said</b> and <b>1 for tone</b>. Open one to see why.</p>
       ${cards}
       ${deliver}
       ${sc.hidden ? `<div class="learn"><b>What this customer really cared about:</b> ${sc.hidden}</div>` : ""}
@@ -347,6 +356,7 @@ function missionResults(M, log) {
       <p><button class="btn" id="cont" type="button">Back to the map</button> ${won && !sc.rehearsal ? "" : `<button class="btn alt" id="retry" type="button">${sc.rehearsal ? "Back to the boss" : boss ? "Back to the boss" : "Try again"}</button>`}</p>
     </section>`;
     $("#cont").onclick = home;
+    $("#toggleAll").onclick = () => { const ds = [...app.querySelectorAll("details.acard")], allOpen = ds.every(d => d.open); ds.forEach(d => { d.open = !allOpen; }); $("#toggleAll").textContent = allOpen ? "Open all" : "Close all"; };
     app.querySelectorAll(".playmine").forEach(b => b.onclick = async () => {
       const l = log[+b.dataset.i]; if (!l || !l.blob) return;
       b.disabled = true; b.textContent = "▶ Playing…";
@@ -356,6 +366,7 @@ function missionResults(M, log) {
     if ($("#retry")) $("#retry").onclick = () => (BOSS_BY[sc.id] && (boss || sc.rehearsal) ? bossIntro(ALL_STOPS().find(x => x.id === sc.id)) : play(sc.practice ? sc : SCENARIOS.find(m => m.id === sc.id)));
     wireRewardChips();
   window.scrollTo(0, 0);
+    if (stars === 3 && won) confetti(app.querySelector(".result"));   // three stars gets a shower of confetti
   };
   if (tierInfo) {
     tierUp({ ...tierInfo, boss, stop: sc, avgText: `${fmt(avg)} / 5`, showScorecard: renderResults });

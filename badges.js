@@ -88,4 +88,6 @@ function badgeCard(k) {
   const sub = a.kind === "boss" ? `<span class="btier">Tier ${a.tier} boss · ${TIERS[a.tier]}</span><span class="btier2">${on ? "Reached" : "Beat it to reach"}: ${a.boss === "mean" ? "Season complete" : "Tier " + a.tierTo + " · " + TIERS[a.tierTo]}</span>` : "";
   return `<div class="bcard ${big ? "big" : ""} ${on ? "on" : ""}" data-k="${k}"><div class="bart">${badgeSVG(k, on)}</div><b>${esc(b[0])}</b>${sub}<small>${esc(b[1])}</small></div>`;
 }
+// New badges on a results screen: the real medals, popping in one after the other.
+const badgeMedals = keys => keys.length ? `<div class="medalrow">${keys.map((k, i) => `<div class="medalnew" style="--i:${i}"><div class="bart">${badgeSVG(k, true)}</div><small>NEW BADGE</small><b>${esc(BADGES[k][0])}</b></div>`).join("")}</div>` : "";
 const bossBadgeRow = () => `<div class="bossrow" aria-label="Boss badges">${BOSSES.map(b => `<span class="bmini ${state.badges.includes("boss-" + b.id) ? "on" : ""}" title="Tier ${b.tier} boss · ${esc(BADGES["boss-" + b.id][0])}">${badgeSVG("boss-" + b.id, state.badges.includes("boss-" + b.id))}</span>`).join("")}</div>`;

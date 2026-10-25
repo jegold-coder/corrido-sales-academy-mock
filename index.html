@@ -114,7 +114,6 @@ body{background:
   repeating-conic-gradient(from 0deg at 50% -5%, #4a2c12 0 5deg, #3b2310 5deg 10deg);
   background-attachment:fixed;min-height:100vh}
 .bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-.bg svg.flags{position:absolute;top:0;left:0;width:100%;height:70px}
 .rec{position:absolute;border-radius:50%;width:340px;height:340px;opacity:.5;animation:spin 40s linear infinite;
   background:radial-gradient(circle,#c9831f 0 11%,#111 11% 13%,#1c1c1c 13% 30%,#0d0d0d 30% 31%,#1c1c1c 31% 52%,#0d0d0d 52% 53%,#1c1c1c 53% 74%,#0d0d0d 74% 75%,#1c1c1c 75% 100%)}
 .rec.a{left:-140px;bottom:-60px}.rec.b{right:-150px;top:140px;width:300px;height:300px;animation-direction:reverse}
@@ -212,7 +211,6 @@ body{background:radial-gradient(ellipse at 50% 0%,#6b4520 0,#3a2410 55%,#24150a 
 /* ===== v7: a bit more, still calm ===== */
 .photo.a{opacity:.2}
 .photo.b{opacity:.14;filter:blur(2px) saturate(.7);mix-blend-mode:normal;width:34%}
-.bg svg.flags{height:40px}
 .rec{opacity:.22;animation:none}
 .keys{opacity:.25}
 
@@ -696,15 +694,56 @@ main:has(.maphome){max-width:1180px}
 .radar .dot{fill:#b8851f}.radar .dot.weak{fill:#b5432a}
 .skilllist{list-style:none;margin:0;padding:0;font-size:.9rem}.skilllist li{display:flex;justify-content:space-between;gap:.5rem;padding:.25rem 0;border-bottom:1px solid #eadfcd}.skilllist b{white-space:nowrap}
 @media(max-width:640px){.radarwrap{grid-template-columns:1fr}}
+/* ===== v36: results screens and the footer hearts ===== */
+body:not(.inlesson) #stHearts{display:none}
+.result.sheet{position:relative;overflow-x:clip}
+.bigstars{display:flex;justify-content:center;gap:.4rem;font-size:3.8rem;line-height:1;letter-spacing:0;margin:.2rem 0}
+.bigstars .star{color:#cfc4b8}
+.bigstars .star.on{color:var(--gold);text-shadow:0 0 16px #e0a42faa,0 2px 0 #a87a1a;animation:starpop .6s calc(var(--i) * .3s + .2s) both cubic-bezier(.2,1.6,.4,1)}
+.bigstars.full .star.on{animation:starpop .6s calc(var(--i) * .3s + .2s) both cubic-bezier(.2,1.6,.4,1),starglow 1.6s calc(var(--i) * .3s + 1.2s) 2 ease-in-out}
+@keyframes starpop{0%{transform:scale(0) rotate(-40deg);opacity:0}100%{transform:none;opacity:1}}
+@keyframes starglow{50%{transform:scale(1.18);text-shadow:0 0 28px #fff1c4,0 2px 0 #a87a1a}}
+.medalrow{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:.8rem 0}
+.medalnew{text-align:center;animation:badgepop .7s calc(var(--i) * .25s + .9s) both cubic-bezier(.2,1.4,.4,1)}.medalnew svg{width:96px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 4px 6px #0003)}
+.medalnew small{display:block;color:#8a5a0a;letter-spacing:.14em;font-weight:700;font-size:.7rem}.medalnew b{font:.95rem Rye,serif}
+.resline{display:flex;gap:1rem;align-items:center;text-align:left;margin:.8rem 0}
+.resface{flex:none;width:104px;height:104px;border-radius:50%;overflow:hidden;background:#e9d5b5;border:4px solid var(--gold);box-shadow:0 0 0 4px #e0a42f44}.resface svg{display:block;width:100%;height:100%}
+.resline .restxt p{margin:.2rem 0}.reslast{border-left:4px solid var(--gold);padding:.1rem .6rem;background:#fff8e6;border-radius:0 8px 8px 0;font-size:.95rem}
+@media(max-width:560px){.resline{flex-direction:column;text-align:center}.reslast{text-align:left}.bigstars{font-size:3.2rem}}
+@media(prefers-reduced-motion:reduce){.bigstars .star.on,.bigstars.full .star.on,.medalnew{animation:none}}
+/* ===== v37: no flags behind the page, and a more compact results page ===== */
+html,body{overscroll-behavior-y:none}
+.result.sheet{padding-top:.9rem}
+.reshead{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:.4rem 1.2rem;align-items:center}
+.resleft{text-align:center}.resleft h1{margin:.1rem 0;font-size:1.7rem}.resleft .chip{margin:.1rem 0}
+.result .bigscore{margin:.1rem 0}.result .bigscore b{font-size:2.6rem}.result .bigstars{font-size:2.6rem;margin:0}
+@media(max-width:700px){.reshead{grid-template-columns:1fr}}
+.reshead .resline{margin:0}
+@media(max-width:560px){.resline{flex-direction:row;text-align:left;gap:.7rem}.resface{width:72px;height:72px;border-width:3px}.resline .restxt p{font-size:.9rem}.result .bigscore b{font-size:2.2rem}.result .bigstars{font-size:2.2rem}.resleft h1{font-size:1.5rem}.medalnew svg{width:64px}.medalrow{gap:.4rem}}
+.result .rewards{margin:.5rem 0;gap:.4rem}.result .rw{padding:.25rem .7rem;font-size:.85rem}
+.medalrow{gap:.6rem;margin:.4rem 0}.medalnew svg{width:76px}.medalnew b{font-size:.85rem}
+.result .rewardcard{padding:.4rem .8rem;margin:.4rem 0}.result .rewardcard h3{margin:0 0 .1rem;font-size:.9rem}.result .rwrow{padding:.2rem 0}
+.resnotes p{margin:.1rem 0;font-size:.88rem}
+.reshow{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem}.reshow .sechead{margin:0}
+.reshow .linkbtn{font-size:.85rem;display:inline;margin:0 0 0 auto;width:auto}
+details.acard{padding:0;margin:.4rem 0;text-align:left}
+details.acard>summary{list-style:none;cursor:pointer;display:grid;gap:.25rem;padding:.5rem .8rem;position:relative}
+details.acard>summary::-webkit-details-marker{display:none}
+details.acard>summary::after{content:"▾";position:absolute;right:.8rem;top:.5rem;color:var(--brown)}
+details.acard[open]>summary::after{content:"▴"}
+details.acard .ahead{padding-right:1.4rem}
+.abar{height:6px;border-radius:99px;background:#eee4d3;overflow:hidden;display:block}.abar i{display:block;height:100%}
+.acard.hi .abar i{background:var(--green)}.acard.mid .abar i{background:var(--gold)}.acard.lo .abar i{background:var(--red)}
+.aone{font-size:.84rem;color:#6e6458}
+.abody{padding:0 .9rem .7rem}.abody .said{margin:.3rem 0}
+.camnudge{font-size:.88rem;color:#4d443a;background:#eef6f7;border-radius:10px;padding:.5rem .8rem;margin:.6rem 0}
+.result .fact{padding:.6rem .9rem;font-size:.9rem;margin:.5rem 0}.result .learn{padding:.5rem .9rem;font-size:.9rem;margin:.5rem 0}
 </style>
 </head>
 <body>
 <a class="skip" href="#app">Skip to main content</a>
 <div class="bg" aria-hidden="true">
   <div class="photo a"></div><div class="photo b"></div>
-  <svg class="flags" preserveAspectRatio="none"><defs><pattern id="fl" width="240" height="40" patternUnits="userSpaceOnUse">
-    <path d="M0 0H60L30 30Z" fill="#2e8b9a"/><path d="M60 0H120L90 30Z" fill="#e0a42f"/><path d="M120 0H180L150 30Z" fill="#b5432a"/><path d="M180 0H240L210 30Z" fill="#fdfaf5"/></pattern></defs>
-    <rect width="100%" height="3" fill="#1e1208"/><rect width="100%" height="40" fill="url(#fl)" opacity=".7"/></svg>
   <div class="keys"></div>
 </div>
 <div class="mock">MOCK PROTOTYPE · STAGE 1 · NOT FINAL · NOT AFFILIATED WITH TEQUILA CORRIDO</div>
@@ -748,23 +787,23 @@ main:has(.maphome){max-width:1180px}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24r"></script>
-<script src="scenarios.js?v=2026-10-24r"></script>
-<script src="progress.js?v=2026-10-24r"></script>
-<script src="criteria.js?v=2026-10-24r"></script>
-<script src="tone.js?v=2026-10-24r"></script>
-<script src="coach.js?v=2026-10-24r"></script>
-<script src="camera.js?v=2026-10-24r"></script>
-<script src="lessons.js?v=2026-10-24r"></script>
-<script src="dashboard.js?v=2026-10-24r"></script>
-<script src="grader.js?v=2026-10-24r"></script>
-<script src="onboarding.js?v=2026-10-24r"></script>
-<script src="tiers.js?v=2026-10-24r"></script>
-<script src="badges.js?v=2026-10-24r"></script>
-<script src="voices.js?v=2026-10-24r"></script>
-<script src="mission.js?v=2026-10-24r"></script>
-<script src="boss.js?v=2026-10-24r"></script>
-<script src="manager.js?v=2026-10-24r"></script>
+<script src="sound.js?v=2026-10-24x"></script>
+<script src="scenarios.js?v=2026-10-24x"></script>
+<script src="progress.js?v=2026-10-24x"></script>
+<script src="criteria.js?v=2026-10-24x"></script>
+<script src="tone.js?v=2026-10-24x"></script>
+<script src="coach.js?v=2026-10-24x"></script>
+<script src="camera.js?v=2026-10-24x"></script>
+<script src="lessons.js?v=2026-10-24x"></script>
+<script src="dashboard.js?v=2026-10-24x"></script>
+<script src="grader.js?v=2026-10-24x"></script>
+<script src="onboarding.js?v=2026-10-24x"></script>
+<script src="tiers.js?v=2026-10-24x"></script>
+<script src="badges.js?v=2026-10-24x"></script>
+<script src="voices.js?v=2026-10-24x"></script>
+<script src="mission.js?v=2026-10-24x"></script>
+<script src="boss.js?v=2026-10-24x"></script>
+<script src="manager.js?v=2026-10-24x"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -788,6 +827,7 @@ const toast = msg => { let t = $("#toast"); if (!t) { t = document.createElement
 new MutationObserver(() => {
   if (!app.contains(document.activeElement)) app.focus({ preventScroll: true });
   if (Sound.theme && !app.querySelector(Sound.theme === "boss" ? ".bossintro" : "#pc")) Sound.stop();
+  document.body.classList.toggle("inlesson", !!app.querySelector(".lesson-top .hearts"));   // the hearts in the footer count only in a lesson
 }).observe(app, { childList: true });
 // and it goes quiet while the page is hidden (another tab or window) instead of playing on in the background
 document.addEventListener("visibilitychange", () => { if (document.hidden) Sound.pause(); else Sound.resume(); });
@@ -1773,6 +1813,9 @@ function coachSummary(skills) {
   return `Your strongest moment was <b>${hi[0]}</b>. Your biggest chance to improve is <b>${lo[0]}</b>. Check the note for that step below.`;
 }
 
+// The stars on a results screen: each earned star pops in one after the other, and the empty ones wait greyed out.
+const starRow = stars => `<div class="bigstars ${stars === 3 ? "full" : ""}" role="img" aria-label="${stars} of 3 stars">${[0, 1, 2].map(i => `<span class="star ${i < stars ? "on" : ""}" style="--i:${i}">★</span>`).join("")}</div>`;
+
 function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
   stopAll();
   state.xp += xp;
@@ -1792,10 +1835,10 @@ function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
   app.innerHTML = `<section class="view result sheet">
     <h1>${stars ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
     <span class="chip">${D().label} · ${L.qs ? "Lesson" : state.mode === "type" ? "Typed" : "Pick an answer"} · ×${D().xp} XP</span>
-    <div class="bigstars" aria-label="${stars} of 3 stars">${"★".repeat(stars)}<span style="color:#bdb2a5">${"★".repeat(3 - stars)}</span></div>
+    ${starRow(stars)}
     <p>${summary}</p>
     <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span><span class="rw">${pct}% score</span></div>
-    ${earned.length ? `<div class="rewards">${earned.map(k => `<span class="rw badge-new">🏅 New badge: ${BADGES[k][0]}</span>`).join("")}</div>` : ""}
+    ${badgeMedals(earned)}
     ${rewardChips(newItems)}
     <div class="card"><h3>Scorecard</h3>${Object.entries(skills).map(([k, v]) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v / 5 * 100}%"></i></div><b>${v}</b></div>`).join("")}</div>
     ${deliver}
@@ -1806,6 +1849,7 @@ function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
   </section>`;
   $("#cont").onclick = home;
   wireRewardChips();
+  if (stars === 3) confetti(app.querySelector(".result"));
   if ($("#cpy")) $("#cpy").onclick = () => { navigator.clipboard?.writeText(transcript).then(() => { $("#cpy").textContent = "Copied"; }).catch(() => {}); };
   if ($("#retry")) $("#retry").onclick = () => (L.qs ? quiz(L) : play(L));
 }

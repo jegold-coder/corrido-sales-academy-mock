@@ -198,7 +198,7 @@ async function shareTierCard(tier) {
 // "Unlocked" chips with a button to wear the piece right away.
 function rewardChips(items) {
   if (!items || !items.length) return "";
-  return `<div class="card rewardcard"><h3>🎁 Merch unlocked</h3>${items.map(n => `<div class="rwrow"><span>${esc(n)}</span><button class="btn alt wearbtn" type="button" data-w="${esc(n)}">Wear it now</button></div>`).join("")}<p class="note2">You can change what you wear any time in Character.</p></div>`;
+  return `<div class="card rewardcard"><h3>🎁 Merch unlocked</h3>${items.map(n => `<div class="rwrow"><span>${esc(n)}</span><button class="btn alt wearbtn" type="button" data-w="${esc(n)}">Wear it now</button></div>`).join("")}</div>`;
 }
 function wireRewardChips() {
   app.querySelectorAll(".wearbtn").forEach(b => b.onclick = () => { if (equipMerch(b.dataset.w)) { b.textContent = "Wearing it"; b.disabled = true; toast(`${b.dataset.w} is on your character.`); } });
