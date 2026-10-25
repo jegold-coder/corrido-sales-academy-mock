@@ -645,6 +645,57 @@ a.diffbtn{text-decoration:none;display:inline-block}
 .gr-list .yes::before{content:"✓";color:#2d6a3a}.gr-list .no::before{content:"✗";color:#9a2f2f}.gr-list .neu::before{content:"•";color:var(--brown)}
 .gr-reply{border-left:4px solid var(--gold);padding:.3rem .7rem;margin:.5rem 0;background:#fff8e6;border-radius:0 8px 8px 0}
 @media(max-width:560px){.gr-top{grid-template-columns:110px 1fr}}
+/* ===== v34: the upgraded map ===== */
+main:has(.maphome){max-width:1180px}
+.maphome{display:grid;grid-template-columns:250px minmax(0,1fr) 250px;gap:1.2rem;align-items:start}
+.maphome>.mcenter{min-width:0}
+.mside{position:sticky;top:5rem;display:grid;gap:.8rem}
+.sidecard{background:#0000004d;border:1px solid #e0a42f66;border-radius:14px;padding:.8rem;color:var(--cream);display:grid;gap:.25rem;justify-items:center;text-align:center}
+.sidecard h3{margin:0 0 .2rem;font:700 .72rem Arimo,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.sidecard p{margin:.1rem 0;font-size:.9rem}.sidecard small{color:#e8d3ae}
+.sidecard .rn{font:1.15rem Rye,serif}.sidecard .rt{color:var(--gold);font-weight:700;font-size:.85rem}
+.sidecard .bar{width:100%;height:8px;background:#ffffff26;border-radius:99px;overflow:hidden;margin-top:.3rem}.sidecard .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#fff1c4)}
+.rav{width:110px;height:110px;border-radius:50%;overflow:hidden;background:#e9d5b5;border:4px solid var(--gold);margin-bottom:.2rem}.rav svg{width:100%;height:100%;display:block}
+.sidestats{display:flex;gap:.7rem;margin-top:.3rem;font-weight:700;font-size:.85rem}
+.pieces{display:flex;gap:.4rem;justify-content:center}.piece{width:56px;height:56px;border-radius:10px;background:#fff;display:grid;place-items:center;overflow:hidden}.piece img,.piece svg{width:100%;height:100%;object-fit:contain}
+.sidecard .btn{margin-top:.4rem;padding:.4rem 1rem;font-size:.9rem}.sidecard .btn:disabled{opacity:.55}
+.sidecard .bossrow{display:grid;grid-template-columns:repeat(6,1fr);gap:.2rem;width:100%}.sidecard .bmini svg{width:100%}
+.bigface{width:120px;height:120px;border-radius:50%;overflow:hidden;background:#e9d5b5;border:4px solid #d9532f;box-shadow:0 0 0 4px #e0a42f55;position:relative}.bigface .bface{position:absolute;inset:0;border-radius:0}
+@media(max-width:1000px){.maphome{display:block}.mside{display:none}}
+@media(max-width:520px){.tierband .tt{display:none}.tierband{--hw:60px}.tierband::before,.tierband::after{display:none}.tierband span{padding:.15rem .7rem;letter-spacing:.1em}}
+.node.boss .bface{position:absolute;inset:6px;border-radius:50%;overflow:hidden;background:#e9d5b5;display:block}.bface svg{width:100%;height:100%;display:block}
+.bface.brain{display:grid;place-items:center;font-size:3rem}
+.node.boss.locked .bface svg{filter:grayscale(1) brightness(.35)}
+.bchk,.blk{position:absolute;right:-6px;bottom:-2px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;border:3px solid #fff1c4}
+.bchk{background:var(--gold);color:var(--deep)}.blk{background:#6e6458;border-color:#c9bfb4;font-size:.95rem}
+.tierband{--hw:120px;position:absolute;left:clamp(var(--hw),var(--x),calc(100% - var(--hw)));transform:translate(-50%,-50%);display:flex;align-items:center;gap:.35rem;pointer-events:none;z-index:1;white-space:nowrap}.tierband::before,.tierband::after{content:"";width:26px;border-top:2px dashed #e0a42f99}
+.tierband span{background:#2a1a0e;color:var(--gold);border:2px solid #e0a42f;border-radius:99px;padding:.15rem .9rem;font:700 .72rem Arimo,sans-serif;letter-spacing:.14em;text-transform:uppercase;height:1.8rem;display:flex;align-items:center}
+.tierband .tt{font-style:normal}.tierband.past span{background:var(--gold);color:var(--deep)}
+.tierband.now span{background:#fff1c4;color:var(--deep);box-shadow:0 0 0 4px #e0a42f55}.tierband.next{opacity:.6}
+.tierband.new span{animation:bandpop 1.1s .5s both cubic-bezier(.2,1.5,.4,1)}
+@keyframes bandpop{0%{transform:scale(.5);opacity:0}100%{transform:none;opacity:1}}
+.node.fresh{animation:nodepop .9s cubic-bezier(.2,1.5,.4,1)}.node.fresh::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:4px solid #fff1c4;animation:nodering 1.4s ease-out 2;pointer-events:none}
+@keyframes nodepop{0%{transform:scale(.6)}60%{transform:scale(1.22)}100%{transform:scale(1)}}
+@keyframes nodering{from{opacity:.9;transform:scale(.9)}to{opacity:0;transform:scale(1.7)}}
+.rd-glow{fill:none;stroke:#fffbe6;stroke-width:7;stroke-linecap:round;stroke-dasharray:14 70;filter:drop-shadow(0 0 5px #ffe9a0);animation:roadrun 1.5s linear 4}
+@keyframes roadrun{to{stroke-dashoffset:-84}}
+@media(prefers-reduced-motion:reduce){.node.fresh,.node.fresh::after,.rd-glow,.tierband.new span{animation:none}.rd-glow{stroke-dasharray:none;opacity:.7}}
+/* ===== v35: dashboard tier ladder and skill radar ===== */
+.ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;list-style:none;margin:.2rem 0 .6rem;padding:0;text-align:center}
+.lstep{border-radius:12px;padding:.4rem .2rem;background:#f4ecdd;display:grid;justify-items:center;align-content:start;gap:.1rem;border:2px solid transparent}
+.lstep.past{background:#fbefcf}.lstep.now{background:#fff6dc;border-color:var(--gold);box-shadow:0 0 0 3px #e0a42f44}
+.lstep .lnum{font:700 .62rem Arimo,sans-serif;letter-spacing:.14em;color:var(--brown)}.lstep b{font-size:.8rem;line-height:1.1}
+.lstep small{font-size:.68rem;color:#6e6458}.lstep.now small{color:#8a5a0a;font-weight:700}
+.lstep .lmedal svg{width:62px;height:auto;display:block}.lstep.next .lmedal{opacity:.85}
+.ltrack{height:8px;background:#e6ddd0;border-radius:99px;overflow:hidden;margin:.4rem 0 .6rem}.ltrack i{display:block;height:100%;background:linear-gradient(90deg,#c47f43,#e0a42f,#fff1c4)}
+.lnext{margin:.2rem 0 .6rem;font-size:.92rem}
+@media(max-width:640px){.ladder{grid-template-columns:repeat(3,1fr)}}
+.radarwrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:1rem;align-items:center}
+.radar{width:100%;height:auto}.radar .ring{fill:none;stroke:#d9cdb8;stroke-width:1}.radar .ax{stroke:#d9cdb8;stroke-width:1}
+.radar .shape{fill:#e0a42f66;stroke:#b8851f;stroke-width:2.5;stroke-linejoin:round}.radar text{font:700 10.5px Arimo,sans-serif;fill:#4a3a2a}
+.radar .dot{fill:#b8851f}.radar .dot.weak{fill:#b5432a}
+.skilllist{list-style:none;margin:0;padding:0;font-size:.9rem}.skilllist li{display:flex;justify-content:space-between;gap:.5rem;padding:.25rem 0;border-bottom:1px solid #eadfcd}.skilllist b{white-space:nowrap}
+@media(max-width:640px){.radarwrap{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -697,23 +748,23 @@ a.diffbtn{text-decoration:none;display:inline-block}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24k"></script>
-<script src="scenarios.js?v=2026-10-24k"></script>
-<script src="progress.js?v=2026-10-24k"></script>
-<script src="criteria.js?v=2026-10-24k"></script>
-<script src="tone.js?v=2026-10-24k"></script>
-<script src="coach.js?v=2026-10-24k"></script>
-<script src="camera.js?v=2026-10-24k"></script>
-<script src="lessons.js?v=2026-10-24k"></script>
-<script src="dashboard.js?v=2026-10-24k"></script>
-<script src="grader.js?v=2026-10-24k"></script>
-<script src="onboarding.js?v=2026-10-24k"></script>
-<script src="tiers.js?v=2026-10-24k"></script>
-<script src="badges.js?v=2026-10-24k"></script>
-<script src="voices.js?v=2026-10-24k"></script>
-<script src="mission.js?v=2026-10-24k"></script>
-<script src="boss.js?v=2026-10-24k"></script>
-<script src="manager.js?v=2026-10-24k"></script>
+<script src="sound.js?v=2026-10-24p"></script>
+<script src="scenarios.js?v=2026-10-24p"></script>
+<script src="progress.js?v=2026-10-24p"></script>
+<script src="criteria.js?v=2026-10-24p"></script>
+<script src="tone.js?v=2026-10-24p"></script>
+<script src="coach.js?v=2026-10-24p"></script>
+<script src="camera.js?v=2026-10-24p"></script>
+<script src="lessons.js?v=2026-10-24p"></script>
+<script src="dashboard.js?v=2026-10-24p"></script>
+<script src="grader.js?v=2026-10-24p"></script>
+<script src="onboarding.js?v=2026-10-24p"></script>
+<script src="tiers.js?v=2026-10-24p"></script>
+<script src="badges.js?v=2026-10-24p"></script>
+<script src="voices.js?v=2026-10-24p"></script>
+<script src="mission.js?v=2026-10-24p"></script>
+<script src="boss.js?v=2026-10-24p"></script>
+<script src="manager.js?v=2026-10-24p"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -952,6 +1003,12 @@ function tierBar() {
 // Dashboard > Settings > Prototype tools (PROTO in tiers.js).
 const needsCheck = () => !state.pre && !(state.history && state.history.length > 0);
 
+// The stops finished the last time the map was drawn, so a stop you just finished can pop and light the road to the next one.
+let mapSeen = null;
+// A boss's face for its stop on the map (the Brand Brain quiz has no face, so it keeps its icon).
+const bossFace = n => { const sc = BOSS_BY[n.id] && SCENARIOS.find(s => s.id === n.id); return sc ? `<span class="bface" aria-hidden="true"><svg viewBox="20 -4 80 80">${person(custLook(sc))}</svg></span>` : null; };
+const pieceThumb = nm => { const m = OUTFITS[nm] || HATS[nm]; return m ? (m.img ? `<img src="${thumb(m.img)}" alt="" loading="lazy">` : poloIcon(m.base)) : ""; };
+
 function home() {
   stopAll(); Cam.stop(); Sound.stop(); document.body.classList.remove("onboarding");
   state.hearts = D().hearts; hud();
@@ -959,27 +1016,47 @@ function home() {
   const GAP = 175, H = nodes.length * GAP + 20;
   const xs = nodes.map((_, i) => (i % 2 ? 295 : 105)), ys = nodes.map((_, i) => 80 + i * GAP);
   let roads = "", stops = "";
+  const doneIds = nodes.filter(n => state.done[n.id]).map(n => n.id), fresh = newlyDone(mapSeen, doneIds), tNow = tierOf(), starts = tierStarts(nodes.map(n => n.id));
+  mapSeen = new Set(doneIds);
+  const freshBoss = fresh.map(id => BOSS_BY[id]).find(Boolean);
   for (let i = 0; i < nodes.length - 1; i++) {
     const d = `M${xs[i]} ${ys[i]} C${xs[i]} ${ys[i] + 95} ${xs[i + 1]} ${ys[i + 1] - 95} ${xs[i + 1]} ${ys[i + 1]}`;
     const c = state.done[nodes[i].id] ? "done" : "";
-    roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>`;
+    roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>${fresh.includes(nodes[i].id) ? `<path class="rd-glow" d="${d}"/>` : ""}`;
   }
   const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck() && !PROTO("unlockStops");
   nodes.forEach((n, i) => {
     const done = state.done[n.id], open = PROTO("unlockStops") || (!gated && (i === 0 || done || state.done[nodes[i - 1].id])), cur = !gated && n === nodes.find(x => !state.done[x.id]);
-    const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`;
+    const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`, face = BOSS_BY[n.id] ? bossFace(n) : null;
     stops += `<div class="stop" style="${pos}">
-      <button class="node ${BOSS_BY[n.id] ? "boss" : ""} ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
-        ${cur ? '<span class="start">START</span>' : ""}${done ? "✓" : open ? n.icon : "🔒"}
+      <button class="node ${BOSS_BY[n.id] ? "boss" : ""} ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"} ${fresh.includes(n.id) ? "fresh" : ""}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
+        ${cur ? '<span class="start">START</span>' : ""}${face ? `${face}${done ? '<span class="bchk">✓</span>' : open ? "" : '<span class="blk">🔒</span>'}` : done ? "✓" : open ? n.icon : "🔒"}
         ${done ? `<span class="stars">${"★".repeat(state.stars[n.id])}${"☆".repeat(3 - state.stars[n.id])}</span>` : ""}
       </button><div class="lab">${BOSS_BY[n.id] ? `<span class="bosstag">Boss · Tier ${BOSS_BY[n.id].tier}</span>` : ""}${n.title}<small>${open ? (BOSS_BY[n.id] ? `Beat it to become ${aTier(Math.min(5, BOSS_BY[n.id].tier + 1))}` : `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}`) : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
-  app.innerHTML = `<section class="view">
+  const lv = levelOf(state.xp), lcur = LEVELS[lv][1], lnxt = LEVELS[lv + 1], lpct = lnxt ? Math.round((state.xp - lcur) / (lnxt[1] - lcur) * 100) : 100;
+  const gotMerch = merchEarned().size, allMerch = Object.keys(OUTFITS).length + Object.keys(HATS).length;
+  const rewardStop = nextStop && nodes.slice(nodes.indexOf(nextStop)).find(n => (REWARDS[n.id] || []).length), rewardItems = rewardStop ? REWARDS[rewardStop.id] : [];
+  const nb = nextBoss(), nbStop = nb && nodes.find(n => n.id === nb.id), nbIdx = nbStop ? nodes.indexOf(nbStop) : -1, nbSc = nbStop && SCENARIOS.find(x => x.id === nbStop.id);
+  const nbOpen = nbStop && (PROTO("unlockStops") || (!gated && (nbIdx === 0 || state.done[nodes[nbIdx - 1].id])));
+  const sideLeft = `<aside class="mside" aria-label="Your rep">
+    <div class="sidecard repcard"><div class="rav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div><b class="rn">${esc(repName())}</b><span class="rt">Tier ${tNow} · ${TIERS[tNow]}</span>
+      <div class="bar" aria-hidden="true"><i style="width:${lpct}%"></i></div><small>Level ${lv + 1}: ${LEVELS[lv][0]}${lnxt ? ` · ${lnxt[1] - state.xp} XP to ${lnxt[0]}` : ""}</small>
+      <div class="sidestats"><span title="Day streak">🔥 ${state.streak || 0}</span><span title="XP">⭐ ${state.xp}</span><span title="Merch unlocked">👕 ${gotMerch}/${allMerch}</span></div></div>
+    ${rewardStop ? `<div class="sidecard"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(nm)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(rewardItems[0])}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small></div>` : ""}</aside>`;
+  const sideRight = `<aside class="mside" aria-label="Next boss and badges">
+    ${nb && nbStop ? `<div class="sidecard bosscard"><h3>Next boss</h3><div class="bigface">${bossFace(nbStop) || '<span class="bface brain">🧠</span>'}</div><b class="rn">${nbSc ? esc(nbSc.cust.name) : "Brand Brain"}</b><span class="rt">${nbSc ? esc(nbSc.cust.role) : "Ten timed questions"}</span>
+      <p>Tier ${nb.tier} boss. Win to become ${aTier(Math.min(5, nb.tier + 1))}.</p><small>${nb.quiz ? `${Math.round(nb.pass * 100)}% or better to win` : `${nb.pass.toFixed(1)} out of 5 on average to win${nb.voice ? ", voice only" : ""}`}</small>
+      <button class="btn" id="sidefight" type="button" ${nbOpen ? "" : "disabled"}>${nbOpen ? "See the battle" : "Locked"}</button></div>`
+      : '<div class="sidecard"><h3>Season complete</h3><p>You have beaten every boss.</p></div>'}
+    <div class="sidecard"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small></div></aside>`;
+  const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 100, 18) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
+  app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     ${tierBar()}
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
-    <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${stops}</div></section>`;
+    <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${bands}${stops}</div></div>${sideRight}</section>`;
   const launch = st => (BOSS_BY[st.id] ? bossIntro(st) : openDiff(() => (st.qs ? quiz(st) : play(st)), st));
   app.querySelectorAll(".node").forEach(b => b.onclick = () => {
     if (b.getAttribute("aria-disabled")) {   // locked: say why instead of doing nothing
@@ -989,6 +1066,9 @@ function home() {
   });
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
+  if ($("#sidefight")) $("#sidefight").onclick = () => launch(nbStop);
+  const popped = app.querySelector(".node.fresh");   // a stop you just finished: bring it into view so you see it pop
+  if (popped) setTimeout(() => popped.scrollIntoView({ block: "center", behavior: "smooth" }), 200);
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------

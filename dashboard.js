@@ -55,10 +55,13 @@ function dashProgress(el) {
   const rec = !H.length ? "Start with the two lessons, Meet Corrido and Know the Lineup, then The Quiet Bar."
     : weak ? `Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). <button class="btn" id="pweak" type="button">Practice ${weak[0]}</button> A short mix of moments from different customers, picked to train it.` : "";
   const wirePractice = () => { if ($("#pweak")) $("#pweak").onclick = () => playPractice(weak[0]); };
-  el.innerHTML = `<div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
-    ${tierCard()}
+  el.innerHTML = `${tierCard()}
+    <div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
     <p class="learn">${rec}</p>
-    <div class="card"><h3>Skills</h3>${skills.length ? skills.map(([k, v, n], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
+    <div class="card"><h3>Skills</h3>${skills.length >= 3
+      ? `<div class="radarwrap">${skillRadar(skills)}<ul class="skilllist">${skills.map(([k, v], i) => `<li><span>${esc(k)}${i === 0 ? ' <small class="focus">focus here</small>' : ""}</span><b>${v}%</b></li>`).join("")}</ul></div>`
+      : skills.length ? skills.map(([k, v], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") + '<p class="note2">The radar chart appears once you have scores in three skills.</p>'
+      : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
     ${cameraDash(H)}
     <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${"★".repeat(h.stars)}${"☆".repeat(3 - h.stars)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
   wirePractice();
@@ -76,14 +79,35 @@ function dashReview(el) {
 }
 
 // Where the rep is on the six tiers, the bosses beaten and how much merch is unlocked.
+// The tier ladder: six steps, each with the medal for its boss (in colour once that boss is beaten), and where you stand now.
 function tierCard() {
-  const t = tierOf(), got = merchEarned().size, total = Object.keys(OUTFITS).length + Object.keys(HATS).length;
-  return `<div class="card tiercard"><h3>Your tier</h3>
-    <div class="tierrow dark">${TIERS.map((n, i) => `<div class="tierdot ${i < t ? "done" : i === t ? "now" : ""}" title="Tier ${i}: ${n}"><b>${i}</b></div>`).join('<i class="tl"></i>')}</div>
+  const t = tierOf(), got = merchEarned().size, total = Object.keys(OUTFITS).length + Object.keys(HATS).length, nb = nextBoss(), st = nb && ALL_STOPS().find(x => x.id === nb.id);
+  const steps = TIERS.map((n, i) => {
+    const boss = BOSSES[i], earned = !!state.done[boss.id], cls = i < t ? "past" : i === t ? "now" : "next";
+    return `<li class="lstep ${cls}"><span class="lnum">TIER ${i}</span><b>${n}</b><span class="lmedal">${badgeSVG("boss-" + boss.id, earned)}</span><small>${earned ? (i === 5 ? "Season complete" : "Boss beaten") : i === t ? "You are here" : "Ahead"}</small></li>`;
+  }).join("");
+  return `<div class="card tiercard"><h3>Your tier ladder</h3>
     <p class="tiernow"><b>Tier ${t} · ${TIERS[t]}</b> <span>${bossesBeaten()} of 6 bosses beaten</span></p>
-    ${bossBadgeRow()}
+    <div class="ltrack" aria-hidden="true"><i style="width:${Math.round(t / 5 * 100)}%"></i></div>
+    <ol class="ladder">${steps}</ol>
+    <p class="lnext">${nb && st ? `Next boss: <b>${esc(st.title)}</b>, ${nb.quiz ? `${Math.round(nb.pass * 100)}% to win` : `${nb.pass.toFixed(1)} out of 5 to win`}. Win to become ${aTier(Math.min(5, nb.tier + 1))}.` : "<b>Season complete.</b> You have beaten every boss."}</p>
     <div class="row"><span>Merch unlocked</span><div class="bar"><i style="width:${Math.round(got / total * 100)}%"></i></div><b>${got}/${total}</b></div>
     <p class="note2">Beat a level to unlock its merch. Beat a boss to move up a tier. ${state.done.mean ? "You have the Legend frame." : ""}</p></div>`;
+}
+
+// Where each of N skills sits on a radar: values 0 to 1, drawn around a circle starting at the top.
+const radarPoints = (vals, R, cx, cy) => vals.map((v, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / vals.length; return [cx + Math.cos(a) * R * v, cy + Math.sin(a) * R * v]; });
+function skillRadar(skills) {
+  const ordered = [...skills].sort((a, b) => a[0].localeCompare(b[0])), N = ordered.length, cx = 170, cy = 140, R = 90, weak = skills[0][0];
+  const poly = pts => pts.map(p => p.map(n => n.toFixed(1)).join(",")).join(" ");
+  const data = radarPoints(ordered.map(s => s[1] / 100), R, cx, cy), labels = radarPoints(Array(N).fill(1.2), R, cx, cy), rim = radarPoints(Array(N).fill(1), R, cx, cy);
+  const wrap = name => { const w = name.split(" "); if (name.length <= 11 || w.length < 2) return [name]; const m = Math.ceil(w.length / 2); return [w.slice(0, m).join(" "), w.slice(m).join(" ")]; };
+  return `<svg class="radar" viewBox="0 0 340 285" role="img" aria-label="Skill radar. ${ordered.map(s => `${s[0]} ${s[1]} percent`).join(", ")}.">
+    ${[.25, .5, .75, 1].map(f => `<polygon class="ring" points="${poly(radarPoints(Array(N).fill(f), R, cx, cy))}"/>`).join("")}
+    ${rim.map(p => `<line class="ax" x1="${cx}" y1="${cy}" x2="${p[0].toFixed(1)}" y2="${p[1].toFixed(1)}"/>`).join("")}
+    <polygon class="shape" points="${poly(data)}"/>
+    ${data.map((p, i) => `<circle class="dot ${ordered[i][0] === weak ? "weak" : ""}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${ordered[i][0] === weak ? 5 : 3.6}"/>`).join("")}
+    ${labels.map((p, i) => { const lines = wrap(ordered[i][0]), anchor = p[0] < cx - 8 ? "end" : p[0] > cx + 8 ? "start" : "middle"; return `<text text-anchor="${anchor}" x="${p[0].toFixed(1)}" y="${(p[1] - (lines.length - 1) * 6 + 3).toFixed(1)}">${lines.map((l, k) => `<tspan x="${p[0].toFixed(1)}" dy="${k ? 12 : 0}">${esc(l)}</tspan>`).join("")}</text>`; }).join("")}</svg>`;
 }
 
 function cameraDash(H) {

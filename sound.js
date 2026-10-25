@@ -132,6 +132,39 @@ const Sound = {
 
     if (R.clink) { const tick = () => { this.clink(0, 0.035, out); later(4000 + Math.random() * 6000, tick); }; later(2500, tick); }
   },
+  // ----- the Tier Up victory music -----
+  // The boss theme's answer: the same corrido, now in A major (the C sharp lifts it out of the minor), faster and bright. A snare
+  // roll, a trumpet call, then A - D - E - A with trumpets on top and a big strummed finish with glasses clinking. The season
+  // finale plays it twice, the second time with the trumpets doubled and a higher last note. Everything runs through one bus,
+  // so leaving the screen cuts it off at once.
+  VICTORY_BARS: ["A", "D", "E", "A"],
+  VICTORY_CHORDS: { A: [110, 164.81, 220, 277.18, 329.63], D: [146.83, 220, 293.66, 369.99, 440], E: [82.41, 123.47, 164.81, 207.65, 246.94] },
+  VICTORY_BASS: { A: [55, 82.41], D: [73.42, 110], E: [41.2, 61.74] },
+  VICTORY_LINE: [
+    [[880, 0, 1], [1108.73, 1, 1], [1318.51, 2, 2]],
+    [[1174.66, 0, 1], [1108.73, 1, 1], [987.77, 2, 1], [880, 3, 1]],
+    [[830.61, 0, 1], [987.77, 1, 1], [1318.51, 2, 2]],
+    [[1108.73, 0, 1], [880, 1, 1], [1108.73, 2, 0.5], [1318.51, 2.5, 0.5], [880, 3, 1]],
+  ],
+  victory(grand) {
+    const c = this.ctx, beat = 0.46, bar = beat * 4, fx = c.createGain(); fx.gain.value = 1; fx.connect(this.master); this.nodes.push(fx);
+    for (let i = 0; i < 8; i++) this.snare(i * 0.06, fx, 0.45 + i * 0.07);   // the roll
+    [[659.25, 0.5], [880, 0.72], [1108.73, 0.94]].forEach(([f, at]) => this.trumpet(f, 0.2, at, 0.1, fx));
+    this.trumpet(1318.51, 0.9, 1.16, 0.11, fx); this.strum([110, 164.81, 220, 277.18, 329.63, 440], 1.16, 0.32, fx); this.clink(1.2, 0.2, fx); this.clink(1.36, 0.16, fx);
+    const passes = grand ? 2 : 1;
+    for (let p = 0; p < passes; p++) this.VICTORY_BARS.forEach((name, i) => {
+      const base = 2.2 + (p * 4 + i) * bar, [root, fifth] = this.VICTORY_BASS[name], chord = this.VICTORY_CHORDS[name], last = p === passes - 1 && i === 3;
+      this.pluck(root, base, 0.45, fx); this.pluck(fifth, base + 2 * beat, 0.4, fx);
+      this.strum(chord, base + beat, 0.2, fx); this.strum(chord, base + 3 * beat, 0.22, fx);
+      this.tone(78, 0.2, "sine", 0.28, fx, base); this.tone(78, 0.2, "sine", 0.28, fx, base + 2 * beat); this.snare(base + beat, fx, 0.8); this.snare(base + 3 * beat, fx, 0.8);
+      this.VICTORY_LINE[i].forEach(([f, st, d], k) => {
+        const top = last && k === this.VICTORY_LINE[i].length - 1;   // the very last note holds, and in the finale it climbs an octave
+        const len = top ? 1.6 : d * beat * 0.95, pitch = top && grand ? f * 2 : f;
+        this.trumpet(pitch, len, base + st * beat, 0.09, fx); if (p === 1 || grand) this.trumpet(pitch / 2, len, base + st * beat, 0.05, fx);
+      });
+      if (last) { this.strum([110, 164.81, 220, 277.18, 329.63, 440], base + 3 * beat, 0.34, fx); this.clink(base + 3 * beat, 0.2, fx); this.clink(base + 3 * beat + 0.15, 0.16, fx); this.clink(base + 3 * beat + 0.3, 0.12, fx); }
+    });
+  },
   // ----- the boss battle theme -----
   // The corrido with the stakes turned up: a driving oom-pah (bass on 1 and 3, strummed chords on 2 and 4), a snare on the backbeat
   // and mariachi trumpets playing a short, urgent line over Am - Am - G - F - E - E - Am - E, the Spanish-sounding turn with the
@@ -200,6 +233,8 @@ const Sound = {
     },
     // a sad little minor line on the guitar
     lose: s => { [329.63, 261.63, 220, 164.81].forEach((f, i) => s.pluck(f, i * 0.28, 0.4)); s.sweep(1500, 200, 0.5, 0.08, 0.8, 2); },
+    // the victory music for a Tier Up, and the longer one for finishing the season
+    tierup: s => s.victory(false), season: s => s.victory(true),
     // two clinks and a sparkle of high piano-like notes
     badge: s => { s.clink(0, 0.18); s.clink(0.14, 0.14); [1318.5, 1568, 2093].forEach((f, i) => s.tone(f, 0.3, "sine", 0.1, null, 0.25 + i * 0.09)); },
   },

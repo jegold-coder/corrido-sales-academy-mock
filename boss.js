@@ -163,7 +163,7 @@ function tierUp(ctx) {
   $("#share").onclick = () => shareTierCard(tierTo);
   if ($("#score")) $("#score").onclick = ctx.showScorecard;
   $("#season").onclick = home;
-  Sound.stop(); Sound.sfx("win"); setTimeout(() => Sound.sfx("badge"), 700); window.scrollTo(0, 0);
+  Sound.stop(); Sound.sfx(final ? "season" : "tierup"); setTimeout(() => { if ($("#tierup")) Sound.sfx("badge"); }, 2600); window.scrollTo(0, 0);
 }
 
 // A picture of the rep with their tier: name, avatar and tier only. Drawn on a canvas so it can be shared or saved.

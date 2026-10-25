@@ -86,4 +86,8 @@ function wearFirst(items) {
   const shirt = items.find(i => OUTFITS[i]), hat = items.find(i => HATS[i]);
   if (shirt) equipMerch(shirt); if (hat) equipMerch(hat);
 }
+// The first stop of each tier: a tier begins right after the boss before it. ids is the map order.
+const tierStarts = ids => TIERS.map((_, i) => (i === 0 ? 0 : ids.indexOf(BOSSES[i - 1].id) + 1));
+// Stops finished since the map was last drawn, for the pop and the glowing road. seen is a Set, or null the first time.
+const newlyDone = (seen, doneIds) => (seen ? doneIds.filter(id => !seen.has(id)) : []);
 if (typeof module !== "undefined") module.exports = { TIERS, BOSSES, REWARDS, STARTER_MERCH };

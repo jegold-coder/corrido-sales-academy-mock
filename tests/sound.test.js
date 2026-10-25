@@ -45,4 +45,14 @@ const scale = [523.25, 587.33, 659.25, 698.46, 783.99, 830.61, 880, 987.77];
 ok("every trumpet note is in A minor (or the G sharp that E major needs)", B.BOSS_LINE.flat().every(([f]) => scale.some(x => near(f, x))));
 ok("the trumpet line fits its bars and never overlaps itself", B.BOSS_LINE.length === 8 && B.BOSS_LINE.every(bar => bar.every(([, s, d], i) => s >= 0 && s + d <= 4.001 && (i === 0 || bar[i - 1][1] + bar[i - 1][2] <= s + 0.001))));
 ok("the line ends on the home note and keeps the tension on the last bar", near(B.BOSS_LINE[7].at(-1)[0], 659.25) && B.BOSS_BARS[7] === "E");
+
+// the Tier Up victory music
+S.stop(); S.sfx("tierup"); ok("Tier Up plays the victory music", nodes() > 0);
+S.stop(); ok("leaving the screen cuts it off at once, because it all runs through one bus", nodes() === 0);
+S.sfx("season"); const grandN = nodes(); S.stop(); S.sfx("tierup"); ok("the season finale is longer than a Tier Up", grandN > nodes()); S.stop();
+ok("every victory bar has a chord and a bass", B.VICTORY_BARS.length === 4 && B.VICTORY_BARS.every(n => B.VICTORY_CHORDS[n] && B.VICTORY_BASS[n]));
+const major = [659.25, 830.61, 880, 987.77, 1108.73, 1174.66, 1318.51];
+ok("the victory trumpets stay in A major", B.VICTORY_LINE.flat().every(([f]) => major.some(x => near(f, x))));
+ok("the victory line fits its bars and never overlaps itself", B.VICTORY_LINE.length === 4 && B.VICTORY_LINE.every(bar => bar.every(([, s, d], i) => s >= 0 && s + d <= 4.001 && (i === 0 || bar[i - 1][1] + bar[i - 1][2] <= s + 0.001))));
+ok("it comes home to A", B.VICTORY_BARS[3] === "A" && near(B.VICTORY_LINE[3].at(-1)[0], 880));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

@@ -41,9 +41,11 @@ What it loads from the internet:
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
 | Sign-in (journey page 2) | Age check, then "continue as guest" or an email that is only saved on this device. Company sign-in comes with the rollout |
 | Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a CSV invite page and leaderboards. Uses sample data. See below |
-| Boss battle theme | A corrido-style tune made in code with the browser's Web Audio (no files): a driving oom-pah of bass and strummed guitar, a snare on the backbeat and mariachi trumpets in A minor over the record-player crackle. It plays only on the boss screen, and stops when you go back, go anywhere else, or start the battle (a practice run too) |
+| The map | A winding road with a boss's face on each boss stop (a dark silhouette while it is still locked), a banner at the start of each tier, and on a wide screen a side panel with your rep, the next unlock and the next boss with the boss badges. A stop you just finished pops and a light runs along the road to the next one, and a beaten boss makes the next tier's banner pop in. On a phone the side panels hide and the banners shorten to "Tier 3" |
+| Boss battle theme | A corrido-style tune made in code with the browser's Web Audio (no files): a driving oom-pah of bass and strummed guitar, a snare on the backbeat and mariachi trumpets in A minor over the record-player crackle. It plays only on the boss screen, and stops when you go back, go anywhere else, or start the battle (a practice run too). Tier Up has its own victory music in A major, and finishing the season plays a longer one; both are cut off the moment you leave the screen |
 | Customer reactions | The customer's face follows the conversation: brows, mouth and cheeks go from delighted to pleased, plain, unsure or annoyed, and a small reaction pops up beside them after each answer. Harder levels start the customer more guarded |
 | Answer grader (manager mode > Grader) | For managers only, because it shows the model answers. For every question: what a good answer looks like and why, the partly-there and not-good answers with the reason for each, and a box to type any answer and see the score, the arithmetic behind it, what it covered, the mistakes, the tone notes and how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
+| Dashboard progress | The tier ladder is first: six steps with each boss's medal in colour once beaten, where you are now, the next boss and the merch meter. Skills are a radar chart once there are scores in three skills (bars before that), with the weakest skill marked |
 | Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules (reached from the header on every screen, next to a link to the real website that opens in a new tab) |
 | Practice and review | The Dashboard's Review tab (with a count) collects every wrong answer with a stronger one, and its Progress tab has a Practice button that replays your weakest skill across different customers. Neither is on the map. Missions also open with a different line on replay |
@@ -87,7 +89,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `globals` and `camera` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `globals` and `camera` tests |
 
 ## Tests
 
@@ -99,6 +101,7 @@ node tests/badges.test.js   # a badge for every boss, awarded once, caught up fr
 node tests/voices.test.js   # each customer gets a different voice, lines are paced like speech
 node tests/reactions.test.js # customer faces react to the conversation, and the grader's arithmetic adds up
 node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; both go quiet when the page is hidden; the tune stays in key
+node tests/map.test.js      # tier banners, the pop for a finished stop, side panels, the ladder and the radar
 node tests/globals.test.js  # no two scripts declare the same name (a clash stops a file loading)
 node tests/camera.test.js   # face maths with fake landmarks
 ```
