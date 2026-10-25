@@ -34,4 +34,5 @@ ok("new avatars start Neutral, and old or damaged saved ones are fixed to Neutra
 ok("Randomize picks a smile too", /smile: pick\(SMILES\)/.test(html));
 ok("the shared tier card picture hides the reaction mouths (it has no page CSS, so all four were drawn at once)", /<style>\.xm path\{display:none\}<\/style>\$\{person\(repLook\(\)\)\}/.test(boss));
 ok("the smile names and drawing function are new global names (no clash)", (html.match(/const SMILES =/g) || []).length === 1 && (html.match(/function smileShape/g) || []).length === 1);
+ok("the Features row is built with the other looks, above the merch grid", /<h3>Features<\/h3>[\s\S]*?\n\s+\+ merchHtml\(\);/.test(html) && !/\+ merchHtml\(\)\n\s+\+ `<div class="grp"><h3>Features/.test(html));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

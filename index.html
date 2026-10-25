@@ -830,25 +830,25 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25h"></script>
-<script src="sound.js?v=2026-10-25h"></script>
-<script src="scenarios.js?v=2026-10-25h"></script>
-<script src="progress.js?v=2026-10-25h"></script>
-<script src="criteria.js?v=2026-10-25h"></script>
-<script src="tone.js?v=2026-10-25h"></script>
-<script src="coach.js?v=2026-10-25h"></script>
-<script src="camera.js?v=2026-10-25h"></script>
-<script src="lessons.js?v=2026-10-25h"></script>
-<script src="dashboard.js?v=2026-10-25h"></script>
-<script src="grader.js?v=2026-10-25h"></script>
-<script src="onboarding.js?v=2026-10-25h"></script>
-<script src="tiers.js?v=2026-10-25h"></script>
-<script src="badges.js?v=2026-10-25h"></script>
-<script src="voices.js?v=2026-10-25h"></script>
-<script src="mission.js?v=2026-10-25h"></script>
-<script src="boss.js?v=2026-10-25h"></script>
-<script src="auth.js?v=2026-10-25h"></script>
-<script src="manager.js?v=2026-10-25h"></script>
+<script src="config.js?v=2026-10-25i"></script>
+<script src="sound.js?v=2026-10-25i"></script>
+<script src="scenarios.js?v=2026-10-25i"></script>
+<script src="progress.js?v=2026-10-25i"></script>
+<script src="criteria.js?v=2026-10-25i"></script>
+<script src="tone.js?v=2026-10-25i"></script>
+<script src="coach.js?v=2026-10-25i"></script>
+<script src="camera.js?v=2026-10-25i"></script>
+<script src="lessons.js?v=2026-10-25i"></script>
+<script src="dashboard.js?v=2026-10-25i"></script>
+<script src="grader.js?v=2026-10-25i"></script>
+<script src="onboarding.js?v=2026-10-25i"></script>
+<script src="tiers.js?v=2026-10-25i"></script>
+<script src="badges.js?v=2026-10-25i"></script>
+<script src="voices.js?v=2026-10-25i"></script>
+<script src="mission.js?v=2026-10-25i"></script>
+<script src="boss.js?v=2026-10-25i"></script>
+<script src="auth.js?v=2026-10-25i"></script>
+<script src="manager.js?v=2026-10-25i"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1663,8 +1663,8 @@ function creator(onDone) {
   const optsHtml = () => groupsFor(A).filter(g => !g.merch).map(g => `<div class="grp"><h3>${g.label}</h3><div class="chips" data-g="${g.k}">${
     g.sw ? g.sw.map((v, i) => `<button type="button" class="sw ${g.match && v === -1 ? "match" : ""}" style="${swatchCol(g, v) ? `background:${swatchCol(g, v)}` : ""}" data-v="${g.match ? v : i}" aria-label="${g.label} ${i + 1}${v === -1 ? " (match hair)" : ""}" title="${v === -1 ? "Match hair" : ""}"></button>`).join("")
     : g.chips.map((c, i) => `<button type="button" class="chip2" data-v="${g.idx ? i : c}">${c}</button>`).join("")}</div></div>`).join("")
-    + merchHtml()
-    + `<div class="grp"><h3>Features</h3><div class="chips">${togglesFor(A).map(([k, l]) => `<button type="button" class="chip2 tg" data-t="${k}">${l}</button>`).join("")}</div></div>`;
+    + `<div class="grp"><h3>Features</h3><div class="chips">${togglesFor(A).map(([k, l]) => `<button type="button" class="chip2 tg" data-t="${k}">${l}</button>`).join("")}</div></div>`   // features sit with the other looks, above the merch
+    + merchHtml();
   app.innerHTML = `<section class="view sheet creator">
     <h1>Create your rep</h1>
     <div class="cwrap">
