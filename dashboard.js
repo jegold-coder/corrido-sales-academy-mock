@@ -19,7 +19,7 @@ function dashboard(tab = dashTab) {
     <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" class="tab" data-t="${k}" aria-selected="${k === tab}">${l}</button>`).join("")}</div>
     <div id="dbody" role="tabpanel"></div></section>`;
   $("#dback").onclick = home;
-  app.querySelectorAll(".tab").forEach(b => b.onclick = () => dashboard(b.dataset.t));
+  app.querySelectorAll(".tab").forEach(b => b.onclick = () => { dashboard(b.dataset.t); window.scrollTo(0, 0); });   // each tab starts at its top
   const body = $("#dbody");
   ({ progress: dashProgress, badges: dashBadges, team: dashTeam, review: dashReview, check: dashCheck, settings: dashSettings })[tab](body);
   if (tab === "progress") {

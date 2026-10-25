@@ -827,25 +827,25 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25f"></script>
-<script src="sound.js?v=2026-10-25f"></script>
-<script src="scenarios.js?v=2026-10-25f"></script>
-<script src="progress.js?v=2026-10-25f"></script>
-<script src="criteria.js?v=2026-10-25f"></script>
-<script src="tone.js?v=2026-10-25f"></script>
-<script src="coach.js?v=2026-10-25f"></script>
-<script src="camera.js?v=2026-10-25f"></script>
-<script src="lessons.js?v=2026-10-25f"></script>
-<script src="dashboard.js?v=2026-10-25f"></script>
-<script src="grader.js?v=2026-10-25f"></script>
-<script src="onboarding.js?v=2026-10-25f"></script>
-<script src="tiers.js?v=2026-10-25f"></script>
-<script src="badges.js?v=2026-10-25f"></script>
-<script src="voices.js?v=2026-10-25f"></script>
-<script src="mission.js?v=2026-10-25f"></script>
-<script src="boss.js?v=2026-10-25f"></script>
-<script src="auth.js?v=2026-10-25f"></script>
-<script src="manager.js?v=2026-10-25f"></script>
+<script src="config.js?v=2026-10-25g"></script>
+<script src="sound.js?v=2026-10-25g"></script>
+<script src="scenarios.js?v=2026-10-25g"></script>
+<script src="progress.js?v=2026-10-25g"></script>
+<script src="criteria.js?v=2026-10-25g"></script>
+<script src="tone.js?v=2026-10-25g"></script>
+<script src="coach.js?v=2026-10-25g"></script>
+<script src="camera.js?v=2026-10-25g"></script>
+<script src="lessons.js?v=2026-10-25g"></script>
+<script src="dashboard.js?v=2026-10-25g"></script>
+<script src="grader.js?v=2026-10-25g"></script>
+<script src="onboarding.js?v=2026-10-25g"></script>
+<script src="tiers.js?v=2026-10-25g"></script>
+<script src="badges.js?v=2026-10-25g"></script>
+<script src="voices.js?v=2026-10-25g"></script>
+<script src="mission.js?v=2026-10-25g"></script>
+<script src="boss.js?v=2026-10-25g"></script>
+<script src="auth.js?v=2026-10-25g"></script>
+<script src="manager.js?v=2026-10-25g"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -866,8 +866,13 @@ const toast = msg => { let t = $("#toast"); if (!t) { t = document.createElement
 // Move keyboard focus to the new screen whenever the view changes.
 // The room's background music belongs to a mission scene, and the boss theme to the boss screen. Whatever way you leave (the X, the
 // logo, the header, anything else), the moment the screen is no longer the one the music belongs to it stops.
+let lastScreen = "";
 new MutationObserver(() => {
   if (!app.contains(document.activeElement)) app.focus({ preventScroll: true });
+  // a different kind of page (map, dashboard, brand, creator...) opens at the top, wherever the page before was scrolled to; redrawing the same
+  // page (a dashboard tab, the map after a stop) keeps its place
+  const screen = (app.firstElementChild || {}).className || "";
+  if (screen !== lastScreen) { lastScreen = screen; window.scrollTo(0, 0); }
   if (Sound.theme && !app.querySelector(Sound.theme === "boss" ? ".bossintro" : "#pc")) Sound.stop();
   document.body.classList.toggle("inlesson", !!app.querySelector(".lesson-top .hearts"));   // the hearts in the footer count only in a lesson
   document.body.classList.toggle("playing", !!app.querySelector("#pc, .lesson-top"));      // a mission or lesson is on: the phone bottom bar steps aside

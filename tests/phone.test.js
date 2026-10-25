@@ -15,4 +15,7 @@ ok("each tab goes to its page, and tapping the page you are on does nothing", /m
 ok("the page you are on is marked, with the brand page told apart from the dashboard (they share a header class)", /\$\("\.creator"\) \? "char" : \$\("\.explore"\) \? "brand" : \$\("\.dash"\) \? "dash" : \$\("\.map"\) \? "map"/.test(html) && /setAttribute\("aria-current", "page"\)/.test(html));
 ok("the header Dashboard button opens the dashboard from the brand page too", /\$\("#dashBtn"\)\.onclick = \(\) => \(\$\("\.dash"\) \? home\(\) : dashboard\(\)\)/.test(html));
 ok("a tap target is at least 44px tall", /min-height:48px/.test(html));
+const dash = fs.readFileSync(path.join(__dirname, "..", "dashboard.js"), "utf8");
+ok("a different kind of page (dashboard, brand, character, map) opens at the top, not where the last page was scrolled", /const screen = \(app\.firstElementChild \|\| \{\}\)\.className \|\| "";\n\s+if \(screen !== lastScreen\) \{ lastScreen = screen; window\.scrollTo\(0, 0\); \}/.test(html));
+ok("each dashboard tab starts at its top too", /dashboard\(b\.dataset\.t\); window\.scrollTo\(0, 0\);/.test(dash));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);
