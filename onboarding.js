@@ -41,9 +41,10 @@ function tutorial(onDone, i = 0) {
 }
 
 // Shown after the first knowledge check.
-function onboardingResult(score, total, onDone) {
+function onboardingResult(score, total, onDone, badges = []) {
   app.innerHTML = `<section class="view sheet result"><h1>Starting point: ${score} / ${total}</h1>
     <p>${score >= 8 ? "You already know a lot about Corrido." : score >= 5 ? "A solid start. The lessons will fill in the rest." : "No worries. That's what the lessons are for."}</p>
+    ${badgeMedals(badges)}
     <p class="note2">You'll take the check again later from the Dashboard to see how much you improved.</p>
     <p><button class="btn" id="obgo" type="button">Start practicing</button></p></section>`;
   $("#obgo").onclick = onDone;

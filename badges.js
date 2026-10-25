@@ -20,7 +20,7 @@ const BOSS_BADGES = {
   mean: { name: "Cool Under Fire", how: "Beat the Bad-Tempered Owner", metal: "diamond" },
 };
 const BADGE_ART = {
-  first: { ico: "🎤", metal: "bronze" }, closer: { ico: "🤝", metal: "silver" }, flawless: { ico: "⭐", metal: "gold" }, hard: { ico: "🔥", metal: "ruby" },
+  first: { ico: "🎤", metal: "bronze" }, check: { ico: "📝", metal: "silver" }, flawless: { ico: "⭐", metal: "gold" }, hard: { ico: "🔥", metal: "ruby" },
   typed: { ico: "💯", metal: "gold" }, voice: { ico: "🎙️", metal: "silver" }, brain: { ico: "🧠", metal: "emerald" }, comply: { ico: "🛡️", metal: "emerald" },
   camera: { ico: "📷", metal: "bronze" }, streak3: { ico: "⚡", metal: "silver" }, all: { ico: "🗺️", metal: "diamond" }, closet: { ico: "👕", metal: "amethyst" },
   bossall: { ico: "👑", metal: "amethyst", kind: "feat", plate: "ALL 6" }, bossperfect: { ico: "🏆", metal: "gold", kind: "feat", plate: "FLAWLESS" },
@@ -43,7 +43,9 @@ function awardBadges(keys) {
 }
 // Badges that follow from progress already made (a boss beaten, the whole closet), so nothing earned earlier goes missing.
 function syncBadges() {
+  if (state.badges.some(k => !BADGES[k])) { state.badges = state.badges.filter(k => BADGES[k]); Progress.save(state); }   // a retired badge (Closer) stops counting
   const keys = BOSSES.filter(b => state.done[b.id]).map(b => "boss-" + b.id);
+  if (state.pre) keys.push("check");   // the knowledge check was finished at least once
   if (BOSSES.every(b => state.done[b.id])) keys.push("bossall");
   if (merchEarned().size >= Object.keys(OUTFITS).length + Object.keys(HATS).length) keys.push("closet");
   return awardBadges(keys);

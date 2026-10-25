@@ -34,4 +34,15 @@ ev("state.badges = []; state.done = {}; state.proto = {}");
 ok("no merch badge until every piece is unlocked", ev("!syncBadges().includes('closet')"));
 ev("Object.keys(REWARDS).forEach(k => { state.done[k] = true; });");
 ok("the Full Closet badge comes with the last piece", ev("syncBadges().includes('closet')"));
+
+// the Knowledge Check badge, which replaced Closer
+ok("there is a Knowledge Check badge with art, and Closer is gone", ev("BADGES.check[0] === 'Knowledge Check' && !!BADGE_ART.check.ico && METALS[BADGE_ART.check.metal] && !BADGES.closer && !BADGE_ART.closer"));
+ev("state.badges = []; state.done = {}; state.pre = null; state.post = null;");
+ok("nothing earns it before the check is finished, and an ordinary mission does not either", !ev("syncBadges().includes('check')") && ev("BADGES.check[2]({ won: true, id: 'quiet', stars: 3 }, { streak: 9, done: {}, pre: null }, 16) === false"));
+ev("state.pre = { score: 6, total: 10, date: '2026-10-24', missed: [] };");
+ok("finishing the check once earns it, and only once", ev("syncBadges().join()") === "check" && ev("syncBadges().length") === 0 && ev("state.badges.filter(k => k === 'check').length") === 1);
+ev("state.badges = ['closer', 'first', 'boss-priya'];");
+ev("syncBadges();");
+ok("a player who earned the retired Closer badge no longer has it counted, but keeps the rest", ev("state.badges.includes('closer')") === false && ev("state.badges.includes('first') && state.badges.includes('boss-priya')"));
+ok("the check finishes into syncBadges and shows the medal on both result screens", /const got = syncBadges\(\);/.test(fs.readFileSync(path.join(root, "lessons.js"), "utf8")) && /\$\{badgeMedals\(fresh\)\}/.test(fs.readFileSync(path.join(root, "lessons.js"), "utf8")) && /\$\{badgeMedals\(badges\)\}/.test(fs.readFileSync(path.join(root, "onboarding.js"), "utf8")));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

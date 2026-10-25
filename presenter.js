@@ -41,7 +41,7 @@ const Presenter = (() => {
     P.streak = full ? 14 : 5; P.lastDay = today; P.tutorialSeen = true;
     P.pre = { score: 5, total: 10, date: today, missed: ["Story", "Rules", "Selling", "Lineup"] };
     if (ids.includes("priya")) P.post = full ? { score: 10, total: 10, date: today, missed: [] } : { score: 8, total: 10, date: today, missed: ["Prices"] };
-    P.badges = full ? Object.keys(BADGES) : ["first", "closer", "flawless", "typed", "streak3"].filter(() => ids.includes("quiet"));
+    P.badges = full ? Object.keys(BADGES) : ["first", "check", "flawless", "typed", "streak3"].filter(() => ids.includes("quiet"));
     P.proto = { unlockStops: false, unlockMerch: false, unlimitedTries: true };
     P.camPref = false; P.profile = { mode: "guest", email: "" };
     if (typeof DEMO_TEAM !== "undefined") DEMO_TEAM.forEach(([name, xp, lv, b, s]) => { P.team[name] = { n: name, xp, lv, b, s, demo: true }; });

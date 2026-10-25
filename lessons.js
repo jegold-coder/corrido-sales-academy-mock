@@ -95,7 +95,9 @@ function knowledgeCheck(ob = null) {
     if (!queue.length) {
       const kind = state.pre ? "post" : "pre", rec = { score, total, date: Progress.today(), missed: [...new Set(missed)] };
       state[kind] = rec; Progress.save(state);
-      return ob ? onboardingResult(score, total, ob) : dashboard("check");
+      const got = syncBadges();   // the first finished check earns the Knowledge Check badge
+      if (ob) return onboardingResult(score, total, ob, got);
+      checkBadges = got; return dashboard("check");
     }
     const it = queue[0], opts = shuffle([[it.a, 1], ...it.w.slice(0, 2).map(x => [x, 0])]), canSkip = ob && queue.length > 1;
     app.innerHTML = `<section class="view sheet"><div class="lesson-top"><h1 class="sr">Knowledge check</h1>${ob ? "" : '<button class="x" id="exit" aria-label="Exit">✕</button>'}<div class="prog"><i style="width:${(total - queue.length) / total * 100}%"></i></div><span class="chip">Knowledge check · ${total - queue.length} of ${total} done</span></div>
@@ -117,12 +119,13 @@ function knowledgeCheck(ob = null) {
   show();
 }
 
+let checkBadges = [];   // badges the check that was just finished earned, shown once on the Knowledge check tab
 function dashCheck(el) {
-  const pre = state.pre, post = state.post;
+  const pre = state.pre, post = state.post, fresh = checkBadges; checkBadges = [];
   const fmt = r => `${r.score} / ${r.total} <small>(${r.date})</small>`;
   const delta = pre && post ? post.score - pre.score : null;
   const finished = ALL_STOPS().filter(x => state.done[x.id]).length;
-  el.innerHTML = `<p class="note2">Ten quick questions from across the lessons. Take it once before you start and once after a few missions to see what you learned.</p>
+  el.innerHTML = `${badgeMedals(fresh)}<p class="note2">Ten quick questions from across the lessons. Take it once before you start and once after a few missions to see what you learned.</p>
     <div class="stats3"><div><b>${pre ? fmt(pre) : "–"}</b><span>before</span></div><div><b>${post ? fmt(post) : "–"}</b><span>after</span></div><div><b>${delta == null ? "–" : (delta >= 0 ? "+" : "") + delta}</b><span>change</span></div></div>
     ${post && post.missed.length ? `<p class="learn">Topics to review: <b>${post.missed.join(", ")}</b>.</p>` : pre && pre.missed.length && !post ? `<p class="learn">Weak spots on your first try: <b>${pre.missed.join(", ")}</b>.</p>` : ""}
     <button class="btn" id="takecheck" type="button">${!pre ? "Take the check (before)" : post ? "Retake the check" : finished < 3 ? "Take it after a few more stops" : "Take the check (after)"}</button>`;
