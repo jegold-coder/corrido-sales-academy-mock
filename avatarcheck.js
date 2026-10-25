@@ -1,7 +1,7 @@
 "use strict";
 // Contact sheets for checking how the avatar is drawn, opened from the Presenter menu ("Avatar check"): every shirt, or every hairstyle on every head shape, on one page.
 // This is how the arms, sleeves, neck skin, hair and hems were checked by eye. Each picture sits in its own frame (an iframe), so pictures never share ids and a shirt
-// cannot borrow another's clip. A sheet only borrows the player's avatar to draw with, and puts it back afterwards. Uses globals from index.html at call time.
+// cannot borrow another's clip. A sheet only borrows the player's avatar to draw with, and puts it back afterwards. Uses globals from the page's own scripts (app.js onward) at call time.
 
 const AvatarCheck = (() => {
   const EXPRESSION = "Warm smile";   // every face on every sheet wears this one expression, so only the hair, shirt or neck differs

@@ -23,7 +23,7 @@ S.stop(); S.setOn(false); S.setOn(true); ok("turning sound on from the home page
 S.theme = "bar"; S.stop(); S.setOn(true); ok("after leaving, switching sound on does not bring the music back", nodes() === 0);
 
 // the page wires it up: a screen change that is not a mission stops the music, and the page hiding pauses it
-const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+const html = require("./page").source();   // index.html with the page's own scripts back in place
 ok("any screen that is not the one the music belongs to stops it", /if \(Sound\.theme && !app\.querySelector\(Sound\.theme === "boss" \? "\.bossintro" : "#pc"\)\) Sound\.stop\(\)/.test(html));
 ok("hiding the page pauses it and showing it resumes", /visibilitychange", \(\) => \{ if \(document\.hidden\) Sound\.pause\(\); else Sound\.resume\(\)/.test(html));
 ok("going home still stops it", /function home\(\) \{\n\s+stopAll\(\); Cam\.stop\(\); Sound\.stop\(\)/.test(html));

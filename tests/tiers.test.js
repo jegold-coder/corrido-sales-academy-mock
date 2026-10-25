@@ -3,7 +3,7 @@ const fs = require("fs"), vm = require("vm"), path = require("path");
 const root = path.join(__dirname, "..");
 const ctx = vm.createContext({ console, state: { done: {}, proto: {} } });
 // pull the OUTFITS and HATS names out of index.html without running the page
-const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+const html = require("./page").source();   // index.html with the page's own scripts back in place
 const names = src => [...src.matchAll(/^  "([^"]+)": \{/gm)].map(m => m[1]);
 const outfits = names(html.slice(html.indexOf("const OUTFITS = {"), html.indexOf("const SLEEVE = {")));
 const hats = names(html.slice(html.indexOf("const HATS = {"), html.indexOf("const BODY = ")));

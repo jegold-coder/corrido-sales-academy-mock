@@ -542,7 +542,7 @@ SCENARIOS.splice(5, 0, BUYER);     // ..., priya, buyer, comply, ray
 SCENARIOS.splice(6, 0, MIA);       // ..., buyer, mia, comply, ray
 SCENARIOS.splice(8, 0, STICKUP);   // ..., comply, stickup, ray
 
-// Other ways each mission can open, used on replay (index.html picks one at random, never the same twice in a row).
+// Other ways each mission can open, used on replay (mission.js picks one at random, never the same twice in a row).
 // Each keeps the same situation and the same hidden worry as the original opening line.
 const OPENERS = {
   marco: [

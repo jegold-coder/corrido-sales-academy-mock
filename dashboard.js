@@ -1,5 +1,5 @@
 "use strict";
-// Rep dashboard: progress, skills, badges, team board and settings. Uses globals from index.html at call time.
+// Rep dashboard: progress, skills, badges, team board and settings. Uses globals from the page's own scripts (app.js onward) at call time.
 
 let dashTab = "progress";
 

@@ -19,7 +19,7 @@ ok("a stop finished since the last drawing pops", ev("newlyDone(new Set(['brand'
 ok("a stop already seen does not pop again", ev("newlyDone(new Set(['brand', 'lineup']), ['brand', 'lineup']).length") === 0);
 
 // the map page
-const html = read("index.html");
+const html = require("./page").source();
 ok("boss stops show the boss's face, and a still-locked boss is a dark silhouette", /const bossFace = n =>/.test(html) && /\.node\.boss\.locked \.bface svg\{filter:grayscale\(1\) brightness/.test(html));
 ok("tier banners sit over the first stop of each tier, on that stop's side, clear of the boss's label, and stay inside the map", /class="tierband /.test(html) && /tierStarts\(nodes\.map/.test(html) && /style="--x:\$\{xs\[f\] \/ 4\}%;top:\$\{Math\.max\(ys\[f\] - 120, 22\)/.test(html) && /left:clamp\(var\(--hw\),var\(--x\),calc\(100% - var\(--hw\)\)\)/.test(html));
 ok("the map has a side panel on each side with the rep, the next unlock, the next boss and the badges", ["Your rep", "Next unlock", "Next boss", "Boss badges"].every(t => html.includes(t)) && /<aside class="mside"/.test(html));

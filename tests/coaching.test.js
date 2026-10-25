@@ -62,5 +62,5 @@ ok("coaching messages never mention merch or clothing", !/merch|shirt|\btee\b|\b
 ok("Coaching is a manager page, after Cohorts", /\["cohorts", "Cohorts"\], \["coaching", "Coaching"\]/.test(mgr) && /coaching: mgrCoaching/.test(mgr));
 ok("the player's own row can find their weakest skill (the function was never defined before)", /const weakestSkill = \(\) =>/.test(mgr) && /Progress\.skillAverages\(state\)\[0\]/.test(mgr));
 ok("copying a message and marking a rep coached are wired up", /\.copybtn"\)\.forEach/.test(mgr) && /\.coachedbtn"\)\.forEach/.test(mgr) && /state\.coached = /.test(mgr) && /#copyteam/.test(mgr));
-ok("reps can't reach the Coaching page, because it is a manager page", !/mgrCoaching|coachPlan|coachMessage|COACH\b/.test(read("dashboard.js")) && !/mgrCoaching|coachPlan/.test(read("index.html").replace(/<script[^>]*src[^>]*><\/script>/g, "")));
+ok("reps can't reach the Coaching page, because it is a manager page", !/mgrCoaching|coachPlan|coachMessage|COACH\b/.test(read("dashboard.js")) && !/mgrCoaching|coachPlan/.test(require("./page").source().replace(/<script[^>]*src[^>]*><\/script>/g, "")));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

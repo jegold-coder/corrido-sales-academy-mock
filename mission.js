@@ -7,7 +7,7 @@
 //   4. The customer replies to what you actually said, like a sales script.
 //   5. Nothing is scored until the end. Each answer is scored out of 5: 4 points for what you said (the rubric in criteria.js)
 //      and 1 for tone, judged for the situation from your words and your voice (tone.js). Scored by Coach.score in coach.js.
-// Uses globals from index.html (state, app, $, esc, barScene, lessonTop, wireX, finish helpers) at call time.
+// Uses globals from the page's own scripts (state, app, $, esc, barScene, lessonTop, wireX, finish helpers) at call time.
 
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let voiceUsed = false, coachOn = false, hintsUsed = 0;

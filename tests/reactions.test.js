@@ -5,7 +5,7 @@ const read = f => fs.readFileSync(path.join(root, f), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
 
 // reactions: the face has what it needs, and the mission uses it at the right moments
-const html = read("index.html"), mission = read("mission.js");
+const html = require("./page").source(), mission = read("mission.js");
 ok("every customer face carries a smile, a grin, a flat mouth and a frown", ["xm-smile", "xm-grin", "xm-flat", "xm-frown"].every(c => html.includes(`class="${c}"`)));
 ok("the brows are drawn in two parts so each can move", html.includes('class="brow bl"') && html.includes('class="brow br"'));
 ok("the four expressions have styles", ["pleased", "delighted", "unsure", "annoyed"].every(x => new RegExp(`\\[data-x=${x}\\]`).test(html)));

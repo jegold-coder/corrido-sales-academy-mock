@@ -55,5 +55,5 @@ ok("even when a drawing fails, the avatar and skin colours come back", threw && 
 // how it is wired in
 const html0 = read("index.html"), pres = read("presenter.js");
 ok("the Presenter menu has an Avatar check section with the four sheets", /\["Avatar check", \[\["Shirts: arms and sleeves", \(\) => AvatarCheck\.show\("sleeves"\)\], \["Shirts: neck and collar", \(\) => AvatarCheck\.show\("necks"\)\], \["Shirts: bottom of the preview", \(\) => AvatarCheck\.show\("bottoms"\)\], \["Hair on every head shape", \(\) => AvatarCheck\.show\("hair"\)\]\]\]/.test(pres));
-ok("the script loads after presenter.js and adds one new global name", html0.indexOf('<script src="presenter.js') < html0.indexOf('<script src="avatarcheck.js') && html0.indexOf('<script src="avatarcheck.js') < html0.indexOf("const enterGame") && (read("avatarcheck.js").match(/^const [A-Za-z]+ =/gm) || []).length === 1);
+ok("the script loads after presenter.js and before the page's own scripts, and adds one new global name", html0.indexOf('<script src="presenter.js') < html0.indexOf('<script src="avatarcheck.js') && html0.indexOf('<script src="avatarcheck.js') < html0.indexOf('<script src="app.js') && (read("avatarcheck.js").match(/^const [A-Za-z]+ =/gm) || []).length === 1);
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

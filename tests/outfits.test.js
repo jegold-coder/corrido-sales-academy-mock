@@ -3,7 +3,7 @@
 // tee) and as a boxier sleeve for a woman. The polos: the skin behind the V stays inside the V. Every photo shirt: no neck skin beside the collar.
 // Run from the mock-prototype folder: node tests/outfits.test.js
 const fs = require("fs"), vm = require("vm"), path = require("path");
-const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+const html = require("./page").source();   // index.html with the page's own scripts back in place
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
 
 // just the body-drawing code from the page, run on its own

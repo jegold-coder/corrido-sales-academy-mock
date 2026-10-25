@@ -2,7 +2,7 @@
 // Run from the mock-prototype folder: node tests/smile.test.js
 const fs = require("fs"), vm = require("vm"), path = require("path");
 const root = path.join(__dirname, "..");
-const html = fs.readFileSync(path.join(root, "index.html"), "utf8"), boss = fs.readFileSync(path.join(root, "boss.js"), "utf8");
+const html = require("./page").source(), boss = fs.readFileSync(path.join(root, "boss.js"), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
 const slice = (a, b) => html.slice(html.indexOf(a), html.indexOf(b));
 const ctx = vm.createContext({});

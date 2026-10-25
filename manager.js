@@ -6,7 +6,7 @@
 //   - the class on the Cohorts page is SAMPLE DATA (labelled), plus the player on this device as one extra row;
 //   - a class created on the Invite page is saved on this device only, and invites are NOT emailed (you copy an invite message);
 //   - Nudge only records the nudge on this device.
-// A real version needs a shared database and company sign-in. Uses globals from index.html and tiers.js at call time.
+// A real version needs a shared database and company sign-in. Uses globals from the page's own scripts (app.js onward) and tiers.js at call time.
 
 const SAMPLE_REPS = [
   // name, team, tier, xp, streak, bosses beaten, focus skill, days idle, boss losses

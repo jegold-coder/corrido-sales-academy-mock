@@ -3,7 +3,7 @@ const fs = require("fs"), vm = require("vm"), path = require("path");
 const root = path.join(__dirname, "..");
 const read = f => fs.readFileSync(path.join(root, f), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
-const mission = read("mission.js"), html = read("index.html"), boss = read("boss.js"), scen = read("scenarios.js");
+const mission = read("mission.js"), html = require("./page").source(), boss = read("boss.js"), scen = read("scenarios.js");
 const ctx = vm.createContext({ console, state: { done: {}, proto: {} } });
 vm.runInContext(scen.replace(/^"use strict";/, ""), ctx);
 const slice = (a, b) => mission.slice(mission.indexOf(a), mission.indexOf(b));

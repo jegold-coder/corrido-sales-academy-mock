@@ -56,7 +56,7 @@ const ask = async (url, o = {}) => { let out; const e = { request: { url, method
   ok("on activate, old csa- caches are deleted and other caches are left alone", !("csa-old-thing" in store) && "other-site-cache" in store && "csa-images-v1" in store);
 
   // how it is wired in
-  const html = read("index.html");
+  const html = require("./page").source();
   ok("the page registers the worker only on http(s), and a failure to register never breaks the page", /if \("serviceWorker" in navigator && \/\^https\?:\$\/\.test\(location\.protocol\)\) navigator\.serviceWorker\.register\("sw\.js"\)\.catch\(\(\) => \{\}\);/.test(html));
   console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);
 })();

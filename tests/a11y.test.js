@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path");
 const root = path.join(__dirname, "..");
 const read = f => fs.readFileSync(path.join(root, f), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
-const html = read("index.html"), lessons = read("lessons.js"), mission = read("mission.js");
+const html = require("./page").source(), lessons = read("lessons.js"), mission = read("mission.js");
 
 // WCAG contrast ratio between two #rrggbb colours (a layer with alpha is mixed over what is behind it first)
 const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };

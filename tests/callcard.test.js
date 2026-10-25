@@ -4,7 +4,7 @@ const fs = require("fs"), vm = require("vm"), path = require("path");
 const root = path.join(__dirname, "..");
 const read = f => fs.readFileSync(path.join(root, f), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
-const html = read("index.html"), onb = read("onboarding.js"), mission = read("mission.js"), dash = read("dashboard.js"), field = read("callcard.js");
+const html = require("./page").source(), onb = read("onboarding.js"), mission = read("mission.js"), dash = read("dashboard.js"), field = read("callcard.js");
 
 // ---------- the calculator's maths ----------
 const ctx = vm.createContext({ console });

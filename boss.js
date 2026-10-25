@@ -1,6 +1,6 @@
 "use strict";
 // Boss battles: the screen before the fight, the timed Brand Brain quiz, the Tier Up celebration and the shareable tier card.
-// Beating a boss moves the rep up a tier and unlocks merch. Uses globals from index.html and tiers.js at call time.
+// Beating a boss moves the rep up a tier and unlocks merch. Uses globals from the page's own scripts (app.js onward) and tiers.js at call time.
 
 const todayKey = () => Progress.today();
 // Three tries a day on each boss (the prototype switch turns the limit off while the game is being tested).

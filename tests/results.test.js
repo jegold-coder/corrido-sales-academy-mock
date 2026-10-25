@@ -3,7 +3,7 @@ const fs = require("fs"), path = require("path");
 const root = path.join(__dirname, "..");
 const read = f => fs.readFileSync(path.join(root, f), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
-const html = read("index.html"), mission = read("mission.js"), badges = read("badges.js");
+const html = require("./page").source(), mission = read("mission.js"), badges = read("badges.js");
 
 // new badges are shown as the real medals, on both kinds of results screen
 ok("a mission's results show new badges as medals, not text pills", /\$\{badgeMedals\(earned\)\}/.test(mission) && !/New badge:/.test(mission));

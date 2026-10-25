@@ -76,11 +76,12 @@ delete mem.csa_progress_v1; delete mem.csa_avatar;
 // the menu and how it is wired in
 const menu = ev("Presenter.MENU().flatMap(([, items]) => items.map(i => i[0]))");
 ok("the menu reaches the game, the dashboard, the character, the brand page, all five manager pages and the four avatar check sheets", menu.length === 30 && ["Map", "Results: a win", "Tier Up", "Dashboard: Settings", "Character", "Who is Tequila Corrido?", "Manager: Grader", "Shirts: arms and sleeves", "Hair on every head shape"].every(l => menu.includes(l)), menu.length + " jumps");
-const code = ["index.html", "dashboard.js", "manager.js", "mission.js", "boss.js", "onboarding.js", "lessons.js"].map(read).join("\n");
+const code = [require("./page").source(), ...["dashboard.js", "manager.js", "mission.js", "boss.js", "onboarding.js", "lessons.js"].map(read)].join("\n");
 ok("every page the menu calls exists", ["creator", "tutorial", "home", "openDiff", "play", "quiz", "bossIntro", "dashboard", "explorer", "managerMode"].every(f => new RegExp(`function ${f}\\(`).test(code)));
-const html = read("index.html"), pres = read("presenter.js"), dash = read("dashboard.js");
+const html = require("./page").source(), pres = read("presenter.js"), dash = read("dashboard.js");
 ok("the menu footer has buttons to start over, load a random sample and complete the game, and each one goes back to the map", ["prreset", "prsample", "prfinish"].every(id => new RegExp(`id="${id}"`).test(pres) && new RegExp(`q\\("#${id}"\\)\\.onclick = jump\\(`).test(pres)) && /const jump = \(fn, msg\) => \(\) => \{ fn\(\); close\(\);[^}]*home\(\)/.test(pres));
-ok("it loads after the manager script and before the page's own script", html.indexOf('<script src="manager.js') < html.indexOf('<script src="presenter.js') && html.indexOf('<script src="presenter.js') < html.indexOf("const enterGame"));
+const tags = read("index.html");   // the real script tags, not the page with its scripts put back
+ok("it loads after the manager script and before the page's own scripts", tags.indexOf('<script src="manager.js') < tags.indexOf('<script src="presenter.js') && tags.indexOf('<script src="presenter.js') < tags.indexOf('<script src="app.js'));
 ok("the way in sits on the sign-in screen, and only turns on after the age check", /<p class="presentrow"><button type="button" class="linkbtn" id="presentGo" disabled>/.test(html) && /\["#guest", "#email", "#sendlink", "#presentGo"\]\.forEach\(x => \{ \$\(x\)\.disabled = false; \}\)/.test(html));
 ok("the menu itself only appears once the age gate has been passed", /MutationObserver/.test(pres) && /gate\.classList\.contains\("hidden"\)/.test(pres));
 ok("Settings has a button to start it, with a warning first, and to leave it", /id="gopresent"/.test(dash) && /confirm\("Presenter mode loads sample progress/.test(dash) && /Leave presenter mode/.test(dash));
