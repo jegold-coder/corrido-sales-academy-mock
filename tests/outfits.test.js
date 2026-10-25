@@ -9,8 +9,8 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
 // just the body-drawing code from the page, run on its own
 const ctx = vm.createContext({});
 vm.runInContext(html.match(/^const OUT = .*;$/m)[0] + html.match(/^const mixHex = .*;$/m)[0] + html.match(/^const placeImg = [\s\S]*?^};$/m)[0] + html.slice(html.indexOf("const capsule ="), html.indexOf("const FACES = {")).replace(/^function hangHand[\s\S]*?^}\n/m, m => m), ctx);
-vm.runInContext(html.slice(html.indexOf("const FIT = {"), html.indexOf("\n};\n", html.indexOf("const DRAWN = {")) + 4), ctx);   // FIT and DRAWN
-const DR = vm.runInContext("DRAWN", ctx);
+vm.runInContext(html.slice(html.indexOf("const FIT = {"), html.indexOf("\n};\n", html.indexOf("const HEM_FILL = {")) + 4), ctx);   // FIT, DRAWN and HEM_FILL
+const DR = vm.runInContext("DRAWN", ctx), HF = vm.runInContext("HEM_FILL", ctx);
 const entry = name => vm.runInContext("(" + html.match(new RegExp('  "' + name.replace(/[()]/g, "\\$&") + '": (\\{[\\s\\S]*?\\}),\\n(?:  "|\\};)'))[1].replace(/IMG \+ ("[^"]*")/g, "$1") + ")", ctx);
 const O = { ...entry("Pickleball Raglan"), dsl: DR["Pickleball Raglan"] };
 const body = (extra = {}, F = false) => vm.runInContext(`humanBody(${JSON.stringify({ F, skin: "#e0b090", base: O.base, img: O.img, bbox: O.bbox, Wk: O.Wk, long: false, hem: O.hem, v: false, polo: false, dsl: O.dsl, ...extra })}).torso`, ctx);
@@ -18,7 +18,7 @@ const shirt = (name, F = false, extra = {}) => { const e = entry(name); return v
 
 ok("the raglan has what it needs to be drawn: the sleeve colour, the torso edges, the armpit and the cuff", O.dsl && /^#[0-9a-f]{6}$/.test(O.dsl.sleeve) && O.dsl.torso[0] < O.dsl.torso[1] && O.dsl.armpit > 0.2 && O.dsl.armpit < O.dsl.cuff && O.dsl.cuff < 0.7);
 ok("it no longer uses the flared photo sleeves as the arm openings", !/"Pickleball Raglan": \[\[/.test(html));
-ok("the creator passes the drawn-sleeve data on to the body (the women's cut has its own, keyed with an F)", /dsl: DRAWN\[A\.outfit \+ \(useF \? "F" : ""\)\], sl: SLEEVE/.test(html));
+ok("the creator passes the drawn-sleeve data on to the body (the women's cut has its own, keyed with an F)", /dsl: DRAWN\[A\.outfit \+ \(useF \? "F" : ""\)\], hemFill: HEM_FILL\[A\.outfit\], sl: SLEEVE/.test(html));
 
 for (const [label, F] of [["a male build", false], ["a female build", true]]) {
   const out = body({}, F), plain = body({ dsl: undefined }, F);
@@ -96,6 +96,24 @@ ok("each arm gets the soft shadow starting at that hem", badShadow.length === 0,
 ok("a woman gets the boxier sleeve (like the women's Era tee) on every one of those shirts", badBox.length === 0, badBox.slice(0, 3).join(" | "));
 ok("a ringer tee (Worth the Shot) has its black cuff band, and a heathered tee has its speckle", /fill="#151515"/.test(shirt("Worth the Shot Tee", false)) && /fill="#151515"/.test(shirt("Worth the Shot Tee", true)) && /<filter id="shr"/.test(shirt("Tequila Delivery Tee", false)) && /<filter id="shr"/.test(shirt("Corrido Classic Tee (Dark Heather)", true)) && !/<filter id="shr"/.test(shirt("Corrido Classic Tee (Black)", false)));
 ok("the Pickleball Raglan keeps its 3/4 box sleeves for a man as well (a cap sleeve would not reach the forearm)", DR["Pickleball Raglan"].box === true && /Q[^QL]*L/.test(body({}, false).match(/<path d="(M[^"]+Z)" fill="#262c39"\/>/)[1]) && !/Q[^QL]*Q/.test(body({}, false).match(/<path d="(M[^"]+Z)" fill="#262c39"\/>/)[1]));
+
+// the bottom of the preview: nothing shows under or beside a shirt's hem (the Raglan's hem is a deep scoop, so a strip of its colour fills in behind the photo)
+{
+  const hemOut = F => body({ hemFill: HF["Pickleball Raglan"] }, F), strips = out => [...out.matchAll(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" fill="#455262"\/>/g)];
+  for (const [label, F] of [["a male build", false], ["a female build", true]]) {
+    const r = strips(hemOut(F));
+    ok(`${label}: the Raglan has a strip of its own colour behind the photo that reaches below the picture (the preview ends at 208)`, r.length === 1 && +r[0][2] + +r[0][4] >= 218 && +r[0][2] < 208, r.length ? `y ${r[0][2]} to ${(+r[0][2] + +r[0][4]).toFixed(1)}` : "no strip");
+    const gw = F ? 120 - 2 * (60 + (16 - 60) * .86 - 9.5) : 110, S = gw * O.Wk / (O.bbox[2] - O.bbox[0]), hemW = (HF["Pickleball Raglan"][1] - HF["Pickleball Raglan"][0]) * S;
+    ok(`${label}: the strip is exactly as wide as the shirt's hem (so it cannot stick out beside it) and starts where the hem is at full width, above the scoop`, r.length === 1 && Math.abs(+r[0][3] - hemW) < 0.15 && +r[0][2] < 205, r.length ? `${r[0][3]} vs ${hemW.toFixed(1)}` : "");
+    ok(`${label}: a shirt without a rounded hem gets no strip`, strips(body({}, F)).length === 0);
+  }
+  ok("the shirts with a rounded or scooped hem are listed with where their hem is at full width", Object.keys(HF).length >= 8 && Object.values(HF).every(([l, r, row]) => l < r && row > 0.85 && row < 1));
+  // the trousers and belt start narrower than the narrowest hem (the Logo tee's, about 55 wide for a man), so they never show beside a shirt
+  for (const [label, F, max] of [["a man's", false, 56], ["a woman's", true, 48]]) {
+    const out = body({}, F), jeans = out.match(/<path d="M([\d.]+) 196H([\d.]+)L[^"]*" fill="#2b3a55"\/>/), belt = out.match(/<rect x="([\d.]+)" y="196" width="([\d.]+)" height="6" fill="#3a2a1c"\/>/);
+    ok(`${label} trousers and belt are narrow enough to hide behind any shirt's hem`, jeans && belt && +jeans[2] - +jeans[1] <= max && +belt[2] <= max && Math.abs(+belt[1] - +jeans[1]) < 0.01, jeans ? `${(+jeans[2] - +jeans[1]).toFixed(1)} wide` : "no trousers");
+  }
+}
 
 // polos: the neck skin behind the V never pokes out beside the collar wings
 const polo = (F = false) => vm.runInContext(`humanBody(${JSON.stringify({ F, skin: "#e0b090", base: "#10264a", Wk: 1, hem: 208, v: true, polo: true, bbox: [0, 0, 1, 1], logo: { img: "logo.png", box: [.553, .242, .678, .306] } })}).torso`, ctx);

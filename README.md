@@ -143,7 +143,7 @@ node tests/globals.test.js  # no two scripts declare the same name (a clash stop
 node tests/camera.test.js   # face maths with fake landmarks
 node tests/learning.test.js # coach mode defaults, the hint costs 5 XP, every customer's second lines keep the same facts and alternate
 node tests/a11y.test.js     # colour contrast of the key pairs, page headings, focus rings, tap size, no tiny text
-node tests/outfits.test.js  # the shirts with drawn sleeves (cap sleeves for a man, boxier for a woman, the Raglan's 3/4 sleeves), the polos, the neck skin on every shirt and the shadow under each cuff
+node tests/outfits.test.js  # the shirts with drawn sleeves (cap sleeves for a man, boxier for a woman, the Raglan's 3/4 sleeves), the polos, the neck skin on every shirt, the shadow under each cuff, and the bottom of the preview (a scooped hem is filled in, the trousers sit narrower than any hem)
 node tests/skills.test.js   # the Skills chart: every skill is in one family, no radar label overlaps another, every skill is still listed
 node tests/hair.test.js     # every hairstyle is attached to every head shape (no gap at the temples), and parting or shine lines stay on the head
 ```

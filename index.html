@@ -864,27 +864,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26d"></script>
-<script src="sound.js?v=2026-10-26d"></script>
-<script src="scenarios.js?v=2026-10-26d"></script>
-<script src="progress.js?v=2026-10-26d"></script>
-<script src="criteria.js?v=2026-10-26d"></script>
-<script src="tone.js?v=2026-10-26d"></script>
-<script src="coach.js?v=2026-10-26d"></script>
-<script src="camera.js?v=2026-10-26d"></script>
-<script src="lessons.js?v=2026-10-26d"></script>
-<script src="dashboard.js?v=2026-10-26d"></script>
-<script src="grader.js?v=2026-10-26d"></script>
-<script src="onboarding.js?v=2026-10-26d"></script>
-<script src="tiers.js?v=2026-10-26d"></script>
-<script src="badges.js?v=2026-10-26d"></script>
-<script src="voices.js?v=2026-10-26d"></script>
-<script src="mission.js?v=2026-10-26d"></script>
-<script src="boss.js?v=2026-10-26d"></script>
-<script src="auth.js?v=2026-10-26d"></script>
-<script src="manager.js?v=2026-10-26d"></script>
-<script src="callcard.js?v=2026-10-26d"></script>
-<script src="presenter.js?v=2026-10-26d"></script>
+<script src="config.js?v=2026-10-26f"></script>
+<script src="sound.js?v=2026-10-26f"></script>
+<script src="scenarios.js?v=2026-10-26f"></script>
+<script src="progress.js?v=2026-10-26f"></script>
+<script src="criteria.js?v=2026-10-26f"></script>
+<script src="tone.js?v=2026-10-26f"></script>
+<script src="coach.js?v=2026-10-26f"></script>
+<script src="camera.js?v=2026-10-26f"></script>
+<script src="lessons.js?v=2026-10-26f"></script>
+<script src="dashboard.js?v=2026-10-26f"></script>
+<script src="grader.js?v=2026-10-26f"></script>
+<script src="onboarding.js?v=2026-10-26f"></script>
+<script src="tiers.js?v=2026-10-26f"></script>
+<script src="badges.js?v=2026-10-26f"></script>
+<script src="voices.js?v=2026-10-26f"></script>
+<script src="mission.js?v=2026-10-26f"></script>
+<script src="boss.js?v=2026-10-26f"></script>
+<script src="auth.js?v=2026-10-26f"></script>
+<script src="manager.js?v=2026-10-26f"></script>
+<script src="callcard.js?v=2026-10-26f"></script>
+<script src="presenter.js?v=2026-10-26f"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1293,7 +1293,8 @@ function humanBody(c) {
   const dPolo = `${neck}L${mir(X(28))} 104Q${mir(A.s - hs - 2)} 106 ${mir(A.s - hs)} 126L${mir(A.e - hs - 1)} 151Q${mir(A.e)} 154 ${mir(A.e + hs - 1)} 149L${mir(X(24))} 151C${mir(X(24))} 172 ${mir(X(22))} 195 ${mir(X(23))} 212Q60 217 ${X(23)} 212C${X(22)} 195 ${X(24)} 172 ${X(24)} 151L${A.e + hs - 1} 149Q${A.e} 154 ${A.e - hs - 1} 151L${A.s - hs} 126Q${A.s - hs - 2} 106 ${X(28)} 104Z`;
   const d = c.polo ? dPolo : `${neck}L${mir(X(28))} 104Q${mir(A.s - hs - 2)} 106 ${mir(A.s - hs)} 124${right}${left}Q${A.s - hs - 2} 106 ${X(28)} 104Z`;
   const gw = (mir(A.s - hs) - (A.s - hs)), id = "rep";
-  const legs = `<path d="M${X(32)} 108L${mir(X(32))} 108L${tr} 200L${tl} 200Z" fill="${c.polo ? sk : c.base}" ${c.polo ? "" : `transform="translate(60 150) scale(.86 1) translate(-60 -150)"`}/><path d="M${tl} 194H${tr}L${mir(X(22))} 280H${X(22)}Z" fill="#2b3a55"/><rect x="${tl}" y="194" width="${(tr - tl).toFixed(1)}" height="7" fill="#3a2a1c"/><rect x="57" y="195" width="6" height="5" rx="1" fill="#e0a42f"/><path d="M60 201V280" stroke="#0004" stroke-width="1"/>`;
+  // The trousers and belt start narrower than any shirt's hem (the narrowest is about 55 wide), so they never show beside a hem in the preview.
+  const legs = `<path d="M${X(32)} 108L${mir(X(32))} 108L${tr} 200L${tl} 200Z" fill="${c.polo ? sk : c.base}" ${c.polo ? "" : `transform="translate(60 150) scale(.86 1) translate(-60 -150)"`}/><path d="M${X(34)} 196H${mir(X(34))}L${mir(X(22))} 280H${X(22)}Z" fill="#2b3a55"/><rect x="${X(34)}" y="196" width="${(mir(X(34)) - X(34)).toFixed(1)}" height="6" fill="#3a2a1c"/><rect x="57" y="195" width="6" height="5" rx="1" fill="#e0a42f"/><path d="M60 201V280" stroke="#0004" stroke-width="1"/>`;
   // The skin under a shirt only shows through the neck opening: cut to that opening, so no corner of it can stick out beside the collar on any shirt.
   const holeD = `M${X(42)} 80V99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99V80Z`;
   const skin = `<rect x="${60 - nw / 2}" y="76" width="${nw}" height="30" rx="8" fill="${sk}"/>${c.polo ? `<path d="M${X(44)} 99.5H${mir(X(44))}L60 123Z" fill="${sk}"/>` : `<defs><clipPath id="nk-${id}"><path d="${holeD}"/></clipPath></defs><g clip-path="url(#nk-${id})"><path d="M${60 - nw / 2} 90H${60 + nw / 2}Q${60 + nw / 2} 98 ${mir(X(41))} 101V128H${X(41)}V101Q${60 - nw / 2} 98 ${60 - nw / 2} 90Z" fill="${sk}"/></g>`}${c.polo ? `<path d="M${X(48)} 108Q60 112 ${mir(X(48))} 108" stroke="#0002" stroke-width="1.4" fill="none"/>` : ""}`;
@@ -1376,7 +1377,9 @@ function humanBody(c) {
   }
   const cuffY = D ? (hemY ?? py(D.cuff)) : c.polo ? 152 : atL ? atL[1] + 9 : 0;   // where the sleeve ends, for the shadow under it
   const arms = c.polo ? arm(false, undefined, cuffY) + arm(true, undefined, cuffY) : atL ? arm(false, atL, cuffY) + arm(true, atR, cuffY) : `<defs><clipPath id="armclip"><rect x="-30" y="134" width="180" height="200"/></clipPath></defs><g clip-path="url(#armclip)">${arm(false)}${arm(true)}</g>`;
-  return { torso: legs + arms + skin + garment + open + sleeves };
+  // the strip that keeps a rounded or scooped hem from showing the trousers under it
+  const hf = c.hemFill, hemFill = hf && !c.polo ? `<rect x="${px(hf[0])}" y="${(py(hf[2]) - 2).toFixed(1)}" width="${(px(hf[1]) - px(hf[0])).toFixed(1)}" height="${(220 - py(hf[2]) + 2).toFixed(1)}" fill="${c.base}"/>` : "";
+  return { torso: legs + hemFill + arms + skin + garment + open + sleeves };
 }
 
 const FACES = {
@@ -1654,6 +1657,13 @@ const DRAWN = {
   "In My Tequila Era Tee (Charcoal)F": { sleeve: "#eeeeec", shade: .12, torso: [.285, .713], edge: [.255, .745], hem: [.24, .76], armpit: .47, cuff: .448 },
   "Pickleball Raglan": { sleeve: "#262c39", torso: [.245, .757], armpit: .39, cuff: .588, box: true },   // 3/4 sleeves; the seams run from the collar to the armpit
 };
+// A few shirt photos have a rounded or scooped hem (the Pickleball Raglan's is a deep scoop), which would let the trousers show under its corners in the preview. For those,
+// a strip of the shirt's colour fills in behind the photo, as wide as the hem and reaching below the picture. [left, right, the row where the hem is at full width], as fractions of the photo.
+const HEM_FILL = {
+  "Pickleball Raglan": [.24, .757, .868], "Tequila On My Mind Tri-Blend Tee": [.245, .743, .945], "Corrido Logo Tee (Heather Navy)": [.277, .737, .968], "Corrido Logo Tee (Dark Grey Heather)": [.277, .737, .968],
+  "Legacy Tee": [.227, .773, .963], "Más Tequila Tee": [.202, .8, .965], "Tequila Delivery Tee": [.167, .82, .952], "Tequila Smuggler Tee": [.262, .738, .955],
+  "Mas Tequila Tee (Ivory)": [.205, .792, .933], "Mas Tequila Tee (Khaki)": [.205, .792, .933], "Mas Tequila Tee (Bay)": [.205, .792, .933],
+};
 // Product page on ilovetequilacorrido.com for each piece of merch, so a double-click in the creator opens the real item.
 const MERCH_URL = {
   "Corrido Classic Tee (Military Green)": "corrido-classic-tee",
@@ -1754,7 +1764,7 @@ const repName = () => (state.avatar.name || "").trim() || "Rep";
 const mixHex = (a, b, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - t) + parseInt(b.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join("");
 function repLook() {
   const A = state.avatar, F = A.gender === "Female", hair = HAIRC[A.hair], h = HAIRS[A.hairStyle](hair, FACES[A.face]), ff = FACE_FIT[A.face],
-    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: DRAWN[A.outfit + (useF ? "F" : "")], sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
+    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: DRAWN[A.outfit + (useF ? "F" : "")], hemFill: HEM_FILL[A.outfit], sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
   const over = [
     A.dimples ? '<path d="M41 72Q43 75 45 72M75 72Q77 75 79 72" stroke="#0004" stroke-width="1.5" fill="none" stroke-linecap="round"/>' : "",
     A.freckles ? [[46, 63], [50, 66], [43, 66], [54, 64], [74, 63], [70, 66], [77, 66], [66, 64], [58, 62], [62, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a8683f" opacity=".7"/>`).join("") : "",
