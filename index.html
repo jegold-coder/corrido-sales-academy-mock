@@ -864,27 +864,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25y"></script>
-<script src="sound.js?v=2026-10-25y"></script>
-<script src="scenarios.js?v=2026-10-25y"></script>
-<script src="progress.js?v=2026-10-25y"></script>
-<script src="criteria.js?v=2026-10-25y"></script>
-<script src="tone.js?v=2026-10-25y"></script>
-<script src="coach.js?v=2026-10-25y"></script>
-<script src="camera.js?v=2026-10-25y"></script>
-<script src="lessons.js?v=2026-10-25y"></script>
-<script src="dashboard.js?v=2026-10-25y"></script>
-<script src="grader.js?v=2026-10-25y"></script>
-<script src="onboarding.js?v=2026-10-25y"></script>
-<script src="tiers.js?v=2026-10-25y"></script>
-<script src="badges.js?v=2026-10-25y"></script>
-<script src="voices.js?v=2026-10-25y"></script>
-<script src="mission.js?v=2026-10-25y"></script>
-<script src="boss.js?v=2026-10-25y"></script>
-<script src="auth.js?v=2026-10-25y"></script>
-<script src="manager.js?v=2026-10-25y"></script>
-<script src="callcard.js?v=2026-10-25y"></script>
-<script src="presenter.js?v=2026-10-25y"></script>
+<script src="config.js?v=2026-10-26c"></script>
+<script src="sound.js?v=2026-10-26c"></script>
+<script src="scenarios.js?v=2026-10-26c"></script>
+<script src="progress.js?v=2026-10-26c"></script>
+<script src="criteria.js?v=2026-10-26c"></script>
+<script src="tone.js?v=2026-10-26c"></script>
+<script src="coach.js?v=2026-10-26c"></script>
+<script src="camera.js?v=2026-10-26c"></script>
+<script src="lessons.js?v=2026-10-26c"></script>
+<script src="dashboard.js?v=2026-10-26c"></script>
+<script src="grader.js?v=2026-10-26c"></script>
+<script src="onboarding.js?v=2026-10-26c"></script>
+<script src="tiers.js?v=2026-10-26c"></script>
+<script src="badges.js?v=2026-10-26c"></script>
+<script src="voices.js?v=2026-10-26c"></script>
+<script src="mission.js?v=2026-10-26c"></script>
+<script src="boss.js?v=2026-10-26c"></script>
+<script src="auth.js?v=2026-10-26c"></script>
+<script src="manager.js?v=2026-10-26c"></script>
+<script src="callcard.js?v=2026-10-26c"></script>
+<script src="presenter.js?v=2026-10-26c"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1277,9 +1277,11 @@ function humanBody(c) {
   const sk = c.skin, hem = c.hem, se = 186, aw = c.F ? 13 : 16, fw = c.F ? 10.5 : 12.5, nw = c.F ? 18 : 22;
   const A = { s: X(16), e: X(14), w: X(14) };           // left arm centre x at shoulder, elbow, wrist
   const hs = aw / 2 + 3, cs = fw / 2 + 3.2, tl = X(23), tr = mir(tl);
-  const arm = (m, at) => { const P = m ? mir : x => x, s = at ? at[0] : P(A.s), e = at ? (at[0] + at[2]) / 2 : P(A.e), w = at ? at[2] : P(A.w), y0 = at ? at[1] : 118, y1 = at ? (at[1] + 174) / 2 : 150;
+  const arm = (m, at, cuff) => { const P = m ? mir : x => x, s = at ? at[0] : P(A.s), e = at ? (at[0] + at[2]) / 2 : P(A.e), w = at ? at[2] : P(A.w), y0 = at ? at[1] : 118, y1 = at ? (at[1] + 174) / 2 : 150;
     const wa = at ? Math.min(aw, fw + .5) : aw;   // under a photo sleeve the upper arm is no wider than the forearm, so it never pokes out of the opening
-    return capsule(s, y0, e, y1, wa, sk, true) + capsule(e, y1, w, 182, fw, sk, true) + capsule(s, y0, e, y1, wa, sk) + capsule(e, y1, w, 182, fw, sk) + hangHand(w, 180, m ? -1 : 1, sk); };
+    // the sleeve's cuff casts a soft shadow on the arm just below it, so the arm reads as coming out of the sleeve
+    const at_ = y => (y <= y1 ? s + (e - s) * (y - y0) / (y1 - y0) : e + (w - e) * (y - y1) / (182 - y1)), gid = "cs" + Math.round(cuff || 0), sh = cuff ? `<defs><linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="0" y1="${cuff}" x2="0" y2="${cuff + 9}"><stop offset="0" stop-color="#000" stop-opacity=".32"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs><line x1="${at_(cuff).toFixed(1)}" y1="${cuff}" x2="${at_(cuff + 9).toFixed(1)}" y2="${cuff + 9}" stroke="url(#${gid})" stroke-width="${cuff <= y1 ? wa : fw}"/>` : "";
+    return capsule(s, y0, e, y1, wa, sk, true) + capsule(e, y1, w, 182, fw, sk, true) + capsule(s, y0, e, y1, wa, sk) + capsule(e, y1, w, 182, fw, sk) + sh + hangHand(w, 180, m ? -1 : 1, sk); };
   const neck = c.v ? `M${X(46)} 99L60 120L${X(74)} 99` : `M${X(42)} 99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99`;
   const right = c.long
     ? `L${mir(A.w - cs)} ${se}L${mir(A.w + cs)} ${se}L${tr} 152L${tr} ${hem}`
@@ -1308,7 +1310,9 @@ function humanBody(c) {
   // the raglan keeps the photo from the shoulder seams down the torso; the flared photo sleeves are cut off (the drawn sleeves cover that edge)
   const D = c.dsl, xt = D ? [px(D.torso[0]), px(D.torso[1])] : null, ay = D ? py(D.armpit) : 0;
   const xh = D ? (D.hem || D.torso).map(px) : null, yh = D ? Math.min(py(D.hemY || .96), 280) : 0;   // a relaxed tee flares from the armpit to the hem
-  const rcut = D ? `M${X(42)} 99L${X(28)} 104L${A.s - hs + 1} 116L${xt[0]} ${ay}L${xh[0]} ${yh}L${xh[0]} 320L${xh[1]} 320L${xh[1]} ${yh}L${xt[1]} ${ay}L${mir(A.s - hs + 1)} 116L${mir(X(28))} 104L${mir(X(42))} 99C${mir(X(42))} 110 ${mir(X(49))} 114 60 114C${X(49)} 114 ${X(42)} 110 ${X(42)} 99Z` : "";
+  const capSleeve = D && !c.F && !D.box && D.shoulder != null;   // a man's tee gets cap sleeves, shaped like the Tequila On My Mind tee's; a woman's (and the raglan) get the boxier drawn sleeve
+  const neckHole = `V99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99V80`;
+  const rcut = capSleeve ? `M${xt[0]} 80H${X(42)}${neckHole}H${xt[1]}V${ay}L${xh[1]} ${yh}V320H${xh[0]}V${yh}L${xt[0]} ${ay}Z` : D ? `M${X(42)} 99L${X(28)} 104L${A.s - hs + 1} 116L${xt[0]} ${ay}L${xh[0]} ${yh}L${xh[0]} 320L${xh[1]} 320L${xh[1]} ${yh}L${xt[1]} ${ay}L${mir(A.s - hs + 1)} 116L${mir(X(28))} 104L${mir(X(42))} 99C${mir(X(42))} 110 ${mir(X(49))} 114 60 114C${X(49)} 114 ${X(42)} 110 ${X(42)} 99Z` : "";
   const garmentPhoto = `<defs><clipPath id="gm-${id}"><path d="${D ? rcut : cutout}"/></clipPath></defs>
     <g clip-path="url(#gm-${id})">${photo}</g>
     <path d="${neck}" fill="none" stroke="${mixHex(c.base, "#000000", .14)}" stroke-width="1.5" stroke-linecap="round"/>`;
@@ -1332,23 +1336,46 @@ function humanBody(c) {
   }
   // A drawn sleeve hangs from the shoulder over the arm and ends at the photo's cuff (3/4 on the raglan, above the elbow on a short-sleeve tee); the forearm
   // and hand show below it, against the torso edge. Its top follows the slope of the shoulder (outer corner low, inner corner up by the collar).
-  let sleeves = "";
+  let sleeves = "", hemY = null;
   if (D) {
-    const cy = py(D.cuff), ya = 132, y1 = (ya + 174) / 2, short = cy <= y1 + 2, shade = D.shade ?? .3, f1 = n => +n.toFixed(1);
-    const w0 = aw + 2, w1 = aw - .5, w2 = short ? aw + 8 : fw + 1.5, xe = (D.edge || D.torso).map(px);   // a short sleeve starts narrow at the shoulder and flares out to its cuff; xe: where the torso edge is at hand height
+    const cy = py(D.cuff), ya = 132, y1 = (ya + 174) / 2, short = cy <= y1 + 2 || !!D.loose, shade = D.shade ?? .3, f1 = n => +n.toFixed(1);
+    const w0 = aw + 2, w1 = aw - .5, w2 = short ? aw + (D.flare ?? 8) : fw + 1.5, xe = (D.edge || D.torso).map(px);   // a short sleeve starts narrow at the shoulder and flares out to its cuff; xe: where the torso edge is at hand height
     atL = [A.s, ya, xe[0] - fw / 2 + 1.5]; atR = [mir(A.s), ya, xe[1] + fw / 2 - 1.5];
-    const sleeve = at => {
+    const gid = Math.round(shade * 100);
+    // cap sleeve: shoulder tip, a hem corner out beside the arm and the armpit, in the proportions of the Tequila On My Mind tee (43 tall, hem corner 10 above the armpit, 9 out from the arm)
+    const capShape = (xt, s, dir) => {
+      const ys = py(D.shoulder), k = (ay - ys) / 43.2, T = [f1(xt - dir * 1.3), f1(ys)], Oc = [f1(s + dir * 9.1), f1(ay - 9.8 * k)], Ia = [f1(xt - dir * .9), f1(ay)];
+      return { T, Oc, Ia, hemAt: x => Oc[1] + (Ia[1] - Oc[1]) * (x - Oc[0]) / (Ia[0] - Oc[0]) };
+    };
+    const side_dir = side => (side === "L" ? -1 : 1);
+    const caps = capSleeve ? [capShape(xt[0], atL[0], -1), capShape(xt[1], atR[0], 1)] : null;
+    if (caps) { atL[1] = f1(caps[0].hemAt(atL[0]) + 1.5); atR[1] = f1(caps[1].hemAt(atR[0]) + 1.5); hemY = atL[1] - 1.5; }   // the arm starts at the hem, under the sleeve
+    const sleeve = (at, side) => {
+      if (caps) {
+        const { T, Oc, Ia } = caps[side === "L" ? 0 : 1], lerp = (P, Q, d) => { const n = Math.hypot(Q[0] - P[0], Q[1] - P[1]); return [f1(P[0] + (Q[0] - P[0]) * d / n), f1(P[1] + (Q[1] - P[1]) * d / n)]; };
+        // the outer hem corner is rounded off, and the top edge bows out a little, like cloth over a shoulder
+        const A1 = lerp(Oc, T, 3.5), A2 = lerp(Oc, Ia, 3.5), Ct = [f1((T[0] + Oc[0]) / 2 + side_dir(side) * 1.6), f1((T[1] + Oc[1]) / 2 - 1.2)], shape = `M${T}Q${Ct} ${A1}Q${Oc} ${A2}L${Ia}Z`, edge = `M${T}Q${Ct} ${A1}Q${Oc} ${A2}L${Ia}`;
+        const band = D.trim ? `<path d="M${Oc}L${Ia}L${lerp(Ia, T, 4.5)}L${lerp(Oc, T, 4.5)}Z" fill="${D.trim}"/>` : "";
+        const speck = D.heather ? `<clipPath id="shc${side}"><path d="${shape}"/></clipPath><g clip-path="url(#shc${side})"><rect x="0" y="100" width="120" height="70" filter="url(#shr)" opacity="${D.heather}"/></g>` : "";
+        return `<path d="${shape}" fill="${D.sleeve}"/>${speck}<path d="${shape}" fill="url(#rsh${gid})"/>${band}
+          <path d="${edge}" fill="none" stroke="#000" stroke-opacity="${shade < .2 ? .2 : .3}" stroke-width="1" stroke-linejoin="round"/><path d="M${T}L${Ia}" fill="none" stroke="#000" stroke-opacity=".1" stroke-width="1"/>`;
+      }
       const s = at[0], dir = s < 60 ? -1 : 1, e = (at[0] + at[2]) / 2;
-      const cx = short ? s + (e - s) * (cy - ya) / (y1 - ya) : e + (at[2] - e) * (cy - y1) / (182 - y1);   // the arm bends at y1 and ends at y 182
+      const along = y => (y <= y1 ? s + (e - s) * (y - ya) / (y1 - ya) : e + (at[2] - e) * (y - y1) / (182 - y1)), cx = along(cy);   // the arm bends at y1 and ends at y 182
       const O = [f1(s + dir * w0 / 2), 126], I = [f1(s - dir * w0 / 2), 114.5], C = [f1(s + dir * (w0 / 2 - 5)), 112.5];   // outer and inner shoulder corners, and the curve's pull
       const inEl = [f1(e - dir * w1 / 2), y1], outEl = [f1(e + dir * w1 / 2), y1], inCf = [f1(cx - dir * w2 / 2), cy], outCf = [f1(cx + dir * w2 / 2), cy];
-      const down = short ? `L${inCf}L${outCf}` : `L${inEl}L${inCf}L${outCf}L${outEl}`;
-      return `<path d="M${O}Q${C} ${I}${down}Z" fill="${D.sleeve}"/><path d="M${O}Q${C} ${I}${down}Z" fill="url(#rsh${Math.round(shade * 100)})"/>
+      const down = short ? `L${inCf}L${outCf}` : `L${inEl}L${inCf}L${outCf}L${outEl}`, shape = `M${O}Q${C} ${I}${down}Z`;
+      // a contrasting band at the cuff (a ringer tee), cut along the sleeve's own edges
+      const at_ = (P, Q, y) => [f1(P[0] + (Q[0] - P[0]) * (y - P[1]) / (cy - P[1])), f1(y)], band = D.trim && short ? `<path d="M${at_(O, outCf, cy - 4.5)}L${outCf}L${inCf}L${at_(I, inCf, cy - 4.5)}Z" fill="${D.trim}"/>` : "";
+      // a speckle over heathered cloth, so a drawn sleeve matches the photo's body
+      const speck = D.heather ? `<clipPath id="shc${side}"><path d="${shape}"/></clipPath><g clip-path="url(#shc${side})"><rect x="0" y="100" width="120" height="70" filter="url(#shr)" opacity="${D.heather}"/></g>` : "";
+      return `<path d="${shape}" fill="${D.sleeve}"/>${speck}<path d="${shape}" fill="url(#rsh${gid})"/>${band}
         <path d="M${I}${down}L${O}" fill="none" stroke="#000" stroke-opacity="${shade < .2 ? .2 : .3}" stroke-width="1" stroke-linejoin="round"/>`;
     };
-    sleeves = `<defs><linearGradient id="rsh${Math.round(shade * 100)}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity="${shade}"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${shade}"/></linearGradient></defs>${sleeve(atL)}${sleeve(atR)}`;
+    sleeves = `<defs><linearGradient id="rsh${gid}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity="${shade}"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${shade}"/></linearGradient>${D.heather ? '<filter id="shr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.12"/></filter>' : ""}</defs>${sleeve(atL, "L")}${sleeve(atR, "R")}`;
   }
-  const arms = c.polo ? arm(false) + arm(true) : atL ? arm(false, atL) + arm(true, atR) : `<defs><clipPath id="armclip"><rect x="-30" y="134" width="180" height="200"/></clipPath></defs><g clip-path="url(#armclip)">${arm(false)}${arm(true)}</g>`;
+  const cuffY = D ? (hemY ?? py(D.cuff)) : c.polo ? 152 : atL ? atL[1] + 9 : 0;   // where the sleeve ends, for the shadow under it
+  const arms = c.polo ? arm(false, undefined, cuffY) + arm(true, undefined, cuffY) : atL ? arm(false, atL, cuffY) + arm(true, atR, cuffY) : `<defs><clipPath id="armclip"><rect x="-30" y="134" width="180" height="200"/></clipPath></defs><g clip-path="url(#armclip)">${arm(false)}${arm(true)}</g>`;
   return { torso: legs + arms + skin + garment + open + sleeves };
 }
 
@@ -1516,9 +1543,7 @@ const IMG = "https://cdn.shopify.com/s/files/1/0665/6091/7672/files/";
 const OUTFITS = {
   "Mas Tequila Tee (White)": { g: "u", price: "$24.90", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-white-front-6997fa20d8768_600x.png?v=1771567841", bbox: [.013, .055, .99, .925] },
   "In My Tequila Era Tee (Charcoal)": { g: "u", price: "$29.00", base: "#6a6a6a", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-charcoal-front-68c3a296d1ab2_600x.png?v=1757651618", bbox: [.023, .042, .978, .958],
-    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2", nameF: "Tequila Era Women’s Tee", urlF: "in-my-tequila-era-women-s-tee",
-    // the women's relaxed tee: its photo sleeves flare out sideways, so the body comes from the photo and short sleeves are drawn over the arms (see the raglan)
-    dslF: { sleeve: "#eeeeec", shade: .12, torso: [0.285, 0.713], edge: [0.255, 0.745], hem: [0.24, 0.76], armpit: 0.47, cuff: 0.448 } },
+    imgF: IMG + "womens-relaxed-t-shirt-white-front-68c3a4bb6ed9a_600x.png?v=1757653237", bboxF: [.082, .035, .917, .965], baseF: "#f4f4f2", nameF: "Tequila Era Women’s Tee", urlF: "in-my-tequila-era-women-s-tee" },
   "Tequila On My Mind Tee": { g: "u", price: "$29.00", base: "#d8cdb4", Wk: .97, hem: 208, img: IMG + "unisex-organic-ribbed-neck-creator-2.0-t-shirt-desert-dust-front-6a091a5ddd295_600x.png?v=1778981479", bbox: [.075, .037, .918, .96] },
   "Corrido x adidas Polo": { g: "u", price: "$64.00", base: "#363635", Wk: 1, hem: 208, polo: true, v: true, bbox: [0, 0, 1, 1],
     logo: { img: IMG + "adidas-space-dyed-polo-shirt-black-melange-front-695df0cbc3730_600x.png?v=1767764185", box: [.556, .238, .652, .292], dim: .72 } },
@@ -1555,37 +1580,78 @@ const OUTFITS = {
   "Mas Tequila Tee (Bay)": { g: "u", price: "$24.90", base: "#b3b8a7", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-bay-front-6a371a9823a39_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
   "In My Tequila Era Tee (Military Green)": { g: "m", after: "In My Tequila Era Tee (Charcoal)", price: "$29.00", base: "#6c715c", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-military-green-front-68c3a296d2cd2_600x.png", bbox: [0.038, 0.04, 0.962, 0.958] },
   "Corrido Logo Tee (Dark Grey Heather)": { g: "u", price: "$24.00", base: "#343434", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-dark-grey-heather-front-68c3a7b7c3abb_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
-  "Pickleball Raglan": { g: "u", price: "$40.00", base: "#455262", Wk: 1.06, hem: 208, img: IMG + "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_600x.png", bbox: [0.015, 0.045, 0.982, 0.96],
-    // The photo's sleeves flare out sideways, so only its body (shoulder seams included) is used and the navy 3/4 sleeves are drawn hanging over the arms.
-    // torso = the body's left and right edges, armpit = where the seams meet it, cuff = where the sleeves end (all as fractions of the photo).
-    dsl: { sleeve: "#262c39", torso: [0.245, 0.757], armpit: 0.39, cuff: 0.588 } },
+  "Pickleball Raglan": { g: "u", price: "$40.00", base: "#455262", Wk: 1.06, hem: 208, img: IMG + "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_600x.png", bbox: [0.015, 0.045, 0.982, 0.96], },
   "Spirit Animal Tee": { g: "u", price: "$29.00", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-white-front-68c3a5c38d353_600x.png?v=1757653148", bbox: [.023, .042, .978, .958] },
 };
 // Where each product photo's sleeves end, as [left, right] = [sleeve centre x, sleeve bottom y, torso edge x] in fractions of the image.
 // Measured from the photos' transparent edges, so the arms line up with the sleeve openings.
 const SLEEVE = {
-  "Mas Tequila Tee (White)": [[.188, .462, 0.222], [.809, .458, 0.775]], "In My Tequila Era Tee (Charcoal)": [[.142, .437, 0.185], [.852, .432, 0.808]],
-  "Tequila On My Mind Tee": [[.227, .442, 0.24], [.768, .438, 0.757]], "D.A.R.E. Oversized Tee": [[.221, .415, 0.233], [.778, .415, 0.765]], "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)": [[.17, .447, 0.217], [.828, .447, 0.782]],
-  "Corrido Classic Tee (Maroon)": [[.142, .437, 0.185], [.852, .432, 0.808]], "Más Tequila Tee": [[.189, .418, 0.21], [.812, .418, 0.795]], "Mexico Es Chingón Tee": [[.227, .442, 0.24], [.768, .438, 0.757]],
-  "Corrido Logo Tee (Heather Navy)": [[.263, .46, 0.275], [.748, .47, 0.728]], "Worth the Shot Tee": [[.22, .473, 0.245], [.774, .473, 0.753]],
-  "Tequila Smuggler Tee": [[.237, .505, 0.26], [.762, .505, 0.738]], "Tequila Delivery Tee": [[.146, .455, 0.17], [.844, .457, 0.807]], "Legacy Tee": [[.22, .4, 0.232], [.777, .407, 0.767]],
-  "Corrido Classic Tee (Military Green)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Black)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Navy)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Dark Chocolate)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Dark Heather)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Charcoal)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Graphite Heather)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Corrido Classic Tee (Brown Savana)": [[0.142, 0.437, 0.185], [0.852, 0.432, 0.808]],
-  "Tequila Delivery 24/7 Oversized Tee (Washed Charcoal)": [[0.17, 0.447, 0.217], [0.828, 0.447, 0.782]],
-  "Tequila Delivery 24/7 Oversized Tee (Light Washed Denim)": [[0.17, 0.447, 0.217], [0.828, 0.447, 0.782]],
-  "Tequila Delivery 24/7 Oversized Tee (Vintage White)": [[0.17, 0.447, 0.217], [0.828, 0.447, 0.782]],
-  "Mas Tequila Tee (Ivory)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
-  "Mas Tequila Tee (Khaki)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
-  "Mas Tequila Tee (Bay)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
-  "In My Tequila Era Tee (Military Green)": [[0.182, 0.435, 0.208], [0.819, 0.437, 0.79]],
+  
+  "Tequila On My Mind Tee": [[.227, .442, 0.24], [.768, .438, 0.757]], "D.A.R.E. Oversized Tee": [[.221, .415, 0.233], [.778, .415, 0.765]], 
+  "Mexico Es Chingón Tee": [[.227, .442, 0.24], [.768, .438, 0.757]],
+  "Corrido Logo Tee (Heather Navy)": [[.263, .46, 0.275], [.748, .47, 0.728]], 
+  "Legacy Tee": [[.22, .4, 0.232], [.777, .407, 0.767]],
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   "Corrido Logo Tee (Dark Grey Heather)": [[0.263, 0.46, 0.275], [0.748, 0.47, 0.728]],
   "Tequila On My Mind Tri-Blend Tee": [[.251, .468, 0.263], [.742, .463, 0.727]], "Spirit Animal Tee": [[.182, .435, 0.208], [.819, .437, 0.79]],
+};
+// Shirts whose product photo has sleeves splayed out sideways (it was shot flat) are drawn on the rep another way: the body, with its shoulder seams, comes from the photo
+// and the sleeves are drawn hanging straight down over the arms, in the shirt's colour, so the arms come out of them properly. Keyed like SLEEVE (a trailing "F" is a women's cut).
+// The numbers are fractions of the photo, measured from its transparent edges: torso = the body's left and right edges at the armpit, edge = at hand height, hem = at the hem,
+// armpit and cuff = where the sleeve ends, shoulder = where the shoulder line meets the torso edge. sleeve = its colour, shade = how dark its edges are (less on light cloth), heather = a speckle on heathered cloth,
+// trim = a contrasting band at the cuff, loose = a wide, deep sleeve.
+const FIT = {
+  masWhite: { torso: [.223, .773], edge: [.222, .773], hem: [.225, .777], hemY: .89, armpit: .462, cuff: .46, shoulder: .112 },
+  mas: { torso: [.213, .783], edge: [.208, .785], hem: [.205, .792], hemY: .91, armpit: .472, cuff: .47, shoulder: .15 },
+  masAccent: { torso: [.213, .788], edge: [.212, .795], hem: [.203, .798], hemY: .93, armpit: .418, cuff: .408, shoulder: .123 },
+  eraM: { torso: [.187, .807], edge: [.185, .808], hem: [.185, .808], hemY: .93, armpit: .435, cuff: .433, shoulder: .158 },
+  eraG: { torso: [.205, .788], edge: [.21, .79], hem: [.208, .788], hemY: .93, armpit: .435, cuff: .433, shoulder: .143 },
+  delivery: { torso: [.175, .798], edge: [.17, .807], hem: [.162, .818], hemY: .93, armpit: .457, cuff: .452, shoulder: .188 },
+  oversized: { torso: [.217, .782], edge: [.217, .782], hem: [.217, .782], hemY: .89, armpit: .447, cuff: .445, shoulder: .148 },
+  worth: { torso: [.248, .75], edge: [.245, .753], hem: [.242, .757], hemY: .93, armpit: .473, cuff: .47, shoulder: .093 },
+  smuggler: { torso: [.26, .738], edge: [.26, .738], hem: [.26, .738], hemY: .93, armpit: .505, cuff: .502, shoulder: .093 },
+  classic: { torso: [.187, .807], edge: [.185, .808], hem: [.185, .808], hemY: .93, armpit: .435, cuff: .433, shoulder: .158 },
+};
+const DRAWN = {
+  "Mas Tequila Tee (White)": { ...FIT.masWhite, sleeve: "#f4f4f2", shade: .12 },
+  "Mas Tequila Tee (Ivory)": { ...FIT.mas, sleeve: "#f2e8d0", shade: .12 },
+  "Mas Tequila Tee (Khaki)": { ...FIT.mas, sleeve: "#aea78b", shade: .2 },
+  "Mas Tequila Tee (Bay)": { ...FIT.mas, sleeve: "#b3b8a7", shade: .12 },
+  "Más Tequila Tee": { ...FIT.masAccent, sleeve: "#e5ddd2", shade: .12 },
+  "In My Tequila Era Tee (Charcoal)": { ...FIT.eraM, sleeve: "#6a6a6a", shade: .3 },
+  "In My Tequila Era Tee (Military Green)": { ...FIT.eraG, sleeve: "#6c715c", shade: .3 },
+  "Tequila Delivery Tee": { ...FIT.delivery, sleeve: "#497182", shade: .3, heather: .1 },
+  "Tequila Delivery 24/7 Oversized Tee (Washed Maroon)": { ...FIT.oversized, sleeve: "#734449", shade: .3 },
+  "Tequila Delivery 24/7 Oversized Tee (Washed Charcoal)": { ...FIT.oversized, sleeve: "#555047", shade: .3 },
+  "Tequila Delivery 24/7 Oversized Tee (Light Washed Denim)": { ...FIT.oversized, sleeve: "#c2c9cd", shade: .12 },
+  "Tequila Delivery 24/7 Oversized Tee (Vintage White)": { ...FIT.oversized, sleeve: "#f4ede0", shade: .12 },
+  "Worth the Shot Tee": { ...FIT.worth, sleeve: "#f4f4f4", shade: .12, trim: "#151515" },
+  "Tequila Smuggler Tee": { ...FIT.smuggler, sleeve: "#c8b394", shade: .12, loose: true },
+  "Corrido Classic Tee (Maroon)": { ...FIT.classic, sleeve: "#4d1127", shade: .3 },
+  "Corrido Classic Tee (Black)": { ...FIT.classic, sleeve: "#212121", shade: .3 },
+  "Corrido Classic Tee (Navy)": { ...FIT.classic, sleeve: "#272e3a", shade: .3 },
+  "Corrido Classic Tee (Charcoal)": { ...FIT.classic, sleeve: "#6b6b68", shade: .3, heather: .1 },
+  "Corrido Classic Tee (Dark Heather)": { ...FIT.classic, sleeve: "#565656", shade: .3, heather: .1 },
+  "Corrido Classic Tee (Military Green)": { ...FIT.classic, sleeve: "#737962", shade: .2 },
+  "Corrido Classic Tee (Dark Chocolate)": { ...FIT.classic, sleeve: "#4d423d", shade: .3 },
+  "Corrido Classic Tee (Graphite Heather)": { ...FIT.classic, sleeve: "#6d6d6d", shade: .3, heather: .1 },
+  "Corrido Classic Tee (Brown Savana)": { ...FIT.classic, sleeve: "#998671", shade: .2 },
+  "In My Tequila Era Tee (Charcoal)F": { sleeve: "#eeeeec", shade: .12, torso: [.285, .713], edge: [.255, .745], hem: [.24, .76], armpit: .47, cuff: .448 },
+  "Pickleball Raglan": { sleeve: "#262c39", torso: [.245, .757], armpit: .39, cuff: .588, box: true },   // 3/4 sleeves; the seams run from the collar to the armpit
 };
 // Product page on ilovetequilacorrido.com for each piece of merch, so a double-click in the creator opens the real item.
 const MERCH_URL = {
@@ -1687,7 +1753,7 @@ const repName = () => (state.avatar.name || "").trim() || "Rep";
 const mixHex = (a, b, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - t) + parseInt(b.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join("");
 function repLook() {
   const A = state.avatar, F = A.gender === "Female", hair = HAIRC[A.hair], h = HAIRS[A.hairStyle](hair, FACES[A.face]), ff = FACE_FIT[A.face],
-    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: useF ? O.dslF : O.dsl, sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
+    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: DRAWN[A.outfit + (useF ? "F" : "")], sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
   const over = [
     A.dimples ? '<path d="M41 72Q43 75 45 72M75 72Q77 75 79 72" stroke="#0004" stroke-width="1.5" fill="none" stroke-linecap="round"/>' : "",
     A.freckles ? [[46, 63], [50, 66], [43, 66], [54, 64], [74, 63], [70, 66], [77, 66], [66, 64], [58, 62], [62, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a8683f" opacity=".7"/>`).join("") : "",
