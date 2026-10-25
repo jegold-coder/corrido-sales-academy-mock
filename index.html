@@ -748,23 +748,23 @@ main:has(.maphome){max-width:1180px}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24p"></script>
-<script src="scenarios.js?v=2026-10-24p"></script>
-<script src="progress.js?v=2026-10-24p"></script>
-<script src="criteria.js?v=2026-10-24p"></script>
-<script src="tone.js?v=2026-10-24p"></script>
-<script src="coach.js?v=2026-10-24p"></script>
-<script src="camera.js?v=2026-10-24p"></script>
-<script src="lessons.js?v=2026-10-24p"></script>
-<script src="dashboard.js?v=2026-10-24p"></script>
-<script src="grader.js?v=2026-10-24p"></script>
-<script src="onboarding.js?v=2026-10-24p"></script>
-<script src="tiers.js?v=2026-10-24p"></script>
-<script src="badges.js?v=2026-10-24p"></script>
-<script src="voices.js?v=2026-10-24p"></script>
-<script src="mission.js?v=2026-10-24p"></script>
-<script src="boss.js?v=2026-10-24p"></script>
-<script src="manager.js?v=2026-10-24p"></script>
+<script src="sound.js?v=2026-10-24r"></script>
+<script src="scenarios.js?v=2026-10-24r"></script>
+<script src="progress.js?v=2026-10-24r"></script>
+<script src="criteria.js?v=2026-10-24r"></script>
+<script src="tone.js?v=2026-10-24r"></script>
+<script src="coach.js?v=2026-10-24r"></script>
+<script src="camera.js?v=2026-10-24r"></script>
+<script src="lessons.js?v=2026-10-24r"></script>
+<script src="dashboard.js?v=2026-10-24r"></script>
+<script src="grader.js?v=2026-10-24r"></script>
+<script src="onboarding.js?v=2026-10-24r"></script>
+<script src="tiers.js?v=2026-10-24r"></script>
+<script src="badges.js?v=2026-10-24r"></script>
+<script src="voices.js?v=2026-10-24r"></script>
+<script src="mission.js?v=2026-10-24r"></script>
+<script src="boss.js?v=2026-10-24r"></script>
+<script src="manager.js?v=2026-10-24r"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1013,8 +1013,8 @@ function home() {
   stopAll(); Cam.stop(); Sound.stop(); document.body.classList.remove("onboarding");
   state.hearts = D().hearts; hud();
   const nodes = ALL_STOPS();
-  const GAP = 175, H = nodes.length * GAP + 20;
-  const xs = nodes.map((_, i) => (i % 2 ? 295 : 105)), ys = nodes.map((_, i) => 80 + i * GAP);
+  const GAP = 175, TOP = 158, H = nodes.length * GAP + TOP - 60;   // TOP leaves room above the first stop for its tier banner and the START tag
+  const xs = nodes.map((_, i) => (i % 2 ? 295 : 105)), ys = nodes.map((_, i) => TOP + i * GAP);
   let roads = "", stops = "";
   const doneIds = nodes.filter(n => state.done[n.id]).map(n => n.id), fresh = newlyDone(mapSeen, doneIds), tNow = tierOf(), starts = tierStarts(nodes.map(n => n.id));
   mapSeen = new Set(doneIds);
@@ -1050,7 +1050,7 @@ function home() {
       <button class="btn" id="sidefight" type="button" ${nbOpen ? "" : "disabled"}>${nbOpen ? "See the battle" : "Locked"}</button></div>`
       : '<div class="sidecard"><h3>Season complete</h3><p>You have beaten every boss.</p></div>'}
     <div class="sidecard"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small></div></aside>`;
-  const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 100, 18) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
+  const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 120, 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}

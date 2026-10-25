@@ -21,12 +21,19 @@ ok("a stop already seen does not pop again", ev("newlyDone(new Set(['brand', 'li
 // the map page
 const html = read("index.html");
 ok("boss stops show the boss's face, and a still-locked boss is a dark silhouette", /const bossFace = n =>/.test(html) && /\.node\.boss\.locked \.bface svg\{filter:grayscale\(1\) brightness/.test(html));
-ok("tier banners sit over the first stop of each tier, on that stop's side, clear of the boss's label, and stay inside the map", /class="tierband /.test(html) && /tierStarts\(nodes\.map/.test(html) && /style="--x:\$\{xs\[f\] \/ 4\}%;top:\$\{Math\.max\(ys\[f\] - 100, 18\)/.test(html) && /left:clamp\(var\(--hw\),var\(--x\),calc\(100% - var\(--hw\)\)\)/.test(html));
+ok("tier banners sit over the first stop of each tier, on that stop's side, clear of the boss's label, and stay inside the map", /class="tierband /.test(html) && /tierStarts\(nodes\.map/.test(html) && /style="--x:\$\{xs\[f\] \/ 4\}%;top:\$\{Math\.max\(ys\[f\] - 120, 22\)/.test(html) && /left:clamp\(var\(--hw\),var\(--x\),calc\(100% - var\(--hw\)\)\)/.test(html));
 ok("the map has a side panel on each side with the rep, the next unlock, the next boss and the badges", ["Your rep", "Next unlock", "Next boss", "Boss badges"].every(t => html.includes(t)) && /<aside class="mside"/.test(html));
 ok("the side panels hide on small screens, where the page is one column", /@media\(max-width:1000px\)\{\.maphome\{display:block\}\.mside\{display:none\}\}/.test(html));
 ok("a stop you just finished pops and lights the road to the next one", /fresh\.includes\(n\.id\) \? "fresh"/.test(html) && /class="rd-glow"/.test(html) && /@keyframes roadrun/.test(html));
 ok("people who prefer less motion get no pop or running light", /prefers-reduced-motion:reduce\)\{\.node\.fresh,\.node\.fresh::after,\.rd-glow/.test(html));
 ok("Tier Up plays the victory music, the longer one for the season finale", /Sound\.sfx\(final \? "season" : "tierup"\)/.test(read("boss.js")));
+
+// the START tag floats 80 units above a stop's centre (24 tall); the tier banner chip is about 30 tall. Neither may touch.
+const top = Number((html.match(/TOP = (\d+)/) || [])[1]), off = Number((html.match(/Math\.max\(ys\[f\] - (\d+), (\d+)\)/) || [])[1]), minY = Number((html.match(/Math\.max\(ys\[f\] - (\d+), (\d+)\)/) || [])[2]);
+const chipBottom = (y0, first) => (first ? Math.max(y0 - off, minY) : y0 - off) + 15, startTop = y0 => y0 - 80;
+ok("the first stop's tier banner clears its START tag by a good margin", chipBottom(top, true) + 12 <= startTop(top), `chip bottom ${chipBottom(top, true)}, START top ${startTop(top)}`);
+ok("every other tier's banner clears the START tag too", chipBottom(top + 175 * 3, false) + 12 <= startTop(top + 175 * 3));
+ok("the first banner is not cut off by the top of the map", Math.max(top - off, minY) - 15 >= 0);
 
 // the dashboard: ladder and radar
 const dash = read("dashboard.js");
