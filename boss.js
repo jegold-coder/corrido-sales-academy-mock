@@ -27,6 +27,7 @@ function confetti(host) {
 
 // ---------- the screen before the fight ----------
 function bossIntro(stop) {
+  Sound.start("boss");   // the boss theme plays on this screen only: it stops when you go back, go anywhere else, or start the battle
   const boss = BOSS_BY[stop.id], tier = boss.tier, quiz = !!boss.quiz, sc = quiz ? null : SCENARIOS.find(m => m.id === stop.id);
   const next = tier >= 5 ? "complete the season" : `become ${aTier(tier + 1)}`, L = sc ? MLEVEL[sc.level] : null;
   const left = bossTriesLeft(stop.id), rewards = REWARDS[stop.id] || [], reward = rewards.join(", ");
@@ -63,6 +64,7 @@ function bossIntro(stop) {
 
 // A real fight uses one of today's tries. A practice run is the same conversation without the stakes.
 function startBoss(stop, boss, rehearsal) {
+  Sound.stop();   // entering the battle (or a practice run) ends the boss theme
   if (boss.quiz) { if (!rehearsal) useBossTry(stop.id); return brandBrain(stop, boss, rehearsal); }
   const sc = SCENARIOS.find(m => m.id === stop.id);
   const run = () => { if (!rehearsal) useBossTry(stop.id); play({ ...sc, boss: rehearsal ? null : boss, rehearsal }); };

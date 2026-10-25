@@ -697,23 +697,23 @@ a.diffbtn{text-decoration:none;display:inline-block}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24j"></script>
-<script src="scenarios.js?v=2026-10-24j"></script>
-<script src="progress.js?v=2026-10-24j"></script>
-<script src="criteria.js?v=2026-10-24j"></script>
-<script src="tone.js?v=2026-10-24j"></script>
-<script src="coach.js?v=2026-10-24j"></script>
-<script src="camera.js?v=2026-10-24j"></script>
-<script src="lessons.js?v=2026-10-24j"></script>
-<script src="dashboard.js?v=2026-10-24j"></script>
-<script src="grader.js?v=2026-10-24j"></script>
-<script src="onboarding.js?v=2026-10-24j"></script>
-<script src="tiers.js?v=2026-10-24j"></script>
-<script src="badges.js?v=2026-10-24j"></script>
-<script src="voices.js?v=2026-10-24j"></script>
-<script src="mission.js?v=2026-10-24j"></script>
-<script src="boss.js?v=2026-10-24j"></script>
-<script src="manager.js?v=2026-10-24j"></script>
+<script src="sound.js?v=2026-10-24k"></script>
+<script src="scenarios.js?v=2026-10-24k"></script>
+<script src="progress.js?v=2026-10-24k"></script>
+<script src="criteria.js?v=2026-10-24k"></script>
+<script src="tone.js?v=2026-10-24k"></script>
+<script src="coach.js?v=2026-10-24k"></script>
+<script src="camera.js?v=2026-10-24k"></script>
+<script src="lessons.js?v=2026-10-24k"></script>
+<script src="dashboard.js?v=2026-10-24k"></script>
+<script src="grader.js?v=2026-10-24k"></script>
+<script src="onboarding.js?v=2026-10-24k"></script>
+<script src="tiers.js?v=2026-10-24k"></script>
+<script src="badges.js?v=2026-10-24k"></script>
+<script src="voices.js?v=2026-10-24k"></script>
+<script src="mission.js?v=2026-10-24k"></script>
+<script src="boss.js?v=2026-10-24k"></script>
+<script src="manager.js?v=2026-10-24k"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -732,11 +732,11 @@ const D = () => DIFF[state.diff];
 $("#yes").focus();
 const toast = msg => { let t = $("#toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); } t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3200); };
 // Move keyboard focus to the new screen whenever the view changes.
-// The room's background music belongs to a mission scene. Whatever way you leave (the X, the logo, the header, anything else), the
-// moment the screen is no longer a mission it stops.
+// The room's background music belongs to a mission scene, and the boss theme to the boss screen. Whatever way you leave (the X, the
+// logo, the header, anything else), the moment the screen is no longer the one the music belongs to it stops.
 new MutationObserver(() => {
   if (!app.contains(document.activeElement)) app.focus({ preventScroll: true });
-  if (Sound.theme && !app.querySelector("#pc")) Sound.stop();
+  if (Sound.theme && !app.querySelector(Sound.theme === "boss" ? ".bossintro" : "#pc")) Sound.stop();
 }).observe(app, { childList: true });
 // and it goes quiet while the page is hidden (another tab or window) instead of playing on in the background
 document.addEventListener("visibilitychange", () => { if (document.hidden) Sound.pause(); else Sound.resume(); });
