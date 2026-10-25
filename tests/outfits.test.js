@@ -11,7 +11,7 @@ const ctx = vm.createContext({});
 vm.runInContext(html.match(/^const OUT = .*;$/m)[0] + html.match(/^const mixHex = .*;$/m)[0] + html.match(/^const placeImg = [\s\S]*?^};$/m)[0] + html.slice(html.indexOf("const capsule ="), html.indexOf("const FACES = {")).replace(/^function hangHand[\s\S]*?^}\n/m, m => m), ctx);
 vm.runInContext(html.slice(html.indexOf("const FIT = {"), html.indexOf("\n};\n", html.indexOf("const DRAWN = {")) + 4), ctx);   // FIT and DRAWN
 const DR = vm.runInContext("DRAWN", ctx);
-const entry = name => vm.runInContext("(" + html.match(new RegExp('  "' + name.replace(/[()]/g, "\\$&") + '": (\\{[\\s\\S]*?\\}),\\n  "'))[1].replace(/IMG \+ ("[^"]*")/g, "$1") + ")", ctx);
+const entry = name => vm.runInContext("(" + html.match(new RegExp('  "' + name.replace(/[()]/g, "\\$&") + '": (\\{[\\s\\S]*?\\}),\\n(?:  "|\\};)'))[1].replace(/IMG \+ ("[^"]*")/g, "$1") + ")", ctx);
 const O = { ...entry("Pickleball Raglan"), dsl: DR["Pickleball Raglan"] };
 const body = (extra = {}, F = false) => vm.runInContext(`humanBody(${JSON.stringify({ F, skin: "#e0b090", base: O.base, img: O.img, bbox: O.bbox, Wk: O.Wk, long: false, hem: O.hem, v: false, polo: false, dsl: O.dsl, ...extra })}).torso`, ctx);
 const shirt = (name, F = false, extra = {}) => { const e = entry(name); return vm.runInContext(`humanBody(${JSON.stringify({ F, skin: "#e0b090", base: e.base, img: e.img, bbox: e.bbox, Wk: e.Wk, long: false, hem: e.hem, v: false, polo: false, dsl: DR[name], ...extra })}).torso`, ctx); };
@@ -73,8 +73,8 @@ for (const [label, F] of [["a male build", false], ["a female build", true]]) {
 
 // the shirts on the list get drawn sleeves; a man's are cap sleeves shaped like the Tequila On My Mind tee's, a woman's the boxier sleeve of the women's Era tee
 const LIST = Object.keys(DR).filter(k => !/\)F$/.test(k) && k !== "Pickleball Raglan");
-ok(`${LIST.length} shirts have drawn sleeves: Mas Tequila, the Era tees, both Delivery tees, Worth the Shot, Smuggler and every Classic colour`, LIST.length === 23 && ["Mas Tequila Tee (White)", "In My Tequila Era Tee (Military Green)", "Tequila Delivery Tee", "Tequila Delivery 24/7 Oversized Tee (Vintage White)", "Worth the Shot Tee", "Tequila Smuggler Tee", "Corrido Classic Tee (Brown Savana)"].every(k => LIST.includes(k)));
-ok("the shirts that already looked right (On My Mind, Mexico Es Chingon, Legacy, D.A.R.E., Spirit Animal, the Logo tees) are left as they were", ["Tequila On My Mind Tee", "Mexico Es Chingón Tee", "Legacy Tee", "D.A.R.E. Oversized Tee", "Spirit Animal Tee", "Corrido Logo Tee (Dark Grey Heather)", "Tequila On My Mind Tri-Blend Tee"].every(k => !(k in DR)));
+ok(`${LIST.length} shirts have drawn sleeves: Mas Tequila, the Era tees, both Delivery tees, Worth the Shot, Smuggler, Spirit Animal and every Classic colour`, LIST.length === 24 && ["Spirit Animal Tee", "Mas Tequila Tee (White)", "In My Tequila Era Tee (Military Green)", "Tequila Delivery Tee", "Tequila Delivery 24/7 Oversized Tee (Vintage White)", "Worth the Shot Tee", "Tequila Smuggler Tee", "Corrido Classic Tee (Brown Savana)"].every(k => LIST.includes(k)));
+ok("the shirts that already looked right (On My Mind, Mexico Es Chingon, Legacy, D.A.R.E., the Logo tees) are left as they were", ["Tequila On My Mind Tee", "Mexico Es Chingón Tee", "Legacy Tee", "D.A.R.E. Oversized Tee", "Corrido Logo Tee (Dark Grey Heather)", "Tequila On My Mind Tri-Blend Tee"].every(k => !(k in DR)));
 const nums = d => [...d.matchAll(/-?\d+(?:\.\d+)?/g)].map(m => +m[0]);
 let badCap = [], badArm = [], badShadow = [], badBox = [];
 for (const k of LIST) {

@@ -864,27 +864,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26c"></script>
-<script src="sound.js?v=2026-10-26c"></script>
-<script src="scenarios.js?v=2026-10-26c"></script>
-<script src="progress.js?v=2026-10-26c"></script>
-<script src="criteria.js?v=2026-10-26c"></script>
-<script src="tone.js?v=2026-10-26c"></script>
-<script src="coach.js?v=2026-10-26c"></script>
-<script src="camera.js?v=2026-10-26c"></script>
-<script src="lessons.js?v=2026-10-26c"></script>
-<script src="dashboard.js?v=2026-10-26c"></script>
-<script src="grader.js?v=2026-10-26c"></script>
-<script src="onboarding.js?v=2026-10-26c"></script>
-<script src="tiers.js?v=2026-10-26c"></script>
-<script src="badges.js?v=2026-10-26c"></script>
-<script src="voices.js?v=2026-10-26c"></script>
-<script src="mission.js?v=2026-10-26c"></script>
-<script src="boss.js?v=2026-10-26c"></script>
-<script src="auth.js?v=2026-10-26c"></script>
-<script src="manager.js?v=2026-10-26c"></script>
-<script src="callcard.js?v=2026-10-26c"></script>
-<script src="presenter.js?v=2026-10-26c"></script>
+<script src="config.js?v=2026-10-26d"></script>
+<script src="sound.js?v=2026-10-26d"></script>
+<script src="scenarios.js?v=2026-10-26d"></script>
+<script src="progress.js?v=2026-10-26d"></script>
+<script src="criteria.js?v=2026-10-26d"></script>
+<script src="tone.js?v=2026-10-26d"></script>
+<script src="coach.js?v=2026-10-26d"></script>
+<script src="camera.js?v=2026-10-26d"></script>
+<script src="lessons.js?v=2026-10-26d"></script>
+<script src="dashboard.js?v=2026-10-26d"></script>
+<script src="grader.js?v=2026-10-26d"></script>
+<script src="onboarding.js?v=2026-10-26d"></script>
+<script src="tiers.js?v=2026-10-26d"></script>
+<script src="badges.js?v=2026-10-26d"></script>
+<script src="voices.js?v=2026-10-26d"></script>
+<script src="mission.js?v=2026-10-26d"></script>
+<script src="boss.js?v=2026-10-26d"></script>
+<script src="auth.js?v=2026-10-26d"></script>
+<script src="manager.js?v=2026-10-26d"></script>
+<script src="callcard.js?v=2026-10-26d"></script>
+<script src="presenter.js?v=2026-10-26d"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1607,7 +1607,7 @@ const SLEEVE = {
   
   
   "Corrido Logo Tee (Dark Grey Heather)": [[0.263, 0.46, 0.275], [0.748, 0.47, 0.728]],
-  "Tequila On My Mind Tri-Blend Tee": [[.251, .468, 0.263], [.742, .463, 0.727]], "Spirit Animal Tee": [[.182, .435, 0.208], [.819, .437, 0.79]],
+  "Tequila On My Mind Tri-Blend Tee": [[.251, .468, 0.263], [.742, .463, 0.727]], 
 };
 // Shirts whose product photo has sleeves splayed out sideways (it was shot flat) are drawn on the rep another way: the body, with its shoulder seams, comes from the photo
 // and the sleeves are drawn hanging straight down over the arms, in the shirt's colour, so the arms come out of them properly. Keyed like SLEEVE (a trailing "F" is a women's cut).
@@ -1650,6 +1650,7 @@ const DRAWN = {
   "Corrido Classic Tee (Dark Chocolate)": { ...FIT.classic, sleeve: "#4d423d", shade: .3 },
   "Corrido Classic Tee (Graphite Heather)": { ...FIT.classic, sleeve: "#6d6d6d", shade: .3, heather: .1 },
   "Corrido Classic Tee (Brown Savana)": { ...FIT.classic, sleeve: "#998671", shade: .2 },
+  "Spirit Animal Tee": { ...FIT.eraG, sleeve: "#f4f4f2", shade: .12 },
   "In My Tequila Era Tee (Charcoal)F": { sleeve: "#eeeeec", shade: .12, torso: [.285, .713], edge: [.255, .745], hem: [.24, .76], armpit: .47, cuff: .448 },
   "Pickleball Raglan": { sleeve: "#262c39", torso: [.245, .757], armpit: .39, cuff: .588, box: true },   // 3/4 sleeves; the seams run from the collar to the armpit
 };
