@@ -170,7 +170,7 @@ function tierUp(ctx) {
 async function shareTierCard(tier) {
   const btn = $("#share"); if (btn) { btn.disabled = true; btn.textContent = "Making your card…"; }
   try {
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -4 120 140" width="565" height="660">${person(repLook())}</svg>`;
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -4 120 140" width="565" height="660"><style>.xm path{display:none}</style>${person(repLook())}</svg>`;   // this picture has no page CSS, so hide the reaction mouths here
     // the merch photos are linked from the shop, so inline them for the picture
     for (const u of [...new Set([...svg.matchAll(/href="(https:[^"]+)"/g)].map(m => m[1]))]) {
       try { const b = await (await fetch(u, { mode: "cors" })).blob(), d = await new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(b); }); svg = svg.split(`href="${u}"`).join(`href="${d}"`); } catch { /* leave it out */ }

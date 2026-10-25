@@ -64,6 +64,7 @@ Three missions come from advice from the team's contact Jay. **The Hard No** (To
 - **Tiers:** Trainee, Associate Rep, Field Rep, Senior Rep, Key Account Rep, Seasoned Seller. Your tier is how many bosses you have beaten. Each boss is the last stop of its difficulty level, so the five mission levels line up with tiers 1 to 5 (`tests/tiers.test.js` checks it).
 - **Bosses** use the existing missions, so their timings are unchanged: Priya (3.5 / 5 to win), Mia (3.5), Rafael (4.0, voice only if your browser can record), Dana (4.0, voice only) and the Bad-Tempered Owner (4.2, voice only). A health claim or a pressure tactic loses a boss battle instantly. Brand Brain is ten questions, fifteen seconds each, 80% to win. Three tries a day per boss, and a Practice first option that does not count.
 - **Merch:** 42 pieces (36 shirts and polos, 6 hats). The creator shows them as one tabbed photo grid (T-shirts, Polos, Hats) so the page stays short. Twenty are free from the start (fifteen shirts, five hats) so there is a choice in the creator on day one. The other 22 are each unlocked by beating a level (what a stop unlocks is shown on the screen before you start it, not on the map) (see `REWARDS` in `tiers.js`; `tests/tiers.test.js` checks every piece is unlocked exactly once). A boss win also moves you up a tier and shows the Tier Up screen with a shareable tier card (name, avatar and tier only).
+- **Smile:** the creator has a Smile row under Lip color (or Facial hair): Neutral, Soft smile, Warm smile, Big smile, Grin, Smirk and Laugh. The smile is drawn over the plain mouth and hides while your character talks, so the lip-sync in missions still works, then it comes back. Older saved characters start Neutral. Randomize picks one too.
 - **Prototype tools** (Dashboard, Settings): every stop open, every piece of merch unlocked, and unlimited boss tries. The first and third are on by default while the game is being tested.
 
 ## Turn on Sign in with Google
@@ -121,6 +122,7 @@ node tests/voices.test.js   # each customer gets a different voice, lines are pa
 node tests/reactions.test.js # customer faces react to the conversation, and the grader's arithmetic adds up
 node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; the defeat sting plays for a lost boss; both go quiet when the page is hidden; the tune stays in key
 node tests/map.test.js      # tier banners, the pop for a finished stop, side panels and their links, the ladder and the radar
+node tests/smile.test.js    # the rep's smile styles: shapes, the creator row, saving, and the mouth still moving while talking
 node tests/phone.test.js    # the phone bottom bar: its five places, when it shows, and that tapping it never sends you home
 node tests/coaching.test.js # the manager Coaching page: every skill has a topic, the suggested stop is real and within reach, the messages read well
 node tests/results.test.js  # medals, stars, the customer on the results, the tie line, hearts only in lessons
