@@ -63,13 +63,13 @@ const Sound = {
     this.tone(f, 0.35, "sine", vol, dest, at); this.tone(f * 1.34, 0.22, "sine", vol * 0.7, dest, at); this.tone(f * 2.1, 0.12, "sine", vol * 0.35, dest, at);
   },
   // Filtered noise that sweeps in pitch: used for the cork pop and the record scratch.
-  sweep(from, to, dur, vol, at = 0, q = 2) {
+  sweep(from, to, dur, vol, at = 0, q = 2, dest = null) {
     if (!this.ctx) return;
     const c = this.ctx, t = c.currentTime + at, s = c.createBufferSource(), bp = c.createBiquadFilter(), g = c.createGain();
     s.buffer = this.noise; s.loop = true; bp.type = "bandpass"; bp.Q.value = q;
     bp.frequency.setValueAtTime(from, t); bp.frequency.exponentialRampToValueAtTime(to, t + dur);
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    s.connect(bp); bp.connect(g); g.connect(this.master); s.start(t); s.stop(t + dur + 0.05);
+    s.connect(bp); bp.connect(g); g.connect(dest || this.master); s.start(t); s.stop(t + dur + 0.05);
   },
   // A snare: a short burst of filtered noise with a little body under it.
   snare(at = 0, dest = null, k = 1) {
@@ -165,6 +165,22 @@ const Sound = {
       if (last) { this.strum([110, 164.81, 220, 277.18, 329.63, 440], base + 3 * beat, 0.34, fx); this.clink(base + 3 * beat, 0.2, fx); this.clink(base + 3 * beat + 0.15, 0.16, fx); this.clink(base + 3 * beat + 0.3, 0.12, fx); }
     });
   },
+  // ----- the boss defeat sting -----
+  // The victory music's opposite, in the boss theme's key: one low toll, a soft snare roll that dies away, then the turn Am - G - F - E - Am
+  // (the same chords as the room music) played slowly, a trumpet sagging down the scale to the home note, and a record winding to a stop
+  // under it. About four and a half seconds, all on one bus, so leaving the screen cuts it off at once.
+  DEFEAT_LINE: [659.25, 587.33, 523.25, 493.88, 440],   // E D C B A, one note over each chord
+  defeat() {
+    const c = this.ctx, step = 0.55, fx = c.createGain(); fx.gain.value = 1; fx.connect(this.master); this.nodes.push(fx);
+    this.tone(55, 1.6, "sine", 0.24, fx); this.tone(110, 1.1, "sine", 0.1, fx);   // one low toll
+    [0, 0.09, 0.18, 0.27, 0.36].forEach((t, i) => this.snare(t, fx, 0.7 - i * 0.1));
+    [...this.CHORDS, this.CHORDS[0]].forEach((ch, i) => {
+      const at = 0.6 + i * step, last = i === this.DEFEAT_LINE.length - 1;
+      this.strum(ch, at, last ? 0.3 : 0.2, fx); this.pluck(ch[0] / 2, at, 0.4, fx);
+      this.trumpet(this.DEFEAT_LINE[i], last ? 1.5 : step * 0.95, at, last ? 0.085 : 0.07, fx);
+    });
+    this.sweep(1800, 90, 1.5, 0.09, 0.6 + 4 * step + 0.2, 3, fx);   // the record winding down
+  },
   // ----- the boss battle theme -----
   // The corrido with the stakes turned up: a driving oom-pah (bass on 1 and 3, strummed chords on 2 and 4), a snare on the backbeat
   // and mariachi trumpets playing a short, urgent line over Am - Am - G - F - E - E - Am - E, the Spanish-sounding turn with the
@@ -235,6 +251,8 @@ const Sound = {
     lose: s => { [329.63, 261.63, 220, 164.81].forEach((f, i) => s.pluck(f, i * 0.28, 0.4)); s.sweep(1500, 200, 0.5, 0.08, 0.8, 2); },
     // the victory music for a Tier Up, and the longer one for finishing the season
     tierup: s => s.victory(false), season: s => s.victory(true),
+    // and the defeat sting for a lost boss battle (an ordinary mission loss keeps the short guitar line above)
+    defeat: s => s.defeat(),
     // two clinks and a sparkle of high piano-like notes
     badge: s => { s.clink(0, 0.18); s.clink(0.14, 0.14); [1318.5, 1568, 2093].forEach((f, i) => s.tone(f, 0.3, "sine", 0.1, null, 0.25 + i * 0.09)); },
   },

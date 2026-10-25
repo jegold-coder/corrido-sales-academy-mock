@@ -55,4 +55,13 @@ const major = [659.25, 830.61, 880, 987.77, 1108.73, 1174.66, 1318.51];
 ok("the victory trumpets stay in A major", B.VICTORY_LINE.flat().every(([f]) => major.some(x => near(f, x))));
 ok("the victory line fits its bars and never overlaps itself", B.VICTORY_LINE.length === 4 && B.VICTORY_LINE.every(bar => bar.every(([, s, d], i) => s >= 0 && s + d <= 4.001 && (i === 0 || bar[i - 1][1] + bar[i - 1][2] <= s + 0.001))));
 ok("it comes home to A", B.VICTORY_BARS[3] === "A" && near(B.VICTORY_LINE[3].at(-1)[0], 880));
+// the boss defeat sting: a lost boss battle gets its own sad ending, an ordinary mission loss keeps the short guitar line
+S.stop(); S.sfx("defeat"); ok("a lost boss battle plays the defeat sting", nodes() > 0); const defeatN = nodes(); S.stop();
+S.sfx("lose"); ok("the sting is bigger than the ordinary loss sound", defeatN > nodes()); S.stop();
+ok("it plays on one bus, so leaving the screen cuts it off at once", nodes() === 0);
+ok("the trumpet sags down the A minor scale one note per chord and ends on the home note", B.DEFEAT_LINE.length === 5 && B.DEFEAT_LINE.every((f, i) => i === 0 || f < B.DEFEAT_LINE[i - 1]) && near(B.DEFEAT_LINE.at(-1), 440) && B.DEFEAT_LINE.every(f => scale.concat([440, 493.88]).some(x => near(f, x))));
+ok("it plays the room music's own chords: Am, G, F, E and back to Am", B.CHORDS.length === 4 && near(B.CHORDS[0][0], 110) && near(B.CHORDS[3][0], 82.41));
+const missionJs = fs.readFileSync(path.join(root, "mission.js"), "utf8");
+ok("a lost mission boss plays the defeat sting, and an ordinary mission loss does not", /Sound\.sfx\(won \? "win" : boss \? "defeat" : "lose"\)/.test(missionJs));
+ok("a lost Brand Brain boss plays it too", /Sound\.sfx\(won \? "win" : "defeat"\); window\.scrollTo/.test(boss));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

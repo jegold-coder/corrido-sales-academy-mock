@@ -137,7 +137,7 @@ function quizBossResult(ctx) {
     <p>${left === Infinity ? "" : `<span class="note2">Tries left today: ${left}</span>`}</p>
     <p><button class="btn" id="again" type="button">${rehearsal ? "Back to the boss" : "Try again"}</button> <button class="btn alt" id="map" type="button">Back to the map</button></p></section>`;
   $("#again").onclick = () => bossIntro(stop); $("#map").onclick = home;
-  Sound.sfx(won ? "win" : "lose"); window.scrollTo(0, 0);
+  Sound.sfx(won ? "win" : "defeat"); window.scrollTo(0, 0);
 }
 
 // ---------- Tier Up ----------

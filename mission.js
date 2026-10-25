@@ -292,7 +292,7 @@ function missionResults(M, log) {
   const earned = Progress.record(state, { id: sc.id, title: sc.title, diff: `Level ${lvl}`, mode: voiceUsed ? "speak" : "type", pct, stars, won, xp, skills, lesson: false, voice: voiceUsed, camera: !!cam, cameraScores: cam, perfect }, TOTAL_STOPS());
   syncBadges().forEach(k => { if (!earned.includes(k)) earned.push(k); });
   hud();
-  Sound.stop(); Sound.sfx(won ? "win" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
+  Sound.stop(); Sound.sfx(won ? "win" : boss ? "defeat" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
   const renderResults = () => {
   const ranked = [...log].sort((a, b) => b.res.score - a.res.score), best = ranked[0], worst = ranked[ranked.length - 1];
     const left = boss ? bossTriesLeft(sc.id) : null, bossPass = boss ? (boss.pass).toFixed(1) : "";

@@ -40,9 +40,9 @@ What it loads from the internet:
 | Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges), daily streak, team board using share codes |
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
 | Sign-in (journey page 2) | Age check, then "continue as guest", **Sign in with Google** (switches on when a free client ID is added, see below) or an email that is only saved on this device. Company sign-in comes with the rollout |
-| Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a CSV invite page and leaderboards. Uses sample data. See below |
+| Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a coaching page, a CSV invite page, leaderboards and the answer grader. Uses sample data. See below |
 | The map | A winding road with a boss's face on each boss stop (a dark silhouette while it is still locked), a banner at the start of each tier, and on a wide screen a side panel with your rep, the next unlock and the next boss with the boss badges. The rep card and the tier bar open Dashboard > Progress, the badges card opens Dashboard > Badges, and the next unlock opens the character creator (all work from the keyboard). A stop you just finished pops and a light runs along the road to the next one, and a beaten boss makes the next tier's banner pop in. On a phone the side panels hide and the banners shorten to "Tier 3" |
-| Boss battle theme | A corrido-style tune made in code with the browser's Web Audio (no files): a driving oom-pah of bass and strummed guitar, a snare on the backbeat and mariachi trumpets in A minor over the record-player crackle. It plays only on the boss screen, and stops when you go back, go anywhere else, or start the battle (a practice run too). Tier Up has its own victory music in A major, and finishing the season plays a longer one; both are cut off the moment you leave the screen |
+| Boss battle theme | A corrido-style tune made in code with the browser's Web Audio (no files): a driving oom-pah of bass and strummed guitar, a snare on the backbeat and mariachi trumpets in A minor over the record-player crackle. It plays only on the boss screen, and stops when you go back, go anywhere else, or start the battle (a practice run too). Tier Up has its own victory music in A major, and finishing the season plays a longer one; both are cut off the moment you leave the screen. A lost boss battle plays its own defeat sting (a low toll, a soft snare roll, the Am - G - F - E - Am turn with a trumpet sagging down to A, and a record winding to a stop); an ordinary mission loss keeps the short guitar line |
 | Results screens | Compact: the score, stars and the customer (looking how the conversation left them, with their last words) share one header row, new badges appear as the real medals, and each answer is a row showing its score and one line, which you open for the detail (the ones that need work start open, and one button opens or closes them all). Stars follow the score out of 100 and go up in halves (100% is 3 stars, 50% is 1.5), so a half star is half filled on the results, the map and the history. Passing is a separate test, the mission's pass mark, so a score can show stars and still miss the pass mark. They pop in one after another, and three stars brings confetti. When every answer scores the same it says so instead of naming a strongest and weakest. The footer hearts show only inside a lesson. The page doesn't bounce past the top, so nothing shows behind it |
 | Customer reactions | The customer's face follows the conversation: brows, mouth and cheeks go from delighted to pleased, plain, unsure or annoyed, and a small reaction pops up beside them after each answer. Harder levels start the customer more guarded |
 | Answer grader (manager mode > Grader) | For managers only, because it shows the model answers. For every question: what a good answer looks like and why, the partly-there and not-good answers with the reason for each, and a box to type any answer and see the score, the arithmetic behind it, what it covered, the mistakes, the tone notes and how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
@@ -83,6 +83,10 @@ What it does and does not do: the browser gets a signed token from Google and re
 
 Open the link ending in `#manager`, use the "Manager? Open the manager view" link on the first screen, or the "Open manager mode" button on the Dashboard (Team tab, and Settings). There is no sign-in or permission check: anyone with the link can open it. The class on the Cohorts page is **sample data** (labelled), plus your own row. Invite lets you upload a CSV (name, email, team), checks it, and creates a class that is saved **on this device only**. Invites are **not emailed**: you copy an invite message instead. Nudge only records the nudge on this device. A real version needs company sign-in and a shared database.
 
+**Coaching** (manager mode > Coaching) shows the class's skills lowest first, each with the stop that practices it, a team drill for the week with a message to copy, and the reps who need one-to-one coaching (lost a boss 3 times, or no practice for 3+ days). Each rep gets the skill to work on, the stop to practice (the first one that practices the skill and that the rep has reached, an ordinary stop before a boss), one tip, and a message to copy. "Mark as coached" is recorded on this device only, and nothing is sent.
+
+**On a phone** (700px wide or less) the header buttons give way to a bottom bar with Map, Dashboard, Character, Brand and Website, with the current page marked. It steps aside during a mission or lesson (the X leaves it) and on the first-run and manager screens; the stats footer sits just above it.
+
 ## Files
 
 | File | What it holds |
@@ -94,7 +98,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `coach.js` | the scoring (`Coach.score`: 4 content points plus 1 tone point) and the old optional Gemini judge |
 | `tiers.js` | tiers, bosses, merch rewards and the prototype switches |
 | `boss.js` | the boss battle screen, the Brand Brain quiz, Tier Up and the shareable tier card |
-| `manager.js` | manager mode: cohorts, invite and leaderboards |
+| `manager.js` | manager mode: cohorts, coaching, invite and leaderboards |
 | `tone.js` | how tone is judged from your words and your voice, for the situation |
 | `lessons.js` | brand lessons, question bank, knowledge check |
 | `progress.js` | saving, levels, badges, streak, team codes |
@@ -115,8 +119,10 @@ node tests/tiers.test.js    # every piece of merch is unlocked once, bosses are 
 node tests/badges.test.js   # a badge for every boss, awarded once, caught up from earlier progress
 node tests/voices.test.js   # each customer gets a different voice, lines are paced like speech
 node tests/reactions.test.js # customer faces react to the conversation, and the grader's arithmetic adds up
-node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; both go quiet when the page is hidden; the tune stays in key
-node tests/map.test.js      # tier banners, the pop for a finished stop, side panels, the ladder and the radar
+node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; the defeat sting plays for a lost boss; both go quiet when the page is hidden; the tune stays in key
+node tests/map.test.js      # tier banners, the pop for a finished stop, side panels and their links, the ladder and the radar
+node tests/phone.test.js    # the phone bottom bar: its five places, when it shows, and that tapping it never sends you home
+node tests/coaching.test.js # the manager Coaching page: every skill has a topic, the suggested stop is real and within reach, the messages read well
 node tests/results.test.js  # medals, stars, the customer on the results, the tie line, hearts only in lessons
 node tests/auth.test.js     # Google token checks: wrong app, expired, unverified, wrong company
 node tests/natural.test.js  # answers in ordinary words score fairly; hype, health claims and pushiness are caught; a question can't lose a boss battle

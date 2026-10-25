@@ -1,6 +1,7 @@
 "use strict";
 // Manager mode (prototype). Open to anyone with the link while the game is a prototype: there is no sign-in or permission check.
-// Pages from the journey: Cohorts (class dashboard), Invite (set up a sales class from a CSV) and Leaderboards.
+// Pages from the journey: Cohorts (class dashboard), Invite (set up a sales class from a CSV) and Leaderboards, plus Coaching (what to
+// work on, with whom, and what to say) and the answer Grader.
 // There is no server yet, so:
 //   - the class on the Cohorts page is SAMPLE DATA (labelled), plus the player on this device as one extra row;
 //   - a class created on the Invite page is saved on this device only, and invites are NOT emailed (you copy an invite message);
@@ -29,7 +30,7 @@ function managerMode(tab) {
   document.body.classList.add("mgr");
   mgrTab = tab || mgrTab || "cohorts";
   stopAll(); Cam.stop(); Sound.stop();
-  const pages = [["cohorts", "Cohorts"], ["invite", "Invite"], ["leaderboards", "Leaderboards"], ["grader", "Grader"]];
+  const pages = [["cohorts", "Cohorts"], ["coaching", "Coaching"], ["invite", "Invite"], ["leaderboards", "Leaderboards"], ["grader", "Grader"]];
   app.innerHTML = `<div class="mgrwrap">
     <div class="mgrbar"><div class="mlogo">Tequila Corrido<small>SALES ACADEMY · MANAGER</small></div>
       <nav class="mnav" aria-label="Manager pages">${pages.map(([k, l]) => `<button type="button" class="mnavbtn ${k === mgrTab ? "on" : ""}" data-p="${k}" ${k === mgrTab ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>
@@ -38,7 +39,7 @@ function managerMode(tab) {
     <div id="mbody"></div></div>`;
   app.querySelectorAll(".mnavbtn").forEach(b => b.onclick = () => managerMode(b.dataset.p));
   $("#mback").onclick = leaveManager;
-  ({ cohorts: mgrCohorts, invite: mgrInvite, leaderboards: mgrBoards, grader: mgrGrader })[mgrTab]($("#mbody"));
+  ({ cohorts: mgrCohorts, coaching: mgrCoaching, invite: mgrInvite, leaderboards: mgrBoards, grader: mgrGrader })[mgrTab]($("#mbody"));
   window.scrollTo(0, 0);
 }
 function leaveManager() {
@@ -48,6 +49,7 @@ function leaveManager() {
 }
 
 // ----- the data behind the pages -----
+const weakestSkill = () => (Progress.skillAverages(state)[0] || [])[0];   // the player's own lowest skill, for their row on the Cohorts page
 const allClasses = () => [SAMPLE_CLASS, ...(state.cohorts || [])];
 function classReps(c) {
   if (c.sample) {
@@ -95,6 +97,58 @@ function mgrCohorts(el) {
   $("#minv").onclick = () => managerMode("invite");
   $("#mexp").onclick = () => download(`${c.name.replace(/\W+/g, "-").toLowerCase()}-roster.csv`, ["Rep,Team,Tier,XP,Streak,Bosses,Focus skill,Last active", ...reps.map(r => [r.name, r.team, `${r.tier} ${TIERS[r.tier]}`, r.xp, r.streak, `${r.bosses}/6`, r.focus, lastActive(r)].map(csvCell).join(","))].join("\n"));
   el.querySelectorAll(".nudgebtn").forEach(b => b.onclick = () => { state.nudged = { ...(state.nudged || {}), [b.dataset.n]: Progress.today() }; Progress.save(state); b.textContent = "Nudged ✓"; b.disabled = true; toast(`Nudge recorded for ${b.dataset.n} (prototype: not delivered).`); });
+}
+
+// ----- Coaching: what to work on, with whom, and what to say -----
+// Each topic knows which skill names it covers (the step skills in scenarios.js and the focus labels on the Cohorts page), one thing worth
+// telling a rep, and sometimes a fixed stop. Otherwise the stop to practice is found in the real missions: the first one, in path order, that
+// practices the skill and that the rep has reached, preferring an ordinary stop to a boss. So it stays right when the missions change.
+// Order matters: the first topic whose pattern matches the skill wins.
+const COACH = [
+  { name: "Staying calm", re: /calm|safety|support|follow-up|trust to/i, tip: "If something goes wrong in a store, stay calm and cooperate, keep people safe, and report it once it is over. Nothing in the bag is worth risking anyone." },
+  { name: "Compliance", re: /compli|health|underage|shipping|marketing/i, tip: "No health claims, 21 and over only, and never promise shipping you have not confirmed. When you are not sure, say you will check and confirm in writing." },
+  { name: "Product and brand knowledge", re: /product|brand|stor|plain/i, stop: "lineup", tip: "Use the brand's own words: additive-free, only three ingredients, no fake flavors. Give one true difference, then invite a taste." },
+  { name: "Price and margin", re: /pric|margin/i, tip: "Never guess a number. Make the price concrete per pour, and offer to confirm wholesale terms in writing." },
+  { name: "Handling objections", re: /objection|persist|credib|trust/i, tip: "Acknowledge the worry first, then make the first step small and low-risk. Do not argue, and do not promise what you cannot prove." },
+  { name: "Closing", re: /clos|follow/i, tip: "Ask for one small, dated next step: a tasting on a named day, or two bottles by Friday. A vague follow-up lets the deal die." },
+  { name: "Discovery", re: /discover|rapport|respect|intro|reading|decision|audience|message/i, tip: "Ask about their guests and what they measure before you pitch, and respect their time in your first sentence." },
+];
+// the stops a rep at this tier has reached: everything up to and including the boss of their tier (a boss can be practiced before the real fight)
+const reachedStops = tier => PATH.slice(0, PATH.indexOf(BOSSES[Math.min(5, tier)].id) + 1);
+function coachPlan(skill, tier) {
+  const topic = COACH.find(t => t.re.test(skill || ""));
+  if (!topic) return null;
+  const reached = reachedStops(tier), has = sid => { const sc = SCENARIOS.find(x => x.id === sid); return sc && sc.steps.some(st => topic.re.test(st.skill)); };
+  const id = topic.stop || reached.find(sid => !BOSS_BY[sid] && has(sid)) || reached.find(has) || reached.filter(sid => !BOSS_BY[sid]).pop();
+  return { topic, stop: ALL_STOPS().find(x => x.id === id) };
+}
+const coachWhy = r => r.lost >= 3 ? `Lost the Tier ${r.tier} boss ${r.lost} times` : r.idle != null && r.idle >= 3 ? `No practice in ${r.idle} days` : "";
+function coachMessage(r, plan, manager) {
+  const first = r.name.split(" ")[0], lead = r.lost >= 3 ? `The Tier ${r.tier} boss has been tough lately. That happens, and it is fixable.` : `It has been ${r.idle} days since your last practice, and a few short sessions will get you back on track.`;
+  return `Hi ${first},\n\n${lead}${plan ? ` Your focus skill is ${plan.topic.name.toLowerCase()}.\n\nPlease practice "${plan.stop.title}" this week. One tip: ${plan.topic.tip}` : "\n\nPlease pick up your next stop this week."}\n\nIt takes about ten minutes. Tell me how it goes.\n\n${manager}`;
+}
+function mgrCoaching(el) {
+  const c = allClasses().find(x => x.id === mgrClass) || SAMPLE_CLASS, reps = classReps(c).filter(r => !r.you && !r.invited), manager = state.mgrName && state.mgrName !== "Manager" ? state.mgrName : "[Your name]";   // the message is from them, so sign it with their name or leave a gap to fill
+  const avgTier = reps.length ? Math.round(reps.reduce((a, r) => a + r.tier, 0) / reps.length) : 0;
+  const skills = c.sample ? Object.entries(SAMPLE_SKILLS).sort((a, b) => a[1] - b[1]) : [];
+  const lowest = skills[0], drill = lowest && coachPlan(lowest[0], avgTier);
+  const team = drill && `Hi team,\n\nThis week's drill is ${drill.topic.name.toLowerCase()}. The class average is ${lowest[1]}%, our lowest skill.\n\nPractice "${drill.stop.title}" and aim for three stars. One tip: ${drill.topic.tip}\n\n${manager}`;
+  const list = reps.map(r => ({ r, why: coachWhy(r), plan: coachPlan(r.focus, r.tier) })).filter(x => x.why);
+  el.innerHTML = `<div class="mhead"><div><h1 class="mtitle">Coaching</h1><p class="msub">${esc(c.name)}${c.sample ? " · Sample data" : ""} · what to work on, with whom, and what to say</p></div></div>
+    ${skills.length && drill ? `<div class="mrow2">
+      <div class="mcard"><h2>Class skills, lowest first</h2>${skills.map(([k, v], i) => { const p = coachPlan(k, avgTier); return `<div class="cskill ${i === 0 ? "low" : ""}"><span>${esc(k)}</span><span class="cb" aria-hidden="true"><i style="width:${v}%"></i></span><b>${v}</b>${p ? `<small>Practice: ${esc(p.stop.title)}</small>` : ""}</div>`; }).join("")}
+        <p class="note2">The stop is the first one that practices the skill, for a rep at the class's average tier (Tier ${avgTier}).</p></div>
+      <div class="mcard"><h2>This week's team drill</h2><p><b>${esc(drill.topic.name)}</b>, class average ${lowest[1]}.</p><p>Practice <b>${esc(drill.stop.title)}</b>.</p><p class="mtip">${esc(drill.topic.tip)}</p>
+        <div class="mcbtns"><button class="mbtn" id="copyteam" type="button">Copy the team message</button></div></div></div>`
+      : `<div class="mcard"><p>Class skills appear once reps start practicing. Switch to the sample class on the Cohorts page to see how this page looks.</p></div>`}
+    <div class="mcard"><h2>Reps to coach one-to-one</h2>${list.length ? list.map(({ r, why, plan }, i) => `<div class="mcoach"><div class="mcwho"><b>${esc(r.name)}</b><span class="mtag">Tier ${r.tier} · ${TIERS[r.tier]}</span><small>${esc(why)} · focus: ${esc(r.focus.toLowerCase())}</small></div>
+        <p>${plan ? `Work on <b>${esc(plan.topic.name.toLowerCase())}</b>. Practice <b>${esc(plan.stop.title)}</b>.` : "Pick up the next stop on the map."}</p>${plan ? `<p class="mtip">${esc(plan.topic.tip)}</p>` : ""}
+        <div class="mcbtns"><button class="mbtn alt copybtn" type="button" data-i="${i}">Copy message to ${esc(r.name.split(" ")[0])}</button><button class="mbtn coachedbtn" type="button" data-n="${esc(r.name)}" ${(state.coached || {})[r.name] ? "disabled" : ""}>${(state.coached || {})[r.name] ? "Coached ✓" : "Mark as coached"}</button></div></div>`).join("") : '<p class="note2">Nobody needs one-to-one coaching this week.</p>'}
+      <p class="note2">Prototype: a message is copied for you to send yourself, and "coached" is only recorded on this device.</p></div>`;
+  const copy = (text, what) => navigator.clipboard?.writeText(text).then(() => toast(`${what} copied.`)).catch(() => toast("Copy did not work. Select the text and press Ctrl+C."));
+  if ($("#copyteam")) $("#copyteam").onclick = () => copy(team, "Team message");
+  el.querySelectorAll(".copybtn").forEach(b => b.onclick = () => { const x = list[+b.dataset.i]; copy(coachMessage(x.r, x.plan, manager), "Message"); });
+  el.querySelectorAll(".coachedbtn").forEach(b => b.onclick = () => { state.coached = { ...(state.coached || {}), [b.dataset.n]: Progress.today() }; Progress.save(state); b.textContent = "Coached ✓"; b.disabled = true; toast(`Marked ${b.dataset.n} as coached (recorded on this device).`); });
 }
 
 // ----- Invite: set up a sales class from a CSV -----

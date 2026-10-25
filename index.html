@@ -555,6 +555,9 @@ main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
 .mchart{display:flex;align-items:flex-end;justify-content:space-around;gap:.4rem;min-height:210px}
 .mcol{display:flex;flex-direction:column;align-items:center;gap:.25rem;flex:1}.mcol b{font-size:1rem}.mcol i{display:block;width:100%;max-width:70px;background:#915f1b;border-radius:8px 8px 0 0}.mcol i.gold{background:var(--gold)}.mcol span{font-size:.72rem;font-weight:700;text-align:center}
 .mnudge{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:#f5eee3;border-radius:10px;padding:.6rem .8rem;margin-bottom:.5rem}.mnudge small{display:block;color:#5c5044}
+.cskill{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 34px;gap:.1rem .6rem;align-items:center;margin:.5rem 0}.cskill .cb{height:10px;border-radius:99px;background:#e9dfcd;overflow:hidden}.cskill .cb i{display:block;height:100%;background:#1f6a77}.cskill.low .cb i{background:#b9452d}.cskill b{text-align:right}.cskill small{grid-column:2/4;color:#5c5044}
+.mcoach{background:#f5eee3;border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem}.mcoach p{margin:.3rem 0}.mcwho small{display:block;color:#5c5044}.mtag{margin-left:.5rem;font-size:.78rem;font-weight:700;color:#915f1b}
+.mtip{color:#3a2c1c;border-left:3px solid #915f1b;padding-left:.6rem}.mcbtns{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
 .mtablewrap{overflow-x:auto}.mtable{width:100%;border-collapse:collapse;min-width:640px}
 .mtable th{text-align:left;font:700 .72rem Arimo;letter-spacing:.12em;text-transform:uppercase;color:#5c5044;padding:.5rem .6rem;border-bottom:2px solid #e3dcd6}
 .mtable td{padding:.65rem .6rem;border-bottom:1px solid #eee6da}.mtable tr.you td{background:#fff4d6}
@@ -659,6 +662,22 @@ main:has(.maphome){max-width:1180px}
 .sidecard .btn{margin-top:.4rem;padding:.4rem 1rem;font-size:.9rem}.sidecard .btn:disabled{opacity:.55}
 .sidecard .bossrow{display:grid;grid-template-columns:repeat(6,1fr);gap:.2rem;width:100%}.sidecard .bmini svg{width:100%}
 .bigface{width:120px;height:120px;border-radius:50%;overflow:hidden;background:#e9d5b5;border:4px solid #d9532f;box-shadow:0 0 0 4px #e0a42f55;position:relative}.bigface .bface{position:absolute;inset:0;border-radius:0}
+/* ===== v40: the phone bottom bar ===== */
+/* On a phone the header buttons give way to a bar along the bottom, where a thumb reaches. It is hidden while a mission or lesson is on
+   (the X leaves it), and on the first-run and manager screens. The stats footer rides just above it. */
+:root{--tabh:calc(53px + env(safe-area-inset-bottom,0px))}
+.tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:19;grid-template-columns:repeat(5,1fr);gap:.1rem;background:var(--deep);border-top:2px solid var(--gold);padding:.2rem .25rem env(safe-area-inset-bottom,0px)}
+.tabbar button,.tabbar a{display:grid;justify-items:center;align-content:center;gap:.1rem;min-height:48px;padding:.2rem .1rem;background:none;border:0;border-radius:10px;color:#e8d3ae;font:700 .62rem Arimo,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.tabbar i{font-style:normal;font-size:1.2rem;line-height:1}
+.tabbar [aria-current="page"]{color:var(--gold);background:#e0a42f26}
+.tabbar button:focus-visible,.tabbar a:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+@media(max-width:700px){
+  .top .stats{display:none}
+  body:not(.onboarding):not(.mgr):not(.playing) .tabbar{display:grid}
+  body:not(.onboarding):not(.mgr):not(.playing) .foot{bottom:var(--tabh)}
+  body:not(.onboarding):not(.mgr):not(.playing) main{padding-bottom:calc(5rem + var(--tabh))}
+  body:not(.onboarding):not(.mgr):not(.playing) #toast{bottom:calc(76px + var(--tabh))}
+}
 .go{cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .go:hover,.go:focus-visible{border-color:var(--gold);box-shadow:0 0 0 3px #e0a42f55;outline:none}
 .goto{font:700 .72rem Arimo,sans-serif;font-style:normal;color:var(--gold);letter-spacing:.06em;margin-top:.15rem}.go:hover .goto,.go:focus-visible .goto{text-decoration:underline}
@@ -799,27 +818,34 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
   <button class="pill soundpill soundfab" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound is on. Click to mute." title="Turn sound on or off">🔊</button>
   <span class="pill" id="stHearts" title="Hearts left in this lesson (not clickable)">❤️❤️❤️</span>
 </footer>
+<nav class="tabbar" id="tabbar" aria-label="Main">
+  <button type="button" data-tab="map"><i aria-hidden="true">🗺️</i><span>Map</span></button>
+  <button type="button" data-tab="dash"><i aria-hidden="true">📊</i><span>Dashboard</span></button>
+  <button type="button" data-tab="char"><i aria-hidden="true">👤</i><span>Character</span></button>
+  <button type="button" data-tab="brand"><i aria-hidden="true">🥃</i><span>Brand</span></button>
+  <a href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer"><i aria-hidden="true">↗</i><span>Website</span><span class="sr"> (opens in a new tab)</span></a>
+</nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25d"></script>
-<script src="sound.js?v=2026-10-25d"></script>
-<script src="scenarios.js?v=2026-10-25d"></script>
-<script src="progress.js?v=2026-10-25d"></script>
-<script src="criteria.js?v=2026-10-25d"></script>
-<script src="tone.js?v=2026-10-25d"></script>
-<script src="coach.js?v=2026-10-25d"></script>
-<script src="camera.js?v=2026-10-25d"></script>
-<script src="lessons.js?v=2026-10-25d"></script>
-<script src="dashboard.js?v=2026-10-25d"></script>
-<script src="grader.js?v=2026-10-25d"></script>
-<script src="onboarding.js?v=2026-10-25d"></script>
-<script src="tiers.js?v=2026-10-25d"></script>
-<script src="badges.js?v=2026-10-25d"></script>
-<script src="voices.js?v=2026-10-25d"></script>
-<script src="mission.js?v=2026-10-25d"></script>
-<script src="boss.js?v=2026-10-25d"></script>
-<script src="auth.js?v=2026-10-25d"></script>
-<script src="manager.js?v=2026-10-25d"></script>
+<script src="config.js?v=2026-10-25f"></script>
+<script src="sound.js?v=2026-10-25f"></script>
+<script src="scenarios.js?v=2026-10-25f"></script>
+<script src="progress.js?v=2026-10-25f"></script>
+<script src="criteria.js?v=2026-10-25f"></script>
+<script src="tone.js?v=2026-10-25f"></script>
+<script src="coach.js?v=2026-10-25f"></script>
+<script src="camera.js?v=2026-10-25f"></script>
+<script src="lessons.js?v=2026-10-25f"></script>
+<script src="dashboard.js?v=2026-10-25f"></script>
+<script src="grader.js?v=2026-10-25f"></script>
+<script src="onboarding.js?v=2026-10-25f"></script>
+<script src="tiers.js?v=2026-10-25f"></script>
+<script src="badges.js?v=2026-10-25f"></script>
+<script src="voices.js?v=2026-10-25f"></script>
+<script src="mission.js?v=2026-10-25f"></script>
+<script src="boss.js?v=2026-10-25f"></script>
+<script src="auth.js?v=2026-10-25f"></script>
+<script src="manager.js?v=2026-10-25f"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -844,6 +870,8 @@ new MutationObserver(() => {
   if (!app.contains(document.activeElement)) app.focus({ preventScroll: true });
   if (Sound.theme && !app.querySelector(Sound.theme === "boss" ? ".bossintro" : "#pc")) Sound.stop();
   document.body.classList.toggle("inlesson", !!app.querySelector(".lesson-top .hearts"));   // the hearts in the footer count only in a lesson
+  document.body.classList.toggle("playing", !!app.querySelector("#pc, .lesson-top"));      // a mission or lesson is on: the phone bottom bar steps aside
+  paintTabs();
 }).observe(app, { childList: true });
 // and it goes quiet while the page is hidden (another tab or window) instead of playing on in the background
 document.addEventListener("visibilitychange", () => { if (document.hidden) Sound.pause(); else Sound.resume(); });
@@ -930,7 +958,14 @@ function openDiff(go, stop) {
 // Header buttons toggle: click again (or click outside, or press Escape) to close without using the in-page buttons.
 const closeCreator = () => { const d = $("#cdone"); if (d && !d.disabled) d.click(); else if ($("#cname")) $("#cname").focus(); };   // saves, since the name is required
 $("#charBtn").onclick = () => { if ($(".creator")) closeCreator(); else if ($(".map") || $(".dhead")) creator(home); };
-$("#dashBtn").onclick = () => ($(".dhead") ? home() : dashboard());
+$("#dashBtn").onclick = () => ($(".dash") ? home() : dashboard());   // .dash is the dashboard itself; the brand page shares its .dhead header
+// the phone bottom bar goes to the same places as the header buttons; tapping the page you are already on does nothing
+const TAB_GO = { map: () => { if (!$(".map")) home(); }, dash: () => { if (!$(".dash")) dashboard(); }, char: () => { if (!$(".creator")) creator(home); }, brand: () => { if (!$(".explore")) explorer(); } };
+document.querySelectorAll("#tabbar [data-tab]").forEach(b => b.onclick = () => TAB_GO[b.dataset.tab]());
+function paintTabs() {
+  const at = $(".creator") ? "char" : $(".explore") ? "brand" : $(".dash") ? "dash" : $(".map") ? "map" : "";
+  document.querySelectorAll("#tabbar [data-tab]").forEach(b => { if (b.dataset.tab === at) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+}
 // Click again to go back. In the middle of a mission it asks first, so answers aren't lost by accident.
 $("#brandBtn").onclick = () => { if ($(".explore")) return home(); if ($("#pc") && !confirm("Leave this mission? Your answers so far won't count.")) return; explorer(); };
 // tapping your level or XP in the footer opens the dashboard, but only from the map so a mission is never interrupted
@@ -942,7 +977,7 @@ const goHome = () => { if (!document.body.classList.contains("onboarding")) home
 $("#logo").onclick = goHome;
 $("#logo").onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goHome(); } };
 const closePanel = () => { if (document.body.classList.contains("onboarding")) return; if ($(".dhead")) home(); else if ($(".creator")) closeCreator(); };
-document.addEventListener("click", e => { if (!e.target.isConnected || e.target.closest("header, footer, dialog, .sheet, #camBox, .gate, a")) return; closePanel(); });
+document.addEventListener("click", e => { if (!e.target.isConnected || e.target.closest("header, footer, #tabbar, dialog, .sheet, #camBox, .gate, a")) return; closePanel(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("dialog[open]")) closePanel(); });
 
 
