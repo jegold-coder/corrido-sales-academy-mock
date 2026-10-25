@@ -166,7 +166,8 @@ function dashSettings(el) {
   el.innerHTML = `<div class="card"><h3>Sound</h3><button class="btn alt" id="snd" type="button">${Sound.on ? "🔊 Sound is on. Mute" : "🔇 Sound is off. Turn on"}</button><p class="note2">Background vinyl and guitar, plus short effects. You can also use the speaker button in the bottom-left corner.</p></div>
     <div class="card"><h3>Prototype tools</h3><p class="note2">The game is in prototype, so these switches make it easy to test everything. Turn them off to play it the way it will really work.</p>
       ${[["unlockStops", "Every stop is open (no need to beat the one before)"], ["unlockMerch", "Every piece of merch is unlocked"], ["unlimitedTries", "Unlimited boss tries (otherwise 3 a day per boss)"]].map(([k, l]) => `<label class="protorow"><input type="checkbox" data-p="${k}" ${PROTO(k) ? "checked" : ""}> ${l}</label>`).join("")}
-      <button class="btn alt" id="gomgr2" type="button">Open manager mode</button></div>
+      <button class="btn alt" id="gomgr2" type="button">Open manager mode</button>
+      <button class="btn alt" id="gopresent" type="button">${Presenter.active() ? "Leave presenter mode" : "Presenter mode (sample progress)"}</button></div>
     ${accountCard()}
     <details class="card xmerch"><summary><h3>Customer voices</h3><small>${SCENARIOS.length} customers</small></summary><p class="note2">Every customer has their own voice and accent, picked from the voices installed in this browser, and speaks a little warmer or colder depending on how you did. Press play to hear each one.</p>
       <div class="vlist">${SCENARIOS.map((sc, i) => { const v = Voices.voice(sc); return `<div class="vrow"><span><b>${esc(sc.cust.name)}</b> <small>${esc(sc.cust.role)}</small></span><span class="vname">${v ? esc(voiceLabel(v)) : "Browser default"}</span><button class="btn alt vplay" data-i="${i}" type="button" aria-label="Hear ${esc(sc.cust.name)}">▶ Play</button><span class="vstat" role="status"></span></div>`; }).join("")}</div>
@@ -182,6 +183,7 @@ function dashSettings(el) {
   $("#snd").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); dashboard("settings"); };
   el.querySelectorAll("[data-p]").forEach(c => c.onchange = () => { state.proto = { ...(state.proto || {}), [c.dataset.p]: c.checked }; Progress.save(state); state.avatar = cleanAvatar(state.avatar); hud(); });
   $("#gomgr2").onclick = () => managerMode();
+  $("#gopresent").onclick = () => { if (Presenter.active()) Presenter.leave(); else if (confirm("Presenter mode loads sample progress so every page has something to show. Your own progress is kept safe and comes back when you leave presenter mode. Start it?")) Presenter.start(); };
   if ($("#signout")) $("#signout").onclick = () => { googleSignOut(); dashboard("settings"); toast("Signed out. Your progress stays on this device."); };
   if ($("#gsave")) {
     const msg = t => { $("#gmsg").textContent = t; };

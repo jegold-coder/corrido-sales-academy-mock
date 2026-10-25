@@ -57,7 +57,7 @@ How scoring works: each answer is worth 5 points. Four are for what you say, spl
 
 Your voice is recorded on your device with the browser's MediaRecorder so your avatar can play it back and so the tone can be analysed. The recording stays in memory, is never saved or uploaded, and is gone when you leave the results page. If the browser can't record, or you typed, the avatar reads your words aloud and tone is judged from your words only. The pitch and pace checks were tested on synthetic audio, not on real voices, so treat those notes as guidance.
 
-Three missions come from advice from the team's contact Jay. **The Hard No** (Tony): when an owner says no, find a way in by learning who he sells to and what appeals to them. **Know Your Buyer** (Rafael): fit the pitch to the buyer and stay honest. **Trouble at the Store** (Ben): a robbery. The right answers teach staying calm, complying, calling 911, staying with the owner and checking in later. They do not teach physically stopping the robber, because confronting an armed person can get people hurt. Confirm with Jay what he meant by "try to stop it".
+Three missions come from advice from the team's contact Ken. **The Hard No** (Tony): when an owner says no, find a way in by learning who he sells to and what appeals to them. **Know Your Buyer** (Rafael): fit the pitch to the buyer and stay honest. **Trouble at the Store** (Ben): a robbery. The right answers teach staying calm, complying, calling 911, staying with the owner and checking in later. They do not teach physically stopping the robber, because confronting an armed person can get people hurt. Confirm with Ken what they meant by "try to stop it".
 
 ## Tiers, bosses and merch
 
@@ -65,6 +65,7 @@ Three missions come from advice from the team's contact Jay. **The Hard No** (To
 - **Bosses** use the existing missions, so their timings are unchanged: Priya (3.5 / 5 to win), Mia (3.5), Rafael (4.0, voice only if your browser can record), Dana (4.0, voice only) and the Bad-Tempered Owner (4.2, voice only). A health claim or a pressure tactic loses a boss battle instantly. Brand Brain is ten questions, fifteen seconds each, 80% to win. Three tries a day per boss, and a Practice first option that does not count.
 - **Merch:** 42 pieces (36 shirts and polos, 6 hats). The creator shows them as one tabbed photo grid (T-shirts, Polos, Hats) so the page stays short. Twenty are free from the start (fifteen shirts, five hats) so there is a choice in the creator on day one. The other 22 are each unlocked by beating a level (what a stop unlocks is shown on the screen before you start it, not on the map) (see `REWARDS` in `tiers.js`; `tests/tiers.test.js` checks every piece is unlocked exactly once). A boss win also moves you up a tier and shows the Tier Up screen with a shareable tier card (name, avatar and tier only).
 - **Smile:** the creator has a Smile row under Lip color (or Facial hair): Neutral, Soft smile, Warm smile, Big smile, Grin, Smirk and Laugh. The smile is drawn over the plain mouth and hides while your character talks, so the lip-sync in missions still works, then it comes back. Older saved characters start Neutral. Randomize picks one too.
+- **Presenter mode** (for demos): start it from the sign-in screen ("Presenting this? Skip setup with sample progress", available once the age check is done) or from Dashboard > Settings > Prototype tools. It loads a sample Tier 2 rep ("Demo Rep") with history, badges, mistakes to review, a before-and-after knowledge check and demo teammates, and adds a small Presenter menu at the bottom left with 26 jumps: the age check, character, tutorial, map, the screen before a stop, a lesson, a mission, results (a win, not this time), boss intro, Brand Brain, a lost boss, Tier Up, every Dashboard tab, the brand page and all five manager pages. The result and Tier Up screens are played through the real screens with typed answers, so they are the real thing (about a second). Your own progress and character are kept safe while it is on and come back exactly as they were when you leave ("Leave presenter mode" in the menu or in Settings). If you close the tab mid-demo the sample stays until you leave. The menu never appears before the age check.
 - **Prototype tools** (Dashboard, Settings): every stop open, every piece of merch unlocked, and unlimited boss tries. The first and third are on by default while the game is being tested.
 
 ## Turn on Sign in with Google
@@ -100,6 +101,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `tiers.js` | tiers, bosses, merch rewards and the prototype switches |
 | `boss.js` | the boss battle screen, the Brand Brain quiz, Tier Up and the shareable tier card |
 | `manager.js` | manager mode: cohorts, coaching, invite and leaderboards |
+| `presenter.js` | presenter mode: the sample player, the jump menu, and safe switching in and out |
 | `tone.js` | how tone is judged from your words and your voice, for the situation |
 | `lessons.js` | brand lessons, question bank, knowledge check |
 | `progress.js` | saving, levels, badges, streak, team codes |
@@ -122,6 +124,7 @@ node tests/voices.test.js   # each customer gets a different voice, lines are pa
 node tests/reactions.test.js # customer faces react to the conversation, and the grader's arithmetic adds up
 node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; the defeat sting plays for a lost boss; both go quiet when the page is hidden; the tune stays in key
 node tests/map.test.js      # tier banners, the pop for a finished stop, side panels and their links, the ladder and the radar
+node tests/presenter.test.js # presenter mode: a consistent sample player, real progress always comes back, and the menu can't skip the age check
 node tests/smile.test.js    # the rep's smile styles: shapes, the creator row, saving, and the mouth still moving while talking
 node tests/phone.test.js    # the phone bottom bar: its five places, when it shows, and that tapping it never sends you home
 node tests/coaching.test.js # the manager Coaching page: every skill has a topic, the suggested stop is real and within reach, the messages read well

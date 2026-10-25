@@ -682,6 +682,21 @@ main:has(.maphome){max-width:1180px}
 .go:hover,.go:focus-visible{border-color:var(--gold);box-shadow:0 0 0 3px #e0a42f55;outline:none}
 .goto{font:700 .72rem Arimo,sans-serif;font-style:normal;color:var(--gold);letter-spacing:.06em;margin-top:.15rem}.go:hover .goto,.go:focus-visible .goto{text-decoration:underline}
 .tierbar.go:hover,.tierbar.go:focus-visible{background:#00000066}
+/* ===== v42: presenter mode ===== */
+.presentrow{margin:.5rem 0 0;text-align:center}.presentrow .linkbtn{font-size:.8rem;opacity:.85}
+#presenter{position:fixed;left:12px;bottom:58px;z-index:45;font-family:Arimo,sans-serif}
+#prbtn{display:flex;align-items:center;gap:.4rem;background:var(--deep);color:var(--gold);border:2px solid var(--gold);border-radius:99px;padding:.35rem .8rem;font-weight:700;font-size:.82rem;box-shadow:0 4px 10px #0007;cursor:pointer}
+#prbtn small{font-weight:400;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:#e8d3ae}
+#prbtn:disabled{opacity:.7;cursor:progress}
+#prpanel{position:absolute;left:0;bottom:calc(100% + 8px);width:min(300px,calc(100vw - 24px));max-height:min(70vh,560px);overflow:auto;background:var(--deep);color:var(--cream);border:2px solid var(--gold);border-radius:14px;padding:.6rem .7rem;box-shadow:0 8px 24px #000a}
+#prpanel[hidden]{display:none}
+.prsec{margin-bottom:.5rem}.prsec h4{margin:.1rem 0 .3rem;font:700 .68rem Arimo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.prsec button{display:block;width:100%;text-align:left;background:#ffffff14;color:var(--cream);border:0;border-radius:8px;padding:.32rem .6rem;margin:0 0 3px;font:inherit;font-size:.85rem;cursor:pointer}
+.prsec button:hover,.prsec button:focus-visible{background:#e0a42f33;outline:none}
+.prfoot{border-top:1px solid #e0a42f55;padding-top:.5rem}.prfoot small{display:block;color:#e8d3ae;font-size:.72rem;margin-top:.2rem}
+body.onboarding #presenter{display:none}
+body.mgr #presenter{bottom:12px}
+@media(max-width:700px){body:not(.onboarding):not(.mgr):not(.playing) #presenter{bottom:calc(58px + var(--tabh))}.playing #presenter{bottom:58px}}
 /* ===== v41: smile styles ===== */
 /* The rep's resting smile hides while they talk. The plain mouth takes over and moves with the words, then the smile comes back. */
 .talking .smilev{display:none}.talking .mouth.hid{opacity:1}
@@ -802,6 +817,7 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
       <p class="or">Or sign in with your company email</p>
       <div class="emailrow"><input id="email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Company email" disabled><button class="btn alt" id="sendlink" type="button" disabled>Continue</button></div>
       <p class="signnote" id="emailnote">Company sign-in arrives with the company rollout. For now your email is saved on this device only, and you continue as a guest.</p>
+      <p class="presentrow"><button type="button" class="linkbtn" id="presentGo" disabled>Presenting this? Skip setup with sample progress</button></p>
     </div>
     <p class="splashfoot">For adults of legal drinking age. Your cohort invite will connect you to your class once company sign-in is live.</p>
     <p class="mgrlink"><a href="#manager" id="mgrLink">Manager? Open the manager view</a></p>
@@ -830,25 +846,26 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25i"></script>
-<script src="sound.js?v=2026-10-25i"></script>
-<script src="scenarios.js?v=2026-10-25i"></script>
-<script src="progress.js?v=2026-10-25i"></script>
-<script src="criteria.js?v=2026-10-25i"></script>
-<script src="tone.js?v=2026-10-25i"></script>
-<script src="coach.js?v=2026-10-25i"></script>
-<script src="camera.js?v=2026-10-25i"></script>
-<script src="lessons.js?v=2026-10-25i"></script>
-<script src="dashboard.js?v=2026-10-25i"></script>
-<script src="grader.js?v=2026-10-25i"></script>
-<script src="onboarding.js?v=2026-10-25i"></script>
-<script src="tiers.js?v=2026-10-25i"></script>
-<script src="badges.js?v=2026-10-25i"></script>
-<script src="voices.js?v=2026-10-25i"></script>
-<script src="mission.js?v=2026-10-25i"></script>
-<script src="boss.js?v=2026-10-25i"></script>
-<script src="auth.js?v=2026-10-25i"></script>
-<script src="manager.js?v=2026-10-25i"></script>
+<script src="config.js?v=2026-10-25j"></script>
+<script src="sound.js?v=2026-10-25j"></script>
+<script src="scenarios.js?v=2026-10-25j"></script>
+<script src="progress.js?v=2026-10-25j"></script>
+<script src="criteria.js?v=2026-10-25j"></script>
+<script src="tone.js?v=2026-10-25j"></script>
+<script src="coach.js?v=2026-10-25j"></script>
+<script src="camera.js?v=2026-10-25j"></script>
+<script src="lessons.js?v=2026-10-25j"></script>
+<script src="dashboard.js?v=2026-10-25j"></script>
+<script src="grader.js?v=2026-10-25j"></script>
+<script src="onboarding.js?v=2026-10-25j"></script>
+<script src="tiers.js?v=2026-10-25j"></script>
+<script src="badges.js?v=2026-10-25j"></script>
+<script src="voices.js?v=2026-10-25j"></script>
+<script src="mission.js?v=2026-10-25j"></script>
+<script src="boss.js?v=2026-10-25j"></script>
+<script src="auth.js?v=2026-10-25j"></script>
+<script src="manager.js?v=2026-10-25j"></script>
+<script src="presenter.js?v=2026-10-25j"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -888,7 +905,7 @@ document.addEventListener("visibilitychange", () => { if (document.hidden) Sound
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
 $("#yes").onclick = () => {
   $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>';
-  $("#signin").classList.remove("off"); ["#guest", "#email", "#sendlink"].forEach(x => { $(x).disabled = false; });
+  $("#signin").classList.remove("off"); ["#guest", "#email", "#sendlink", "#presentGo"].forEach(x => { $(x).disabled = false; });
   const p = state.profile || {};
   if (p.email) { $("#email").value = p.email; $("#guest").textContent = "Continue as " + (p.mode === "google" && p.name ? p.name : p.email); }
   showGoogleButton();
@@ -985,7 +1002,7 @@ const goHome = () => { if (!document.body.classList.contains("onboarding")) home
 $("#logo").onclick = goHome;
 $("#logo").onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goHome(); } };
 const closePanel = () => { if (document.body.classList.contains("onboarding")) return; if ($(".dhead")) home(); else if ($(".creator")) closeCreator(); };
-document.addEventListener("click", e => { if (!e.target.isConnected || e.target.closest("header, footer, #tabbar, dialog, .sheet, #camBox, .gate, a")) return; closePanel(); });
+document.addEventListener("click", e => { if (!e.target.isConnected || e.target.closest("header, footer, #tabbar, #presenter, dialog, .sheet, #camBox, .gate, a")) return; closePanel(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("dialog[open]")) closePanel(); });
 
 

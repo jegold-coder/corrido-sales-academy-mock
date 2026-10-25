@@ -1,0 +1,179 @@
+"use strict";
+// Presenter mode: for showing the game to other people. It loads a sample player, so every page has something on it, and adds a small
+// "Presenter" menu that jumps straight to any page. Your own progress and character are stashed in localStorage while it is on and put
+// back when you leave, so a demo never costs anyone their real progress. Uses globals from the other scripts at call time.
+// Start it from the sign-in screen (after the age check) or from Dashboard > Settings > Prototype tools.
+
+const Presenter = (() => {
+  const FLAG = "csa_presenter", STASH = "csa_presenter_stash", AVATAR = "csa_avatar";
+  const RUNTIME = ["hearts", "avatar", "avatarSaved", "sc", "cam"];   // fields Progress.save never stores
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* storage unavailable */ } },
+    del: k => { try { localStorage.removeItem(k); } catch { /* ignore */ } },
+  };
+  const parse = s => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const q = s => document.querySelector(s);
+  const stop = id => ALL_STOPS().find(x => x.id === id);
+  const scenario = id => SCENARIOS.find(x => x.id === id);
+
+  // ---------- the sample player ----------
+  // A Tier 2 rep part-way through the season, with a weak spot (price handling), a few mistakes to review and a before-and-after check.
+  const STARS = [3, 2.5, 3, 3, 3, 2.5];
+  const DIPS = { "Price handling": 2.4, Closing: 3.1, "Objection handling": 3.4 };   // the lowest skills show on the radar and in Review
+  const sampleAvatar = () => cleanAvatar({ ...DEFAULT_AVATAR, name: "Demo Rep", smile: "Warm smile", hairStyle: "Wavy", hair: 2 });
+  function sampleProgress(through = "sam") {
+    const P = Progress.blank(), today = Progress.today(), ids = PATH.slice(0, PATH.indexOf(through) + 1);
+    ids.forEach((id, i) => { P.done[id] = true; P.stars[id] = STARS[i % STARS.length]; });
+    ids.forEach((id, i) => {
+      const sc = scenario(id), lesson = LESSONS.find(x => x.id === id);
+      if (!sc && !lesson) return;   // the Brand Brain quiz boss has no mission history
+      const skills = {}; let n = 0;
+      if (sc) sc.steps.forEach((st, k) => { skills[st.skill] = DIPS[st.skill] || +(4.2 + (k % 3) * 0.25).toFixed(2); });
+      else skills[id === "brand" ? "Story" : "Product knowledge"] = 4.1;
+      const vals = Object.values(skills), avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      n += 1;
+      P.history.push({ id, title: sc ? sc.title : lesson.title, diff: sc ? `Level ${sc.level}` : "medium", mode: sc ? "typed" : "quiz", pct: Math.round(avg / 5 * 100), stars: P.stars[id], won: true, xp: sc ? 90 : 60, date: today, skills, camera: null });
+    });
+    P.xp = through === "sam" ? 520 : Math.max(60, P.history.reduce((a, h) => a + h.xp, 0));
+    P.streak = 5; P.lastDay = today; P.tutorialSeen = true;
+    P.pre = { score: 5, total: 10, date: today, missed: ["Story", "Rules", "Selling", "Lineup"] };
+    if (ids.includes("priya")) P.post = { score: 8, total: 10, date: today, missed: ["Prices"] };
+    P.badges = ["first", "closer", "flawless", "typed", "streak3"].filter(() => ids.includes("quiet"));
+    P.proto = { unlockStops: true, unlockMerch: false, unlimitedTries: true };
+    P.camPref = false; P.profile = { mode: "guest", email: "" };
+    if (typeof DEMO_TEAM !== "undefined") DEMO_TEAM.forEach(([name, xp, lv, b, s]) => { P.team[name] = { n: name, xp, lv, b, s, demo: true }; });
+    // moments to review: a poor and a middling answer on the missions already played, scored by the real coach
+    const sample = [];
+    ids.filter(id => scenario(id)).forEach((id, i) => {
+      const sc = scenario(id), k = Math.min(sc.steps.length - 1, 1 + (i % 2)), st = sc.steps[k], text = String((i % 2 ? st.H[0][0] : st.E[0][0]) || "").replace(/^"|"$/g, "");
+      try {
+        const res = Coach.score(`${id}:${k}`, text, sc.level, { tone: TONE_FOR[id], voice: null });
+        if (res.score < 3.5) sample.push({ ck: `${id}:${k}`, mid: id, mission: sc.title, skill: st.skill, line: st.line.replace(/<[^>]+>/g, ""), text, better: st.R[0].replace(/^"|"$/g, ""), missed: res.misses, flags: [...res.flags.map(f => f.msg), ...res.tone.notes.filter(x => !x.ok).map(x => x.msg)], score: res.score, date: today });
+      } catch { /* a mistake we can't score is simply left out */ }
+    });
+    P.mistakes = sample.slice(0, 4);
+    return P;
+  }
+
+  // ---------- switching in and out, without losing anyone's real progress ----------
+  const active = () => store.get(FLAG) === "1";
+  function apply(progress, avatar) {
+    Object.keys(state).forEach(k => { if (!RUNTIME.includes(k)) delete state[k]; });
+    Object.assign(state, Progress.blank(), progress);
+    state.hearts = 3; state.cam = state.camPref !== false;
+    state.avatar = avatar ? cleanAvatar(avatar) : { ...DEFAULT_AVATAR }; state.avatarSaved = !!avatar;
+    Progress.save(state);
+    if (avatar) store.set(AVATAR, JSON.stringify(state.avatar)); else store.del(AVATAR);
+    if (typeof syncBadges === "function") syncBadges();
+    if (typeof hud === "function") hud();
+  }
+  function enter(through) {
+    if (!active()) {   // stash only once: the second time round the live data is the sample, and it would overwrite the real thing
+      store.set(STASH, JSON.stringify({ progress: store.get(Progress.KEY), avatar: store.get(AVATAR) }));
+      store.set(FLAG, "1");
+    }
+    apply(sampleProgress(through), active() && state.avatarSaved && state.avatar && state.avatar.name === "Demo Rep" ? state.avatar : sampleAvatar());
+  }
+  function restore() {
+    const st = parse(store.get(STASH)) || {}, progress = parse(st.progress), avatar = parse(st.avatar);
+    store.del(FLAG); store.del(STASH);
+    apply(progress || {}, avatar);
+    if (!progress) Progress.reset();   // a first-time visitor goes back to a first-time visit
+  }
+
+  // ---------- the jump menu ----------
+  // A sample run plays a mission through its real screens with typed answers (R strong, H middling, E poor), so the results are the real ones.
+  async function autoplay(id, kinds, { through, boss = false } = {}) {
+    const sc = scenario(id), real = window.lipTalk;
+    if (through) apply(sampleProgress(through), state.avatar);   // a first win only looks like one if the stop has not been won yet
+    busy(true); window.lipTalk = () => sleep(120);               // a sample run doesn't speak
+    const until = async (fn, ms = 8000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { const v = fn(); if (v) return v; await sleep(60); } return null; };
+    try {
+      play(boss ? { ...sc, boss: BOSS_BY[id] } : sc);
+      for (let k = 0; k < sc.steps.length; k++) {
+        const box = await until(() => { const a = q("#ans"); return a && !a.disabled && a; });
+        if (!box) throw new Error("the mission did not start");
+        const kind = kinds[Math.min(k, kinds.length - 1)], st = sc.steps[k], pick = kind === "R" ? st.R[0] : kind === "H" ? st.H[0][0] : st.E[0][0];
+        box.value = String(pick).replace(/^"|"$/g, ""); box.dispatchEvent(new Event("input", { bubbles: true }));
+        q("#submit").click();
+        const next = await until(() => q("#nx")); if (!next) throw new Error("the answer was not scored");
+        next.click();
+      }
+    } catch (e) { if (typeof toast === "function") toast("The sample run stopped: " + e.message); }
+    finally { window.lipTalk = real; busy(false); }
+  }
+  const tabs = [["Progress", "progress"], ["Badges", "badges"], ["Team", "team"], ["Review", "review"], ["Knowledge check", "check"], ["Settings", "settings"]];
+  const mgr = [["Cohorts", "cohorts"], ["Coaching", "coaching"], ["Invite", "invite"], ["Leaderboards", "leaderboards"], ["Grader", "grader"]];
+  const MENU = () => [
+    ["Start", [["Age check", () => location.reload()], ["Create your rep", () => creator(home)], ["Tutorial", () => tutorial(home)]]],
+    ["The game", [
+      ["Map", () => home()], ["Before you start", () => { home(); openDiff(() => play(scenario("quiet")), stop("quiet")); }], ["Lesson", () => quiz(stop("brand"))],
+      ["Mission question", () => play(scenario("quiet"))], ["Results: a win", () => autoplay("quiet", "R", { through: "brandbrain" })],
+      ["Results: not this time", () => autoplay("marco", "RHEHR", { through: "quiet" })], ["Boss intro", () => bossIntro(stop("priya"))],
+      ["Brand Brain boss", () => bossIntro(stop("brandbrain"))], ["Boss lost", () => autoplay("mia", "E", { through: "sam", boss: true })],
+      ["Tier Up", () => autoplay("priya", "R", { through: "quiet", boss: true })],
+    ]],
+    ["Dashboard and more", [...tabs.map(([l, t]) => ["Dashboard: " + l, () => dashboard(t)]), ["Character", () => creator(home)], ["Who is Tequila Corrido?", () => explorer()]]],
+    ["Manager", mgr.map(([l, t]) => ["Manager: " + l, () => managerMode(t), true])],
+  ];
+  function busy(on) { const b = q("#prbtn"); if (b) { b.disabled = on; b.querySelector("small").textContent = on ? "playing a sample…" : "sample data"; } }
+  function go(fn, manager) {
+    return () => {
+      q("#gate") && q("#gate").classList.add("hidden");
+      document.querySelectorAll("dialog[open]").forEach(d => d.close());   // a dialog left open from the last jump would sit on top of this one
+      document.body.classList.remove("onboarding"); document.body.classList.toggle("mgr", !!manager);
+      close();
+      try { const r = fn(); if (r && r.catch) r.catch(() => {}); } catch (e) { if (typeof toast === "function") toast("Couldn't open that page: " + e.message); }
+    };
+  }
+  function close() { const p = q("#prpanel"), b = q("#prbtn"); if (p) p.hidden = true; if (b) b.setAttribute("aria-expanded", "false"); }
+  function mount() {
+    if (!q("#presenter")) {
+      const d = document.createElement("div"); d.id = "presenter";
+      d.innerHTML = '<button type="button" id="prbtn" aria-expanded="false" aria-controls="prpanel">🎤 Presenter <small>sample data</small></button><div id="prpanel" role="dialog" aria-label="Presenter menu" hidden></div>';
+      document.body.appendChild(d);
+      q("#prbtn").onclick = () => { const p = q("#prpanel"), open = p.hidden; if (open) render(); p.hidden = !open; q("#prbtn").setAttribute("aria-expanded", String(open)); };
+      document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+    }
+  }
+  function render() {
+    const p = q("#prpanel"); p.innerHTML = "";
+    MENU().forEach(([title, items]) => {
+      const sec = document.createElement("div"); sec.className = "prsec"; sec.innerHTML = `<h4>${title}</h4>`;
+      items.forEach(([label, fn, manager]) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.onclick = go(fn, manager); sec.appendChild(b); });
+      p.appendChild(sec);
+    });
+    const foot = document.createElement("div"); foot.className = "prsec prfoot";
+    foot.innerHTML = '<button type="button" id="prreset">Reset the sample progress</button><button type="button" id="prleave">Leave presenter mode</button><small>Your own progress is safe and comes back when you leave.</small>';
+    p.appendChild(foot);
+    q("#prreset").onclick = () => { enter(); close(); home(); if (typeof toast === "function") toast("Sample progress reset."); };
+    q("#prleave").onclick = () => leave();
+  }
+  function unmount() { const d = q("#presenter"); if (d) d.remove(); }
+
+  // ---------- the two ways in and out ----------
+  function start() {
+    enter();
+    q("#gate") && q("#gate").classList.add("hidden");
+    document.body.classList.remove("onboarding", "mgr");
+    mount(); home();
+    if (typeof toast === "function") toast("Presenter mode: sample progress is loaded. Your own is safe.");
+  }
+  function leave() {
+    restore(); unmount();
+    document.body.classList.remove("mgr");
+    if (state.avatarSaved) home(); else startFlow();
+    if (typeof toast === "function") toast("Back to your own progress.");
+  }
+  function boot() {
+    const gate = q("#gate"), go = q("#presentGo");
+    if (go) go.onclick = () => start();
+    const ready = () => { if (active()) mount(); };   // the menu appears only after the age check, so it can never skip it
+    if (!gate || gate.classList.contains("hidden")) ready();
+    else new MutationObserver((_, obs) => { if (gate.classList.contains("hidden")) { obs.disconnect(); ready(); } }).observe(gate, { attributes: true, attributeFilter: ["class"] });
+  }
+  return { active, start, leave, enter, restore, sampleProgress, sampleAvatar, boot, MENU, FLAG, STASH };
+})();
+if (typeof document !== "undefined" && document.getElementById) Presenter.boot();
