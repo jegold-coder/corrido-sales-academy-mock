@@ -403,8 +403,6 @@ main:has(.creator){max-width:1120px}
 .xp{color:var(--brown);font-weight:700;white-space:nowrap;font-size:.76rem}
 @media(max-width:560px){.xlist{grid-template-columns:1fr}}
 
-.sitelink{text-decoration:none;display:inline-block;text-align:center}
-.xsite{margin:.2rem 0 .8rem}.xsite small{color:#6e6458;margin-left:.4rem}
 
 .xlineup{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))!important}
 .xbottle{grid-template-columns:110px 1fr;align-items:center;gap:.7rem!important}
@@ -679,9 +677,16 @@ main:has(.maphome){max-width:1180px}
   body:not(.onboarding):not(.mgr):not(.playing) #toast{bottom:calc(76px + var(--tabh))}
 }
 .callcard .card{margin-bottom:.8rem}.callcard .dhead{margin-bottom:.8rem}
-.cclineup{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem}.cclineup div{background:#fff8e6;border:1px solid #ead9b5;border-radius:10px;padding:.5rem .7rem}.cclineup .pr{color:var(--brown);font-weight:700;margin-left:.3rem}.cclineup small{display:block;color:#5c5044}
 .ccrow{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.ccrow .card{margin-bottom:.8rem}@media(max-width:700px){.ccrow{grid-template-columns:1fr}}
 .callcard .xlist{column-count:1}.xlist.nev li::marker{color:var(--red)}
+/* the Who is Tequila Corrido? page is a quick review before a sale: one column of bullets, tighter cards, smaller bottle photos */
+.callcard ul.xlist{display:block}
+.explore.callcard .card{padding:.7rem 1rem;margin-bottom:.6rem}.explore.callcard .card h3{margin:0 0 .35rem}.explore.callcard ul.xlist li{margin:.2rem 0}
+.explore.callcard .xlineup{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:.5rem}
+.explore.callcard .xbottle{grid-template-columns:64px 1fr;padding:.45rem .6rem}.explore.callcard .xbottle img{width:64px;height:82px}
+.explore.callcard .ccrow{gap:.6rem}.explore.callcard .ccrow .card{margin-bottom:.6rem}
+.explore.callcard .ifthey{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:.4rem 1rem;align-items:baseline}.explore.callcard .ifthey dt{margin:0}
+@media(max-width:600px){.explore.callcard .ifthey{grid-template-columns:1fr;gap:0}.explore.callcard .ifthey dd{margin-bottom:.45rem}}
 .ifthey{margin:0}.ifthey dt{font-weight:700;margin-top:.5rem}.ifthey dd{margin:.1rem 0 0;color:#3a2c1c}
 .calcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.5rem 0}.calcgrid label{display:grid;gap:.2rem;font-weight:700;font-size:.85rem}
 .calcgrid input,.calcgrid select{font:inherit;font-weight:400;padding:.45rem .5rem;border:2px solid #cfc4b8;border-radius:10px;background:#fff;min-height:44px}
@@ -864,27 +869,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26f"></script>
-<script src="sound.js?v=2026-10-26f"></script>
-<script src="scenarios.js?v=2026-10-26f"></script>
-<script src="progress.js?v=2026-10-26f"></script>
-<script src="criteria.js?v=2026-10-26f"></script>
-<script src="tone.js?v=2026-10-26f"></script>
-<script src="coach.js?v=2026-10-26f"></script>
-<script src="camera.js?v=2026-10-26f"></script>
-<script src="lessons.js?v=2026-10-26f"></script>
-<script src="dashboard.js?v=2026-10-26f"></script>
-<script src="grader.js?v=2026-10-26f"></script>
-<script src="onboarding.js?v=2026-10-26f"></script>
-<script src="tiers.js?v=2026-10-26f"></script>
-<script src="badges.js?v=2026-10-26f"></script>
-<script src="voices.js?v=2026-10-26f"></script>
-<script src="mission.js?v=2026-10-26f"></script>
-<script src="boss.js?v=2026-10-26f"></script>
-<script src="auth.js?v=2026-10-26f"></script>
-<script src="manager.js?v=2026-10-26f"></script>
-<script src="callcard.js?v=2026-10-26f"></script>
-<script src="presenter.js?v=2026-10-26f"></script>
+<script src="config.js?v=2026-10-26i"></script>
+<script src="sound.js?v=2026-10-26i"></script>
+<script src="scenarios.js?v=2026-10-26i"></script>
+<script src="progress.js?v=2026-10-26i"></script>
+<script src="criteria.js?v=2026-10-26i"></script>
+<script src="tone.js?v=2026-10-26i"></script>
+<script src="coach.js?v=2026-10-26i"></script>
+<script src="camera.js?v=2026-10-26i"></script>
+<script src="lessons.js?v=2026-10-26i"></script>
+<script src="dashboard.js?v=2026-10-26i"></script>
+<script src="grader.js?v=2026-10-26i"></script>
+<script src="onboarding.js?v=2026-10-26i"></script>
+<script src="tiers.js?v=2026-10-26i"></script>
+<script src="badges.js?v=2026-10-26i"></script>
+<script src="voices.js?v=2026-10-26i"></script>
+<script src="mission.js?v=2026-10-26i"></script>
+<script src="boss.js?v=2026-10-26i"></script>
+<script src="auth.js?v=2026-10-26i"></script>
+<script src="manager.js?v=2026-10-26i"></script>
+<script src="callcard.js?v=2026-10-26i"></script>
+<script src="presenter.js?v=2026-10-26i"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1098,7 +1103,7 @@ const SOLD_OUT = new Set(["denim-tote-bag"]);   // out of stock on the shop when
 
 // ---------- who is Tequila Corrido ----------
 // A read-only page for Ken's other goal: teach people who Corrido is. Only facts from the brand's own site.
-// The four bottles with their public shop prices: [name, price, tasting notes, shop handle, photo]. Used by the brand page and the Before a call card.
+// The four bottles with their public shop prices: [name, price, tasting notes, shop handle, photo]. Used by the Who is Tequila Corrido? page (the 60-second review).
 const LINEUP = [
     ["Blanco", "$44.99", "Citrus, fruity, floral agave and a slight crisp pepper.", "blanco", "Tequila_Corrido_Blanco_Additive-Free_1_400x.png"],
     ["Reposado", "$54.99", "Vanilla, caramel, fruit and spice.", "reposado", "Tequila_Corrido_Reposado_Additive-Free_Tequila_Bottle_1_400x.png"],
@@ -1107,29 +1112,14 @@ const LINEUP = [
 ];
 function explorer() {
   stopAll(); Cam.stop(); Sound.stop();
-  const lineup = LINEUP;
-  app.innerHTML = `<section class="view sheet explore">
-    <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Everything a new rep should know, in one place.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
-    <p class="xsite"><button class="btn" id="xcall" type="button">Before a call: the 60-second card</button> <a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a> <small>Opens in a new tab, so you can come right back.</small></p>
-    <div class="card"><h3>The promise</h3><p><b>Additive-free.</b> Only three ingredients and no fake flavors. That one line is what to say when someone asks what's in it.</p></div>
-    <div class="card"><h3>The lineup</h3><div class="xlineup">${lineup.map(([n, pr, notes, h, img]) => `<a class="xbottle" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><img src="${IMG}${img}" alt="A bottle of Tequila Corrido ${n}" loading="lazy"><div class="xtext"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>See it on the shop ↗</em></div></a>`).join("")}</div>
-      <p class="note2">Prices are the public site prices. Wholesale pricing and margins aren't public, so a rep confirms those in writing.</p></div>
-    <div class="card"><h3>The story</h3><ul class="xlist">
-      <li><b>The name.</b> A corrido is a traditional Mexican ballad. The brand borrows its music-and-rebellion spirit, with vinyl records and piano keys all over the look.</li>
-      <li><b>The maker.</b> The tequila bears the stamp of one of the first female master distillers.</li>
-      <li><b>Celebrity-free.</b> The site says it's not about flashy endorsements. The tequila does the talking, so a rep never claims famous fans.</li>
-      <li><b>The voice.</b> Bold, irreverent and a little rebellious, set against mass-produced, overpriced tequila.</li></ul></div>
-
-    <div class="card"><h3>Selling it right</h3><ul class="xlist">
-      <li><b>21 and over only.</b> Never encourage serving anyone under 21.</li>
-      <li><b>Stick to the brand's own words.</b> No health, hangover, organic or low-calorie claims.</li>
-      <li><b>Never invent numbers.</b> Prices, margins and sales figures get confirmed in writing, not guessed.</li>
-      <li><b>Respect the other brand.</b> Name one real difference and invite a taste.</li></ul></div>
+  // This page is the 60-second review before a sale: quick reminders only (CallCard.review), then the shop's merch folded away. No links out to the website.
+  app.innerHTML = `<section class="view sheet explore callcard">
+    <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Your 60-second review before a call. Quick reminders, public facts only.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
+    ${CallCard.review()}
     <details class="card xmerch"><summary><h3>Merch</h3><small>${SHOP.length} products</small></summary>
-      <p class="note2">What the real shop sells, as checked on ${SHOP_CHECKED}. Prices and stock change, so each one opens the live product page.</p>
+      <p class="note2">What the real shop sells, as checked on ${SHOP_CHECKED}. Prices and stock change.</p>
       <div class="xtabs" role="tablist">${["All", ...SHOP_CATS].map((c, i) => `<button type="button" role="tab" class="mtab" data-c="${c}" aria-selected="${i === 0}">${c === "Gear and accessories" ? "Gear" : c === "Tees and tops" ? "Tees" : c} <small>${i ? SHOP.filter(r => r[0] === c).length : SHOP.length}</small></button>`).join("")}</div>
-      <div class="xlist">${SHOP.map(([c, n, h, pr, th]) => `<a class="xrow" data-c="${c}" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><img src="${IMG}${th}" alt="" loading="lazy"><span class="xn">${esc(n)}${SOLD_OUT.has(h) ? " <em class=\"out\">Sold out</em>" : ""}</span><span class="xp">${pr}</span></a>`).join("")}</div>
-      <p><a class="shoplink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener">Open the Tequila Corrido shop ↗</a></p></details>
+      <div class="xlist">${SHOP.map(([c, n, h, pr, th]) => `<div class="xrow" data-c="${c}"><img src="${IMG}${th}" alt="" loading="lazy"><span class="xn">${esc(n)}${SOLD_OUT.has(h) ? " <em class=\"out\">Sold out</em>" : ""}</span><span class="xp">${pr}</span></div>`).join("")}</div></details>
     <p><button class="btn" id="xquiz" type="button">Test yourself with a lesson</button> <button class="btn alt" id="xmap" type="button">Back to the map</button></p></section>`;
   $("#xback").onclick = home; $("#xmap").onclick = home;
   app.querySelectorAll(".xtabs .mtab").forEach(t => t.onclick = () => {
@@ -1137,7 +1127,7 @@ function explorer() {
     app.querySelectorAll(".xrow").forEach(r => { r.hidden = t.dataset.c !== "All" && r.dataset.c !== t.dataset.c; });
   });
   $("#xquiz").onclick = () => { const l = LESSONS[0]; openDiff(() => quiz(l), l); };
-  $("#xcall").onclick = () => CallCard.beforeCall();
+  CallCard.wire();
 }
 
 // ---------- home / map ----------

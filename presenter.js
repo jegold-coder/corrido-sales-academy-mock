@@ -138,7 +138,7 @@ const Presenter = (() => {
       ["Brand Brain boss", () => bossIntro(stop("brandbrain"))], ["Boss lost", () => autoplay("mia", "E", { through: "sam", boss: true })],
       ["Tier Up", () => autoplay("priya", "R", { through: "quiet", boss: true })],
     ]],
-    ["Dashboard and more", [...tabs.map(([l, t]) => ["Dashboard: " + l, () => dashboard(t)]), ["Character", () => creator(home)], ["Who is Tequila Corrido?", () => explorer()], ["Before a call", () => CallCard.beforeCall()]]],
+    ["Dashboard and more", [...tabs.map(([l, t]) => ["Dashboard: " + l, () => dashboard(t)]), ["Character", () => creator(home)], ["Who is Tequila Corrido?", () => explorer()]]],
     ["Manager", mgr.map(([l, t]) => ["Manager: " + l, () => managerMode(t), true])],
   ];
   function busy(on) { const b = q("#prbtn"); if (b) { b.disabled = on; b.querySelector("small").textContent = on ? "playing a sample…" : "sample data"; } }

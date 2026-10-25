@@ -1,4 +1,4 @@
-// Checks the first run, "Try this question again", the Before a call card and calculator, time estimates.
+// Checks the first run, "Try this question again", the 60-second review (the Who is Tequila Corrido? page) and its calculator, time estimates.
 // Run from the mock-prototype folder: node tests/callcard.test.js
 const fs = require("fs"), vm = require("vm"), path = require("path");
 const root = path.join(__dirname, "..");
@@ -21,10 +21,21 @@ ok("a bigger pour means fewer pours and a higher cost per pour", vm.runInContext
 
 // ---------- the card never invents numbers ----------
 ok("the card says its prices are public shop prices and that wholesale must be confirmed in writing", /public shop prices/.test(field) && /confirm them in writing/.test(field) && /never quotes a margin/.test(field));
-ok("the bottles come from the same list as the brand page", /const lineup = LINEUP;/.test(html) && /LINEUP\.map/.test(field) && (html.match(/const LINEUP = \[/g) || []).length === 1);
+ok("the bottles come from one list, the same one the calculator uses", /LINEUP\.map/.test(field) && (field.match(/LINEUP\.map/g) || []).length === 2 && (html.match(/const LINEUP = \[/g) || []).length === 1);
 ok("no merch or clothing on the card", !/merch|shirt|\bhat\b/i.test([...vm.runInContext("[...FW.DO, ...FW.NEVER, ...FW.IFTHEY.flat()]", ctx)].join(" ")));
 ok("the Never list covers under 21, health claims, invented numbers, other brands, leaving alcohol and shipping", ["under 21", "health claims", "Invent prices", "Run down", "Leave alcohol", "shipping"].every(w => vm.runInContext("FW.NEVER", ctx).some(x => x.includes(w))));
-ok("the brand page links to the card", /id="xcall"/.test(html) && /\$\("#xcall"\)\.onclick = \(\) => CallCard\.beforeCall\(\)/.test(html));
+// ---------- the Who is Tequila Corrido? page is the 60-second review ----------
+const explorer = html.slice(html.indexOf("function explorer() {"), html.indexOf("// ---------- home / map ----------"));
+ok("the Who is Tequila Corrido? page is the 60-second review: built from CallCard.review(), with its calculator wired, and no separate Before a call page or button", /\$\{CallCard\.review\(\)\}/.test(explorer) && /CallCard\.wire\(\);/.test(explorer) && !/beforeCall|id="xcall"|Before a call/.test(html + field + read("presenter.js")) && /your 60-second review before a call/i.test(explorer));
+ok("that page has no link to the website: no href, no new-tab link, no shop link, and its merch list is plain rows", !/href=|target=|ilovetequilacorrido|shoplink|sitelink|xsite/.test(explorer + field) && !/<a class="xrow"|<a class="xbottle"/.test(explorer + field) && /<div class="xrow"/.test(explorer));
+const rev = (() => {
+  const c = vm.createContext({ console, IMG: "img/", esc: s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), $: () => ({}) });
+  vm.runInContext(html.match(/const LINEUP = \[[\s\S]*?\n\];/)[0] + field.replace(/^"use strict";/, "") + ";globalThis.R = CallCard.review();", c);
+  return c.R;
+})();
+ok("the review has the one-line promise, four bottles with photos and prices, Do and Never, six things they might say, and a calculator folded away", /Say it in one line/.test(rev) && (rev.match(/class="xbottle"/g) || []).length === 4 && /\$44\.99/.test(rev) && /\$89\.99/.test(rev) && /<h3>Do<\/h3>/.test(rev) && /<h3>Never<\/h3>/.test(rev) && (rev.match(/<dt>/g) || []).length === 6 && /<details class="card xmerch" id="calc">/.test(rev));
+ok("it is condensed: each Do, Never and objection answer is one short line (under 80 characters)", vm.runInContext("[...FW.DO, ...FW.NEVER, ...FW.IFTHEY.map(x => x[1])]", ctx).every(x => x.length < 80));
+ok("the review itself has no links at all", !/<a /.test(rev) && !/href/.test(rev));
 
 // ---------- the Field log is gone ----------
 ok("there is no Field log: no tab, no code, no styles, and the card has no link to one", !/Field log|dashField|FieldWork|fieldwork|state\.field|fform|flist/.test(html + dash + field + read("presenter.js")) && !fs.existsSync(path.join(root, "fieldwork.js")));
