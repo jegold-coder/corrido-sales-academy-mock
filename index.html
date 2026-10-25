@@ -631,6 +631,11 @@ a.diffbtn{text-decoration:none;display:inline-block}
 .gr-says{margin:.5rem 0;padding:.5rem .7rem;background:#f6efe2;border-radius:10px}
 .gr-btns{display:flex;gap:.4rem;flex-wrap:wrap;margin:.5rem 0}.gr-btns .btn{padding:.35rem .8rem;font-size:.85rem}
 .gr-why{font-size:.85rem;color:var(--brown);margin:.2rem 0 0}
+.gr-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem;align-items:start}.gr-cols .mcard{margin-bottom:1rem}
+@media(max-width:900px){.gr-cols{grid-template-columns:1fr}}
+.gr-h{font:700 .82rem Arimo,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--brown);margin:1rem 0 .3rem}
+.gr-ex{border-left:4px solid #cfc4b8;padding:.4rem .7rem;margin:.4rem 0;border-radius:0 8px 8px 0;background:#faf6ee}.gr-ex p{margin:.15rem 0}.gr-ex .btn{padding:.2rem .7rem;font-size:.8rem;margin-top:.3rem}
+.gr-ex.good{border-color:#2d6a3a;background:#eef7ee}.gr-ex.so{border-color:#c28a1a;background:#fdf4e0}.gr-ex.weak{border-color:#9a2f2f;background:#fcefed}
 .gr-top{display:grid;grid-template-columns:150px 1fr;gap:1rem;align-items:center}
 .gr-face{background:#e9dcc6;border-radius:14px;overflow:hidden}.gr-face svg{display:block;width:100%}
 .gr-score{font:2.4rem Rye,serif;line-height:1}.gr-score small{font:700 .9rem Arimo,sans-serif;color:var(--brown)}
@@ -692,23 +697,23 @@ a.diffbtn{text-decoration:none;display:inline-block}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24i"></script>
-<script src="scenarios.js?v=2026-10-24i"></script>
-<script src="progress.js?v=2026-10-24i"></script>
-<script src="criteria.js?v=2026-10-24i"></script>
-<script src="tone.js?v=2026-10-24i"></script>
-<script src="coach.js?v=2026-10-24i"></script>
-<script src="camera.js?v=2026-10-24i"></script>
-<script src="lessons.js?v=2026-10-24i"></script>
-<script src="dashboard.js?v=2026-10-24i"></script>
-<script src="grader.js?v=2026-10-24i"></script>
-<script src="onboarding.js?v=2026-10-24i"></script>
-<script src="tiers.js?v=2026-10-24i"></script>
-<script src="badges.js?v=2026-10-24i"></script>
-<script src="voices.js?v=2026-10-24i"></script>
-<script src="mission.js?v=2026-10-24i"></script>
-<script src="boss.js?v=2026-10-24i"></script>
-<script src="manager.js?v=2026-10-24i"></script>
+<script src="sound.js?v=2026-10-24j"></script>
+<script src="scenarios.js?v=2026-10-24j"></script>
+<script src="progress.js?v=2026-10-24j"></script>
+<script src="criteria.js?v=2026-10-24j"></script>
+<script src="tone.js?v=2026-10-24j"></script>
+<script src="coach.js?v=2026-10-24j"></script>
+<script src="camera.js?v=2026-10-24j"></script>
+<script src="lessons.js?v=2026-10-24j"></script>
+<script src="dashboard.js?v=2026-10-24j"></script>
+<script src="grader.js?v=2026-10-24j"></script>
+<script src="onboarding.js?v=2026-10-24j"></script>
+<script src="tiers.js?v=2026-10-24j"></script>
+<script src="badges.js?v=2026-10-24j"></script>
+<script src="voices.js?v=2026-10-24j"></script>
+<script src="mission.js?v=2026-10-24j"></script>
+<script src="boss.js?v=2026-10-24j"></script>
+<script src="manager.js?v=2026-10-24j"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);

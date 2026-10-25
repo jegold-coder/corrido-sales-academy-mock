@@ -29,7 +29,7 @@ function managerMode(tab) {
   document.body.classList.add("mgr");
   mgrTab = tab || mgrTab || "cohorts";
   stopAll(); Cam.stop(); Sound.stop();
-  const pages = [["cohorts", "Cohorts"], ["invite", "Invite"], ["leaderboards", "Leaderboards"]];
+  const pages = [["cohorts", "Cohorts"], ["invite", "Invite"], ["leaderboards", "Leaderboards"], ["grader", "Grader"]];
   app.innerHTML = `<div class="mgrwrap">
     <div class="mgrbar"><div class="mlogo">Tequila Corrido<small>SALES ACADEMY · MANAGER</small></div>
       <nav class="mnav" aria-label="Manager pages">${pages.map(([k, l]) => `<button type="button" class="mnavbtn ${k === mgrTab ? "on" : ""}" data-p="${k}" ${k === mgrTab ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>
@@ -38,7 +38,7 @@ function managerMode(tab) {
     <div id="mbody"></div></div>`;
   app.querySelectorAll(".mnavbtn").forEach(b => b.onclick = () => managerMode(b.dataset.p));
   $("#mback").onclick = leaveManager;
-  ({ cohorts: mgrCohorts, invite: mgrInvite, leaderboards: mgrBoards })[mgrTab]($("#mbody"));
+  ({ cohorts: mgrCohorts, invite: mgrInvite, leaderboards: mgrBoards, grader: mgrGrader })[mgrTab]($("#mbody"));
   window.scrollTo(0, 0);
 }
 function leaveManager() {

@@ -42,7 +42,7 @@ What it loads from the internet:
 | Sign-in (journey page 2) | Age check, then "continue as guest" or an email that is only saved on this device. Company sign-in comes with the rollout |
 | Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a CSV invite page and leaderboards. Uses sample data. See below |
 | Customer reactions | The customer's face follows the conversation: brows, mouth and cheeks go from delighted to pleased, plain, unsure or annoyed, and a small reaction pops up beside them after each answer. Harder levels start the customer more guarded |
-| Test the grader (Dashboard > Grader) | Type any answer to any question and see the score, the arithmetic behind it, what it covered, the mistakes and the tone notes, plus how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
+| Answer grader (manager mode > Grader) | For managers only, because it shows the model answers. For every question: what a good answer looks like and why, the partly-there and not-good answers with the reason for each, and a box to type any answer and see the score, the arithmetic behind it, what it covered, the mistakes, the tone notes and how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
 | Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules (reached from the header on every screen, next to a link to the real website that opens in a new tab) |
 | Practice and review | The Dashboard's Review tab (with a count) collects every wrong answer with a stronger one, and its Progress tab has a Practice button that replays your weakest skill across different customers. Neither is on the map. Missions also open with a different line on replay |
@@ -84,7 +84,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `badges.js` | the badge medals (boss faces, metals, ribbons), awarding boss badges |
 | `voices.js` | giving each customer a distinct voice and accent, and speaking like a person |
 | `dashboard.js` | the rep dashboard |
-| `grader.js` | the Grader tab: score any answer and see why |
+| `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
 | `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `globals` and `camera` tests |
 

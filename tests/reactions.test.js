@@ -25,7 +25,7 @@ ok("an easy customer starts friendly or plain and the hardest starts guarded", s
 
 // grader: same scoring as the missions, and its arithmetic adds up
 ["criteria.js", "tone.js", "coach.js"].forEach(f => vm.runInContext(read(f).replace(/^"use strict";/, "").replace(/if \(typeof module[^\n]*/, ""), scn));
-vm.runInContext(read("grader.js").replace(/^"use strict";/, "").replace(/if \(typeof module[^\n]*/, "").replace(/\bfunction dashGrader[\s\S]*$/, ""), scn);
+vm.runInContext(read("grader.js").replace(/^"use strict";/, "").replace(/if \(typeof module[^\n]*/, "").replace(/\bfunction mgrGrader[\s\S]*$/, ""), scn);
 const rows = vm.runInContext(`SCENARIOS.flatMap(s => s.steps.map((st, i) => ({ id: s.id, i, model: st.R[0].replace(/^"|"$/g, ""), weak: st.E && st.E[0] && st.E[0][0].replace(/^"|"$/g, ""), lvl: s.level })))`, scn);
 let mathOk = true, tierOk = true, bad = "";
 rows.forEach(r => {
@@ -37,6 +37,8 @@ rows.forEach(r => {
 });
 ok(`the grader's arithmetic adds up for all ${rows.length} questions, model and weak answers`, mathOk, bad);
 ok("every answer lands in one of the three customer reactions", tierOk);
-const dash = read("dashboard.js");
-ok("the Grader tab is wired in", /\["grader", "Grader"\]/.test(dash) && /grader: dashGrader/.test(dash) && /<script src="grader\.js/.test(html));
+const dash = read("dashboard.js"), mgr = read("manager.js");
+ok("the Grader is a manager page", /\["grader", "Grader"\]/.test(mgr) && /grader: mgrGrader/.test(mgr) && /<script src="grader\.js/.test(html));
+ok("reps can't reach the grader, because it shows the model answers", !/grader/i.test(dash) && !/mgrGrader/.test(html.replace(/<script src[^>]*>/g, "")));
+ok("managers see what a good answer is and what is not", /What a good answer looks like/.test(read("grader.js")) && /Not good/.test(read("grader.js")) && /S\.R\[1\]/.test(read("grader.js")));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);
