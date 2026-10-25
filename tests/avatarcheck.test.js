@@ -37,6 +37,14 @@ ok("and 2 x 5 for a man, one row per hairstyle", frames(show("hair", "Male")) ==
 ok("every sheet has tabs for the other sheets and a men or women switch, and a way back to the map", ["sleeves", "necks", "bottoms", "hair"].every(k => html.includes(`data-k="${k}"`)) && /data-g="Male"/.test(html) && /data-g="Female"/.test(html) && /id="avback"/.test(html));
 ok("the sheet stops any sound or camera that was running", calls.stop > 0);
 
+// one facial expression on every face: the same smile for all, and the reaction mouths (which the page's CSS hides) hidden inside each frame
+html = show("hair", "Female");
+ok("every face on every sheet wears the same single expression (a warm smile), not the player's own", seen.length === 15 && seen.every(s => s.smile === "Warm smile") && ["sleeves", "necks", "bottoms"].every(k => (show(k, "Male"), seen.every(s => s.smile === "Warm smile"))));
+html = show("hair", "Female");
+ok("each frame carries the rule that hides the four reaction mouths, so they are not drawn on top of each other", (html.match(/<iframe /g) || []).length === 15 && (html.match(/srcdoc="<style>\.xm path\{display:none\}<\/style>/g) || []).length === 15);
+// and the rule matches the page: the reaction mouths are hidden in index.html's own CSS too
+ok("the page's own CSS hides the same reaction mouths", /\.xm path\{display:none\}/.test(read("index.html")));
+
 // the player's own avatar and skin colours are back exactly as they were, even if drawing fails
 const keep = JSON.stringify(mine), skinKeep = SKINS.join();
 ok("afterwards the player's avatar and the skin colours are exactly as they were", ctx.state.avatar === mine && JSON.stringify(mine) === keep && SKINS.join() === skinKeep);
