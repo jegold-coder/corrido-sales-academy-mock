@@ -104,7 +104,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `results`, `auth`, `globals` and `camera` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `results`, `auth`, `natural`, `globals` and `camera` tests |
 
 ## Tests
 
@@ -119,6 +119,7 @@ node tests/sound.test.js    # room music only plays during a mission and the bos
 node tests/map.test.js      # tier banners, the pop for a finished stop, side panels, the ladder and the radar
 node tests/results.test.js  # medals, stars, the customer on the results, the tie line, hearts only in lessons
 node tests/auth.test.js     # Google token checks: wrong app, expired, unverified, wrong company
+node tests/natural.test.js  # answers in ordinary words score fairly; hype, health claims and pushiness are caught; a question can't lose a boss battle
 node tests/globals.test.js  # no two scripts declare the same name (a clash stops a file loading)
 node tests/camera.test.js   # face maths with fake landmarks
 ```

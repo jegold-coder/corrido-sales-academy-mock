@@ -9,7 +9,7 @@
 
 const Tone = {
   // Warm or polite wording: thanks, empathy, or a polite invitation instead of an order.
-  WARM: /\b(please|thank(s| you)?|appreciate|glad|happy|love\w*|nice to meet|great to meet|good to meet|congrat\w*|great|nice|wonderful|lovely|i'?m sorry|makes sense|fair (enough|question|point|concern)|i understand|understood|i hear you|good call|no problem|of course|sounds good|that'?s (great|a good|a fair|a real)|welcome|sorry (to hear|about that)|how about|would you|could (i|we)|can i|may i|if you'?d like|if you like|let me|we could|i could|good question|good idea|you'?re right)\b/i,
+  WARM: /\b(hi|hello|hey|good (morning|afternoon|evening)|pleasure|hoping|no pressure|if that'?s (okay|ok|alright|all right|fine)|whenever (works|suits)|at your convenience|please|thank(s| you)?|appreciate|glad|happy|love\w*|nice to meet|great to meet|good to meet|congrat\w*|great|nice|wonderful|lovely|i'?m sorry|makes sense|fair (enough|question|point|concern)|i understand|understood|i hear you|good call|no problem|of course|sounds good|that'?s (great|a good|a fair|a real)|welcome|sorry (to hear|about that)|how about|would you|could (i|we)|can i|may i|if you'?d like|if you like|let me|we could|i could|good question|good idea|you'?re right)\b/i,
   PUSHY: /\b(you (need|have|must|should) to|you must|you'?ve got to|right now|today only|last chance|don'?t miss|i insist|you'?ll regret)\b/i,
   COMBATIVE: /\b(wrong|ridiculous|stupid|dumb|obviously|calm down|listen,? (pal|buddy|man|sir)|as i (said|told)|are you kidding|that'?s (rude|ridiculous)|how dare|shut up|i don'?t care)\b/i,
   PROFANE: /\b(damn|hell|crap|sucks|shit|bullshit|ass|pissed|freaking|wtf)\b/i,
@@ -29,7 +29,9 @@ const Tone = {
     }
     if (Tone.PROFANE.test(t)) { notes.push({ ok: false, msg: "Bad language. Never in front of a customer.", pts: .6 }); pen += .6; }
     if (Tone.COMBATIVE.test(t)) { const c = profile.steady ? .5 : .4; notes.push({ ok: false, msg: "Combative or defensive wording. It escalates things.", pts: c }); pen += c; }
-    if (Tone.PUSHY.test(t)) { notes.push({ ok: false, msg: "Pushy wording (\"you need to\", \"right now\"). Invite instead of telling.", pts: .3 }); pen += .3; }
+    // pushy wording is about telling people what to do, so questions don't count ("what margin do you need to make this work?" is a fair question)
+    const statements = (t.match(/[^.!?]+[.!?]*/g) || [t]).filter(x => !/\?\s*$/.test(x)).join(" ");
+    if (Tone.PUSHY.test(statements)) { notes.push({ ok: false, msg: "Pushy wording (\"you need to\", \"right now\"). Invite instead of telling.", pts: .3 }); pen += .3; }
     if (Tone.GROVEL.test(t)) { const c = profile.steady ? .5 : .3; notes.push({ ok: false, msg: "Apologetic and grovelling. It hands the customer all the power.", pts: c }); pen += c; }
     if (profile.plain && Tone.JARGON.test(t)) { notes.push({ ok: false, msg: "Jargon. This customer needs plain, everyday words.", pts: .2 }); pen += .2; }
     if (profile.firm) {

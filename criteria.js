@@ -90,8 +90,8 @@ const CRITERIA = {
           [/(walk you through|show you what we have)/i, "Show-and-tell before you know what she needs."]] },
   "priya:1": {
     need: [[/(three ingredients|3 ingredients)/i, "only three ingredients"],
-           [/(no fake|fake flavors|nothing added|additive)/i, "no fake flavors added"],
-           [/(one sentence|tell shoppers|tell customers|explain|say to|repeat|simple|honest answer|a shopper asks|when a shopper)/i, "something she can repeat to shoppers"]],
+           [/(no fake|fake flavors|nothing fake|nothing artificial|no artificial|nothing added|nothing else|no additives|without (any )?(additives|flavou?rings)|additive)/i, "no fake flavors added"],
+           [/(one sentence|tell shoppers|tell customers|tell them|explain|say to|you can say|easy line|simple line|one.?liner|easy way to|repeat|simple|honest answer|a shopper asks|when a shopper)/i, "something she can repeat to shoppers"]],
     bad: [[/(better for you|healthier|cleaner|good for you|detox|doesn'?t give you)/i, "That's a health claim you can't make."],
           [/(marketing term|don'?t worry|artisanal|it means premium|small.?batch)/i, "That's vague or dismissive. Use the brand's own simple words."],
           [/(isn'?t right for your shop|if you don'?t know)/i, "Condescending to a nervous new owner."]] },

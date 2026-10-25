@@ -10,7 +10,8 @@ const Coach = {
     [/(trust me|best ever|guarantee|guaranteed|no.?brainer|you'?d be crazy|can'?t lose|everyone loves)/i, "Hype and guarantees sound like a line. Use specific, true facts."],
     [/(garbage|trash|sucks|overrated)/i, "Never run down another brand."],
   ],
-  REFUSAL: /(can'?t|cannot|won'?t|not able|unable|don'?t make|not allowed|isn'?t something|don'?t (call|say|use|claim)|aren'?t claims|avoid)/i,
+  // Only a refusal to make the claim counts: "I can't say that", "we don't claim that". A bare "won't" doesn't ("won't give you a hangover" is a claim).
+  REFUSAL: /((can'?t|cannot|can not|won'?t|not able to|unable to|not allowed to|not permitted to|shouldn'?t|don'?t|do not|never)\s+(\w+\s+){0,2}(say|claim|promise|call|make|state|tell|suggest|advertise|market|speak to|comment on|guarantee|use)|not allowed|isn'?t something (we|i)|aren'?t claims|avoid (saying|making|claiming|any claims))/i,
   HEALTH: /(cure|hangover.?free|no hangover|healthier|better for you|good for you|detox|clean eating|low.?calorie)/i,
 
   needed(diff, n) { return diff === "easy" ? 1 : diff === "medium" ? Math.min(n, 2) : n; },
