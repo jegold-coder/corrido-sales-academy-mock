@@ -68,7 +68,7 @@ function quiz(L, i = 0, right = 0, missed = []) {
   }
   const it = items[i], opts = choicesFor(it, state.diff);
   let done = false;
-  app.innerHTML = `<section class="view sheet">${lessonTop(i / items.length)}
+  app.innerHTML = `<section class="view sheet">${lessonTop(i / items.length, false, L.title)}
     <div class="q">${it.q}</div>
     ${D().timer ? '<div class="timer" aria-label="Time left"><i id="tm"></i></div>' : ""}
     <div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o[0]}</button>`).join("")}</div><div id="fb" aria-live="polite"></div></section>`;
@@ -98,7 +98,7 @@ function knowledgeCheck(ob = null) {
       return ob ? onboardingResult(score, total, ob) : dashboard("check");
     }
     const it = queue[0], opts = shuffle([[it.a, 1], ...it.w.slice(0, 2).map(x => [x, 0])]), canSkip = ob && queue.length > 1;
-    app.innerHTML = `<section class="view sheet"><div class="lesson-top">${ob ? "" : '<button class="x" id="exit" aria-label="Exit">✕</button>'}<div class="prog"><i style="width:${(total - queue.length) / total * 100}%"></i></div><span class="chip">Knowledge check · ${total - queue.length} of ${total} done</span></div>
+    app.innerHTML = `<section class="view sheet"><div class="lesson-top"><h1 class="sr">Knowledge check</h1>${ob ? "" : '<button class="x" id="exit" aria-label="Exit">✕</button>'}<div class="prog"><i style="width:${(total - queue.length) / total * 100}%"></i></div><span class="chip">Knowledge check · ${total - queue.length} of ${total} done</span></div>
       <div class="q">${it.q}</div><div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o[0]}</button>`).join("")}</div>
       ${ob ? `<p class="note2">${canSkip ? "Not sure? You can skip a question for now, and it comes back at the end. " : ""}You need to finish the check to open the map.</p>` : ""}
       ${canSkip ? '<button class="btn alt" id="skipq" type="button">Skip for now</button>' : ""}<div id="fb" aria-live="polite"></div></section>`;

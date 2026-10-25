@@ -31,7 +31,7 @@ What it loads from the internet:
 |---|---|
 | Personas with hidden objections | 13 missions, each customer hides a worry that is revealed on the scorecard |
 | Behavioral chat | Spoken sales-script conversations: the customer talks, you answer out loud (or type), your avatar plays your answer back in your own recorded voice with its mouth moving with the sound, and the customer replies to what you said |
-| Hints | On Level 1 and 2 missions you see what a strong answer should mention before you record. Later levels hide it |
+| Coach mode and hints | A checkbox in the screen before each mission (on by default for Levels 1 and 2). With it on, you see what your answer got right and missed right after each answer, before the next question. On Levels 3 and up the checklist is hidden, and a **Show a hint** button gives the same help for 5 XP. Boss battles have neither, so they are scored only at the end |
 | Post-session scorecard | Every answer scored out of 5 at the end: 4 points for what you said (what you mentioned, what you missed, what knocked points off) and 1 for tone, with a stronger answer to compare to and a button to hear yourself again. Plus a delivery score from the camera |
 | Edge-case library | Pricing pushback (Marco, Dana), competitor comparison (Ray), compliance (Jess), gatekeeper (Sam), product matching (Mia), a store owner who says no (Tony), reading the buyer (Rafael), a store robbery (Ben) |
 | Grading | A free rule-based rubric (see `criteria.js`) scores each answer. No account, no cost. The old optional Gemini judge is still in `coach.js` but is not wired into the new flow |
@@ -47,7 +47,13 @@ What it loads from the internet:
 | Customer reactions | The customer's face follows the conversation: brows, mouth and cheeks go from delighted to pleased, plain, unsure or annoyed, and a small reaction pops up beside them after each answer. Harder levels start the customer more guarded |
 | Answer grader (manager mode > Grader) | For managers only, because it shows the model answers. For every question: what a good answer looks like and why, the partly-there and not-good answers with the reason for each, and a box to type any answer and see the score, the arithmetic behind it, what it covered, the mistakes, the tone notes and how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
 | Dashboard progress | The tier ladder is first: six steps with each boss's medal in colour once beaten, where you are now, the next boss and the merch meter. Skills are a radar chart once there are scores in three skills (bars before that), with the weakest skill marked |
-| Rep dashboard | Skills, history, badges, before/after knowledge check. The first check is required: the map stays locked until it is done |
+| Rep dashboard | Progress, badges, team, review, knowledge check (optional) and settings |
+| Quick start (first run) | After the age check and sign-in, a new player creates their rep (every option is there from the start, and it begins from a random look with a clear face), sees a short three-card tutorial (skippable; replayable from Dashboard > Settings > Help), and lands on the open map. Nothing opens by itself: the Next up bar shows where to begin and they can explore first. No knowledge check in the way: it is optional (Dashboard > Knowledge check) |
+| Try this question again | Every answer under 4 out of 5 on a results screen has a button that replays just that question, same customer, with the checklist hidden. It is practice (no stop is marked done) but earns XP, feeds the skill scores, and a good answer clears that moment from Review. The results compare the two scores |
+| Before a call | A 60-second card, opened from the "Who is Tequila Corrido?" page: the promise in one line, the four bottles at their public shop prices, do and never lists, what to say to six usual objections, and a per-pour cost calculator (bottle cost, size, pour size and menu price in; pours per bottle, cost per pour, pour cost, and what a bottle brings in out). It uses only the numbers typed in and never quotes a margin or wholesale price |
+| Time estimates | "About 6 min" shows in the screen before a stop and in the Next up bar (not on every stop, so the map stays clear) |
+| Customers that change | Each customer has a second way to say their later lines (facts, prices and days stay the same). On a replay you never get the same version twice in a row, so you practise the idea, not the wording |
+| Accessibility | Checked by a script across 52 screens at desktop and phone width: text colours meet WCAG AA, every page has a heading, every control has a name, tap targets are at least 24 px, focus rings show on every kind of control, nothing scrolls sideways at 320 px, and the age gate locks the page behind it. Still for a person to check: a real screen-reader run, and captions on any video added later |
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules (reached from the header on every screen, next to a link to the real website that opens in a new tab) |
 | Practice and review | The Dashboard's Review tab (with a count) collects every wrong answer with a stronger one, and its Progress tab has a Practice button that replays your weakest skill across different customers. Neither is on the map. Missions also open with a different line on replay |
 
@@ -65,8 +71,8 @@ Three missions come from advice from the team's contact Ken. **The Hard No** (To
 - **Bosses** use the existing missions, so their timings are unchanged: Priya (3.5 / 5 to win), Mia (3.5), Rafael (4.0, voice only if your browser can record), Dana (4.0, voice only) and the Bad-Tempered Owner (4.2, voice only). A health claim or a pressure tactic loses a boss battle instantly. Brand Brain is ten questions, fifteen seconds each, 80% to win. Three tries a day per boss, and a Practice first option that does not count.
 - **Merch:** 42 pieces (36 shirts and polos, 6 hats). The creator shows them as one tabbed photo grid (T-shirts, Polos, Hats) so the page stays short. Twenty are free from the start (fifteen shirts, five hats) so there is a choice in the creator on day one. The other 22 are each unlocked by beating a level (what a stop unlocks is shown on the screen before you start it, not on the map) (see `REWARDS` in `tiers.js`; `tests/tiers.test.js` checks every piece is unlocked exactly once). A boss win also moves you up a tier and shows the Tier Up screen with a shareable tier card (name, avatar and tier only).
 - **Smile:** the creator has a Smile row under Lip color (or Facial hair): Neutral, Soft smile, Warm smile, Big smile, Grin, Smirk and Laugh. The smile is drawn over the plain mouth and hides while your character talks, so the lip-sync in missions still works, then it comes back. Older saved characters start Neutral. Randomize picks one too.
-- **Presenter mode** (for demos): start it from the sign-in screen ("Presenting this? Skip setup with sample progress", available once the age check is done) or from Dashboard > Settings > Prototype tools. It loads a sample Tier 2 rep ("Demo Rep") with history, badges, mistakes to review, a before-and-after knowledge check and demo teammates, and adds a small Presenter menu at the bottom left with 26 jumps: the age check, character, tutorial, map, the screen before a stop, a lesson, a mission, results (a win, not this time), boss intro, Brand Brain, a lost boss, Tier Up, every Dashboard tab, the brand page and all five manager pages. The result and Tier Up screens are played through the real screens with typed answers, so they are the real thing (about a second). Your own progress and character are kept safe while it is on and come back exactly as they were when you leave ("Leave presenter mode" in the menu or in Settings). If you close the tab mid-demo the sample stays until you leave. The menu never appears before the age check.
-- **Prototype tools** (Dashboard, Settings): every stop open, every piece of merch unlocked, and unlimited boss tries. The first and third are on by default while the game is being tested.
+- **Presenter mode** (for demos): start it from the sign-in screen ("Presenting this? Skip setup with sample progress", available once the age check is done) or from Dashboard > Settings > Prototype tools. It loads a sample rep ("Demo Rep") who is part-way through the season, at a random point each time (never empty, never finished), with history, badges, mistakes to review, a before-and-after knowledge check and demo teammates, and adds a small Presenter menu at the bottom left with 27 jumps: the age check, character, tutorial, map, the screen before a stop, a lesson, a mission, results (a win, not this time), boss intro, Brand Brain, a lost boss, Tier Up, every Dashboard tab, the brand page and all five manager pages. The result and Tier Up screens are played through the real screens with typed answers, so they are the real thing (about a second). Your own progress and character are kept safe while it is on and come back exactly as they were when you leave ("Leave presenter mode" in the menu or in Settings). Three buttons in the menu footer switch the progress while keeping the character: **Start over: nothing complete** (a first-day player: no stops done, 0 XP), **Random sample progress** (a different point part-way through the season each press, never empty and never finished), and **Complete the game** (all 16 stops at three stars, all six bosses, every badge and piece of merch, Tier 5, Master Rep). If you close the tab mid-demo the sample stays until you leave. The menu never appears before the age check.
+- **Prototype tools** (Dashboard, Settings): every stop open, every piece of merch unlocked, and unlimited boss tries. Only unlimited boss tries is on by default; each stop stays locked on the map until the one before it is done.
 
 ## Turn on Sign in with Google
 
@@ -101,6 +107,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `tiers.js` | tiers, bosses, merch rewards and the prototype switches |
 | `boss.js` | the boss battle screen, the Brand Brain quiz, Tier Up and the shareable tier card |
 | `manager.js` | manager mode: cohorts, coaching, invite and leaderboards |
+| `callcard.js` | the Before a call card and the pour-cost calculator |
 | `presenter.js` | presenter mode: the sample player, the jump menu, and safe switching in and out |
 | `tone.js` | how tone is judged from your words and your voice, for the situation |
 | `lessons.js` | brand lessons, question bank, knowledge check |
@@ -111,7 +118,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `results`, `auth`, `natural`, `globals` and `camera` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning` and `a11y` tests |
 
 ## Tests
 
@@ -124,6 +131,7 @@ node tests/voices.test.js   # each customer gets a different voice, lines are pa
 node tests/reactions.test.js # customer faces react to the conversation, and the grader's arithmetic adds up
 node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; the defeat sting plays for a lost boss; both go quiet when the page is hidden; the tune stays in key
 node tests/map.test.js      # tier banners, the pop for a finished stop, side panels and their links, the ladder and the radar
+node tests/callcard.test.js  # the first run, Try this question again, the calculator's maths, time estimates
 node tests/presenter.test.js # presenter mode: a consistent sample player, real progress always comes back, and the menu can't skip the age check
 node tests/smile.test.js    # the rep's smile styles: shapes, the creator row, saving, and the mouth still moving while talking
 node tests/phone.test.js    # the phone bottom bar: its five places, when it shows, and that tapping it never sends you home
@@ -133,6 +141,8 @@ node tests/auth.test.js     # Google token checks: wrong app, expired, unverifie
 node tests/natural.test.js  # answers in ordinary words score fairly; hype, health claims and pushiness are caught; a question can't lose a boss battle
 node tests/globals.test.js  # no two scripts declare the same name (a clash stops a file loading)
 node tests/camera.test.js   # face maths with fake landmarks
+node tests/learning.test.js # coach mode defaults, the hint costs 5 XP, every customer's second lines keep the same facts and alternate
+node tests/a11y.test.js     # colour contrast of the key pairs, page headings, focus rings, tap size, no tiny text
 ```
 
 ## Known limits (be honest about these in the pitch)

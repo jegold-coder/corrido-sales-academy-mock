@@ -52,8 +52,8 @@ const REWARDS = {
 const MERCH_SOURCE = {};
 Object.entries(REWARDS).forEach(([stop, items]) => items.forEach(i => { MERCH_SOURCE[i] = stop; }));
 
-// Prototype switches (Dashboard, Settings). Every stop is open and boss tries are unlimited while the game is being tested.
-const PROTO_DEFAULTS = { unlockStops: true, unlockMerch: false, unlimitedTries: true };
+// Prototype switches (Dashboard, Settings). Each stop stays locked until the one before it is done; boss tries are unlimited while the game is being tested.
+const PROTO_DEFAULTS = { unlockStops: false, unlockMerch: false, unlimitedTries: true };
 const PROTO = k => ({ ...PROTO_DEFAULTS, ...((typeof state !== "undefined" && state.proto) || {}) })[k];
 
 // "a Field Rep" / "an Associate Rep"

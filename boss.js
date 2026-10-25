@@ -68,7 +68,7 @@ function startBoss(stop, boss, rehearsal) {
   if (boss.quiz) { if (!rehearsal) useBossTry(stop.id); return brandBrain(stop, boss, rehearsal); }
   const sc = SCENARIOS.find(m => m.id === stop.id);
   const run = () => { if (!rehearsal) useBossTry(stop.id); play({ ...sc, boss: rehearsal ? null : boss, rehearsal }); };
-  openDiff(run, { ...stop, title: stop.title + (rehearsal ? " (practice)" : ""), sub: rehearsal ? "A practice run. It doesn't use a try and doesn't count." : "Boss battle", noReward: true, level: sc.level });
+  openDiff(run, { ...stop, title: stop.title + (rehearsal ? " (practice)" : ""), sub: rehearsal ? "A practice run. It doesn't use a try and doesn't count." : "Boss battle", noReward: true, level: sc.level, boss: !rehearsal });
 }
 
 // ---------- Brand Brain: ten timed brand questions ----------

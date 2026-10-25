@@ -9,7 +9,7 @@
 <style>
 :root{
   --sand:#e3dcd6; --cream:#fdfaf5; --brown:#915f1b; --deep:#3a2410; --ink:#1e2021;
-  --teal:#2e8b9a; --teal-d:#1f6a77; --red:#b5432a; --green:#3f8f4f; --gold:#e0a42f;
+  --teal:#1f7583; --teal-d:#164f5b; --red:#b5432a; --green:#2d7a3e; --gold:#e0a42f; --gold-t:#f6cf78;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--sand);color:var(--ink);font:16px/1.5 Arimo,system-ui,sans-serif}
@@ -21,7 +21,7 @@ button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 /* top bar */
 .top{background:var(--brown);color:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;position:sticky;top:0;z-index:5}
 .logo{font-family:Rye,serif;font-size:1.3rem;line-height:1}
-.logo small{display:block;font:700 .6rem Arimo;letter-spacing:.25em}
+.logo small{display:block;font:700 .7rem Arimo;letter-spacing:.25em}
 .stats{display:flex;gap:1.1rem;font-weight:700}
 .mock{background:var(--ink);color:var(--gold);text-align:center;font-size:.8rem;padding:.25rem;letter-spacing:.08em}
 
@@ -140,7 +140,7 @@ body{background:
 .stop .lab small{color:#e8d3ae}
 .stop .node{box-shadow:0 0 0 6px #0003}
 .stop .node.cur{animation:pulse 1.4s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 14px #2e8b9a55}}
+@keyframes pulse{50%{box-shadow:0 0 0 14px #1f758355}}
 .deco{position:absolute;transform:translate(-50%,-50%);font-size:2.2rem;opacity:.85;filter:drop-shadow(0 3px 2px #0006)}
 .legend{text-align:center;color:#e8d3ae;font-size:.85rem}
 
@@ -331,9 +331,9 @@ body.onboarding .soundfab{display:none}
 /* ===== v19: stats live in a footer ===== */
 .foot{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;align-items:center;gap:.6rem;padding:.45rem .8rem;background:var(--brown);border-top:2px solid var(--gold);box-shadow:0 -4px 14px #0004}
 .foot .pill{display:inline-flex;align-items:center;gap:.4rem;background:#0003;border:1px solid #e3b34155;border-radius:99px;padding:.15rem .8rem;color:var(--cream);font-weight:700;white-space:nowrap;line-height:1.5}
-.foot .pill b{color:var(--gold);font-size:1.05rem}
+.foot .pill b{color:var(--gold-t);font-size:1.05rem}
 .foot .pill em{font-style:normal;font-weight:400;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
-.foot .lvname{color:var(--gold)}
+.foot .lvname{color:var(--gold-t)}
 .xpbar{display:inline-block;width:70px;height:8px;border-radius:9px;background:#0005;overflow:hidden}
 .xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#f5d27a);transition:width .5s}
 main{padding-bottom:5rem}
@@ -399,7 +399,7 @@ main:has(.creator){max-width:1120px}
 .xrow{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:.5rem;background:#fff;border:1px solid #e3d9c8;border-radius:8px;padding:.2rem .4rem .2rem .2rem;text-decoration:none;color:var(--ink);font-size:.8rem}
 .xrow[hidden]{display:none}
 .xrow:hover{border-color:var(--gold);background:#fff9ec}.xrow img{width:36px;height:36px;object-fit:contain;background:#f3eee6;border-radius:6px}
-.xn{line-height:1.2;font-weight:700}.xn em{display:inline-block;font:700 .66rem Arimo,sans-serif;font-style:normal;border-radius:99px;padding:0 .4rem;margin-left:.2rem;white-space:nowrap}.xn em.out{color:#8a2a14;background:#fbe6e0}
+.xn{line-height:1.2;font-weight:700}.xn em{display:inline-block;font:700 .7rem Arimo,sans-serif;font-style:normal;border-radius:99px;padding:0 .4rem;margin-left:.2rem;white-space:nowrap}.xn em.out{color:#8a2a14;background:#fbe6e0}
 .xp{color:var(--brown);font-weight:700;white-space:nowrap;font-size:.76rem}
 @media(max-width:560px){.xlist{grid-template-columns:1fr}}
 
@@ -421,7 +421,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 /* ===== v24: spoken, scored-at-the-end missions ===== */
 .hirelist{padding-left:1.1rem;margin:.3rem 0}.hirelist li{margin:.25rem 0}
 .camopt .recommend{color:var(--red);font-weight:700}
-.qhead{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}.lvlchip{background:var(--brown)}
+.qhead{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}.lvlchip{background:#5a3a12}
 .qprompt{font:1.15rem Rye,serif;text-transform:uppercase;margin:.6rem 0 .3rem}
 .tipbox{background:#fff9ec;border-left:4px solid var(--gold);border-radius:6px;padding:.4rem .7rem;margin:.4rem 0;font-size:.9rem}
 .tipbox ul{margin:.2rem 0 0}
@@ -434,7 +434,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .rtime{font-weight:700;color:var(--brown);font-variant-numeric:tabular-nums}
 #ans{width:100%;border:2px solid #cfc4b8;border-radius:10px;padding:.6rem;font:inherit;resize:vertical}
 .bigscore{display:flex;align-items:baseline;justify-content:center;gap:.3rem;margin:.4rem 0}.bigscore b{font:3.2rem Rye,serif;font-weight:400}.bigscore span{font-size:1.2rem;color:#6e6458}
-.bigscore.hi b,.score.hi{color:var(--green)}.bigscore.mid b,.score.mid{color:#b9801a}.bigscore.lo b,.score.lo{color:var(--red)}
+.bigscore.hi b,.score.hi{color:var(--green)}.bigscore.mid b,.score.mid{color:#8f6212}.bigscore.lo b,.score.lo{color:var(--red)}
 .sechead{margin:1rem 0 .2rem}
 .acard{background:#fff;border:2px solid #e3d9c8;border-left-width:6px;border-radius:12px;padding:.7rem .9rem;margin:.6rem 0}
 .acard.hi{border-left-color:var(--green)}.acard.mid{border-left-color:var(--gold)}.acard.lo{border-left-color:var(--red)}
@@ -457,20 +457,20 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .splashbox{width:100%;max-width:440px;text-align:center;color:var(--cream);padding:1rem 0 2rem}
 .bottleicon{width:46px;height:70px}
 .splashtitle{font:2.3rem Rye,serif;text-transform:none;margin:.3rem 0 0;color:#fff}
-.splashsub{font:700 .85rem Arimo;letter-spacing:.35em;color:var(--gold);margin:.1rem 0 .8rem}
+.splashsub{font:700 .85rem Arimo;letter-spacing:.35em;color:var(--gold-t);margin:.1rem 0 .8rem}
 .splashtag{color:#eadfcc;margin:0 .5rem 1.2rem}
 .agecard{background:var(--cream);color:var(--ink);border-radius:18px;padding:1.1rem 1.2rem;text-align:left}
 .agecard h2{font-size:1.4rem;margin:0 0 .3rem}
 .agebtns{display:flex;gap:.6rem}.agebtns .btn{flex:1}.agebtns .btn.alt{flex:.45}
 .ageok{margin:0;font-weight:700;color:var(--green)}
 .signin{margin-top:1.2rem;text-align:left}.signin.off{opacity:.45;pointer-events:none}
-.signhead{font:700 .8rem Arimo;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);text-align:center;margin:0 0 .6rem}
+.signhead{font:700 .8rem Arimo;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-t);text-align:center;margin:0 0 .6rem}
 .guestbtn{width:100%;padding:.9rem;font-size:1rem}
 .or{margin:.9rem 0 .4rem;color:#eadfcc}
 .emailrow{display:flex;gap:.5rem}.emailrow input{flex:1;min-width:0;border:0;border-radius:10px;padding:.7rem .8rem;font:inherit}
 .signnote{font-size:.8rem;color:#d9ccb4;margin:.5rem 0 0}.signnote.bad{color:#ffb4a3}
 .splashfoot{font-size:.8rem;color:#cdbfa6;margin:1.6rem .5rem .4rem}
-.mgrlink{font-size:.85rem;margin:.2rem 0}.mgrlink a{color:var(--gold)}
+.mgrlink{font-size:.85rem;margin:.2rem 0}.mgrlink a{display:inline-block;padding:.4rem 0;color:var(--gold-t)}
 #toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);background:var(--deep);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:.6rem 1rem;max-width:90vw;z-index:60;opacity:0;pointer-events:none;transition:.25s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -478,7 +478,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .node.boss{width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9532f,#8a2a14);border:4px solid var(--gold);border-bottom:10px solid #5a1a0a;font-size:2.6rem;box-shadow:0 0 0 6px #e0a42f33,0 0 24px #d9532f88!important}
 .node.boss.done{background:radial-gradient(circle at 35% 30%,#f1c25a,#b8851f);border-color:#fff1c4}
 .node.boss.locked{background:#c9bfb4;border-color:#a99d90;box-shadow:none!important}
-.bosstag{display:block;width:max-content;margin:0 auto .2rem;background:#8a2a14;color:#fff;font:700 .62rem Arimo;letter-spacing:.12em;text-transform:uppercase;padding:.08rem .55rem;border-radius:99px;border:1px solid var(--gold)}
+.bosstag{display:block;width:max-content;margin:0 auto .2rem;background:#8a2a14;color:#fff;font:700 .7rem Arimo;letter-spacing:.12em;text-transform:uppercase;padding:.08rem .55rem;border-radius:99px;border:1px solid var(--gold)}
 .vrow{display:flex;align-items:center;gap:.6rem;padding:.35rem 0;border-bottom:1px solid #e6ddd0;flex-wrap:wrap}.vrow>span:first-child{flex:1 1 140px}.vrow small{color:#6e6458}.vname{flex:1 1 150px;font-size:.88rem;color:var(--brown)}.vplay{padding:.2rem .7rem;font-size:.85rem}.vstat{flex:1 0 100%;font-size:.78rem;color:var(--brown)}.vstat:empty{display:none}
 .unlockbox{margin:.5rem 0;padding:.5rem .7rem;background:#fff4d6;border:2px solid var(--gold);border-radius:10px;font-size:.92rem}.unlockbox.got{background:#e8f4e5;border-color:#8fc38a}
 .tierbar{background:#0000004d;border:1px solid #e0a42f66;border-radius:14px;padding:.6rem .8rem;margin:.2rem 0 .8rem;color:var(--cream)}
@@ -487,7 +487,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .tierdot.done{background:var(--gold);color:var(--deep)}.tierdot.now{background:#fff1c4;color:var(--deep);box-shadow:0 0 0 4px #e0a42f55}
 .tiernow{text-align:center;margin:.4rem 0 0;font-size:.9rem}.tiernow span{color:#eadfcc}
 
-.chip2.locked{opacity:.6;border-style:dashed;cursor:not-allowed}.chip2.locked .unlockhow{display:block;font-size:.68rem;color:#8a2a14;font-weight:700}
+.chip2.locked{opacity:.6;border-style:dashed;cursor:not-allowed}.chip2.locked .unlockhow{display:block;font-size:.7rem;color:#8a2a14;font-weight:700}
 .chip2 .unlockhow{display:none}.chip2.locked .unlockhow{display:block}
 
 /* ===== v27: boss battle screen, tier up, rewards ===== */
@@ -507,17 +507,17 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .trydot.on{background:var(--gold)}.trynote{color:#d9ccb4;font-weight:400;font-size:.85rem}
 .goldbtn{background:var(--gold);color:#2b1a05;border-bottom-color:#a87a1a;width:100%;padding:1rem;font-size:1.1rem;margin-top:.6rem}
 .goldbtn:disabled{opacity:.5}
-.linkbtn{display:block;margin:.8rem auto 0;background:none;border:0;color:var(--gold);font-weight:700;text-decoration:underline;font-size:1rem}
+.linkbtn{display:block;margin:.8rem auto 0;background:none;border:0;color:var(--gold-t);font-weight:700;text-decoration:underline;font-size:1rem}
 .bi-foot{color:#cdbfa6}
 .bosschip{background:#8a2a14;border:1px solid var(--gold)}
 .bossrule{background:#fff1ec;border-left:4px solid #b5432a;border-radius:6px;padding:.4rem .7rem;margin:.4rem 0;font-size:.9rem}
 .compmiss{background:#fde8e2;border-radius:8px;padding:.4rem .7rem;color:#8a2f2f;font-weight:700;margin:.4rem 0}
 .tierup{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 18%,#7a4d22 0%,#33200f 55%,#1a0f06 100%);border-radius:18px;padding:1.2rem 1.1rem 1.6rem;text-align:center;color:var(--cream);min-height:70vh}
-.tu-kicker{font:700 .85rem Arimo;letter-spacing:.3em;color:var(--gold);margin:.3rem 0}.tu-title{font:3rem Rye,serif;color:#fff;margin:.2rem 0 .8rem}
+.tu-kicker{font:700 .85rem Arimo;letter-spacing:.3em;color:var(--gold-t);margin:.3rem 0}.tu-title{font:3rem Rye,serif;color:#fff;margin:.2rem 0 .8rem}
 .tu-ring{width:min(300px,70vw);aspect-ratio:1;margin:0 auto;border-radius:50%;background:#fdfaf5;border:10px solid var(--gold);box-shadow:0 0 0 14px #e0a42f33;overflow:hidden;display:grid;place-items:end center}
 .tu-ring.legend{border-color:#fff1c4;box-shadow:0 0 0 14px #e0a42f88,0 0 40px #f1c25a}
 .tu-ring svg{height:100%;width:auto;display:block}
-.tu-tier{font:700 .95rem Arimo;letter-spacing:.3em;color:var(--gold);margin:1.2rem 0 0}.tu-name{font:2.2rem Rye,serif;color:#fff;margin:.1rem 0 1rem}
+.tu-tier{font:700 .95rem Arimo;letter-spacing:.3em;color:var(--gold-t);margin:1.2rem 0 0}.tu-name{font:2.2rem Rye,serif;color:#fff;margin:.1rem 0 1rem}
 .tu-rewards{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem}
 .rwcard{background:var(--cream);color:var(--ink);border-radius:14px;padding:.6rem 1rem;min-width:140px}.rwcard small{display:block;font:700 .7rem Arimo;letter-spacing:.2em;color:var(--brown)}.rwcard b{font-size:1.1rem}
 .tu-legend{color:var(--gold);font-weight:700}
@@ -536,14 +536,14 @@ body.mgr .mock{background:#2b1a05}
 main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
 .mgrwrap{color:var(--ink)}
 .mgrbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:#915f1b;color:#fff;margin:0 -1.2rem 1rem;padding:.7rem 1.4rem;position:sticky;top:0;z-index:7}
-.mlogo{font:1.3rem Rye,serif;line-height:1}.mlogo small{display:block;font:700 .58rem Arimo;letter-spacing:.28em;margin-top:.25rem}
+.mlogo{font:1.3rem Rye,serif;line-height:1}.mlogo small{display:block;font:700 .7rem Arimo;letter-spacing:.28em;margin-top:.25rem}
 .mnav{display:flex;gap:.3rem;flex-wrap:wrap}.mnavbtn{background:none;border:0;color:#fff;font-weight:700;padding:.45rem 1rem;border-radius:10px}
 .mnavbtn.on{background:#3a2410;color:var(--gold)}.mnavbtn:hover:not(.on){background:#ffffff22}
-.muser{display:flex;align-items:center;gap:.8rem;font-weight:700}.mback{background:#ffffff22;border:1px solid #ffffff66;color:#fff;border-radius:99px;padding:.25rem .8rem;font-weight:700}
+.muser{display:flex;align-items:center;gap:.8rem;font-weight:700}.mback{background:#0003;border:1px solid #ffffff99;color:#fff;border-radius:99px;padding:.25rem .8rem;font-weight:700}
 .mproto{background:#fff9ec;border:1px dashed #915f1b;border-radius:10px;padding:.4rem .8rem;font-size:.88rem;margin:0 0 1rem}
 .mhead{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
 .mtitle{font:2.2rem Rye,serif;color:#3a2410;margin:0}.msub{margin:.2rem 0 0;color:#5c5044}
-.mstep{font:700 .8rem Arimo;letter-spacing:.22em;color:#915f1b;margin:0}
+.mstep{font:700 .8rem Arimo;letter-spacing:.22em;color:#7a4f12;margin:0}
 .mactions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}.mactions select{border:2px solid #cfc4b8;border-radius:10px;padding:.5rem .6rem;background:#fff;font:inherit}
 .mbtn{background:#1f6a77;color:#fff;border:0;border-radius:10px;padding:.6rem 1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.82rem}
 .mbtn.alt{background:#fff;color:#1f6a77;border:2px solid #1f6a77}.mbtn:disabled{opacity:.5;cursor:default}
@@ -566,7 +566,7 @@ main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
 .mlab{display:block;font-weight:700;margin:.8rem 0 .25rem}.minput{width:100%;border:2px solid #d8cdc0;border-radius:10px;padding:.6rem .7rem;font:inherit;background:#fff}
 .mjourney{border:2px solid var(--gold);background:#f5eee3;border-radius:10px;padding:.6rem .8rem}.mjourney small{display:block;color:#5c5044}
 .mdrop{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;border:2px dashed #915f1b;background:#f5eee3;border-radius:12px;padding:1rem}.mdrop.over{background:#fff4d6}.mdrop small{display:block;color:#5c5044}
-.mfilebtn{cursor:pointer}.linkbtn.dark{color:#915f1b;display:inline;margin:0;font-size:.9rem}
+.mfilebtn{cursor:pointer}.linkbtn.dark{padding:.3rem .25rem;min-height:28px;color:#7a4f12;display:inline;margin:0;font-size:.9rem}
 .mfoot{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:1rem;border-top:1px solid #eadfcc;padding-top:.8rem}
 .mboard{list-style:none;padding:0;margin:0}.mboard li,.mteam{display:flex;align-items:center;gap:.8rem;padding:.55rem .3rem;border-bottom:1px solid #eee6da}.mboard li.you{background:#fff4d6;border-radius:8px}
 .mrank{width:2rem;text-align:center;font-size:1.2rem;font-weight:700}.mname,.mteam>span:nth-child(2){flex:1}.mname small,.mteam small{display:block;color:#5c5044}.mxp{font-weight:700;color:#915f1b}
@@ -587,7 +587,7 @@ main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
 .tile.locked{opacity:.55;border-style:dashed;cursor:not-allowed}
 .tile .lk{position:absolute;right:2px;top:1px;font-size:.78rem;font-style:normal}
 .tile.none span{font-size:1.2rem;line-height:1}
-.tile.none small{font-size:.68rem}
+.tile.none small{font-size:.7rem}
 @media(max-width:640px){.chips.tiles{grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:.3rem}}
 /* ===== v30: badge medals ===== */
 .badgehead{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.4rem}.badgehead .bar{flex:1 1 160px}
@@ -595,7 +595,7 @@ main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
 .bossgrid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
 .bcard .bart svg{width:84px;height:auto;display:block;margin:0 auto .2rem}
 .bcard.big .bart svg{width:116px;filter:drop-shadow(0 4px 5px #0003)}
-.bcard:not(.on){opacity:.88}.bcard.big.on{background:linear-gradient(#fff8e6,#fbe6b0)}
+.bcard:not(.on){opacity:1}.bcard:not(.on) .bart,.bcard:not(.on) .bi{opacity:.7}.bcard.big.on{background:linear-gradient(#fff8e6,#fbe6b0)}
 @media(max-width:520px){.bossgrid{grid-template-columns:1fr 1fr}.bcard.big .bart svg{width:96px}.bossrow .bmini svg{width:42px}}
 .bcard .btier{font-size:.76rem;font-weight:700;color:var(--brown)}.bcard .btier2{font-size:.72rem;color:var(--brown)}
 .tiercard .tiernow span{color:#6e6458}
@@ -610,9 +610,9 @@ main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
 a.diffbtn{text-decoration:none;display:inline-block}
 .brandbtn{background:transparent;color:var(--cream);border-color:#e0a42fcc}.brandbtn:hover{background:var(--deep);color:var(--gold)}
 .diffbtn .sm{display:none}
-@media(max-width:700px){.brandbtn .lg{display:none}.brandbtn .sm{display:inline}.navsep{display:none}.top .stats .diffbtn{padding:.1rem .45rem;font-size:.68rem;letter-spacing:.02em}.top .stats{gap:.35rem .4rem}}
+@media(max-width:700px){.brandbtn .lg{display:none}.brandbtn .sm{display:inline}.navsep{display:none}.top .stats .diffbtn{padding:.1rem .45rem;font-size:.7rem;letter-spacing:.02em}.top .stats{gap:.35rem .4rem}}
 /* ===== v33: customer reactions, the grader page, and tidy checkboxes ===== */
-.dash input[type=checkbox]{width:1.15rem;height:1.15rem;flex:none;margin:.12rem 0 0;padding:0;border:0;background:none;border-radius:4px;accent-color:var(--teal)}
+.dash input[type=checkbox]{width:1.5rem;height:1.5rem;flex:none;margin:.12rem 0 0;padding:0;border:0;background:none;border-radius:4px;accent-color:var(--teal)}
 .protorow{display:flex!important;align-items:flex-start;gap:.6rem;margin:.55rem 0!important;line-height:1.35;cursor:pointer}
 .brow,.blush{transform-box:fill-box;transform-origin:center;transition:transform .4s}
 .xm path{display:none}
@@ -667,7 +667,7 @@ main:has(.maphome){max-width:1180px}
    (the X leaves it), and on the first-run and manager screens. The stats footer rides just above it. */
 :root{--tabh:calc(53px + env(safe-area-inset-bottom,0px))}
 .tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:19;grid-template-columns:repeat(5,1fr);gap:.1rem;background:var(--deep);border-top:2px solid var(--gold);padding:.2rem .25rem env(safe-area-inset-bottom,0px)}
-.tabbar button,.tabbar a{display:grid;justify-items:center;align-content:center;gap:.1rem;min-height:48px;padding:.2rem .1rem;background:none;border:0;border-radius:10px;color:#e8d3ae;font:700 .62rem Arimo,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.tabbar button,.tabbar a{display:grid;justify-items:center;align-content:center;gap:.1rem;min-height:48px;padding:.2rem .1rem;background:none;border:0;border-radius:10px;color:#e8d3ae;font:700 .7rem Arimo,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;cursor:pointer}
 .tabbar i{font-style:normal;font-size:1.2rem;line-height:1}
 .tabbar [aria-current="page"]{color:var(--gold);background:#e0a42f26}
 .tabbar button:focus-visible,.tabbar a:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
@@ -678,19 +678,28 @@ main:has(.maphome){max-width:1180px}
   body:not(.onboarding):not(.mgr):not(.playing) main{padding-bottom:calc(5rem + var(--tabh))}
   body:not(.onboarding):not(.mgr):not(.playing) #toast{bottom:calc(76px + var(--tabh))}
 }
+.callcard .card{margin-bottom:.8rem}.callcard .dhead{margin-bottom:.8rem}
+.cclineup{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem}.cclineup div{background:#fff8e6;border:1px solid #ead9b5;border-radius:10px;padding:.5rem .7rem}.cclineup .pr{color:var(--brown);font-weight:700;margin-left:.3rem}.cclineup small{display:block;color:#5c5044}
+.ccrow{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.ccrow .card{margin-bottom:.8rem}@media(max-width:700px){.ccrow{grid-template-columns:1fr}}
+.callcard .xlist{column-count:1}.xlist.nev li::marker{color:var(--red)}
+.ifthey{margin:0}.ifthey dt{font-weight:700;margin-top:.5rem}.ifthey dd{margin:.1rem 0 0;color:#3a2c1c}
+.calcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.5rem 0}.calcgrid label{display:grid;gap:.2rem;font-weight:700;font-size:.85rem}
+.calcgrid input,.calcgrid select{font:inherit;font-weight:400;padding:.45rem .5rem;border:2px solid #cfc4b8;border-radius:10px;background:#fff;min-height:44px}
+.calcout{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;background:#fff8e6;border:2px solid var(--gold);border-radius:12px;padding:.7rem;margin:.4rem 0}.calcout div{text-align:center}.calcout b{display:block;font:1.4rem Rye,serif;color:var(--brown);font-weight:400}.calcout span{font-size:.78rem;color:#5c5044}.calcout p{grid-column:1/-1;margin:0}
+.retryrow{margin:.5rem 0 .2rem}.retryrow small{color:#5c5044;margin-left:.3rem}.retrynote{border-left:4px solid var(--gold);padding-left:.6rem}
 .go{cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .go:hover,.go:focus-visible{border-color:var(--gold);box-shadow:0 0 0 3px #e0a42f55;outline:none}
 .goto{font:700 .72rem Arimo,sans-serif;font-style:normal;color:var(--gold);letter-spacing:.06em;margin-top:.15rem}.go:hover .goto,.go:focus-visible .goto{text-decoration:underline}
 .tierbar.go:hover,.tierbar.go:focus-visible{background:#00000066}
 /* ===== v42: presenter mode ===== */
-.presentrow{margin:.5rem 0 0;text-align:center}.presentrow .linkbtn{font-size:.8rem;opacity:.85}
+.presentrow{margin:.5rem 0 0;text-align:center}.presentrow .linkbtn{font-size:.85rem;padding:.4rem .6rem}
 #presenter{position:fixed;left:12px;bottom:58px;z-index:45;font-family:Arimo,sans-serif}
 #prbtn{display:flex;align-items:center;gap:.4rem;background:var(--deep);color:var(--gold);border:2px solid var(--gold);border-radius:99px;padding:.35rem .8rem;font-weight:700;font-size:.82rem;box-shadow:0 4px 10px #0007;cursor:pointer}
-#prbtn small{font-weight:400;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:#e8d3ae}
+#prbtn small{font-weight:400;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:#e8d3ae}
 #prbtn:disabled{opacity:.7;cursor:progress}
 #prpanel{position:absolute;left:0;bottom:calc(100% + 8px);width:min(300px,calc(100vw - 24px));max-height:min(70vh,560px);overflow:auto;background:var(--deep);color:var(--cream);border:2px solid var(--gold);border-radius:14px;padding:.6rem .7rem;box-shadow:0 8px 24px #000a}
 #prpanel[hidden]{display:none}
-.prsec{margin-bottom:.5rem}.prsec h4{margin:.1rem 0 .3rem;font:700 .68rem Arimo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.prsec{margin-bottom:.5rem}.prsec h4{margin:.1rem 0 .3rem;font:700 .7rem Arimo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 .prsec button{display:block;width:100%;text-align:left;background:#ffffff14;color:var(--cream);border:0;border-radius:8px;padding:.32rem .6rem;margin:0 0 3px;font:inherit;font-size:.85rem;cursor:pointer}
 .prsec button:hover,.prsec button:focus-visible{background:#e0a42f33;outline:none}
 .prfoot{border-top:1px solid #e0a42f55;padding-top:.5rem}.prfoot small{display:block;color:#e8d3ae;font-size:.72rem;margin-top:.2rem}
@@ -723,8 +732,8 @@ body.mgr #presenter{bottom:12px}
 .ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;list-style:none;margin:.2rem 0 .6rem;padding:0;text-align:center}
 .lstep{border-radius:12px;padding:.4rem .2rem;background:#f4ecdd;display:grid;justify-items:center;align-content:start;gap:.1rem;border:2px solid transparent}
 .lstep.past{background:#fbefcf}.lstep.now{background:#fff6dc;border-color:var(--gold);box-shadow:0 0 0 3px #e0a42f44}
-.lstep .lnum{font:700 .62rem Arimo,sans-serif;letter-spacing:.14em;color:var(--brown)}.lstep b{font-size:.8rem;line-height:1.1}
-.lstep small{font-size:.68rem;color:#6e6458}.lstep.now small{color:#8a5a0a;font-weight:700}
+.lstep .lnum{font:700 .7rem Arimo,sans-serif;letter-spacing:.14em;color:var(--brown)}.lstep b{font-size:.8rem;line-height:1.1}
+.lstep small{font-size:.7rem;color:#6e6458}.lstep.now small{color:#8a5a0a;font-weight:700}
 .lstep .lmedal svg{width:62px;height:auto;display:block}.lstep.next .lmedal{opacity:.85}
 .ltrack{height:8px;background:#e6ddd0;border-radius:99px;overflow:hidden;margin:.4rem 0 .6rem}.ltrack i{display:block;height:100%;background:linear-gradient(90deg,#c47f43,#e0a42f,#fff1c4)}
 .lnext{margin:.2rem 0 .6rem;font-size:.92rem}
@@ -788,6 +797,11 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 .gs.half{background:linear-gradient(90deg,var(--gold) 50%,#cfc4b8 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .node .stars .gs{color:#ffffff4d}.node .stars .gs.full{color:var(--gold)}.node .stars .gs.half{background:linear-gradient(90deg,var(--gold) 50%,#ffffff4d 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .bigstars .star.half{background:linear-gradient(90deg,var(--gold) 50%,#cfc4b8 50%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 8px #e0a42f99)}
+/* ===== v43: accessibility (focus rings, tap size, page headings) ===== */
+a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[role=button]:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.gate :focus-visible,.foot :focus-visible,.top :focus-visible{outline-color:var(--gold-t)}
+input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertical-align:middle}
+.top{z-index:6}   /* the sticky bar stays above the page as it scrolls (the page title was drawing over its buttons) */
 </style>
 </head>
 <body>
@@ -846,26 +860,27 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25j"></script>
-<script src="sound.js?v=2026-10-25j"></script>
-<script src="scenarios.js?v=2026-10-25j"></script>
-<script src="progress.js?v=2026-10-25j"></script>
-<script src="criteria.js?v=2026-10-25j"></script>
-<script src="tone.js?v=2026-10-25j"></script>
-<script src="coach.js?v=2026-10-25j"></script>
-<script src="camera.js?v=2026-10-25j"></script>
-<script src="lessons.js?v=2026-10-25j"></script>
-<script src="dashboard.js?v=2026-10-25j"></script>
-<script src="grader.js?v=2026-10-25j"></script>
-<script src="onboarding.js?v=2026-10-25j"></script>
-<script src="tiers.js?v=2026-10-25j"></script>
-<script src="badges.js?v=2026-10-25j"></script>
-<script src="voices.js?v=2026-10-25j"></script>
-<script src="mission.js?v=2026-10-25j"></script>
-<script src="boss.js?v=2026-10-25j"></script>
-<script src="auth.js?v=2026-10-25j"></script>
-<script src="manager.js?v=2026-10-25j"></script>
-<script src="presenter.js?v=2026-10-25j"></script>
+<script src="config.js?v=2026-10-25p"></script>
+<script src="sound.js?v=2026-10-25p"></script>
+<script src="scenarios.js?v=2026-10-25p"></script>
+<script src="progress.js?v=2026-10-25p"></script>
+<script src="criteria.js?v=2026-10-25p"></script>
+<script src="tone.js?v=2026-10-25p"></script>
+<script src="coach.js?v=2026-10-25p"></script>
+<script src="camera.js?v=2026-10-25p"></script>
+<script src="lessons.js?v=2026-10-25p"></script>
+<script src="dashboard.js?v=2026-10-25p"></script>
+<script src="grader.js?v=2026-10-25p"></script>
+<script src="onboarding.js?v=2026-10-25p"></script>
+<script src="tiers.js?v=2026-10-25p"></script>
+<script src="badges.js?v=2026-10-25p"></script>
+<script src="voices.js?v=2026-10-25p"></script>
+<script src="mission.js?v=2026-10-25p"></script>
+<script src="boss.js?v=2026-10-25p"></script>
+<script src="auth.js?v=2026-10-25p"></script>
+<script src="manager.js?v=2026-10-25p"></script>
+<script src="callcard.js?v=2026-10-25p"></script>
+<script src="presenter.js?v=2026-10-25p"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -920,6 +935,11 @@ $("#sendlink").onclick = () => {
 };
 $("#email").onkeydown = e => { if (e.key === "Enter") $("#sendlink").click(); };
 $("#mgrLink").onclick = e => { e.preventDefault(); $("#gate").classList.add("hidden"); managerMode(); };
+// while the age gate is up, the keyboard and screen readers cannot reach the page behind it
+{
+  const wall = () => { const up = !$("#gate").classList.contains("hidden"); ["header.top", "#app", ".foot", "#tabbar"].forEach(q => { $(q).inert = up; }); };
+  wall(); new MutationObserver(wall).observe($("#gate"), { attributes: true, attributeFilter: ["class"] });
+}
 
 // ---------- helpers ----------
 const clamp = v => Math.max(0, Math.min(100, v));
@@ -954,13 +974,16 @@ function stopAll() { stopTimer(); if (window.speechSynthesis) { Voices.halt(); s
 
 // ---------- difficulty dialog ----------
 // The popup before a stop. Lessons just start. Missions explain how they work and offer the camera coach, which is on by default.
+// About how long a stop takes, so a rep can fit it in. A lesson question takes about half a minute and a mission answer about a minute and a half.
+const stopMinutes = st => (st.practice ? 6 : st.qs ? Math.max(2, Math.round(st.qs.length * 0.5)) : st.steps ? Math.max(3, Math.round(st.steps.length * 1.5)) : 3);
 function openDiff(go, stop) {
   const dlg = $("#diffDlg"), lesson = !!(stop && stop.qs), L = MLEVEL[(stop && stop.level) || 2];
   dlg.onclick = e => { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); };   // click outside to close
   const rw = !stop.practice && !stop.noReward && REWARDS[stop.id], got = rw && state.done[stop.id];
+  const coachOnDefault = state.coachPref === true || state.coachPref === false ? state.coachPref : ((stop && stop.level) || 2) <= 2;
   const secure = window.isSecureContext, hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
   dlg.innerHTML = `<h2>${esc(stop.title)}</h2>
-    <p class="note2">${esc(stop.sub)} · ${lesson ? "lesson" : stop.practice ? "practice round" : "Level " + stop.level + " · " + L.name}</p>
+    <p class="note2">${esc(stop.sub)} · ${lesson ? "lesson" : stop.practice ? "practice round" : "Level " + stop.level + " · " + L.name} · about ${stopMinutes(stop)} min</p>
     ${rw ? `<p class="unlockbox ${got ? "got" : ""}"><b>${got ? "✓ Already unlocked" : "🎁 Pass this to unlock"}:</b> ${rw.map(esc).join(", ")}</p>` : ""}
     ${lesson ? `<p>A quick brand quiz to learn the facts you'll use in the missions.</p>` : `
     <p>${stop.practice ? "A short mix of moments from different customers, picked to train one skill." : L.blurb}</p>
@@ -968,13 +991,16 @@ function openDiff(go, stop) {
       <li><b>The customer speaks</b> and you get a question.</li>
       <li><b>You answer out loud</b>, like a recorded interview, or type it.</li>
       <li><b>Your avatar plays your answer back in your own voice</b>, and the customer replies to what you said.</li>
-      <li><b>Scores come at the end:</b> each answer out of 5. Four points are for what you say and one is for <b>tone</b>, judged for the situation. You see what you mentioned and what to improve.</li></ul>
+      <li><b>Scores come at the end</b> (or after each answer in Coach mode): each answer out of 5. Four points are for what you say and one is for <b>tone</b>, judged for the situation. You see what you mentioned and what to improve.</li></ul>
+    ${stop.boss ? '<p class="note2 coachnote">💡 Boss battles are scored at the end, with no Coach mode and no hints.</p>' : `<div class="grp"><label class="camopt"><input type="checkbox" id="coachOn" ${coachOnDefault ? "checked" : ""}> 💡 Coach mode <span class="recommend">(feedback after every answer)</span></label>
+      <p class="note2 camnote">On by default for the easy levels. Turn it off to be scored only at the end, like a real interview. A hint costs ${HINT_COST} XP.</p></div>`}
     <div class="grp"><label class="camopt"><input type="checkbox" id="camOn" ${state.cam ? "checked" : ""}> 📷 Camera coach <span class="recommend">(highly recommended)</span></label>
       <p class="note2 camnote" id="camnote"><b>Why:</b> you get a delivery score out of 5 for eye contact, posture and smiling, and 25% more XP. Your browser will ask to use the camera. Video stays on your device and is never recorded or uploaded.</p>
       ${secure ? "" : '<p class="note2 warnnote">The camera and microphone only work on https or http://localhost.</p>'}
       ${hasSR ? "" : '<p class="note2 warnnote">Voice recording isn\'t available in this browser. Chrome or Edge have it. You can still type your answers.</p>'}</div>`}
     <div class="dactions"><button class="btn" id="dstart" type="button">Start</button><button class="btn alt" id="dcancel" type="button">Cancel</button></div>`;
   if ($("#camOn")) $("#camOn").onchange = e => { state.cam = e.target.checked; state.camPref = state.cam; Progress.save(state); };
+  if ($("#coachOn")) $("#coachOn").onchange = e => { state.coachPref = e.target.checked; Progress.save(state); };
   $("#dstart").onclick = () => { dlg.close(); if (go) go(); };
   $("#dcancel").onclick = () => dlg.close();
   dlg.showModal();
@@ -1068,17 +1094,19 @@ const SOLD_OUT = new Set(["denim-tote-bag"]);   // out of stock on the shop when
 
 // ---------- who is Tequila Corrido ----------
 // A read-only page for Ken's other goal: teach people who Corrido is. Only facts from the brand's own site.
-function explorer() {
-  stopAll(); Cam.stop(); Sound.stop();
-  const lineup = [
+// The four bottles with their public shop prices: [name, price, tasting notes, shop handle, photo]. Used by the brand page and the Before a call card.
+const LINEUP = [
     ["Blanco", "$44.99", "Citrus, fruity, floral agave and a slight crisp pepper.", "blanco", "Tequila_Corrido_Blanco_Additive-Free_1_400x.png"],
     ["Reposado", "$54.99", "Vanilla, caramel, fruit and spice.", "reposado", "Tequila_Corrido_Reposado_Additive-Free_Tequila_Bottle_1_400x.png"],
     ["Overproof", "$56.99", "Cooked agave, citrus, tropical hints and subtle spices.", "overproof", "Overproof_Bottle_Tequila_Corrido_Shadow_0507c1d7-9f43-42eb-9e1e-ec0e4de3bb56_400x.png"],
     ["Añejo", "$89.99", "Coffee, agave and dried fruit.", "anejo", "Tequila_Corrido_Anejo_Additive-free_Tequila_400x.png"],
-  ];
+];
+function explorer() {
+  stopAll(); Cam.stop(); Sound.stop();
+  const lineup = LINEUP;
   app.innerHTML = `<section class="view sheet explore">
     <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Everything a new rep should know, in one place.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
-    <p class="xsite"><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a> <small>Opens in a new tab, so you can come right back.</small></p>
+    <p class="xsite"><button class="btn" id="xcall" type="button">Before a call: the 60-second card</button> <a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 Tequila Corrido website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a> <small>Opens in a new tab, so you can come right back.</small></p>
     <div class="card"><h3>The promise</h3><p><b>Additive-free.</b> Only three ingredients and no fake flavors. That one line is what to say when someone asks what's in it.</p></div>
     <div class="card"><h3>The lineup</h3><div class="xlineup">${lineup.map(([n, pr, notes, h, img]) => `<a class="xbottle" href="https://ilovetequilacorrido.com/products/${h}" target="_blank" rel="noopener"><img src="${IMG}${img}" alt="A bottle of Tequila Corrido ${n}" loading="lazy"><div class="xtext"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>See it on the shop ↗</em></div></a>`).join("")}</div>
       <p class="note2">Prices are the public site prices. Wholesale pricing and margins aren't public, so a rep confirms those in writing.</p></div>
@@ -1105,6 +1133,7 @@ function explorer() {
     app.querySelectorAll(".xrow").forEach(r => { r.hidden = t.dataset.c !== "All" && r.dataset.c !== t.dataset.c; });
   });
   $("#xquiz").onclick = () => { const l = LESSONS[0]; openDiff(() => quiz(l), l); };
+  $("#xcall").onclick = () => CallCard.beforeCall();
 }
 
 // ---------- home / map ----------
@@ -1115,10 +1144,9 @@ function tierBar() {
     <div class="tierrow">${TIERS.map((n, i) => `<div class="tierdot ${i < t ? "done" : i === t ? "now" : ""}" title="Tier ${i}: ${n}"><b>${i}</b></div>`).join("<i class=\"tl\"></i>")}</div>
     <p class="tiernow"><b>Tier ${t} · ${TIERS[t]}</b>${nb && st ? ` <span>Next boss: <b>${esc(st.title)}</b></span>` : ` <span>Season complete. You beat every boss.</span>`}</p></div>`;
 }
-// The knowledge check is required before the map opens. People who already have progress from before this rule are let through.
-// While the game is being tested every stop is open and the knowledge check isn't required. The switch is in
-// Dashboard > Settings > Prototype tools (PROTO in tiers.js).
-const needsCheck = () => !state.pre && !(state.history && state.history.length > 0);
+// The knowledge check used to lock the map until it was done. It is optional now (Dashboard > Knowledge check), so a new rep can start selling
+// straight away. This stays as one switch in case the company wants it required again: return true to lock the map until the check is done.
+const needsCheck = () => false;
 
 // The stops finished the last time the map was drawn, so a stop you just finished can pop and light the road to the next one.
 let mapSeen = null;
@@ -1169,8 +1197,9 @@ function home() {
     <div class="sidecard go" data-go="badges" role="link" tabindex="0" title="Open your badges"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small><em class="goto">All badges ›</em></div></aside>`;
   const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 120, 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
+    <h1 class="sr">Your training map</h1>
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
-    ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"}</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
+    ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     ${tierBar()}
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${bands}${stops}</div></div>${sideRight}</section>`;
@@ -1194,8 +1223,8 @@ function home() {
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------
-function lessonTop(p, mission) {
-  return `<div class="lesson-top"><button class="x" id="exit" aria-label="Exit">✕</button><div class="prog"><i style="width:${p * 100}%"></i></div>${mission ? "" : `<span class="hearts">❤️ ${state.hearts}</span><span class="chip">${D().label}</span>`}</div>`;
+function lessonTop(p, mission, title) {
+  return `<div class="lesson-top">${title ? `<h1 class="sr">${esc(title)}</h1>` : ""}<button class="x" id="exit" aria-label="Exit">✕</button><div class="prog"><i style="width:${p * 100}%"></i></div>${mission ? "" : `<span class="hearts">❤️ ${state.hearts}</span><span class="chip">${D().label}</span>`}</div>`;
 }
 function wireX() { $("#exit").onclick = home; }
 
@@ -1657,8 +1686,9 @@ const togglesFor = A => [["dimples", "Dimples"], ["freckles", "Freckles"], ["mol
 const thumb = u => u.replace(/_\d+x\.png/, "_300x.png");
 // Polos are drawn in code (there is no flat photo to trim), so their tile is a small polo in the same colour.
 const poloIcon = c => `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 7L5 14l5 9 6-3v22h16V20l6 3 5-9-12-7-5 4h-6z" fill="${c}" stroke="#0005" stroke-width="1.4" stroke-linejoin="round"/><path d="M19 7l5 9 5-9M24 16v9" fill="none" stroke="#0006" stroke-width="1.4" stroke-linecap="round"/></svg>`;
-function creator(onDone) {
+function creator(onDone, opts = {}) {
   const A = state.avatar;
+  const fresh = !!opts.fresh;   // the first time: start from a random look, so there is a good starting point to adjust
   let mtab = "tee";
   const merchTile = c => {
     if (c === "None") return `<button type="button" class="tile none" data-v="None" data-cap="No hat" aria-label="No hat"><span aria-hidden="true">✕</span><small>None</small></button>`;
@@ -1752,6 +1782,7 @@ function creator(onDone) {
   };
   wire();
   checkName();
+  if (fresh && !state.avatarSaved) { $("#crand").click(); A.glasses = "None"; A.hat = "None"; wire(); }   // a random look with a clear face to start from
   if (!A.name.trim()) $("#cname").focus();
   window.scrollTo(0, 0);
 }

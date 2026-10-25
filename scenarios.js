@@ -587,6 +587,82 @@ const OPENERS = {
   ],
 };
 
+// A second version of what the customer says for every question after the opener, so a replay is a different conversation, not the same one with a new
+// first line. The meaning, the facts and the price or day they mention stay the same, so the rubric, the hints and the customer's replies still fit.
+// (Trouble at the Store keeps its first three lines as they are: a robbery is not something to reword for variety.) mission.js picks between the two,
+// never the same version twice in a row.
+const LINE_ALTS = {
+  marco: {
+    1: `Marco sets the cloth down. "Okay, a minute. Why should I care? I've got a $9 well tequila and nobody complains."`,
+    2: `Marco shakes his head. "Over $12 a pour and my guests complain. And yours isn't cheap."`,
+    3: `"Suppose the math works. Why would I swap the big-name brand my guests already know and trust?"`,
+    4: `Marco finally relaxes. "Okay. So where do we go from here?"`,
+  },
+  sam: {
+    1: `"Okay. What's this about? I need to tell her something."`,
+    2: `Sam grins. "Could you just leave a bottle at the host stand for her to try?"`,
+    3: `"Fine. How does she reach you, and when should she expect to hear from you?"`,
+  },
+  dana: {
+    1: `Dana flips a page. "Blanco is $44.99 on the shelf. That's mid-pack, so what's my margin story?"`,
+    2: `"Trendy brands burned me before: a big launch, then they stall. What tells me this one will sell?"`,
+    3: `Dana sets the pen down. "Say we run a pilot. What would you need from me?"`,
+  },
+  hardno: {
+    1: `Tony shrugs. "Nobody asks for tequila here. It's beer and cheap whiskey, that's it."`,
+    2: `"Forty-five bucks for tequila? Not around here. I can't see it moving."`,
+    3: `"Every rep promises the moon and then I never see them again. Why would you be any different?"`,
+    4: `Tony exhales. "Come back Thursday. No promises."`,
+  },
+  priya: {
+    1: `"You said additive-free. To be honest, I don't know what that means. Could you explain it?"`,
+    2: `"My budget is small. I can't tie up cash in bottles I'm not sure I can sell."`,
+    3: `Priya smiles. "Okay. What would a first order look like?"`,
+  },
+  buyer: {
+    1: `Rafael crosses his arms. "Everybody says they're authentic. What's actually real about yours?"`,
+    2: `"After the family meal on Sundays my regulars like to sip, something with coffee and dried fruit. And weekends are all about my margaritas. What would you put in my hands?"`,
+    3: `"My families count every dollar. A bottle at $44.99, and a sipper at $89.99, is a lot for a taquería."`,
+    4: `Rafael nods. "Alright. What comes next?"`,
+  },
+  mia: {
+    1: `"Say a guest asks for a bright, citrusy margarita with a bit of pepper at the end. Which one would you pour?"`,
+    2: `"Now after dinner. A guest wants the most special bottle on the shelf, but $89.99 a bottle is a lot for my lounge."`,
+    3: `Mia smiles. "Okay. What's the easiest way for us to try this without much work?"`,
+  },
+  comply: {
+    1: `"Great. My cousin is 19. Can she have a little taste at the party?"`,
+    2: `"Love it. Can you ship cases to my guests wherever they live? I saw that you ship anywhere."`,
+    3: `"One more thing. On my flyer, can I call it 'organic', 'low-calorie' and 'healthy'?"`,
+  },
+  stickup: {
+    4: `Three weeks later Ben waves you in. "You stayed when it counted. So what have you got for me? Keep it honest."`,
+  },
+  ray: {
+    1: `"Okay. What's actually different about yours?"`,
+    2: `Ray tilts his head. "The big-name brand has a famous face behind it, and my guests notice that. What do you bring?"`,
+    3: `"So what does this cost me? I assume the premium bottles aren't cheap."`,
+    4: `Ray leans forward. "Alright. Convince me with your story, and tell me what happens next."`,
+  },
+  quiet: {
+    1: `"Sure, I have time. We're trying to get more people in on weeknights."`,
+    2: `"Mostly margaritas and shots. What makes yours different?"`,
+    3: `"Interesting. What would a first step be?"`,
+  },
+  gas: {
+    1: `"I only work the counter. The owner orders everything, but I'm not sure he's in. Or maybe my manager decides? I really don't know who does."`,
+    2: `"Is yours like the one with the red cap? My customers mostly buy whatever's cheapest. And what does 'additive-free' even mean?"`,
+    3: `"Do I need some kind of special thing to sell it? The last rep mentioned a license. And my manager said never to take a bottle from a rep. Could you just leave one anyway?"`,
+    4: `"Okay. The owner is in Thursdays around noon. Can you come back then?"`,
+  },
+  mean: {
+    1: `"Tequila's what college kids do shots of and regret. My guys drink beer and whiskey. Why waste a rail on it?"`,
+    2: `"Forty-five bucks a bottle, I hear. That's crazy. Who pays that?"`,
+    3: `"Every rep says the same thing. What makes you different? Do you even know my bar?"`,
+    4: `Gus grunts again. "Fine, one bottle. What do you need from me, and by when?"`,
+  },
+};
+
 // ---------------------------------------------------------------------------------------------------------------
 // Sales-script missions. Each mission is a conversation: the customer speaks, you answer out loud (or type), and
 // nothing is scored until the end. Missions get harder as you go. Three more scenarios were added for the ladder:

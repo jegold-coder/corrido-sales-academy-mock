@@ -19,29 +19,30 @@ const Presenter = (() => {
   const scenario = id => SCENARIOS.find(x => x.id === id);
 
   // ---------- the sample player ----------
-  // A Tier 2 rep part-way through the season, with a weak spot (price handling), a few mistakes to review and a before-and-after check.
+  // A rep part-way through the season, with a weak spot (price handling), a few mistakes to review and a before-and-after check. Where in the
+  // season is random (see randomStop); the stops done are always the first ones in a row, so the next stop is open and everything after it is locked.
   const STARS = [3, 2.5, 3, 3, 3, 2.5];
   const DIPS = { "Price handling": 2.4, Closing: 3.1, "Objection handling": 3.4 };   // the lowest skills show on the radar and in Review
   const sampleAvatar = () => cleanAvatar({ ...DEFAULT_AVATAR, name: "Demo Rep", smile: "Warm smile", hairStyle: "Wavy", hair: 2 });
-  function sampleProgress(through = "sam") {
+  function sampleProgress(through = "sam", full = false) {   // full: the whole season, every stop at three stars with strong skills
     const P = Progress.blank(), today = Progress.today(), ids = PATH.slice(0, PATH.indexOf(through) + 1);
-    ids.forEach((id, i) => { P.done[id] = true; P.stars[id] = STARS[i % STARS.length]; });
+    ids.forEach((id, i) => { P.done[id] = true; P.stars[id] = full ? 3 : STARS[i % STARS.length]; });
     ids.forEach((id, i) => {
       const sc = scenario(id), lesson = LESSONS.find(x => x.id === id);
       if (!sc && !lesson) return;   // the Brand Brain quiz boss has no mission history
       const skills = {}; let n = 0;
-      if (sc) sc.steps.forEach((st, k) => { skills[st.skill] = DIPS[st.skill] || +(4.2 + (k % 3) * 0.25).toFixed(2); });
+      if (sc) sc.steps.forEach((st, k) => { skills[st.skill] = (!full && DIPS[st.skill]) || +(4.2 + (k % 3) * 0.25).toFixed(2); });
       else skills[id === "brand" ? "Story" : "Product knowledge"] = 4.1;
       const vals = Object.values(skills), avg = vals.reduce((a, b) => a + b, 0) / vals.length;
       n += 1;
       P.history.push({ id, title: sc ? sc.title : lesson.title, diff: sc ? `Level ${sc.level}` : "medium", mode: sc ? "typed" : "quiz", pct: Math.round(avg / 5 * 100), stars: P.stars[id], won: true, xp: sc ? 90 : 60, date: today, skills, camera: null });
     });
-    P.xp = through === "sam" ? 520 : Math.max(60, P.history.reduce((a, h) => a + h.xp, 0));
-    P.streak = 5; P.lastDay = today; P.tutorialSeen = true;
+    P.xp = through === "sam" ? 520 : Math.max(full ? LEVELS[LEVELS.length - 1][1] : 60, P.history.reduce((a, h) => a + h.xp, 0));
+    P.streak = full ? 14 : 5; P.lastDay = today; P.tutorialSeen = true;
     P.pre = { score: 5, total: 10, date: today, missed: ["Story", "Rules", "Selling", "Lineup"] };
-    if (ids.includes("priya")) P.post = { score: 8, total: 10, date: today, missed: ["Prices"] };
-    P.badges = ["first", "closer", "flawless", "typed", "streak3"].filter(() => ids.includes("quiet"));
-    P.proto = { unlockStops: true, unlockMerch: false, unlimitedTries: true };
+    if (ids.includes("priya")) P.post = full ? { score: 10, total: 10, date: today, missed: [] } : { score: 8, total: 10, date: today, missed: ["Prices"] };
+    P.badges = full ? Object.keys(BADGES) : ["first", "closer", "flawless", "typed", "streak3"].filter(() => ids.includes("quiet"));
+    P.proto = { unlockStops: false, unlockMerch: false, unlimitedTries: true };
     P.camPref = false; P.profile = { mode: "guest", email: "" };
     if (typeof DEMO_TEAM !== "undefined") DEMO_TEAM.forEach(([name, xp, lv, b, s]) => { P.team[name] = { n: name, xp, lv, b, s, demo: true }; });
     // moments to review: a poor and a middling answer on the missions already played, scored by the real coach
@@ -69,13 +70,35 @@ const Presenter = (() => {
     if (typeof syncBadges === "function") syncBadges();
     if (typeof hud === "function") hud();
   }
-  function enter(through) {
+  function stash() {
     if (!active()) {   // stash only once: the second time round the live data is the sample, and it would overwrite the real thing
       store.set(STASH, JSON.stringify({ progress: store.get(Progress.KEY), avatar: store.get(AVATAR) }));
       store.set(FLAG, "1");
     }
-    apply(sampleProgress(through), active() && state.avatarSaved && state.avatar && state.avatar.name === "Demo Rep" ? state.avatar : sampleAvatar());
   }
+  // Where a random sample stops: after at least the first four stops (so there is a mission, badges and a radar to show) and never after the
+  // last one, so the game is part-way through and never finished. It never picks the stop it picked last, so pressing the button changes the map.
+  let lastStop = null;
+  const randomStop = () => {
+    const pool = PATH.slice(3, PATH.length - 1).filter(id => id !== lastStop);
+    return (lastStop = pool[Math.floor(Math.random() * pool.length)]);
+  };
+  function enter(through) {
+    stash();
+    apply(sampleProgress(through || randomStop()), active() && state.avatarSaved && state.avatar && state.avatar.name === "Demo Rep" ? state.avatar : sampleAvatar());
+  }
+  // A first-day player: nothing done, nothing earned, every stop locked behind the one before. The character stays, so a demo can start from the beginning.
+  function freshProgress() {
+    const P = Progress.blank();
+    P.tutorialSeen = true; P.camPref = false; P.profile = { mode: "guest", email: "" };
+    P.proto = { unlockStops: false, unlimitedTries: true };
+    return P;
+  }
+  // Switch the player to some progress and keep the character as it is now (it may have been edited during the demo).
+  function load(progress) { stash(); apply(progress, state.avatarSaved && state.avatar ? state.avatar : sampleAvatar()); }
+  const reset = () => load(freshProgress());
+  const finish = () => load(sampleProgress(PATH[PATH.length - 1], true));   // the whole game complete: every stop, all six bosses, every badge, the top tier and level
+  const sample = () => load(sampleProgress(randomStop()));   // a different point in the season each time
   function restore() {
     const st = parse(store.get(STASH)) || {}, progress = parse(st.progress), avatar = parse(st.avatar);
     store.del(FLAG); store.del(STASH);
@@ -115,7 +138,7 @@ const Presenter = (() => {
       ["Brand Brain boss", () => bossIntro(stop("brandbrain"))], ["Boss lost", () => autoplay("mia", "E", { through: "sam", boss: true })],
       ["Tier Up", () => autoplay("priya", "R", { through: "quiet", boss: true })],
     ]],
-    ["Dashboard and more", [...tabs.map(([l, t]) => ["Dashboard: " + l, () => dashboard(t)]), ["Character", () => creator(home)], ["Who is Tequila Corrido?", () => explorer()]]],
+    ["Dashboard and more", [...tabs.map(([l, t]) => ["Dashboard: " + l, () => dashboard(t)]), ["Character", () => creator(home)], ["Who is Tequila Corrido?", () => explorer()], ["Before a call", () => CallCard.beforeCall()]]],
     ["Manager", mgr.map(([l, t]) => ["Manager: " + l, () => managerMode(t), true])],
   ];
   function busy(on) { const b = q("#prbtn"); if (b) { b.disabled = on; b.querySelector("small").textContent = on ? "playing a sample…" : "sample data"; } }
@@ -146,9 +169,12 @@ const Presenter = (() => {
       p.appendChild(sec);
     });
     const foot = document.createElement("div"); foot.className = "prsec prfoot";
-    foot.innerHTML = '<button type="button" id="prreset">Reset the sample progress</button><button type="button" id="prleave">Leave presenter mode</button><small>Your own progress is safe and comes back when you leave.</small>';
+    foot.innerHTML = '<button type="button" id="prreset">Start over: nothing complete</button><button type="button" id="prsample">Random sample progress</button><button type="button" id="prfinish">Complete the game</button><button type="button" id="prleave">Leave presenter mode</button><small>Your own progress is safe and comes back when you leave.</small>';
     p.appendChild(foot);
-    q("#prreset").onclick = () => { enter(); close(); home(); if (typeof toast === "function") toast("Sample progress reset."); };
+    const jump = (fn, msg) => () => { fn(); close(); document.body.classList.remove("onboarding", "mgr"); home(); if (typeof toast === "function") toast(typeof msg === "function" ? msg() : msg); };
+    q("#prreset").onclick = jump(reset, "Progress reset: nothing is complete.");
+    q("#prsample").onclick = jump(sample, () => `Sample progress loaded: ${Object.keys(state.done).length} of ${PATH.length} stops done.`);
+    q("#prfinish").onclick = jump(finish, "The whole game is complete: every stop, all six bosses, every badge.");
     q("#prleave").onclick = () => leave();
   }
   function unmount() { const d = q("#presenter"); if (d) d.remove(); }
@@ -174,6 +200,6 @@ const Presenter = (() => {
     if (!gate || gate.classList.contains("hidden")) ready();
     else new MutationObserver((_, obs) => { if (gate.classList.contains("hidden")) { obs.disconnect(); ready(); } }).observe(gate, { attributes: true, attributeFilter: ["class"] });
   }
-  return { active, start, leave, enter, restore, sampleProgress, sampleAvatar, boot, MENU, FLAG, STASH };
+  return { active, start, leave, enter, reset, finish, sample, restore, sampleProgress, freshProgress, randomStop, sampleAvatar, boot, MENU, FLAG, STASH };
 })();
 if (typeof document !== "undefined" && document.getElementById) Presenter.boot();

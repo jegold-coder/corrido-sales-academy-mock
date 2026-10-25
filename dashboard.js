@@ -57,6 +57,7 @@ function dashProgress(el) {
   const wirePractice = () => { if ($("#pweak")) $("#pweak").onclick = () => playPractice(weak[0]); };
   el.innerHTML = `${tierCard()}
     <div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
+    ${!state.pre ? '<p class="learn">Optional: the 2-minute <b>knowledge check</b> shows where you start, so you can see how much you improve. <button class="btn alt" id="pcheck" type="button">Take the check</button></p>' : ""}
     <p class="learn">${rec}</p>
     <div class="card"><h3>Skills</h3>${skills.length >= 3
       ? `<div class="radarwrap">${skillRadar(skills)}<ul class="skilllist">${skills.map(([k, v], i) => `<li><span>${esc(k)}${i === 0 ? ' <small class="focus">focus here</small>' : ""}</span><b>${v}%</b></li>`).join("")}</ul></div>`
@@ -65,6 +66,7 @@ function dashProgress(el) {
     ${cameraDash(H)}
     <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${starGlyphs(h.stars || 0)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
   wirePractice();
+  if ($("#pcheck")) $("#pcheck").onclick = () => knowledgeCheck(home);
 }
 
 function dashReview(el) {

@@ -20,7 +20,7 @@ ok("it is a Tier 2 rep who has finished the first six stops", Object.keys(P.done
 ok("it has history for the missions and lessons played, and enough skills for the radar chart", P.history.length === 5 && ev("Progress.skillAverages(Presenter.sampleProgress('sam')).length") >= 3);
 ok("there are moments to review, each with what the Review tab needs", P.mistakes.length >= 3 && P.mistakes.every(m => m.mission && m.skill && m.line && m.text && m.better && Array.isArray(m.missed) && m.score < 3.5));
 ok("it has a before and after knowledge check, a streak and demo teammates", P.pre.score === 5 && P.post.score === 8 && P.streak === 5 && Object.keys(P.team).length > 0);
-ok("every stop is open and boss tries are unlimited, so any page can be shown", P.proto.unlockStops === true && P.proto.unlimitedTries === true);
+ok("stops stay locked until the one before is done, and boss tries are unlimited", P.proto.unlockStops === false && P.proto.unlimitedTries === true && ev("PROTO_DEFAULTS.unlockStops") === false);
 ok("the camera is off, so no permission prompt interrupts a demo", P.camPref === false);
 const early = ev("Presenter.sampleProgress('quiet')"), start = ev("Presenter.sampleProgress('brandbrain')");
 ok("a sample taken before a stop leaves that stop unplayed, so its first win looks like one", early.done.priya !== true && start.done.quiet !== true && start.done.brandbrain === true);
@@ -29,7 +29,7 @@ ok("no merch or clothing in anything the sample says", !/merch|shirt|\btee\b|\bh
 // entering and leaving never costs the real player anything
 const realProgress = JSON.stringify({ xp: 77, done: { brand: true }, streak: 2 }), realAvatar = JSON.stringify({ name: "Real Person", gender: "Male" });
 mem.csa_progress_v1 = realProgress; mem.csa_avatar = realAvatar;
-ev("Presenter.enter()");
+ev("Presenter.enter('sam')");
 ok("on entering, the flag is set and the sample is what is saved", mem.csa_presenter === "1" && JSON.parse(mem.csa_progress_v1).xp === 520 && JSON.parse(mem.csa_avatar).name === "Demo Rep" && ev("state.xp") === 520);
 ok("the real progress and character are kept in the stash, exactly as they were", JSON.parse(mem.csa_presenter_stash).progress === realProgress && JSON.parse(mem.csa_presenter_stash).avatar === realAvatar);
 ev("Presenter.enter(); Presenter.enter(through = undefined)");
@@ -40,12 +40,46 @@ delete mem.csa_progress_v1; delete mem.csa_avatar;
 ev("Presenter.enter(); Presenter.restore()");
 ok("a first-time visitor who leaves goes back to a first-time visit (nothing saved, no character)", !("csa_progress_v1" in mem) && !("csa_avatar" in mem) && ev("state.avatarSaved") === false);
 
+// random sample progress: part-way through the season every time, never nothing and never the whole game, and a different point on each press
+const picks = Array.from({ length: 300 }, () => ev("Presenter.randomStop()")), idx = picks.map(id => ev("PATH").indexOf(id));
+ok("a random sample stops after at least four stops and never after the last one", Math.min(...idx) >= 3 && Math.max(...idx) <= ev("PATH.length") - 2 && !picks.includes(ev("PATH[PATH.length - 1]")));
+ok("it uses the whole range, and never picks the same point twice in a row", new Set(picks).size === ev("PATH.length") - 4 && picks.every((id, i) => i === 0 || id !== picks[i - 1]));
+const partial = picks.slice(0, 40).map(id => ev(`Presenter.sampleProgress(${JSON.stringify(id)})`));
+ok("every random sample has some stops done and some left, in order from the start, so only the next stop is open", partial.every(P => { const n = Object.keys(P.done).length; return n >= 4 && n < ev("PATH.length") && ev("PATH").slice(0, n).every(id => P.done[id]); }));
+ok("every random sample has what the dashboard needs: a mission played, a radar with three skills, and a before and after check once past Priya", partial.every(P => P.history.some(h => h.mode === "typed") && ev(`Progress.skillAverages(${JSON.stringify(P)}).length`) >= 3 && P.pre && (!P.done.priya || P.post)));
+ev("Presenter.enter()"); const entered = JSON.parse(mem.csa_progress_v1), nDone = Object.keys(entered.done).length; ev("Presenter.restore()");
+ok("entering presenter mode without a stop gives a random sample too, part-way through", nDone >= 4 && nDone < ev("PATH.length"));
+delete mem.csa_progress_v1; delete mem.csa_avatar;
+
+// starting over from the menu: a map with nothing complete, the same character, the real progress still safe
+mem.csa_progress_v1 = realProgress; mem.csa_avatar = realAvatar;
+ev("Presenter.enter(); state.avatar.name = 'Edited Demo'; Presenter.reset()");
+const fresh = JSON.parse(mem.csa_progress_v1);
+ok("start over leaves nothing complete: no stops done, no XP, no history, no badges, no mistakes", Object.keys(fresh.done).length === 0 && fresh.xp === 0 && fresh.history.length === 0 && fresh.badges.length === 0 && fresh.mistakes.length === 0 && ev("Object.keys(state.done).length") === 0 && ev("state.xp") === 0);
+ok("start over keeps the character, skips the tutorial and camera prompt, and does not unlock every stop", JSON.parse(mem.csa_avatar).name === "Edited Demo" && fresh.tutorialSeen === true && fresh.camPref === false && !fresh.proto.unlockStops);
+ok("start over is still presenter mode, and the real progress is still in the stash", mem.csa_presenter === "1" && JSON.parse(mem.csa_presenter_stash).progress === realProgress);
+
+// completing the game: everything done, the top tier and level, every badge, strong skills; and it also keeps the real progress safe
+ev("Presenter.finish()");
+const all = JSON.parse(mem.csa_progress_v1);
+ok("complete the game finishes every stop and all six bosses at three stars", ev("PATH").every(id => all.done[id] && all.stars[id] === 3) && ev("BOSSES").every(b => all.done[b.id]));
+ok("it reaches the top level and the highest tier", all.xp >= ev("LEVELS[LEVELS.length - 1][1]") && ev("levelOf(state.xp)") === ev("LEVELS.length - 1") && ev("tierOf()") === 5);
+ok("it has every badge the game knows (the boss ones are added by badges.js, which the page loads before this)", ev("Object.keys(BADGES)").every(k => all.badges.includes(k)));
+ok("its skills are all strong, with no weak spot left on the radar", ev("Progress.skillAverages(state)").length >= 3 && ev("Progress.skillAverages(state)").every(s => s[1] >= 4));
+ok("it keeps the character, is still presenter mode and the real progress is still in the stash", JSON.parse(mem.csa_avatar).name === "Edited Demo" && mem.csa_presenter === "1" && JSON.parse(mem.csa_presenter_stash).progress === realProgress);
+ev("Presenter.sample()");
+ok("a random sample can be loaded again afterwards, part-way through, and keeps the character", Object.keys(JSON.parse(mem.csa_progress_v1).done).length < ev("PATH.length") && JSON.parse(mem.csa_progress_v1).xp < all.xp && JSON.parse(mem.csa_avatar).name === "Edited Demo");
+ev("Presenter.restore()");
+ok("leaving after a start over still brings the real player back", JSON.parse(mem.csa_progress_v1).xp === 77 && JSON.parse(mem.csa_avatar).name === "Real Person");
+delete mem.csa_progress_v1; delete mem.csa_avatar;
+
 // the menu and how it is wired in
 const menu = ev("Presenter.MENU().flatMap(([, items]) => items.map(i => i[0]))");
-ok("the menu reaches the game, the dashboard, the character, the brand page and all five manager pages", menu.length === 26 && ["Map", "Results: a win", "Tier Up", "Dashboard: Settings", "Character", "Who is Tequila Corrido?", "Manager: Grader"].every(l => menu.includes(l)), menu.length + " jumps");
+ok("the menu reaches the game, the dashboard, the character, the brand page and all five manager pages", menu.length === 27 && ["Map", "Results: a win", "Tier Up", "Dashboard: Settings", "Character", "Who is Tequila Corrido?", "Before a call", "Manager: Grader"].every(l => menu.includes(l)), menu.length + " jumps");
 const code = ["index.html", "dashboard.js", "manager.js", "mission.js", "boss.js", "onboarding.js", "lessons.js"].map(read).join("\n");
 ok("every page the menu calls exists", ["creator", "tutorial", "home", "openDiff", "play", "quiz", "bossIntro", "dashboard", "explorer", "managerMode"].every(f => new RegExp(`function ${f}\\(`).test(code)));
 const html = read("index.html"), pres = read("presenter.js"), dash = read("dashboard.js");
+ok("the menu footer has buttons to start over, load a random sample and complete the game, and each one goes back to the map", ["prreset", "prsample", "prfinish"].every(id => new RegExp(`id="${id}"`).test(pres) && new RegExp(`q\\("#${id}"\\)\\.onclick = jump\\(`).test(pres)) && /const jump = \(fn, msg\) => \(\) => \{ fn\(\); close\(\);[^}]*home\(\)/.test(pres));
 ok("it loads after the manager script and before the page's own script", html.indexOf('<script src="manager.js') < html.indexOf('<script src="presenter.js') && html.indexOf('<script src="presenter.js') < html.indexOf("const enterGame"));
 ok("the way in sits on the sign-in screen, and only turns on after the age check", /<p class="presentrow"><button type="button" class="linkbtn" id="presentGo" disabled>/.test(html) && /\["#guest", "#email", "#sendlink", "#presentGo"\]\.forEach\(x => \{ \$\(x\)\.disabled = false; \}\)/.test(html));
 ok("the menu itself only appears once the age gate has been passed", /MutationObserver/.test(pres) && /gate\.classList\.contains\("hidden"\)/.test(pres));

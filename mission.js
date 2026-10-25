@@ -10,33 +10,57 @@
 // Uses globals from index.html (state, app, $, esc, barScene, lessonTop, wireX, finish helpers) at call time.
 
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let voiceUsed = false;
+let voiceUsed = false, coachOn = false, hintsUsed = 0;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const wordCount = t => (t.trim() ? t.trim().split(/\s+/).length : 0);
 const lvlOf = (sc, view) => (view && view.level) || sc.level || 3;
+// Coach mode shows how each answer did right after it, instead of at the end. It is on by default for the two easy levels, never in a real boss battle,
+// and the rep's own choice (the checkbox before a mission) wins. A hint (levels 3 and up, and retries, where the checklist is hidden) costs a little XP.
+const HINT_COST = 5;
+const coachFor = sc => !sc.boss && (state.coachPref === true || state.coachPref === false ? state.coachPref : (sc.level || 3) <= 2);
 
 // The Trust, Interest and bonus meters under the scene.
 const need = (name, v, id, tip) => `<div class="need" title="${tip}"><span>${name}</span><div class="bar" role="img" aria-label="${name}. ${tip}"><i id="n${id}" style="width:${v}%"></i></div></div>`;
 
-// A mission can open in a few different ways, so a replay doesn't start with the same line. Never the same one twice in a row.
+// A mission can open in a few different ways, and every later question has a second version too (LINE_ALTS in scenarios.js), so a replay is a
+// different conversation. Never the same version twice in a row, for the opener or for any question.
 function withOpener(sc) {
+  let steps = sc.steps;
   const alts = OPENERS[sc.id];
-  if (!alts) return sc;
-  const all = [sc.steps[0].line, ...alts], last = (state.opener || {})[sc.id];
-  const pool = all.map((_, n) => n).filter(n => n !== last), n = pool[Math.floor(Math.random() * pool.length)];
-  state.opener = { ...(state.opener || {}), [sc.id]: n };
-  return n === 0 ? sc : { ...sc, steps: [{ ...sc.steps[0], line: all[n] }, ...sc.steps.slice(1)] };
+  if (alts) {
+    const all = [steps[0].line, ...alts], last = (state.opener || {})[sc.id];
+    const pool = all.map((_, n) => n).filter(n => n !== last), n = pool[Math.floor(Math.random() * pool.length)];
+    state.opener = { ...(state.opener || {}), [sc.id]: n };
+    if (n !== 0) steps = [{ ...steps[0], line: all[n] }, ...steps.slice(1)];
+  }
+  const second = LINE_ALTS[sc.id] || {}, seen = state.variant || {}, now = { ...seen };
+  steps = steps.map((st, k) => {
+    if (!second[k]) return st;
+    const key = sc.id + ":" + k, v = seen[key] === 1 ? 0 : seen[key] === 0 ? 1 : Math.round(Math.random());
+    now[key] = v;
+    return v ? { ...st, line: second[k] } : st;
+  });
+  state.variant = now;
+  return steps === sc.steps ? sc : { ...sc, steps };
 }
 
 function play(sc) {
   const L = MLEVEL[sc.level || 3];
   sc = sc.practice ? sc : withOpener(sc);
-  state.sc = sc; voiceUsed = false;
+  state.sc = sc; voiceUsed = false; hintsUsed = 0; coachOn = coachFor(sc);
   if (state.voiceOff !== true) voiceOn = true;   // the avatars talk by default so you hear your answer repeated
   if (state.cam) { Cam.reset(); Cam.begin(); } else Cam.stop();
   Sound.start(sc.theme);
   hud();
   question(0, { trust: L.start[0], interest: L.start[1], price: L.start[2] }, []);
+}
+
+// "Try this question again": the same customer line and one question, with the checklist hidden so it is a real attempt. It is practice, so it never
+// marks a stop done, but it earns XP, feeds the skill scores, and a good answer clears that moment from Review (it uses the same criteria key).
+function retryScenario(l) {
+  const src = SCENARIOS.find(m => m.id === l.mid), k = Number(l.ck.split(":")[1]), st = src.steps[k];
+  return { id: "retry", practice: true, retry: true, retryFrom: l.res.score, level: src.level, title: "Try again: " + l.skill, sub: src.title, icon: "↻", theme: src.theme, cust: src.cust, hidden: "",
+    win: "Better. That is how practice works.", lose: "Not yet. Read the notes and try once more.", steps: [{ ...st, line: l.line, src, ckey: l.ck }] };
 }
 
 // ---------- the customer's face follows how it is going ----------
@@ -110,6 +134,17 @@ async function playOwnVoice(blob) {
   URL.revokeObjectURL(url);
 }
 
+// Coach mode: a short card right after an answer. What you said and what tone, what you hit, what you missed, and a stronger answer.
+function coachCard(l) {
+  const r = l.res, off = r.tone.notes.find(x => !x.ok);
+  return `<div class="feed coach ${band(r.score)}"><p><b>Coach: ${fmt(r.score)} / 5</b> <span class="note2">what you said ${fmt(r.content)} / 4 · tone ${fmt(r.tone.pts)} / 1</span></p>
+    ${r.hits.length ? `<ul class="hits">${r.hits.map(h => `<li class="ok">✓ ${esc(h)}</li>`).join("")}</ul>` : ""}
+    ${r.misses.length ? `<ul class="misses">${r.misses.map(h => `<li class="no">✗ Missing: ${esc(h)}</li>`).join("")}</ul>` : ""}
+    ${r.flags.length ? `<ul class="flags">${r.flags.slice(0, 2).map(f => `<li>⚠ ${esc(f.msg)}</li>`).join("")}</ul>` : ""}
+    ${off ? `<p class="note2">🎭 ${esc(off.msg)}</p>` : ""}
+    ${r.score < 5 ? `<p class="better"><b>A stronger answer might sound like:</b> <i>${esc(l.model)}</i></p>` : `<p class="better"><b>Nothing to fix.</b> That answer hit everything.</p>`}</div>`;
+}
+
 // ---------- one question ----------
 function question(i, M, log) {
   stopAll();
@@ -124,7 +159,7 @@ function question(i, M, log) {
   const camBlock = state.cam
     ? `<p class="camline" id="camLine" role="status">📷 ${esc(Cam.msg || "Starting camera…")}</p>`
     : `<p class="camnudge" id="camNudge">📷 <b>Camera coach is off.</b> Turn it on for a delivery score and +25% XP. <button class="btn alt" id="camEnable" type="button">Turn on camera</button></p>`;
-  app.innerHTML = `<section class="view sheet mission">${lessonTop(i / n, true)}
+  app.innerHTML = `<section class="view sheet mission">${lessonTop(i / n, true, sc.title)}
     <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, view)}</div>
     <div class="names"><span>${cust.name} · ${cust.role}</span><span>${esc(repName())} · Rep</span></div>
     ${camBlock}
@@ -132,7 +167,7 @@ function question(i, M, log) {
     <div class="bubble" id="bub" aria-live="polite">${S.line}</div>
     <div class="needs">${need("Trust", M.trust, "t", "How much they believe you and like you.")}${need("Interest", M.interest, "i", "How curious they are about Tequila Corrido.")}${need(cust.meter, M.price, "p", `A bonus meter for this customer: ${cust.meter.toLowerCase()}.`)}</div>
     <h2 class="qprompt">${S.q}</h2>
-    ${L.tips && !boss ? tips : ""}
+    ${boss ? "" : L.tips && !sc.retry ? tips : `<div id="hintslot"><button class="btn alt" id="hintbtn" type="button">💡 Show a hint <small>(−${HINT_COST} XP)</small></button></div>`}
     ${boss ? `<p class="bossrule">⚔️ Boss rules: ${boss.pass.toFixed(1)} / 5 to win. A health claim or a pressure tactic loses instantly.${voiceOnly ? " Voice only: speak your answer." : ""}</p>` : ""}
     <div class="recpanel" id="recpanel">
       <div class="rtimer" aria-hidden="true"><i id="rbar"></i></div>
@@ -146,6 +181,7 @@ function question(i, M, log) {
   wireX();
   const ans = $("#ans"), refresh = () => { const w = wordCount(ans.value); $("#submit").disabled = submitted || w < 3; $("#cnt").textContent = w ? w + " words" : ""; };
   ans.oninput = refresh;
+  if ($("#hintbtn")) $("#hintbtn").onclick = () => { hintsUsed++; $("#hintslot").innerHTML = tips + `<p class="note2">Hint used: −${HINT_COST} XP.</p>`; };
   $("#vo").onclick = () => { voiceOn = !voiceOn; state.voiceOff = !voiceOn; Progress.save(state); $("#vo").textContent = voiceOn ? "🔊 Voice on" : "🔇 Voice off"; if (!voiceOn && window.speechSynthesis) { Voices.halt(); speechSynthesis.cancel(); } };
   if ($("#camEnable")) $("#camEnable").onclick = () => {
     state.cam = true; state.camPref = true; Progress.save(state); Cam.reset(); Cam.begin();
@@ -255,7 +291,8 @@ function question(i, M, log) {
     if (res.score < 3.5) state.mistakes.unshift({ ck: key, mid: view.id, mission: view.title, skill: S.skill, line: S.line.replace(/<[^>]+>/g, ""), text, better: S.R[0].replace(/^"|"$/g, ""), missed: res.misses, flags: [...res.flags.map(f => f.msg), ...res.tone.notes.filter(x => !x.ok).map(x => x.msg)], score: res.score, date: Progress.today() });
     state.mistakes = state.mistakes.slice(0, 80); Progress.save(state);
     const last = i === n - 1;
-    $("#fb").innerHTML = `<div class="feed best"><span>${last ? "That was the last question. Your scorecard has a score for every answer." : "Answer recorded. Your scores come at the end."}</span><button class="btn" id="nx" type="button">${last ? "See my results" : "Next question"}</button></div>`;
+    const here = log[log.length - 1], coach = coachOn ? coachCard(here) : "";
+    $("#fb").innerHTML = `${coach}<div class="feed best"><span>${last ? "That was the last question. Your scorecard has a score for every answer." : coachOn ? "Ready for the next one?" : "Answer recorded. Your scores come at the end."}</span><button class="btn" id="nx" type="button">${last ? "See my results" : "Next question"}</button></div>`;
     $("#nx").onclick = () => (last ? missionResults(M, log) : question(i + 1, M, log));
     $("#nx").focus({ preventScroll: true });
     $("#fb").scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -279,7 +316,7 @@ function missionResults(M, log) {
   const perfect = log.some(l => l.res.score >= 5);
   const cam = Cam.scores(); Cam.stop();
   const delivery = cam ? Math.round((cam.presence + cam.eye + cam.posture + cam.smile) / 4 / 20 * 10) / 10 : null;
-  const xp = Math.round((avg * 14 + (won ? 25 : 0)) * (L.mult || 1) * (cam ? 1.25 : 1));
+  const xp = Math.max(0, Math.round((avg * 14 + (won ? 25 : 0)) * (L.mult || 1) * (cam ? 1.25 : 1)) - hintsUsed * HINT_COST);
   const skills = {}, cnt = {};
   log.forEach(l => { skills[l.skill] = (skills[l.skill] || 0) + l.res.score; cnt[l.skill] = (cnt[l.skill] || 0) + 1; });
   Object.keys(skills).forEach(k => { skills[k] = Math.round(skills[k] / cnt[k] * 10) / 10; });
@@ -307,6 +344,7 @@ function missionResults(M, log) {
     const hiS = best.res.score, loS = worst.res.score;   // when every answer scores the same there is no "strongest" and no "weakest"
     const focus = log.length < 2 ? "" : hiS - loS < 0.05 ? (hiS >= 4.8 ? '<p class="note2"><b>Every answer was a strong one.</b> There is nothing to fix.</p>' : `<p class="note2">All your answers scored about the same (<b>${fmt(hiS)}</b> out of 5), so the notes under each one show what to work on.</p>`)
       : best.skill !== worst.skill ? `<p class="note2">Your strongest answer was <b>${esc(best.skill)}</b> (${fmt(best.res.score)}). Your biggest chance to improve is <b>${esc(worst.skill)}</b> (${fmt(worst.res.score)}).</p>` : "";
+    const retryNote = sc.retry && sc.retryFrom != null ? `<p class="note2 retrynote"><b>Last time you scored ${fmt(sc.retryFrom)} on this question. This time: ${fmt(avg)}.</b> ${avg > sc.retryFrom + 0.05 ? "Better." : "About the same, so read the notes below and try once more."}</p>` : "";
     // the customer you were talking to, looking how the conversation left them, with their last words
     const lastL = log[log.length - 1], view = SCENARIOS.find(x => x.id === (lastL && lastL.mid)) || sc, faceX = avg >= 4 ? "delighted" : won ? "pleased" : avg >= 2.5 ? "unsure" : "annoyed";
     const custBlock = lastL ? `<div class="resline"><div class="resface" data-x="${faceX}"><svg viewBox="14 -2 92 112" aria-hidden="true">${person(custLook(view))}</svg></div><div class="restxt"><p class="reslast"><b>${esc(lastL.cname)}:</b> “${esc(spoken(lastL.reply))}”</p><p>${summary}</p></div></div>` : `<p>${summary}</p>`;
@@ -327,6 +365,7 @@ function missionResults(M, log) {
         <ul class="tonelist"><li class="tonehead">🎭 Tone for this customer: ${esc(r.tone.name)}${r.tone.voiceUsed ? "" : " <small>(judged from your words, no voice recording)</small>"}</li>${r.tone.notes.map(x => `<li class="${x.ok ? "ok" : "no"}">${x.ok ? "✓" : "✗"} ${esc(x.msg)} ${x.ok ? "" : `<b>−${fmt(x.pts)}</b>`}</li>`).join("")}${r.tone.stats && r.tone.stats.wpm ? `<li class="tonestats">Pace ${r.tone.stats.wpm} words a minute · ${r.tone.stats.pauses} long pauses · volume ${r.tone.stats.db} dB</li>` : ""}</ul>
         ${r.flags.length ? `<ul class="flags">${r.flags.map(f => `<li>⚠ ${esc(f.msg)} ${f.pts ? `<b>−${fmt(f.pts)}</b>` : ""}</li>`).join("")}</ul>` : ""}
         ${r.score < 5 ? `<p class="better"><b>A stronger answer might sound like:</b> <i>${esc(l.model)}</i></p>` : `<p class="better"><b>Nothing to fix here.</b> That answer hit everything.</p>`}
+        ${r.score < 4 ? `<p class="retryrow"><button class="btn alt retryq" type="button" data-i="${j}">↻ Try this question again</button> <small>Same customer, one question, and the checklist is hidden.</small></p>` : ""}
         </div>
       </details>`;
     }).join("");
@@ -341,10 +380,10 @@ function missionResults(M, log) {
         <div class="bigscore ${band(avg)}" aria-label="Average score ${fmt(avg)} out of 5"><b>${fmt(avg)}</b><span>/ 5</span></div>
         ${starRow(stars)}</div>
       ${custBlock}</div>
-      <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span>${cam ? '<span class="rw">📷 +25% camera bonus</span>' : ""}</div>
+      <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span>${cam ? '<span class="rw">📷 +25% camera bonus</span>' : ""}${hintsUsed ? `<span class="rw">💡 ${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} (−${hintsUsed * HINT_COST} XP)</span>` : ""}</div>
       ${badgeMedals(earned)}
       ${rewardChips(newItems)}
-      <div class="resnotes">${focus}${toneLine}</div>
+      <div class="resnotes">${retryNote}${focus}${toneLine}</div>
       <div class="reshow"><h3 class="sechead">Your answers</h3><button class="linkbtn dark" id="toggleAll" type="button">Open all</button></div>
       <p class="note2">Each answer is worth 5: <b>4 for what you said</b> and <b>1 for tone</b>. Open one to see why.</p>
       ${cards}
@@ -355,6 +394,7 @@ function missionResults(M, log) {
       <p><button class="btn" id="cont" type="button">Back to the map</button> ${won && !sc.rehearsal ? "" : `<button class="btn alt" id="retry" type="button">${sc.rehearsal ? "Back to the boss" : boss ? "Back to the boss" : "Try again"}</button>`}</p>
     </section>`;
     $("#cont").onclick = home;
+    app.querySelectorAll(".retryq").forEach(b => b.onclick = () => play(retryScenario(log[+b.dataset.i])));
     $("#toggleAll").onclick = () => { const ds = [...app.querySelectorAll("details.acard")], allOpen = ds.every(d => d.open); ds.forEach(d => { d.open = !allOpen; }); $("#toggleAll").textContent = allOpen ? "Open all" : "Close all"; };
     app.querySelectorAll(".playmine").forEach(b => b.onclick = async () => {
       const l = log[+b.dataset.i]; if (!l || !l.blob) return;
