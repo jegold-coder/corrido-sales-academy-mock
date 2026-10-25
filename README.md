@@ -39,7 +39,7 @@ What it loads from the internet:
 | Body-language rating (stretch) | Camera coach is on by default and highly recommended: eye contact, posture, presence and smile, scored out of 5. Video never leaves the device |
 | Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges), daily streak, team board using share codes |
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
-| Sign-in (journey page 2) | Age check, then "continue as guest" or an email that is only saved on this device. Company sign-in comes with the rollout |
+| Sign-in (journey page 2) | Age check, then "continue as guest", **Sign in with Google** (switches on when a free client ID is added, see below) or an email that is only saved on this device. Company sign-in comes with the rollout |
 | Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a CSV invite page and leaderboards. Uses sample data. See below |
 | The map | A winding road with a boss's face on each boss stop (a dark silhouette while it is still locked), a banner at the start of each tier, and on a wide screen a side panel with your rep, the next unlock and the next boss with the boss badges. A stop you just finished pops and a light runs along the road to the next one, and a beaten boss makes the next tier's banner pop in. On a phone the side panels hide and the banners shorten to "Tier 3" |
 | Boss battle theme | A corrido-style tune made in code with the browser's Web Audio (no files): a driving oom-pah of bass and strummed guitar, a snare on the backbeat and mariachi trumpets in A minor over the record-player crackle. It plays only on the boss screen, and stops when you go back, go anywhere else, or start the battle (a practice run too). Tier Up has its own victory music in A major, and finishing the season plays a longer one; both are cut off the moment you leave the screen |
@@ -66,6 +66,19 @@ Three missions come from advice from the team's contact Jay. **The Hard No** (To
 - **Merch:** 42 pieces (36 shirts and polos, 6 hats). The creator shows them as one tabbed photo grid (T-shirts, Polos, Hats) so the page stays short. Twenty are free from the start (fifteen shirts, five hats) so there is a choice in the creator on day one. The other 22 are each unlocked by beating a level (what a stop unlocks is shown on the screen before you start it, not on the map) (see `REWARDS` in `tiers.js`; `tests/tiers.test.js` checks every piece is unlocked exactly once). A boss win also moves you up a tier and shows the Tier Up screen with a shareable tier card (name, avatar and tier only).
 - **Prototype tools** (Dashboard, Settings): every stop open, every piece of merch unlocked, and unlimited boss tries. The first and third are on by default while the game is being tested.
 
+## Turn on Sign in with Google
+
+The sign-in screen has a Google button, but Google only allows it once the app has a **client ID**. A client ID is free and is meant to be public, but only you can create it because it needs your Google login. Until then the screen shows "Sign in with Google · not set up yet". Takes about five minutes:
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project (any name).
+2. Open **APIs & Services > OAuth consent screen** (or **Google Auth Platform**). Choose **External**, name the app "Tequila Corrido Sales Academy", add your email as the support contact, and keep the default scopes (openid, email, profile). While the app is in **Testing**, add the Google accounts that should be able to sign in under **Test users**.
+3. Open **APIs & Services > Credentials > Create credentials > OAuth client ID**, choose **Web application**, and under **Authorized JavaScript origins** add `http://localhost:8766` and `https://corrido-sales-academy-mock.vercel.app` (the address only, no slash at the end and no path). No redirect address is needed.
+4. Copy the client ID (it ends in `.apps.googleusercontent.com`). Either paste it into `googleClientId` in `config.js` (on for everyone once pushed), or paste it into **Dashboard > Settings > Account** (this device only, handy for trying it). Reload the page and the Google button appears.
+
+Optional: set `googleDomain` in `config.js` (for example `"tequilacorrido.com"`) to let only that company's Google accounts in.
+
+What it does and does not do: the browser gets a signed token from Google and reads the name and email from it. Only the name and email are kept, on this device, and the character's name starts as the first name. There is no server, so nothing checks the token's signature. That makes it fine for the prototype and **not real security**: the company rollout needs the token verified on a server (for example Firebase Auth or Amazon Cognito) before it protects anything. Google's script is only loaded after the age check, and only when a client ID is set. If you use a university Google account for the Cloud project, check the university's rules first.
+
 ## Manager mode (prototype)
 
 Open the link ending in `#manager`, use the "Manager? Open the manager view" link on the first screen, or the "Open manager mode" button on the Dashboard (Team tab, and Settings). There is no sign-in or permission check: anyone with the link can open it. The class on the Cohorts page is **sample data** (labelled), plus your own row. Invite lets you upload a CSV (name, email, team), checks it, and creates a class that is saved **on this device only**. Invites are **not emailed**: you copy an invite message instead. Nudge only records the nudge on this device. A real version needs company sign-in and a shared database.
@@ -85,12 +98,13 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `tone.js` | how tone is judged from your words and your voice, for the situation |
 | `lessons.js` | brand lessons, question bank, knowledge check |
 | `progress.js` | saving, levels, badges, streak, team codes |
+| `config.js`, `auth.js` | the Google client ID switch, and Sign in with Google (token checks, button, sign out) |
 | `badges.js` | the badge medals (boss faces, metals, ribbons), awarding boss badges |
 | `voices.js` | giving each customer a distinct voice and accent, and speaking like a person |
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `results`, `globals` and `camera` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `results`, `auth`, `globals` and `camera` tests |
 
 ## Tests
 
@@ -104,6 +118,7 @@ node tests/reactions.test.js # customer faces react to the conversation, and the
 node tests/sound.test.js    # room music only plays during a mission and the boss theme only on the boss screen; both go quiet when the page is hidden; the tune stays in key
 node tests/map.test.js      # tier banners, the pop for a finished stop, side panels, the ladder and the radar
 node tests/results.test.js  # medals, stars, the customer on the results, the tie line, hearts only in lessons
+node tests/auth.test.js     # Google token checks: wrong app, expired, unverified, wrong company
 node tests/globals.test.js  # no two scripts declare the same name (a clash stops a file loading)
 node tests/camera.test.js   # face maths with fake landmarks
 ```

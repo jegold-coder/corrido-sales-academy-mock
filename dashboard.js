@@ -152,11 +152,22 @@ function dashTeam(el) {
 const ACCENTS = { "en-US": "American", "en-GB": "British", "en-AU": "Australian", "en-IE": "Irish", "en-IN": "Indian", "en-ZA": "South African", "en-CA": "Canadian", "en-NZ": "New Zealand", "en-scotland": "Scottish" };
 const voiceLabel = v => `${v.name.replace(/\s*\(.*$/, "").replace(/^Microsoft\s+/, "").replace(/\s+Online.*$/, "")} · ${ACCENTS[String(v.lang).replace("_", "-")] || v.lang}`;
 
+// Who is signed in, and where the free Google client ID goes to turn on Sign in with Google.
+function accountCard() {
+  const p = state.profile || {}, id = googleClientId(), fromFile = !!String(CSA_CONFIG.googleClientId).trim();
+  const who = p.mode === "google" ? `Signed in with Google as <b>${esc(p.email)}</b>.` : p.email ? `Guest, with <b>${esc(p.email)}</b> saved on this device.` : "Guest.";
+  return `<div class="card"><h3>Account</h3><p class="note2">${who} Nothing is sent to a server.</p>${p.mode ? '<button class="btn alt" id="signout" type="button">Sign out</button>' : ""}
+    <details class="gsetup"${id ? "" : " open"}><summary>Google sign-in setup · ${id ? "on" : "off"}</summary>
+      <p class="note2">${fromFile ? "A Google client ID is set in config.js, so it is on for everyone." : id ? "A Google client ID is saved on this device only." : "Google sign-in is off until a client ID is added."} A client ID is free from Google Cloud (the steps are in the README). Paste it here to try it on this device, or put it in <code>config.js</code> to turn it on for everyone, then reload.</p>
+      ${fromFile ? "" : `<input id="gid" placeholder="1234567890-abc123.apps.googleusercontent.com" value="${esc(id)}" aria-label="Google client ID"><button class="btn" id="gsave" type="button">Save</button> <button class="btn alt" id="gclear" type="button">Clear</button><p class="note2" id="gmsg"></p>`}</details></div>`;
+}
+
 function dashSettings(el) {
   el.innerHTML = `<div class="card"><h3>Sound</h3><button class="btn alt" id="snd" type="button">${Sound.on ? "🔊 Sound is on. Mute" : "🔇 Sound is off. Turn on"}</button><p class="note2">Background vinyl and guitar, plus short effects. You can also use the speaker button in the bottom-left corner.</p></div>
     <div class="card"><h3>Prototype tools</h3><p class="note2">The game is in prototype, so these switches make it easy to test everything. Turn them off to play it the way it will really work.</p>
       ${[["unlockStops", "Every stop is open (no need to beat the one before)"], ["unlockMerch", "Every piece of merch is unlocked"], ["unlimitedTries", "Unlimited boss tries (otherwise 3 a day per boss)"]].map(([k, l]) => `<label class="protorow"><input type="checkbox" data-p="${k}" ${PROTO(k) ? "checked" : ""}> ${l}</label>`).join("")}
       <button class="btn alt" id="gomgr2" type="button">Open manager mode</button></div>
+    ${accountCard()}
     <details class="card xmerch"><summary><h3>Customer voices</h3><small>${SCENARIOS.length} customers</small></summary><p class="note2">Every customer has their own voice and accent, picked from the voices installed in this browser, and speaks a little warmer or colder depending on how you did. Press play to hear each one.</p>
       <div class="vlist">${SCENARIOS.map((sc, i) => { const v = Voices.voice(sc); return `<div class="vrow"><span><b>${esc(sc.cust.name)}</b> <small>${esc(sc.cust.role)}</small></span><span class="vname">${v ? esc(voiceLabel(v)) : "Browser default"}</span><button class="btn alt vplay" data-i="${i}" type="button" aria-label="Hear ${esc(sc.cust.name)}">▶ Play</button><span class="vstat" role="status"></span></div>`; }).join("")}</div>
       <p class="note2" id="vcount">${Voices.count() ? `Your browser lists ${Voices.count()} English voices.${Voices.count() < 6 ? " That is not many, so some customers may sound alike." : ""}` : "Your browser hasn't listed any voices yet. If this stays empty it can't speak, so try Chrome, Edge or Safari."}</p>
@@ -171,6 +182,16 @@ function dashSettings(el) {
   $("#snd").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); dashboard("settings"); };
   el.querySelectorAll("[data-p]").forEach(c => c.onchange = () => { state.proto = { ...(state.proto || {}), [c.dataset.p]: c.checked }; Progress.save(state); state.avatar = cleanAvatar(state.avatar); hud(); });
   $("#gomgr2").onclick = () => managerMode();
+  if ($("#signout")) $("#signout").onclick = () => { googleSignOut(); dashboard("settings"); toast("Signed out. Your progress stays on this device."); };
+  if ($("#gsave")) {
+    const msg = t => { $("#gmsg").textContent = t; };
+    $("#gsave").onclick = () => {
+      const v = $("#gid").value.trim();
+      if (!/^[\w-]+\.apps\.googleusercontent\.com$/.test(v)) return msg("That doesn't look like a Google client ID. It ends in .apps.googleusercontent.com.");
+      try { localStorage.setItem("csa_google_id", v); msg("Saved. Reload the page and the sign-in screen will show the Google button."); } catch { msg("This browser wouldn't save it."); }
+    };
+    $("#gclear").onclick = () => { try { localStorage.removeItem("csa_google_id"); } catch { /* ignore */ } $("#gid").value = ""; msg("Cleared. Google sign-in is off."); };
+  }
   el.querySelectorAll(".vplay").forEach(b => b.onclick = async () => {
     const sc = SCENARIOS[Number(b.dataset.i)], p = Voices.profile(sc), line = spoken(sc.steps[0].line).slice(0, 220), stat = b.parentElement.querySelector(".vstat");
     el.querySelectorAll(".vstat").forEach(x => { x.textContent = ""; });

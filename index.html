@@ -738,6 +738,10 @@ details.acard .ahead{padding-right:1.4rem}
 .abody{padding:0 .9rem .7rem}.abody .said{margin:.3rem 0}
 .camnudge{font-size:.88rem;color:#4d443a;background:#eef6f7;border-radius:10px;padding:.5rem .8rem;margin:.6rem 0}
 .result .fact{padding:.6rem .9rem;font-size:.9rem;margin:.5rem 0}.result .learn{padding:.5rem .9rem;font-size:.9rem;margin:.5rem 0}
+/* ===== v32: sign in with Google ===== */
+.googlerow{margin:.6rem 0 0;display:flex;flex-direction:column;align-items:center;gap:.3rem}.gbtn{max-width:100%;min-height:0}
+.gsoon{width:100%}.gsoon[hidden]{display:none}.gsoon:disabled{opacity:.75;cursor:default}
+details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weight:700;color:var(--teal)}
 </style>
 </head>
 <body>
@@ -763,6 +767,7 @@ details.acard .ahead{padding-right:1.4rem}
     <div class="signin off" id="signin">
       <h3 class="signhead">Then sign in</h3>
       <button class="btn guestbtn" id="guest" type="button" disabled>Continue as guest</button>
+      <div class="googlerow" id="googlerow"><div id="gbtn" class="gbtn"></div><button class="btn alt gsoon" id="gsoon" type="button" disabled hidden>Sign in with Google · not set up yet</button></div>
       <p class="or">Or sign in with your company email</p>
       <div class="emailrow"><input id="email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Company email" disabled><button class="btn alt" id="sendlink" type="button" disabled>Continue</button></div>
       <p class="signnote" id="emailnote">Company sign-in arrives with the company rollout. For now your email is saved on this device only, and you continue as a guest.</p>
@@ -787,23 +792,25 @@ details.acard .ahead{padding-right:1.4rem}
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="sound.js?v=2026-10-24x"></script>
-<script src="scenarios.js?v=2026-10-24x"></script>
-<script src="progress.js?v=2026-10-24x"></script>
-<script src="criteria.js?v=2026-10-24x"></script>
-<script src="tone.js?v=2026-10-24x"></script>
-<script src="coach.js?v=2026-10-24x"></script>
-<script src="camera.js?v=2026-10-24x"></script>
-<script src="lessons.js?v=2026-10-24x"></script>
-<script src="dashboard.js?v=2026-10-24x"></script>
-<script src="grader.js?v=2026-10-24x"></script>
-<script src="onboarding.js?v=2026-10-24x"></script>
-<script src="tiers.js?v=2026-10-24x"></script>
-<script src="badges.js?v=2026-10-24x"></script>
-<script src="voices.js?v=2026-10-24x"></script>
-<script src="mission.js?v=2026-10-24x"></script>
-<script src="boss.js?v=2026-10-24x"></script>
-<script src="manager.js?v=2026-10-24x"></script>
+<script src="config.js?v=2026-10-24y"></script>
+<script src="sound.js?v=2026-10-24y"></script>
+<script src="scenarios.js?v=2026-10-24y"></script>
+<script src="progress.js?v=2026-10-24y"></script>
+<script src="criteria.js?v=2026-10-24y"></script>
+<script src="tone.js?v=2026-10-24y"></script>
+<script src="coach.js?v=2026-10-24y"></script>
+<script src="camera.js?v=2026-10-24y"></script>
+<script src="lessons.js?v=2026-10-24y"></script>
+<script src="dashboard.js?v=2026-10-24y"></script>
+<script src="grader.js?v=2026-10-24y"></script>
+<script src="onboarding.js?v=2026-10-24y"></script>
+<script src="tiers.js?v=2026-10-24y"></script>
+<script src="badges.js?v=2026-10-24y"></script>
+<script src="voices.js?v=2026-10-24y"></script>
+<script src="mission.js?v=2026-10-24y"></script>
+<script src="boss.js?v=2026-10-24y"></script>
+<script src="auth.js?v=2026-10-24y"></script>
+<script src="manager.js?v=2026-10-24y"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -831,18 +838,19 @@ new MutationObserver(() => {
 }).observe(app, { childList: true });
 // and it goes quiet while the page is hidden (another tab or window) instead of playing on in the background
 document.addEventListener("visibilitychange", () => { if (document.hidden) Sound.pause(); else Sound.resume(); });
-// Page 2 of the journey: age check, then sign in. Company sign-in is not live yet, so the options are "continue as guest" and an
-// email that is only saved on this device.
+// Page 2 of the journey: age check, then sign in. The options are "continue as guest", Sign in with Google (auth.js, once a client ID
+// is set) and an email that is only saved on this device. Company sign-in is not live yet.
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
 $("#yes").onclick = () => {
   $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>';
   $("#signin").classList.remove("off"); ["#guest", "#email", "#sendlink"].forEach(x => { $(x).disabled = false; });
   const p = state.profile || {};
-  if (p.email) { $("#email").value = p.email; $("#guest").textContent = "Continue as " + p.email; }
+  if (p.email) { $("#email").value = p.email; $("#guest").textContent = "Continue as " + (p.mode === "google" && p.name ? p.name : p.email); }
+  showGoogleButton();
   $("#guest").focus();
 };
 $("#no").onclick = () => $("#underMsg").classList.remove("hidden");
-$("#guest").onclick = () => { state.profile = { mode: "guest", email: (state.profile || {}).email || "" }; Progress.save(state); enterGame(); };
+$("#guest").onclick = () => { const p = state.profile || {}; state.profile = p.mode === "google" ? p : { mode: "guest", email: p.email || "" }; Progress.save(state); enterGame(); };
 $("#sendlink").onclick = () => {
   const em = $("#email").value.trim();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { $("#emailnote").textContent = "That doesn't look like an email address. Try again, or continue as a guest."; $("#emailnote").classList.add("bad"); return; }
