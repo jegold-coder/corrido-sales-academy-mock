@@ -140,6 +140,7 @@ const Presenter = (() => {
     ]],
     ["Dashboard and more", [...tabs.map(([l, t]) => ["Dashboard: " + l, () => dashboard(t)]), ["Character", () => creator(home)], ["Who is Tequila Corrido?", () => explorer()]]],
     ["Manager", mgr.map(([l, t]) => ["Manager: " + l, () => managerMode(t), true])],
+    ["Avatar check", [["Shirts: arms and sleeves", () => AvatarCheck.show("sleeves")], ["Shirts: neck and collar", () => AvatarCheck.show("necks")], ["Shirts: bottom of the preview", () => AvatarCheck.show("bottoms")], ["Hair on every head shape", () => AvatarCheck.show("hair")]]],
   ];
   function busy(on) { const b = q("#prbtn"); if (b) { b.disabled = on; b.querySelector("small").textContent = on ? "playing a sample…" : "sample data"; } }
   function go(fn, manager) {

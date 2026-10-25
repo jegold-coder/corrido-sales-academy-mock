@@ -811,6 +811,10 @@ a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[
 .gate :focus-visible,.foot :focus-visible,.top :focus-visible{outline-color:var(--gold-t)}
 input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertical-align:middle}
 .top{z-index:6}   /* the sticky bar stays above the page as it scrolls (the page title was drawing over its buttons) */
+/* ===== v45: the Presenter menu's avatar check sheets ===== */
+.avcheck .avtabs{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.2rem 0 .8rem}.avcheck .avtabs .btn{padding:.3rem .8rem;font-size:.8rem}.avgender{margin-left:auto;display:inline-flex;gap:.4rem}
+.avgrid{display:flex;flex-wrap:wrap;gap:6px}.avcell{display:grid;gap:2px;width:190px}.avcell small{font-size:.7rem;color:#4d443a}.avcell iframe,.avrow iframe{border-radius:6px}
+.avrow{display:flex;gap:4px;align-items:center;margin-bottom:4px}.avrow b{width:78px;font-size:.75rem;flex:none}
 </style>
 </head>
 <body>
@@ -869,27 +873,28 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26i"></script>
-<script src="sound.js?v=2026-10-26i"></script>
-<script src="scenarios.js?v=2026-10-26i"></script>
-<script src="progress.js?v=2026-10-26i"></script>
-<script src="criteria.js?v=2026-10-26i"></script>
-<script src="tone.js?v=2026-10-26i"></script>
-<script src="coach.js?v=2026-10-26i"></script>
-<script src="camera.js?v=2026-10-26i"></script>
-<script src="lessons.js?v=2026-10-26i"></script>
-<script src="dashboard.js?v=2026-10-26i"></script>
-<script src="grader.js?v=2026-10-26i"></script>
-<script src="onboarding.js?v=2026-10-26i"></script>
-<script src="tiers.js?v=2026-10-26i"></script>
-<script src="badges.js?v=2026-10-26i"></script>
-<script src="voices.js?v=2026-10-26i"></script>
-<script src="mission.js?v=2026-10-26i"></script>
-<script src="boss.js?v=2026-10-26i"></script>
-<script src="auth.js?v=2026-10-26i"></script>
-<script src="manager.js?v=2026-10-26i"></script>
-<script src="callcard.js?v=2026-10-26i"></script>
-<script src="presenter.js?v=2026-10-26i"></script>
+<script src="config.js?v=2026-10-26k"></script>
+<script src="sound.js?v=2026-10-26k"></script>
+<script src="scenarios.js?v=2026-10-26k"></script>
+<script src="progress.js?v=2026-10-26k"></script>
+<script src="criteria.js?v=2026-10-26k"></script>
+<script src="tone.js?v=2026-10-26k"></script>
+<script src="coach.js?v=2026-10-26k"></script>
+<script src="camera.js?v=2026-10-26k"></script>
+<script src="lessons.js?v=2026-10-26k"></script>
+<script src="dashboard.js?v=2026-10-26k"></script>
+<script src="grader.js?v=2026-10-26k"></script>
+<script src="onboarding.js?v=2026-10-26k"></script>
+<script src="tiers.js?v=2026-10-26k"></script>
+<script src="badges.js?v=2026-10-26k"></script>
+<script src="voices.js?v=2026-10-26k"></script>
+<script src="mission.js?v=2026-10-26k"></script>
+<script src="boss.js?v=2026-10-26k"></script>
+<script src="auth.js?v=2026-10-26k"></script>
+<script src="manager.js?v=2026-10-26k"></script>
+<script src="callcard.js?v=2026-10-26k"></script>
+<script src="presenter.js?v=2026-10-26k"></script>
+<script src="avatarcheck.js?v=2026-10-26k"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -2122,6 +2127,8 @@ const ALL_STOPS = () => PATH.map(id => LESSONS.find(l => l.id === id) || SCENARI
 const TOTAL_STOPS = () => ALL_STOPS().length;
 
 if (location.hash === "#manager") { $("#gate").classList.add("hidden"); managerMode(); } else home();
+// keep the app and the shop photos on this device after the first visit, so a demo still works on bad Wi-Fi (see sw.js)
+if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 </body>
 </html>

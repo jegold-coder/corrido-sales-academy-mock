@@ -51,4 +51,13 @@ ok("the same stops give something to women as to men, so no stop is left empty",
 ok("the merch total is 42 for a man and 41 for a woman, so 'Full Closet' can still be earned", F.total("Male") === 42 && F.total("Female") === 41, `${F.total("Male")} / ${F.total("Female")}`);
 const earnedF = vm.runInContext("(() => { state.avatar = { gender: 'Female' }; state.done = Object.fromEntries(Object.keys(REWARDS).map(k => [k, true])); const n = merchEarned().size, has = merchEarned().has('In My Tequila Era Tee (Military Green)'); state.avatar = { gender: 'Male' }; const m = merchEarned().size; state.avatar = undefined; state.done = {}; return { n, m, has }; })()", ctx);
 ok("a woman who finishes every stop has all 41 of her pieces and not the men's tee; a man has all 42", earnedF.n === 41 && !earnedF.has && earnedF.m === 42, JSON.stringify(earnedF));
+
+// a boss gives three tries a day unless the prototype switch (or Presenter mode) says otherwise
+const bossCtx = vm.createContext({ console, state: { done: {}, proto: {}, bossTries: {} }, Progress: { today: () => "2026-10-25", save() {} } });
+vm.runInContext(fs.readFileSync(path.join(root, "tiers.js"), "utf8").replace(/^"use strict";/, "").replace(/if \(typeof module[^\n]*/, ""), bossCtx);
+vm.runInContext(fs.readFileSync(path.join(root, "boss.js"), "utf8").match(/const todayKey[\s\S]*?function useBossTry\(id\) \{[\s\S]*?\n\}/)[0], bossCtx);
+const tries = () => vm.runInContext("bossTriesLeft('priya')", bossCtx);
+ok("by default a boss gives three tries a day, and each fight uses one", tries() === 3 && (vm.runInContext("useBossTry('priya')", bossCtx), tries() === 2) && (vm.runInContext("useBossTry('priya'); useBossTry('priya')", bossCtx), tries() === 0));
+ok("the tries of one boss do not use up another's, and a new day gives three again", vm.runInContext("bossTriesLeft('mia')", bossCtx) === 3 && (vm.runInContext("Progress.today = () => '2026-10-26'", bossCtx), tries() === 3));
+ok("the Presenter sample (or the Settings switch) makes them unlimited", (vm.runInContext("state.proto = { unlimitedTries: true }", bossCtx), tries() === Infinity));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

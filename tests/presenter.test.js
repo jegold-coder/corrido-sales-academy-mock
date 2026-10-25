@@ -20,7 +20,7 @@ ok("it is a Tier 2 rep who has finished the first six stops", Object.keys(P.done
 ok("it has history for the missions and lessons played, and enough skills for the radar chart", P.history.length === 5 && ev("Progress.skillAverages(Presenter.sampleProgress('sam')).length") >= 3);
 ok("there are moments to review, each with what the Review tab needs", P.mistakes.length >= 3 && P.mistakes.every(m => m.mission && m.skill && m.line && m.text && m.better && Array.isArray(m.missed) && m.score < 3.5));
 ok("it has a before and after knowledge check, a streak and demo teammates", P.pre.score === 5 && P.post.score === 8 && P.streak === 5 && Object.keys(P.team).length > 0);
-ok("stops stay locked until the one before is done, and boss tries are unlimited", P.proto.unlockStops === false && P.proto.unlimitedTries === true && ev("PROTO_DEFAULTS.unlockStops") === false);
+ok("stops stay locked until the one before is done; the sample player has unlimited boss tries so a demo can retry, but the game itself does not by default", P.proto.unlockStops === false && P.proto.unlimitedTries === true && ev("PROTO_DEFAULTS.unlockStops") === false && ev("PROTO_DEFAULTS.unlimitedTries") === false);
 ok("the camera is off, so no permission prompt interrupts a demo", P.camPref === false);
 const early = ev("Presenter.sampleProgress('quiet')"), start = ev("Presenter.sampleProgress('brandbrain')");
 ok("a sample taken before a stop leaves that stop unplayed, so its first win looks like one", early.done.priya !== true && start.done.quiet !== true && start.done.brandbrain === true);
@@ -75,7 +75,7 @@ delete mem.csa_progress_v1; delete mem.csa_avatar;
 
 // the menu and how it is wired in
 const menu = ev("Presenter.MENU().flatMap(([, items]) => items.map(i => i[0]))");
-ok("the menu reaches the game, the dashboard, the character, the brand page and all five manager pages", menu.length === 26 && ["Map", "Results: a win", "Tier Up", "Dashboard: Settings", "Character", "Who is Tequila Corrido?", "Manager: Grader"].every(l => menu.includes(l)), menu.length + " jumps");
+ok("the menu reaches the game, the dashboard, the character, the brand page, all five manager pages and the four avatar check sheets", menu.length === 30 && ["Map", "Results: a win", "Tier Up", "Dashboard: Settings", "Character", "Who is Tequila Corrido?", "Manager: Grader", "Shirts: arms and sleeves", "Hair on every head shape"].every(l => menu.includes(l)), menu.length + " jumps");
 const code = ["index.html", "dashboard.js", "manager.js", "mission.js", "boss.js", "onboarding.js", "lessons.js"].map(read).join("\n");
 ok("every page the menu calls exists", ["creator", "tutorial", "home", "openDiff", "play", "quiz", "bossIntro", "dashboard", "explorer", "managerMode"].every(f => new RegExp(`function ${f}\\(`).test(code)));
 const html = read("index.html"), pres = read("presenter.js"), dash = read("dashboard.js");

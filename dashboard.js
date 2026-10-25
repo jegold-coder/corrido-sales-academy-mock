@@ -199,7 +199,7 @@ function dashSettings(el) {
       <label class="btn alt filebtn">Restore from a backup<input type="file" id="imp" accept="application/json,.json" hidden></label>
       <button class="btn alt" id="rst" type="button">Reset all progress</button><p class="note2" id="smsg"></p></div>
     <div class="card"><h3>The real brand</h3><p class="note2">See the real Tequila Corrido website. It opens in a new tab, so Sales Academy stays open.</p><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 ilovetequilacorrido.com ↗</a></div>
-    <div class="card"><h3>About this mock</h3><p class="note2">Free and offline: no accounts, no paid services. The AI coach is a built-in rule checker, with an optional free Gemini key for typed answers. Mission scripts are draft ideas for the team, not approved by Tequila Corrido.</p></div>`;
+    <div class="card"><h3>About this mock</h3><p class="note2">Free and offline: no accounts, no paid services. The coach is a built-in rule checker, not a live AI. Mission scripts are draft ideas for the team, not approved by Tequila Corrido.</p></div>`;
   $("#snd").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); dashboard("settings"); };
   el.querySelectorAll("[data-p]").forEach(c => c.onchange = () => { state.proto = { ...(state.proto || {}), [c.dataset.p]: c.checked }; Progress.save(state); state.avatar = cleanAvatar(state.avatar); hud(); });
   $("#gomgr2").onclick = () => managerMode();

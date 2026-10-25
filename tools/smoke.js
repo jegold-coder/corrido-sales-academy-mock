@@ -1,0 +1,108 @@
+"use strict";
+// A click-through smoke test: it opens the game in a real (windowless) Chrome, plays through the first run, visits every page the Presenter menu can reach,
+// draws every shirt and hairstyle, and checks the offline copy. It fails on any error in the page. Run from the mock-prototype folder:  node tools/smoke.js
+// It needs Chrome (set CHROME if it is not in the usual place) and an internet connection for the shop photos; it installs nothing.
+const http = require("http"), fs = require("fs"), path = require("path");
+const { launch, sleep } = require("./cdp.js");
+const root = path.join(__dirname, "..");
+const TYPES = { ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".css": "text/css" };
+let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
+
+(async () => {
+  // a tiny web server for this folder that tells the browser to keep nothing, so every run sees the files as they are now
+  const server = http.createServer((req, res) => {
+    const f = path.join(root, decodeURIComponent(req.url.split("?")[0]).replace(/^\/$/, "/index.html"));
+    if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end("not found"); }
+    res.writeHead(200, { "Content-Type": TYPES[path.extname(f)] || "application/octet-stream", "Cache-Control": "no-store" }); fs.createReadStream(f).pipe(res);
+  });
+  await new Promise(r => server.listen(0, "127.0.0.1", r));
+  const base = `http://127.0.0.1:${server.address().port}/`;
+  const chrome = await launch();
+
+  // every error the page reports, except images from the shop failing to load (no internet is not a bug in the game)
+  const errors = [];
+  chrome.on(m => {
+    if (m.method === "Runtime.exceptionThrown") errors.push("exception: " + ((m.params.exceptionDetails.exception || {}).description || m.params.exceptionDetails.text));
+    if (m.method === "Runtime.consoleAPICalled" && m.params.type === "error") errors.push("console.error: " + m.params.args.map(a => a.value || a.description || "").join(" "));
+    if (m.method === "Log.entryAdded" && m.params.entry.level === "error" && !/shopify|ilovetequilacorrido/.test(m.params.entry.url || "")) errors.push("log: " + m.params.entry.text + " " + (m.params.entry.url || ""));
+  });
+  const step = async (name, fn) => { const before = errors.length; try { await fn(); } catch (e) { ok(name, false, e.message); return; } ok(name, errors.length === before, errors.slice(before).join(" | ")); };
+  const click = sel => chrome.eval(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) throw new Error("no ${sel.replace(/"/g, "'")}"); e.click(); return true; })()`);
+
+  try {
+    // ----- a first visit: age check, guest sign-in, create a rep, tutorial, the map
+    await chrome.go(base); await chrome.eval("localStorage.clear()"); await chrome.go(base);
+    await step("the age check shows first, with no way past it except yes", async () => {
+      if (!await chrome.waitFor("!!document.querySelector('#yes')")) throw new Error("no age check");
+      if (await chrome.eval("document.querySelector('#guest').disabled") !== true) throw new Error("sign-in is open before the age check");
+    });
+    await step("yes opens sign-in, and guest leads to the character creator", async () => {
+      await click("#yes"); if (!await chrome.waitFor("!document.querySelector('#guest').disabled")) throw new Error("sign-in stayed locked");
+      await click("#guest"); if (!await chrome.waitFor("!!document.querySelector('#cname') && !!document.querySelector('#cprev')")) throw new Error("no creator");
+    });
+    await step("a name and Save and continue lead to the three-card tutorial, which can be skipped", async () => {
+      await chrome.eval("(() => { const n = document.querySelector('#cname'); n.value = 'Taylor'; n.dispatchEvent(new Event('input', { bubbles: true })); })()");
+      await click("#cdone"); if (!await chrome.waitFor("!!document.querySelector('#tskip')")) throw new Error("no tutorial");
+      await click("#tskip"); if (!await chrome.waitFor("!!document.querySelector('.maphome')")) throw new Error("no map");
+    });
+    await step("the map has 16 stops, only the first one open", async () => {
+      const r = await chrome.eval("({ nodes: document.querySelectorAll('.node').length, locked: document.querySelectorAll('.node.locked').length })");
+      if (r.nodes !== 16 || r.locked !== 15) throw new Error(JSON.stringify(r));
+    });
+    await step("the first lesson can be opened from the map and played through to its results", async () => {
+      await click(".node[data-id=brand]"); if (!await chrome.waitFor("document.querySelector('#diffDlg').open")) throw new Error("no dialog");
+      await chrome.eval("document.querySelector('#diffDlg button.btn:not(.alt)').click()");
+      for (let i = 0; i < 40 && !await chrome.eval("!!document.querySelector('.result')"); i++) {
+        await chrome.eval("(() => { const o = document.querySelector('.opt:not(:disabled)'); if (o) o.click(); })()"); await sleep(120);
+        await chrome.eval("(() => { const n = document.querySelector('#nx'); if (n) n.click(); })()"); await sleep(120);
+      }
+      if (!await chrome.waitFor("!!document.querySelector('.result')", 4000)) throw new Error("the lesson never reached its results");
+    });
+    await step("every Dashboard tab opens", async () => {
+      for (const t of ["progress", "badges", "team", "review", "check", "settings"]) { await chrome.eval(`dashboard(${JSON.stringify(t)})`); if (!await chrome.eval("!!document.querySelector('.dash, .dhead')")) throw new Error("tab " + t); }
+    });
+
+    // ----- Presenter mode: every page its menu reaches
+    await chrome.go(base); await chrome.eval("localStorage.clear()"); await chrome.go(base);
+    await click("#yes"); await chrome.waitFor("!document.querySelector('#presentGo').disabled"); await click("#presentGo");
+    ok("Presenter mode opens with sample progress and its menu button", await chrome.waitFor("!!document.querySelector('#prbtn') && !!document.querySelector('.maphome')"));
+    const jumps = await chrome.eval("Presenter.MENU().flatMap(([, items]) => items.map(i => i[0]))");
+    ok(`the Presenter menu has ${jumps.length} jumps`, jumps.length >= 26);
+    for (let k = 0; k < jumps.length; k++) {
+      if (jumps[k] === "Age check") continue;   // that jump reloads the page, which the first-visit steps above already cover
+      await step(`jump ${k + 1}/${jumps.length}: ${jumps[k]}`, async () => {
+        await chrome.eval(`(() => { document.querySelectorAll("dialog[open]").forEach(d => d.close()); document.body.classList.toggle("mgr", ${/^Manager/.test(jumps[k])}); const f = Presenter.MENU().flatMap(([, items]) => items)[${k}][1]; const r = f(); if (r && r.catch) r.catch(() => {}); })()`);
+        await sleep(350);
+        if (!await chrome.waitFor("!document.querySelector('#prbtn').disabled", 30000)) throw new Error("a sample run never finished");
+      });
+    }
+    await step("the three progress buttons in the menu work: start over, random sample, complete the game", async () => {
+      const r = await chrome.eval(`(() => { const n = () => Object.keys(state.done).length; Presenter.reset(); const a = n(); Presenter.sample(); const b = n(); Presenter.finish(); return [a, b, n(), PATH.length]; })()`);
+      if (!(r[0] === 0 && r[1] > 3 && r[1] < r[3] && r[2] === r[3])) throw new Error(JSON.stringify(r));
+    });
+
+    // ----- every shirt, hairstyle and head shape draws without an error
+    await step("every shirt, hairstyle and head shape draws, for a man and a woman", async () => {
+      const r = await chrome.eval(`(() => { let n = 0; const keep = JSON.stringify(state.avatar); state.proto = { ...state.proto, unlockMerch: true };
+        for (const g of ["Male", "Female"]) { state.avatar.gender = g; Object.assign(state.avatar, GENDER_DEFAULTS[g]);
+          for (const o of outfitsFor(g)) { state.avatar.outfit = o; if (!/<g|<path/.test(person(repLook()))) throw new Error("nothing drawn for " + o); n++; }
+          state.avatar.outfit = GENDER_DEFAULTS[g].outfit;
+          for (const h of HAIR_BY[g]) for (const f of Object.keys(FACES)) { state.avatar.hairStyle = h; state.avatar.face = f; if (!/<path/.test(person(repLook()))) throw new Error("nothing drawn for " + h + "/" + f); n++; } }
+        Object.assign(state.avatar, JSON.parse(keep)); return n; })()`);
+      if (r < 200) throw new Error("only " + r + " drawings");
+    });
+
+    // ----- the offline copy
+    await chrome.go(base); await click("#yes").catch(() => {});
+    const sw = await chrome.eval("navigator.serviceWorker.ready.then(r => !!r.active)").catch(() => false);
+    ok("the offline worker registers and becomes active", sw === true);
+    await chrome.eval("(() => { state.proto = { ...state.proto, unlockMerch: true }; creator(home); })()"); await sleep(5000);
+    const kept = await chrome.eval("caches.open('csa-images-v1').then(c => c.keys()).then(k => k.length)").catch(() => 0);
+    const online = await chrome.eval("fetch('https://cdn.shopify.com/s/files/1/0665/6091/7672/files/unisex-classic-tee-black-front-680fb818a821d_600x.png', { mode: 'no-cors' }).then(() => true).catch(() => false)");
+    if (online) ok("shop photos are kept on the device after they load", kept > 3, kept + " kept");
+    else console.log("skip  no internet, so the photo copy was not checked");
+  } catch (e) { ok("the run itself", false, e.message); }
+
+  console.log(fails ? `${fails} FAILED` : "OK");
+  await chrome.close(); server.close(); process.exit(fails ? 1 : 0);
+})();

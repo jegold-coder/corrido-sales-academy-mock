@@ -63,8 +63,9 @@ const merchStop = name => (Object.entries(rewardsFor(curGender())).find(([, item
 // How many pieces this rep can collect: everything cut for their gender (the Military Green Era tee is men's only), plus the hats.
 const merchTotal = (gender = curGender()) => Object.values(OUTFITS).filter(o => !o.g || o.g === "u" || o.g === (gender === "Female" ? "f" : "m")).length + Object.keys(HATS).length;
 
-// Prototype switches (Dashboard, Settings). Each stop stays locked until the one before it is done; boss tries are unlimited while the game is being tested.
-const PROTO_DEFAULTS = { unlockStops: false, unlockMerch: false, unlimitedTries: true };
+// Prototype switches (Dashboard, Settings), all off by default: each stop stays locked until the one before it is done, merch has to be earned, and a boss gives
+// three tries a day. Presenter mode turns unlimited tries on for its sample player, so a demo can retry a boss.
+const PROTO_DEFAULTS = { unlockStops: false, unlockMerch: false, unlimitedTries: false };
 const PROTO = k => ({ ...PROTO_DEFAULTS, ...((typeof state !== "undefined" && state.proto) || {}) })[k];
 
 // "a Field Rep" / "an Associate Rep"
