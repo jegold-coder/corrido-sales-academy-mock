@@ -13,7 +13,7 @@ ok("a medal row shows the medal, 'NEW BADGE' and the badge's name", /const badge
 // stars: earned ones pop in one by one, and three stars gets confetti
 ok("both results screens use the same animated star row", /const starRow = stars =>/.test(html) && /\$\{starRow\(stars\)\}/.test(mission) && (html.match(/\$\{starRow\(stars\)\}/g) || []).length === 1);
 ok("each earned star pops in after the one before it", /animation:starpop \.6s calc\(var\(--i\) \* \.3s \+ \.2s\)/.test(html));
-ok("three stars gets confetti on a mission and on a lesson", /if \(stars === 3 && won\) confetti/.test(mission) && /if \(stars === 3\) confetti/.test(html));
+ok("three stars gets confetti on a mission and on a lesson", /if \(stars === 3 && won\) confetti/.test(mission) && /if \(stars === 3 && passed\) confetti/.test(html));
 ok("people who prefer less motion get static stars and medals", /prefers-reduced-motion:reduce\)\{\.bigstars \.star\.on,\.bigstars\.full \.star\.on,\.medalnew\{animation:none/.test(html));
 
 // the customer on a mission's results
@@ -43,4 +43,26 @@ ok("the strongest and tone notes share one block", /<div class="resnotes">\$\{fo
 ok("the camera reminder is one short line, not a card", /class="camnudge"/.test(mission) && !/card nudge/.test(mission));
 ok("the merch card no longer carries a footnote", !/You can change what you wear any time in Character/.test(read("boss.js")));
 ok("the voice details are still on each answer (pace, pauses, volume)", /words a minute · \$\{r\.tone\.stats\.pauses\} long pauses · volume \$\{r\.tone\.stats\.db\} dB/.test(mission));
+
+// stars follow the score out of 100, in halves; passing is a separate test
+const vm = require("vm"), sctx = vm.createContext({ console, localStorage: { getItem() { return null; }, setItem() {}, removeItem() {} } });
+vm.runInContext(read("progress.js").replace(/^"use strict";/, ""), sctx);
+const sf = p => vm.runInContext(`starsFor(${p})`, sctx);
+ok("50% is 1.5 stars, as asked", sf(50) === 1.5);
+ok("100% is 3 stars and 0% is none", sf(100) === 3 && sf(0) === 0);
+ok("the stars go up in halves with the score", [[17, 0.5], [34, 1], [50, 1.5], [67, 2], [78, 2.5], [92, 3]].every(([p, s]) => sf(p) === s), [17, 34, 50, 67, 78, 92].map(p => sf(p)).join(" "));
+ok("a better score never gets fewer stars", Array.from({ length: 101 }, (_, i) => sf(i)).every((s, i, a) => !i || s >= a[i - 1]));
+ok("scores outside 0 to 100 are held to 0 to 3 stars", sf(-20) === 0 && sf(140) === 3);
+ok("a mission's stars come from its percentage, not from passing", /const pct = Math\.round\(avg \/ 5 \* 100\), stars = starsFor\(pct\)/.test(mission));
+ok("a mission counts as passed by its pass mark (won), never by having stars", /counts && won && firstTime/.test(mission) && /if \(counts && won\) \{ state\.done/.test(mission) && !/stars > 0/.test(mission));
+ok("a lesson's stars come from its percentage and passing is its own flag", /stars = starsFor\(pct\)/.test(html) && /function finish\(L, passed,/.test(html) && !/stars > 0/.test(html) && /return finish\(L, pass,/.test(read("lessons.js")));
+ok("a lesson's Brand Brain badge needs a perfect score, not a rounded star count", /s\.lesson && s\.won && s\.pct === 100/.test(read("progress.js")));
+// half stars draw as half stars, on the results, the map and the history
+const rctx = vm.createContext({ console }); vm.runInContext(html.slice(html.indexOf("const starRow ="), html.indexOf("function finish(L, passed,")), rctx);
+const big = vm.runInContext("starRow(1.5)", rctx), small = vm.runInContext("starGlyphs(2.5)", rctx);
+ok("1.5 stars is one full star, one half star and one empty", (big.match(/class="star on"/g) || []).length === 1 && (big.match(/class="star on half"/g) || []).length === 1 && (big.match(/class="star "/g) || []).length === 1);
+ok("the map and history stars show 2.5 as two full and a half", (small.match(/class="gs full"/g) || []).length === 2 && (small.match(/class="gs half"/g) || []).length === 1);
+ok("the stars say how many they are for screen readers", /aria-label="1\.5 of 3 stars"/.test(big) && /aria-label="2\.5 of 3 stars"/.test(small));
+ok("the map and the history use the half-star stars", /starGlyphs\(state\.stars\[n\.id\] \|\| 0\)/.test(html) && /starGlyphs\(h\.stars \|\| 0\)/.test(read("dashboard.js")));
+ok("a half star fills half", /\.bigstars \.star\.half\{background:linear-gradient\(90deg,var\(--gold\) 50%/.test(html) && /\.gs\.half\{background:linear-gradient\(90deg,var\(--gold\) 50%/.test(html));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

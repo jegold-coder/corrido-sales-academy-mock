@@ -275,7 +275,7 @@ function missionResults(M, log) {
   const total = log.reduce((a, l) => a + l.res.score, 0), avg = total / n;
   const boss = sc.boss, miss = !!boss && log.some(l => l.res.compliance);   // a health claim or a pressure tactic loses a boss fight
   const pass = boss ? boss.pass : sc.practice ? 2.8 : L.pass, won = avg >= pass && !miss;
-  const stars = won ? (avg >= 4.5 ? 3 : avg >= 4 ? 2 : 1) : 0;
+  const pct = Math.round(avg / 5 * 100), stars = starsFor(pct);   // stars follow the score out of 100: 50% is 1.5 stars. Passing is a separate test (won).
   const perfect = log.some(l => l.res.score >= 5);
   const cam = Cam.scores(); Cam.stop();
   const delivery = cam ? Math.round((cam.presence + cam.eye + cam.posture + cam.smile) / 4 / 20 * 10) / 10 : null;
@@ -286,10 +286,9 @@ function missionResults(M, log) {
   stopAll(); state.xp += xp;
   // beating a regular level unlocks its merch. A boss win is handled by the tier-up (it also moves you up a tier).
   const counts = !sc.practice && !sc.rehearsal && !boss, firstTime = !state.done[sc.id];
-  const newItems = counts && stars > 0 && firstTime ? (REWARDS[sc.id] || []) : [];
-  if (counts && stars > 0) { state.done[sc.id] = true; state.stars[sc.id] = Math.max(state.stars[sc.id] || 0, stars); }
+  const newItems = counts && won && firstTime ? (REWARDS[sc.id] || []) : [];
+  if (counts && won) { state.done[sc.id] = true; state.stars[sc.id] = Math.max(state.stars[sc.id] || 0, stars); }
   const tierInfo = boss && won && !sc.rehearsal ? bossApplyWin({ boss, stop: sc, first: firstTime, stars, perfect: avg >= 4.8 }) : null;
-  const pct = Math.round(avg / 5 * 100);
   const earned = Progress.record(state, { id: sc.id, title: sc.title, diff: `Level ${lvl}`, mode: voiceUsed ? "speak" : "type", pct, stars, won, xp, skills, lesson: false, voice: voiceUsed, camera: !!cam, cameraScores: cam, perfect }, TOTAL_STOPS());
   syncBadges().forEach(k => { if (!earned.includes(k)) earned.push(k); });
   hud();

@@ -742,6 +742,11 @@ details.acard .ahead{padding-right:1.4rem}
 .googlerow{margin:.6rem 0 0;display:flex;flex-direction:column;align-items:center;gap:.3rem}.gbtn{max-width:100%;min-height:0}
 .gsoon{width:100%}.gsoon[hidden]{display:none}.gsoon:disabled{opacity:.75;cursor:default}
 details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weight:700;color:var(--teal)}
+/* ===== v39: half stars ===== */
+.node .stars{font-size:1rem;bottom:-25px;text-shadow:0 1px 2px #000a}.node.boss .stars{bottom:-31px}.stop .lab{margin-top:18px}.gstars{display:inline-flex;gap:1px}.gs{color:#cfc4b8}.gs.full{color:var(--gold)}
+.gs.half{background:linear-gradient(90deg,var(--gold) 50%,#cfc4b8 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.node .stars .gs{color:#ffffff4d}.node .stars .gs.full{color:var(--gold)}.node .stars .gs.half{background:linear-gradient(90deg,var(--gold) 50%,#ffffff4d 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigstars .star.half{background:linear-gradient(90deg,var(--gold) 50%,#cfc4b8 50%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 8px #e0a42f99)}
 </style>
 </head>
 <body>
@@ -792,25 +797,25 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-24y"></script>
-<script src="sound.js?v=2026-10-24y"></script>
-<script src="scenarios.js?v=2026-10-24y"></script>
-<script src="progress.js?v=2026-10-24y"></script>
-<script src="criteria.js?v=2026-10-24y"></script>
-<script src="tone.js?v=2026-10-24y"></script>
-<script src="coach.js?v=2026-10-24y"></script>
-<script src="camera.js?v=2026-10-24y"></script>
-<script src="lessons.js?v=2026-10-24y"></script>
-<script src="dashboard.js?v=2026-10-24y"></script>
-<script src="grader.js?v=2026-10-24y"></script>
-<script src="onboarding.js?v=2026-10-24y"></script>
-<script src="tiers.js?v=2026-10-24y"></script>
-<script src="badges.js?v=2026-10-24y"></script>
-<script src="voices.js?v=2026-10-24y"></script>
-<script src="mission.js?v=2026-10-24y"></script>
-<script src="boss.js?v=2026-10-24y"></script>
-<script src="auth.js?v=2026-10-24y"></script>
-<script src="manager.js?v=2026-10-24y"></script>
+<script src="config.js?v=2026-10-25b"></script>
+<script src="sound.js?v=2026-10-25b"></script>
+<script src="scenarios.js?v=2026-10-25b"></script>
+<script src="progress.js?v=2026-10-25b"></script>
+<script src="criteria.js?v=2026-10-25b"></script>
+<script src="tone.js?v=2026-10-25b"></script>
+<script src="coach.js?v=2026-10-25b"></script>
+<script src="camera.js?v=2026-10-25b"></script>
+<script src="lessons.js?v=2026-10-25b"></script>
+<script src="dashboard.js?v=2026-10-25b"></script>
+<script src="grader.js?v=2026-10-25b"></script>
+<script src="onboarding.js?v=2026-10-25b"></script>
+<script src="tiers.js?v=2026-10-25b"></script>
+<script src="badges.js?v=2026-10-25b"></script>
+<script src="voices.js?v=2026-10-25b"></script>
+<script src="mission.js?v=2026-10-25b"></script>
+<script src="boss.js?v=2026-10-25b"></script>
+<script src="auth.js?v=2026-10-25b"></script>
+<script src="manager.js?v=2026-10-25b"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1079,7 +1084,7 @@ function home() {
     stops += `<div class="stop" style="${pos}">
       <button class="node ${BOSS_BY[n.id] ? "boss" : ""} ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"} ${fresh.includes(n.id) ? "fresh" : ""}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
         ${cur ? '<span class="start">START</span>' : ""}${face ? `${face}${done ? '<span class="bchk">✓</span>' : open ? "" : '<span class="blk">🔒</span>'}` : done ? "✓" : open ? n.icon : "🔒"}
-        ${done ? `<span class="stars">${"★".repeat(state.stars[n.id])}${"☆".repeat(3 - state.stars[n.id])}</span>` : ""}
+        ${done ? `<span class="stars">${starGlyphs(state.stars[n.id] || 0)}</span>` : ""}
       </button><div class="lab">${BOSS_BY[n.id] ? `<span class="bosstag">Boss · Tier ${BOSS_BY[n.id].tier}</span>` : ""}${n.title}<small>${open ? (BOSS_BY[n.id] ? `Beat it to become ${aTier(Math.min(5, BOSS_BY[n.id].tier + 1))}` : `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}`) : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
   const lv = levelOf(state.xp), lcur = LEVELS[lv][1], lnxt = LEVELS[lv + 1], lpct = lnxt ? Math.round((state.xp - lcur) / (lnxt[1] - lcur) * 100) : 100;
@@ -1821,27 +1826,30 @@ function coachSummary(skills) {
   return `Your strongest moment was <b>${hi[0]}</b>. Your biggest chance to improve is <b>${lo[0]}</b>. Check the note for that step below.`;
 }
 
-// The stars on a results screen: each earned star pops in one after the other, and the empty ones wait greyed out.
-const starRow = stars => `<div class="bigstars ${stars === 3 ? "full" : ""}" role="img" aria-label="${stars} of 3 stars">${[0, 1, 2].map(i => `<span class="star ${i < stars ? "on" : ""}" style="--i:${i}">★</span>`).join("")}</div>`;
+// The stars on a results screen: they follow the score (3 for 100, so 50% is 1.5), earned ones pop in one after the other, a half star
+// fills half, and the empty ones wait greyed out.
+const starRow = stars => `<div class="bigstars ${stars >= 3 ? "full" : ""}" role="img" aria-label="${stars} of 3 stars">${[0, 1, 2].map(i => { const f = Math.max(0, Math.min(1, stars - i)); return `<span class="star ${f >= 1 ? "on" : f > 0 ? "on half" : ""}" style="--i:${i}">★</span>`; }).join("")}</div>`;
+// Three small stars for the map and the history, each full, half or empty.
+const starGlyphs = n => `<span class="gstars" role="img" aria-label="${n} of 3 stars">${[0, 1, 2].map(i => { const f = Math.max(0, Math.min(1, n - i)); return `<span class="gs ${f >= 1 ? "full" : f > 0 ? "half" : ""}">★</span>`; }).join("")}</span>`;
 
-function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
+function finish(L, passed, xp, skills, summary, hidden, extra = {}) {
   stopAll();
   state.xp += xp;
-  const newItems = stars > 0 && !L.practice && !state.done[L.id] ? (REWARDS[L.id] || []) : [];   // first pass of a lesson unlocks its merch
-  if (stars > 0 && !L.practice) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
-  const pct = Math.round(Object.values(skills).reduce((a, b) => a + b, 0) / (Object.keys(skills).length * 5) * 100);
+  const pct = Math.round(Object.values(skills).reduce((a, b) => a + b, 0) / (Object.keys(skills).length * 5) * 100), stars = starsFor(pct);   // stars follow the score; passing is its own test
+  const newItems = passed && !L.practice && !state.done[L.id] ? (REWARDS[L.id] || []) : [];   // first pass of a lesson unlocks its merch
+  if (passed && !L.practice) { state.done[L.id] = true; state.stars[L.id] = Math.max(state.stars[L.id] || 0, stars); }
   const { log, sc, ...meta } = extra;
-  const earned = Progress.record(state, { id: L.id, title: L.title, diff: state.diff, mode: L.qs ? "choice" : state.mode, pct, stars, won: stars > 0, xp, skills, lesson: !!L.qs, ...meta }, TOTAL_STOPS());
+  const earned = Progress.record(state, { id: L.id, title: L.title, diff: state.diff, mode: L.qs ? "choice" : state.mode, pct, stars, won: passed, xp, skills, lesson: !!L.qs, ...meta }, TOTAL_STOPS());
   syncBadges().forEach(k => { if (!earned.includes(k)) earned.push(k); });
   hud();
-  Sound.stop(); Sound.sfx(stars ? "win" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
-  const next = stars > 0 && ALL_STOPS()[ALL_STOPS().findIndex(x => x.id === L.id) + 1];
+  Sound.stop(); Sound.sfx(passed ? "win" : "lose"); if (earned.length) setTimeout(() => Sound.sfx("badge"), 750);
+  const next = passed && ALL_STOPS()[ALL_STOPS().findIndex(x => x.id === L.id) + 1];
   const deliver = meta.cameraScores ? `<div class="card"><h3>Delivery (camera coach)</h3>${[["Eye contact", "eye"], ["Posture", "posture"], ["Presence", "presence"], ["Expression", "smile"]].map(([l, k]) => `<div class="row"><span>${l}</span><div class="bar"><i style="width:${meta.cameraScores[k]}%"></i></div><b>${meta.cameraScores[k]}%</b></div>`).join("")}<ul class="tips">${Cam.tips(meta.cameraScores).map(t => `<li>${t}</li>`).join("")}</ul><p class="note2">Nothing was recorded. Only these percentages are kept.</p></div>` : "";
   const transcript = log ? log.map(l => `${l.cname || sc.cust.name}: ${l.line.replace(/<[^>]+>/g, "")}\n${repName()}: ${l.text.replace(/<[^>]+>/g, "")}\n${l.cname || sc.cust.name}: ${l.reply}`).join("\n\n") : "";
   const steps = log ? `<div class="card"><h3>Step by step</h3>${log.map((l, j) => `<div class="stepnote ${l.k}"><b>${j + 1}. ${l.skill}</b> <span>${l.k === "best" ? "✓" : "✗"}</span><p>${l.typed ? esc(l.fb) : l.fb}</p>${l.better ? `<p class="better"><b>Try this instead:</b> <i>${esc(l.better)}</i></p>` : ""}</div>`).join("")}<p class="note2">${coachSummary(skills)}</p></div>
     <details class="card"><summary>Conversation transcript</summary><pre id="tx" class="tx">${esc(transcript)}</pre><button class="btn alt" id="cpy" type="button">Copy transcript</button></details>` : "";
   app.innerHTML = `<section class="view result sheet">
-    <h1>${stars ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
+    <h1>${passed ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
     <span class="chip">${D().label} · ${L.qs ? "Lesson" : state.mode === "type" ? "Typed" : "Pick an answer"} · ×${D().xp} XP</span>
     ${starRow(stars)}
     <p>${summary}</p>
@@ -1853,11 +1861,11 @@ function finish(L, stars, xp, skills, summary, hidden, extra = {}) {
     ${steps}
     ${hidden ? `<div class="learn"><b>Hidden objection revealed:</b> ${hidden}</div>` : ""}
     <div class="fact">💡 <b>Did you know?</b> ${FACTS[Math.floor(Math.random() * FACTS.length)]}</div>
-    <p><button class="btn" id="cont">${next ? "Back to the map" : "Continue"}</button> ${stars === 0 ? '<button class="btn alt" id="retry">Try again</button>' : ""}</p>
+    <p><button class="btn" id="cont">${next ? "Back to the map" : "Continue"}</button> ${!passed ? '<button class="btn alt" id="retry">Try again</button>' : ""}</p>
   </section>`;
   $("#cont").onclick = home;
   wireRewardChips();
-  if (stars === 3) confetti(app.querySelector(".result"));
+  if (stars === 3 && passed) confetti(app.querySelector(".result"));
   if ($("#cpy")) $("#cpy").onclick = () => { navigator.clipboard?.writeText(transcript).then(() => { $("#cpy").textContent = "Copied"; }).catch(() => {}); };
   if ($("#retry")) $("#retry").onclick = () => (L.qs ? quiz(L) : play(L));
 }

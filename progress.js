@@ -3,6 +3,8 @@
 // Nothing is sent anywhere. The "team board" works by pasting share codes, so it needs no server and costs nothing.
 
 const LEVELS = [["Rookie", 0], ["Opener", 100], ["Closer", 250], ["Rainmaker", 450], ["Corrido Legend", 700], ["Master Rep", 1000]];
+// Stars follow the score out of 100, three stars for 100: 50% is 1.5 stars, and halves are the smallest step.
+const starsFor = pct => Math.round(Math.max(0, Math.min(100, pct)) / 100 * 6) / 2;
 const levelOf = xp => { let i = 0; LEVELS.forEach((l, n) => { if (xp >= l[1]) i = n; }); return i; };
 
 // Each badge: [name, how to earn it, test(session, P)]. session = the mission that was just finished.
@@ -13,7 +15,7 @@ const BADGES = {
   hard: ["Tough Crowd", "Pass a Level 4 or 5 mission", s => s.won && /Level [45]/.test(s.diff || "")],
   typed: ["Perfect Answer", "Score 5 out of 5 on a single answer", s => s.perfect],
   voice: ["Say It Out Loud", "Answer a mission question by speaking", s => s.voice],
-  brain: ["Brand Brain", "Get every question right in a brand lesson", s => s.lesson && s.stars === 3],
+  brain: ["Brand Brain", "Get every question right in a brand lesson", s => s.lesson && s.won && s.pct === 100],
   comply: ["Clean Hands", "Earn 3 stars in the Compliance Trap", s => s.id === "comply" && s.stars === 3],
   camera: ["On Camera", "Finish a mission with the camera coach", s => s.camera],
   streak3: ["On a Roll", "Practice 3 days in a row", (s, P) => P.streak >= 3],

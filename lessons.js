@@ -63,7 +63,7 @@ function quiz(L, i = 0, right = 0, missed = []) {
     items.forEach(q => { topics[q.topic] = topics[q.topic] || [0, 0]; topics[q.topic][1]++; if (!missed.includes(q.id)) topics[q.topic][0]++; });
     const skills = Object.fromEntries(Object.entries(topics).map(([k, v]) => [k, Math.round(v[0] / v[1] * 5 * 10) / 10]));
     const wrong = items.length - right;
-    return finish(L, !pass ? 0 : wrong === 0 ? 3 : wrong === 1 ? 2 : 1, pass ? 20 + right * 5 : 0, skills,
+    return finish(L, pass, pass ? 20 + right * 5 : 0, skills,
       pass ? `Lesson complete: ${right} of ${items.length} right.` : "You ran out of hearts. Review the cheat sheet below and try again.", "");
   }
   const it = items[i], opts = choicesFor(it, state.diff);
