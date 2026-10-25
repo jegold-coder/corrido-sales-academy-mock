@@ -49,7 +49,7 @@ function importProgress(file, done) {
 function dashProgress(el) {
   const H = state.history, wins = H.filter(h => h.won).length;
   const avg = H.length ? Math.round(H.reduce((a, h) => a + h.pct, 0) / H.length) : 0;
-  const skills = Progress.skillAverages(state);
+  const skills = Progress.skillAverages(state), fams = skillFamilies(skills);
   const weak = skills[0];
   const done = ALL_STOPS().filter(x => state.done[x.id]).length;
   const rec = !H.length ? "Start with the two lessons, Meet Corrido and Know the Lineup, then The Quiet Bar."
@@ -59,9 +59,10 @@ function dashProgress(el) {
     <div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
     ${!state.pre ? '<p class="learn">Optional: the 2-minute <b>knowledge check</b> shows where you start, so you can see how much you improve. <button class="btn alt" id="pcheck" type="button">Take the check</button></p>' : ""}
     <p class="learn">${rec}</p>
-    <div class="card"><h3>Skills</h3>${skills.length >= 3
-      ? `<div class="radarwrap">${skillRadar(skills)}<ul class="skilllist">${skills.map(([k, v], i) => `<li><span>${esc(k)}${i === 0 ? ' <small class="focus">focus here</small>' : ""}</span><b>${v}%</b></li>`).join("")}</ul></div>`
-      : skills.length ? skills.map(([k, v], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") + '<p class="note2">The radar chart appears once you have scores in three skills.</p>'
+    <div class="card"><h3>Skills</h3>${fams.length >= 3
+      ? `<div class="radarwrap">${skillRadar(fams)}<ul class="skilllist">${[...fams].sort((a, b) => a[1] - b[1]).map(([k, v], i) => `<li${i === 0 ? ' class="weak"' : ""}><span>${esc(k)}${i === 0 ? ' <small class="focus">focus here</small>' : ""}</span><b>${v}%</b><div class="sbar" aria-hidden="true"><i style="width:${v}%"></i></div></li>`).join("")}</ul></div>
+        <details class="skilldetail"><summary>All ${skills.length} skills</summary><ul class="skilltable">${skills.map(([k, v], i) => `<li><span>${esc(k)}${i === 0 ? ' <small class="focus">lowest</small>' : ""}</span><b>${v}%</b></li>`).join("")}</ul></details>`
+      : skills.length ? skills.map(([k, v], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") + '<p class="note2">The radar chart appears once you have scores in three skill areas.</p>'
       : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
     ${cameraDash(H)}
     <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${starGlyphs(h.stars || 0)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
@@ -99,17 +100,34 @@ function tierCard() {
 
 // Where each of N skills sits on a radar: values 0 to 1, drawn around a circle starting at the top.
 const radarPoints = (vals, R, cx, cy) => vals.map((v, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / vals.length; return [cx + Math.cos(a) * R * v, cy + Math.sin(a) * R * v]; });
-function skillRadar(skills) {
-  const ordered = [...skills].sort((a, b) => a[0].localeCompare(b[0])), N = ordered.length, cx = 170, cy = 140, R = 90, weak = skills[0][0];
+// The missions train over thirty named skills, and that many labels cannot fit around a chart. The radar shows a few skill families in a fixed
+// order (the order of a sales call); every skill is still listed under "All skills". A skill that is in no family gets a family of its own.
+const SKILL_FAMILIES = [
+  ["Opening", ["Introduction", "Rapport", "Respect", "Message", "Finding the decision-maker", "Plain explanation"]],
+  ["Discovery", ["Discovery", "Reading the room", "Audience fit"]],
+  ["Product & story", ["Product knowledge", "Story", "Brand story", "Storytelling", "Credibility"]],
+  ["Price & margin", ["Price handling", "Margin handling", "Trust to business"]],
+  ["Objections", ["Objection handling", "Handling objections", "Persistence"]],
+  ["Closing", ["Closing", "Follow-through", "Follow-up"]],
+  ["Compliance & calm", ["Compliance", "Health claims", "Underage service", "Shipping rules", "Marketing claims", "Safety", "Support", "Staying calm"]],
+];
+// skills = [[name, percent, how many times scored]]; returns [[family, percent, times scored]] in call order, for the families that have a score.
+function skillFamilies(skills) {
+  const famOf = name => (SKILL_FAMILIES.find(([, list]) => list.includes(name)) || [name])[0], acc = new Map(SKILL_FAMILIES.map(([f]) => [f, [0, 0]]));
+  skills.forEach(([k, v, n = 1]) => { const f = famOf(k), a = acc.get(f) || acc.set(f, [0, 0]).get(f); a[0] += v * n; a[1] += n; });
+  return [...acc].filter(([, a]) => a[1]).map(([f, a]) => [f, Math.round(a[0] / a[1]), a[1]]);
+}
+function skillRadar(fams) {
+  const N = fams.length, cx = 170, cy = 140, R = 90, weak = [...fams].sort((a, b) => a[1] - b[1])[0][0];
   const poly = pts => pts.map(p => p.map(n => n.toFixed(1)).join(",")).join(" ");
-  const data = radarPoints(ordered.map(s => s[1] / 100), R, cx, cy), labels = radarPoints(Array(N).fill(1.2), R, cx, cy), rim = radarPoints(Array(N).fill(1), R, cx, cy);
+  const data = radarPoints(fams.map(s => s[1] / 100), R, cx, cy), labels = radarPoints(Array(N).fill(1.22), R, cx, cy), rim = radarPoints(Array(N).fill(1), R, cx, cy);
   const wrap = name => { const w = name.split(" "); if (name.length <= 11 || w.length < 2) return [name]; const m = Math.ceil(w.length / 2); return [w.slice(0, m).join(" "), w.slice(m).join(" ")]; };
-  return `<svg class="radar" viewBox="0 0 340 285" role="img" aria-label="Skill radar. ${ordered.map(s => `${s[0]} ${s[1]} percent`).join(", ")}.">
+  return `<svg class="radar" viewBox="0 0 340 285" role="img" aria-label="Skill radar. ${fams.map(s => `${s[0]} ${s[1]} percent`).join(", ")}.">
     ${[.25, .5, .75, 1].map(f => `<polygon class="ring" points="${poly(radarPoints(Array(N).fill(f), R, cx, cy))}"/>`).join("")}
     ${rim.map(p => `<line class="ax" x1="${cx}" y1="${cy}" x2="${p[0].toFixed(1)}" y2="${p[1].toFixed(1)}"/>`).join("")}
     <polygon class="shape" points="${poly(data)}"/>
-    ${data.map((p, i) => `<circle class="dot ${ordered[i][0] === weak ? "weak" : ""}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${ordered[i][0] === weak ? 5 : 3.6}"/>`).join("")}
-    ${labels.map((p, i) => { const lines = wrap(ordered[i][0]), anchor = p[0] < cx - 8 ? "end" : p[0] > cx + 8 ? "start" : "middle"; return `<text text-anchor="${anchor}" x="${p[0].toFixed(1)}" y="${(p[1] - (lines.length - 1) * 6 + 3).toFixed(1)}">${lines.map((l, k) => `<tspan x="${p[0].toFixed(1)}" dy="${k ? 12 : 0}">${esc(l)}</tspan>`).join("")}</text>`; }).join("")}</svg>`;
+    ${data.map((p, i) => `<circle class="dot ${fams[i][0] === weak ? "weak" : ""}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${fams[i][0] === weak ? 5 : 3.6}"/>`).join("")}
+    ${labels.map((p, i) => { const lines = wrap(fams[i][0]), anchor = p[0] < cx - 8 ? "end" : p[0] > cx + 8 ? "start" : "middle"; return `<text text-anchor="${anchor}" x="${p[0].toFixed(1)}" y="${(p[1] - (lines.length - 1) * 6 + 3).toFixed(1)}">${lines.map((l, k) => `<tspan x="${p[0].toFixed(1)}" dy="${k ? 12 : 0}">${esc(l)}</tspan>`).join("")}</text>`; }).join("")}</svg>`;
 }
 
 function cameraDash(H) {

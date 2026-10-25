@@ -1,5 +1,6 @@
-// Checks the Pickleball Raglan on the avatar: the body comes from the photo, the sleeves are drawn hanging over the arms, and nothing is left floating.
-// Run from the mock-prototype folder: node tests/raglan.test.js
+// Checks how two kinds of outfit are drawn on the avatar. The Pickleball Raglan: the body comes from the photo, the sleeves are drawn hanging over
+// the arms and nothing floats. The polos: the skin behind the V stays inside the V, so none shows beside the collar.
+// Run from the mock-prototype folder: node tests/outfits.test.js
 const fs = require("fs"), vm = require("vm"), path = require("path");
 const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL ") + n + (x ? " " + x : "")); if (!c) fails++; };
@@ -30,4 +31,14 @@ for (const [label, F] of [["a male build", false], ["a female build", true]]) {
   ok(`${label}: the forearm and hand are drawn below the sleeve (skin shows under the cuff)`, (out.match(/<line [^>]*stroke="#e0b090"/g) || []).length >= 4 && (out.match(/<path [^>]*fill="#e0b090"/g) || []).length >= 4);
   ok(`${label}: other photo tees are drawn exactly as before (no navy sleeves, the old clip)`, !/#262c39/.test(plain) && !/url\(#rsh\)/.test(plain));
 }
+
+// polos: the neck skin behind the V never pokes out beside the collar wings
+const polo = (F = false) => vm.runInContext(`humanBody(${JSON.stringify({ F, skin: "#e0b090", base: "#10264a", Wk: 1, hem: 208, v: true, polo: true, bbox: [0, 0, 1, 1], logo: { img: "logo.png", box: [.553, .242, .678, .306] } })}).torso`, ctx);
+for (const [label, F] of [["a male build", false], ["a female build", true]]) {
+  const out = polo(F), patch = [...out.matchAll(/<path d="M(-?[\d.]+) (-?[\d.]+)H(-?[\d.]+)L60 (-?[\d.]+)Z" fill="#e0b090"\/>/g)];
+  const wingTip = Math.min(...[...out.matchAll(/<path d="M(-?[\d.]+) 96\.5L/g)].map(m => +m[1]));   // the collar wing's outer tip, as x
+  ok(`${label}: the skin behind the polo's V is a triangle that ends in the V's point (no wide patch with corners)`, patch.length === 1 && !/V124H/.test(out), "patches " + patch.length);
+  ok(`${label}: its corners sit inside the collar wings and not above the shoulder line, so none shows at the sides`, patch.length === 1 && +patch[0][1] >= wingTip && +patch[0][3] <= 120 - wingTip && +patch[0][2] >= 99, patch[0] ? `${patch[0][1]}..${patch[0][3]} at y ${patch[0][2]}, wing tip ${wingTip}` : "no patch");
+}
+ok("other outfits keep their own neck skin (only the polos changed)", /\$\{c\.polo \? `<path d="M\$\{X\(44\)\} 99\.5H/.test(html) && /V128H\$\{X\(41\)\}V101Q/.test(html));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

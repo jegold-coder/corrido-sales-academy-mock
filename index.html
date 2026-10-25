@@ -742,7 +742,11 @@ body.mgr #presenter{bottom:12px}
 .radar{width:100%;height:auto}.radar .ring{fill:none;stroke:#d9cdb8;stroke-width:1}.radar .ax{stroke:#d9cdb8;stroke-width:1}
 .radar .shape{fill:#e0a42f66;stroke:#b8851f;stroke-width:2.5;stroke-linejoin:round}.radar text{font:700 10.5px Arimo,sans-serif;fill:#4a3a2a}
 .radar .dot{fill:#b8851f}.radar .dot.weak{fill:#b5432a}
-.skilllist{list-style:none;margin:0;padding:0;font-size:.9rem}.skilllist li{display:flex;justify-content:space-between;gap:.5rem;padding:.25rem 0;border-bottom:1px solid #eadfcd}.skilllist b{white-space:nowrap}
+.skilllist{list-style:none;margin:0;padding:0;font-size:.9rem}.skilllist li{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;padding:.4rem 0;border-bottom:1px solid #eadfcd}.skilllist b{white-space:nowrap}
+.sbar{grid-column:1/-1;height:6px;background:#e6ddd0;border-radius:99px;overflow:hidden}.sbar i{display:block;height:100%;background:linear-gradient(90deg,#c47f43,#e0a42f);border-radius:99px}.skilllist li.weak .sbar i{background:var(--red)}
+.skilldetail{margin-top:.6rem;font-size:.9rem}.skilldetail summary{cursor:pointer;font-weight:700;color:var(--brown);padding:.3rem 0}
+.skilltable{list-style:none;margin:.3rem 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 1.4rem}.skilltable li{display:flex;justify-content:space-between;gap:.5rem;padding:.25rem 0;border-bottom:1px solid #eadfcd}.skilltable b{white-space:nowrap}
+@media(max-width:640px){.skilltable{grid-template-columns:1fr}}
 @media(max-width:640px){.radarwrap{grid-template-columns:1fr}}
 /* ===== v36: results screens and the footer hearts ===== */
 body:not(.inlesson) #stHearts{display:none}
@@ -860,27 +864,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25r"></script>
-<script src="sound.js?v=2026-10-25r"></script>
-<script src="scenarios.js?v=2026-10-25r"></script>
-<script src="progress.js?v=2026-10-25r"></script>
-<script src="criteria.js?v=2026-10-25r"></script>
-<script src="tone.js?v=2026-10-25r"></script>
-<script src="coach.js?v=2026-10-25r"></script>
-<script src="camera.js?v=2026-10-25r"></script>
-<script src="lessons.js?v=2026-10-25r"></script>
-<script src="dashboard.js?v=2026-10-25r"></script>
-<script src="grader.js?v=2026-10-25r"></script>
-<script src="onboarding.js?v=2026-10-25r"></script>
-<script src="tiers.js?v=2026-10-25r"></script>
-<script src="badges.js?v=2026-10-25r"></script>
-<script src="voices.js?v=2026-10-25r"></script>
-<script src="mission.js?v=2026-10-25r"></script>
-<script src="boss.js?v=2026-10-25r"></script>
-<script src="auth.js?v=2026-10-25r"></script>
-<script src="manager.js?v=2026-10-25r"></script>
-<script src="callcard.js?v=2026-10-25r"></script>
-<script src="presenter.js?v=2026-10-25r"></script>
+<script src="config.js?v=2026-10-25s"></script>
+<script src="sound.js?v=2026-10-25s"></script>
+<script src="scenarios.js?v=2026-10-25s"></script>
+<script src="progress.js?v=2026-10-25s"></script>
+<script src="criteria.js?v=2026-10-25s"></script>
+<script src="tone.js?v=2026-10-25s"></script>
+<script src="coach.js?v=2026-10-25s"></script>
+<script src="camera.js?v=2026-10-25s"></script>
+<script src="lessons.js?v=2026-10-25s"></script>
+<script src="dashboard.js?v=2026-10-25s"></script>
+<script src="grader.js?v=2026-10-25s"></script>
+<script src="onboarding.js?v=2026-10-25s"></script>
+<script src="tiers.js?v=2026-10-25s"></script>
+<script src="badges.js?v=2026-10-25s"></script>
+<script src="voices.js?v=2026-10-25s"></script>
+<script src="mission.js?v=2026-10-25s"></script>
+<script src="boss.js?v=2026-10-25s"></script>
+<script src="auth.js?v=2026-10-25s"></script>
+<script src="manager.js?v=2026-10-25s"></script>
+<script src="callcard.js?v=2026-10-25s"></script>
+<script src="presenter.js?v=2026-10-25s"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1288,7 +1292,7 @@ function humanBody(c) {
   const d = c.polo ? dPolo : `${neck}L${mir(X(28))} 104Q${mir(A.s - hs - 2)} 106 ${mir(A.s - hs)} 124${right}${left}Q${A.s - hs - 2} 106 ${X(28)} 104Z`;
   const gw = (mir(A.s - hs) - (A.s - hs)), id = "rep";
   const legs = `<path d="M${X(32)} 108L${mir(X(32))} 108L${tr} 200L${tl} 200Z" fill="${c.polo ? sk : c.base}" ${c.polo ? "" : `transform="translate(60 150) scale(.86 1) translate(-60 -150)"`}/><path d="M${tl} 194H${tr}L${mir(X(22))} 280H${X(22)}Z" fill="#2b3a55"/><rect x="${tl}" y="194" width="${(tr - tl).toFixed(1)}" height="7" fill="#3a2a1c"/><rect x="57" y="195" width="6" height="5" rx="1" fill="#e0a42f"/><path d="M60 201V280" stroke="#0004" stroke-width="1"/>`;
-  const skin = `<rect x="${60 - nw / 2}" y="76" width="${nw}" height="30" rx="8" fill="${sk}"/>${c.polo ? `<path d="M${X(40)} 98H${mir(X(40))}V124H${X(40)}Z" fill="${sk}"/>` : `<path d="M${60 - nw / 2} 90H${60 + nw / 2}Q${60 + nw / 2} 98 ${mir(X(41))} 101V128H${X(41)}V101Q${60 - nw / 2} 98 ${60 - nw / 2} 90Z" fill="${sk}"/>`}${c.polo ? `<path d="M${X(48)} 108Q60 112 ${mir(X(48))} 108" stroke="#0002" stroke-width="1.4" fill="none"/>` : ""}`;
+  const skin = `<rect x="${60 - nw / 2}" y="76" width="${nw}" height="30" rx="8" fill="${sk}"/>${c.polo ? `<path d="M${X(44)} 99.5H${mir(X(44))}L60 123Z" fill="${sk}"/>` : `<path d="M${60 - nw / 2} 90H${60 + nw / 2}Q${60 + nw / 2} 98 ${mir(X(41))} 101V128H${X(41)}V101Q${60 - nw / 2} 98 ${60 - nw / 2} 90Z" fill="${sk}"/>`}${c.polo ? `<path d="M${X(48)} 108Q60 112 ${mir(X(48))} 108" stroke="#0002" stroke-width="1.4" fill="none"/>` : ""}`;
   // the photo is stretched so its hem always lands at HEM_Y, whatever the product's proportions
   const HEM_Y = 212, W = gw * c.Wk, vsFit = c.polo ? 1 : (HEM_Y - 99) * (c.bbox[2] - c.bbox[0]) / ((c.bbox[3] - c.bbox[1]) * W);
   const photo = c.polo ? poloCloth(c, X, mir) : placeImg(c.img, c.bbox, W, 99, false, vsFit);

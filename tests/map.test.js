@@ -43,7 +43,7 @@ vm.runInContext(dash.slice(dash.indexOf("const radarPoints"), dash.indexOf("func
 const pts = ev("radarPoints([1, 1, 1, 1], 100, 0, 0)");
 ok("a four-skill radar puts the points at the top, right, bottom and left", Math.abs(pts[0][0]) < 1e-6 && Math.abs(pts[0][1] + 100) < 1e-6 && Math.abs(pts[1][0] - 100) < 1e-6 && Math.abs(pts[2][1] - 100) < 1e-6 && Math.abs(pts[3][0] + 100) < 1e-6);
 ok("a zero score sits at the centre and half sits halfway", ev("radarPoints([0, .5], 100, 10, 10)").flat().map(n => Math.round(n)).join() === "10,10,10,60");
-ok("the radar shows once there are scores in three skills, bars before that", /skills\.length >= 3/.test(dash) && /The radar chart appears once you have scores in three skills/.test(dash));
+ok("the radar shows once there are scores in three skill areas, bars before that", /fams\.length >= 3/.test(dash) && /The radar chart appears once you have scores in three skill areas/.test(dash));
 ok("the ladder has one step per tier, each with its boss's medal", /TIERS\.map\(\(n, i\) =>/.test(dash) && /badgeSVG\("boss-" \+ boss\.id, earned\)/.test(dash));
 ok("the ladder comes first on the Progress tab", dash.indexOf("${tierCard()}") < dash.indexOf('<div class="stats3">'));
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

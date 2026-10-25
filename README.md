@@ -46,7 +46,7 @@ What it loads from the internet:
 | Results screens | Compact: the score, stars and the customer (looking how the conversation left them, with their last words) share one header row, new badges appear as the real medals, and each answer is a row showing its score and one line, which you open for the detail (the ones that need work start open, and one button opens or closes them all). Stars follow the score out of 100 and go up in halves (100% is 3 stars, 50% is 1.5), so a half star is half filled on the results, the map and the history. Passing is a separate test, the mission's pass mark, so a score can show stars and still miss the pass mark. They pop in one after another, and three stars brings confetti. When every answer scores the same it says so instead of naming a strongest and weakest. The footer hearts show only inside a lesson. The page doesn't bounce past the top, so nothing shows behind it |
 | Customer reactions | The customer's face follows the conversation: brows, mouth and cheeks go from delighted to pleased, plain, unsure or annoyed, and a small reaction pops up beside them after each answer. Harder levels start the customer more guarded |
 | Answer grader (manager mode > Grader) | For managers only, because it shows the model answers. For every question: what a good answer looks like and why, the partly-there and not-good answers with the reason for each, and a box to type any answer and see the score, the arithmetic behind it, what it covered, the mistakes, the tone notes and how the customer would react. It is the same grader the missions use, so the team and the client can check it against their own judgement |
-| Dashboard progress | The tier ladder is first: six steps with each boss's medal in colour once beaten, where you are now, the next boss and the merch meter. Skills are a radar chart once there are scores in three skills (bars before that), with the weakest skill marked |
+| Dashboard progress | The tier ladder is first: six steps with each boss's medal in colour once beaten, where you are now, the next boss and the merch meter. Skills are a radar chart of up to seven skill areas in the order of a sales call (Opening, Discovery, Product & story, Price & margin, Objections, Closing, Compliance & calm) once there are scores in three of them (bars before that), with the weakest area marked and every individual skill listed under "All skills" |
 | Rep dashboard | Progress, badges, team, review, knowledge check (optional) and settings |
 | Quick start (first run) | After the age check and sign-in, a new player creates their rep (every option is there from the start, and it begins from a random look with a clear face), sees a short three-card tutorial (skippable; replayable from Dashboard > Settings > Help), and lands on the open map. Nothing opens by itself: the Next up bar shows where to begin and they can explore first. No knowledge check in the way: it is optional (Dashboard > Knowledge check) |
 | Try this question again | Every answer under 4 out of 5 on a results screen has a button that replays just that question, same customer, with the checklist hidden. It is practice (no stop is marked done) but earns XP, feeds the skill scores, and a good answer clears that moment from Review. The results compare the two scores |
@@ -118,7 +118,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y` and `raglan` tests |
+| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits` and `skills` tests |
 
 ## Tests
 
@@ -143,7 +143,8 @@ node tests/globals.test.js  # no two scripts declare the same name (a clash stop
 node tests/camera.test.js   # face maths with fake landmarks
 node tests/learning.test.js # coach mode defaults, the hint costs 5 XP, every customer's second lines keep the same facts and alternate
 node tests/a11y.test.js     # colour contrast of the key pairs, page headings, focus rings, tap size, no tiny text
-node tests/raglan.test.js   # the Pickleball Raglan on the avatar: photo body, drawn 3/4 sleeves over the arms, no gap beside the torso
+node tests/outfits.test.js  # the Pickleball Raglan (photo body, drawn 3/4 sleeves over the arms, no gap beside the torso) and the polos (no neck skin beside the collar)
+node tests/skills.test.js   # the Skills chart: every skill is in one family, no radar label overlaps another, every skill is still listed
 ```
 
 ## Known limits (be honest about these in the pitch)
