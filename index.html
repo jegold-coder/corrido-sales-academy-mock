@@ -860,27 +860,27 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25q"></script>
-<script src="sound.js?v=2026-10-25q"></script>
-<script src="scenarios.js?v=2026-10-25q"></script>
-<script src="progress.js?v=2026-10-25q"></script>
-<script src="criteria.js?v=2026-10-25q"></script>
-<script src="tone.js?v=2026-10-25q"></script>
-<script src="coach.js?v=2026-10-25q"></script>
-<script src="camera.js?v=2026-10-25q"></script>
-<script src="lessons.js?v=2026-10-25q"></script>
-<script src="dashboard.js?v=2026-10-25q"></script>
-<script src="grader.js?v=2026-10-25q"></script>
-<script src="onboarding.js?v=2026-10-25q"></script>
-<script src="tiers.js?v=2026-10-25q"></script>
-<script src="badges.js?v=2026-10-25q"></script>
-<script src="voices.js?v=2026-10-25q"></script>
-<script src="mission.js?v=2026-10-25q"></script>
-<script src="boss.js?v=2026-10-25q"></script>
-<script src="auth.js?v=2026-10-25q"></script>
-<script src="manager.js?v=2026-10-25q"></script>
-<script src="callcard.js?v=2026-10-25q"></script>
-<script src="presenter.js?v=2026-10-25q"></script>
+<script src="config.js?v=2026-10-25r"></script>
+<script src="sound.js?v=2026-10-25r"></script>
+<script src="scenarios.js?v=2026-10-25r"></script>
+<script src="progress.js?v=2026-10-25r"></script>
+<script src="criteria.js?v=2026-10-25r"></script>
+<script src="tone.js?v=2026-10-25r"></script>
+<script src="coach.js?v=2026-10-25r"></script>
+<script src="camera.js?v=2026-10-25r"></script>
+<script src="lessons.js?v=2026-10-25r"></script>
+<script src="dashboard.js?v=2026-10-25r"></script>
+<script src="grader.js?v=2026-10-25r"></script>
+<script src="onboarding.js?v=2026-10-25r"></script>
+<script src="tiers.js?v=2026-10-25r"></script>
+<script src="badges.js?v=2026-10-25r"></script>
+<script src="voices.js?v=2026-10-25r"></script>
+<script src="mission.js?v=2026-10-25r"></script>
+<script src="boss.js?v=2026-10-25r"></script>
+<script src="auth.js?v=2026-10-25r"></script>
+<script src="manager.js?v=2026-10-25r"></script>
+<script src="callcard.js?v=2026-10-25r"></script>
+<script src="presenter.js?v=2026-10-25r"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1292,12 +1292,17 @@ function humanBody(c) {
   // the photo is stretched so its hem always lands at HEM_Y, whatever the product's proportions
   const HEM_Y = 212, W = gw * c.Wk, vsFit = c.polo ? 1 : (HEM_Y - 99) * (c.bbox[2] - c.bbox[0]) / ((c.bbox[3] - c.bbox[1]) * W);
   const photo = c.polo ? poloCloth(c, X, mir) : placeImg(c.img, c.bbox, W, 99, false, vsFit);
+  // where a point of the product photo (as fractions of the image) lands on the avatar
+  const px = f => +(60 + (f - (c.bbox[0] + c.bbox[2]) / 2) * W / (c.bbox[2] - c.bbox[0])).toFixed(1), py = f => +(99 + (f - c.bbox[1]) * W / (c.bbox[2] - c.bbox[0]) * vsFit).toFixed(1);
   const lumB = [1, 3, 5].reduce((t, i) => t + parseInt(c.base.slice(i, i + 2), 16), 0) / 3, K = lumB > 170 ? .3 : lumB > 110 ? .65 : 1;   // light cloth needs far less shading
   const shade = `<linearGradient id="gs-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity="${(.3 * K).toFixed(2)}"/><stop offset=".2" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${(.3 * K).toFixed(2)}"/></linearGradient>`;
   // A photo tee is the whole garment: the product photo is stretched over shoulders, sleeves and hem as it is, with only
   // the neck opening cut out, so there is no second body shape behind it.
   const cutout = `M-30 80H${X(42)}V99C${X(42)} 110 ${X(49)} 114 60 114C${mir(X(49))} 114 ${mir(X(42))} 110 ${mir(X(42))} 99V80H150V320H-30Z`;
-  const garmentPhoto = `<defs><clipPath id="gm-${id}"><path d="${cutout}"/></clipPath></defs>
+  // the raglan keeps the photo from the shoulder seams down the torso; the flared photo sleeves are cut off (the drawn sleeves cover that edge)
+  const D = c.dsl, xt = D ? [px(D.torso[0]), px(D.torso[1])] : null, ay = D ? py(D.armpit) : 0;
+  const rcut = D ? `M${X(42)} 99L${X(28)} 104L${A.s - hs + 1} 116L${xt[0]} ${ay}L${xt[0]} 320L${xt[1]} 320L${xt[1]} ${ay}L${mir(A.s - hs + 1)} 116L${mir(X(28))} 104L${mir(X(42))} 99C${mir(X(42))} 110 ${mir(X(49))} 114 60 114C${X(49)} 114 ${X(42)} 110 ${X(42)} 99Z` : "";
+  const garmentPhoto = `<defs><clipPath id="gm-${id}"><path d="${D ? rcut : cutout}"/></clipPath></defs>
     <g clip-path="url(#gm-${id})">${photo}</g>
     <path d="${neck}" fill="none" stroke="${mixHex(c.base, "#000000", .14)}" stroke-width="1.5" stroke-linecap="round"/>`;
   const garment = c.polo ? `<defs>${shade}<clipPath id="gm-${id}"><path d="${d}"/></clipPath></defs>
@@ -1314,13 +1319,28 @@ function humanBody(c) {
   // arms start below the sleeve, so no shoulder skin pokes out above a photo tee's sleeve
   let atL = null, atR = null;
   if (!c.polo && c.sl) {   // each photo's sleeves end in a different place, so the arms come out of the real sleeve openings
-    const [x0, y0, x1, y1] = c.bbox, S = W / (x1 - x0), px = f => +(60 + (f - (x0 + x1) / 2) * S).toFixed(1), py = f => +(99 + (f - y0) * S * vsFit).toFixed(1);
     atL = [px(c.sl[0][0]), py(c.sl[0][1]) - 9, 0]; atR = [px(c.sl[1][0]), py(c.sl[1][1]) - 9, 0];
     // below the sleeve the arm hangs against the side of the body, so there is no gap between arm and torso
     atL[2] = Math.max(atL[0], px(c.sl[0][2]) - fw / 2 + 1.5); atR[2] = Math.min(atR[0], px(c.sl[1][2]) + fw / 2 - 1.5);
   }
+  // A drawn sleeve hangs from the shoulder over the arm and ends at the photo's 3/4 cuff; the forearm and hand show below it, against the torso edge.
+  // Its top follows the slope of the raglan shoulder (outer corner low, inner corner up by the yoke), and it is cut as snug as the photo's sleeve.
+  let sleeves = "";
+  if (D) {
+    const cy = py(D.cuff), ya = 132, y1 = (ya + 174) / 2, w0 = aw + 2, w1 = aw - .5, w2 = fw + 1.5, f1 = n => +n.toFixed(1);
+    atL = [A.s, ya, xt[0] - fw / 2 + 1.5]; atR = [mir(A.s), ya, xt[1] + fw / 2 - 1.5];
+    const sleeve = at => {
+      const s = at[0], dir = s < 60 ? -1 : 1, e = (at[0] + at[2]) / 2, cx = e + (at[2] - e) * (cy - y1) / (182 - y1);   // the arm bends at y1 and ends at y 182
+      const O = [f1(s + dir * w0 / 2), 126], I = [f1(s - dir * w0 / 2), 114.5], C = [f1(s + dir * (w0 / 2 - 5)), 112.5];   // outer and inner shoulder corners, and the curve's pull
+      const inEl = [f1(e - dir * w1 / 2), y1], outEl = [f1(e + dir * w1 / 2), y1], inCf = [f1(cx - dir * w2 / 2), cy], outCf = [f1(cx + dir * w2 / 2), cy];
+      const down = `L${inEl}L${inCf}L${outCf}L${outEl}`;
+      return `<path d="M${O}Q${C} ${I}${down}Z" fill="${D.sleeve}"/><path d="M${O}Q${C} ${I}${down}Z" fill="url(#rsh)"/>
+        <path d="M${I}${down}L${O}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1" stroke-linejoin="round"/>`;
+    };
+    sleeves = `<defs><linearGradient id="rsh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".3"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs>${sleeve(atL)}${sleeve(atR)}`;
+  }
   const arms = c.polo ? arm(false) + arm(true) : atL ? arm(false, atL) + arm(true, atR) : `<defs><clipPath id="armclip"><rect x="-30" y="134" width="180" height="200"/></clipPath></defs><g clip-path="url(#armclip)">${arm(false)}${arm(true)}</g>`;
-  return { torso: legs + arms + skin + garment + open };
+  return { torso: legs + arms + skin + garment + open + sleeves };
 }
 
 const FACES = {
@@ -1514,7 +1534,10 @@ const OUTFITS = {
   "Mas Tequila Tee (Bay)": { g: "u", price: "$24.90", base: "#b3b8a7", Wk: 1.06, hem: 208, img: IMG + "unisex-garment-dyed-heavyweight-t-shirt-bay-front-6a371a9823a39_600x.png", bbox: [0.017, 0.057, 0.982, 0.94] },
   "In My Tequila Era Tee (Military Green)": { g: "u", price: "$29.00", base: "#6c715c", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-military-green-front-68c3a296d2cd2_600x.png", bbox: [0.038, 0.04, 0.962, 0.958] },
   "Corrido Logo Tee (Dark Grey Heather)": { g: "u", price: "$24.00", base: "#343434", Wk: 1.06, hem: 208, img: IMG + "unisex-staple-t-shirt-dark-grey-heather-front-68c3a7b7c3abb_600x.png", bbox: [0.15, 0.022, 0.858, 0.977] },
-  "Pickleball Raglan": { g: "u", price: "$40.00", base: "#455262", Wk: 1.06, hem: 208, img: IMG + "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_600x.png", bbox: [0.015, 0.045, 0.982, 0.96] },
+  "Pickleball Raglan": { g: "u", price: "$40.00", base: "#455262", Wk: 1.06, hem: 208, img: IMG + "unisex-34-sleeve-raglan-shirt-heather-denim-navy-front-6709a7bbee3d3_600x.png", bbox: [0.015, 0.045, 0.982, 0.96],
+    // The photo's sleeves flare out sideways, so only its body (shoulder seams included) is used and the navy 3/4 sleeves are drawn hanging over the arms.
+    // torso = the body's left and right edges, armpit = where the seams meet it, cuff = where the sleeves end (all as fractions of the photo).
+    dsl: { sleeve: "#262c39", torso: [0.245, 0.757], armpit: 0.39, cuff: 0.588 } },
   "Spirit Animal Tee": { g: "u", price: "$29.00", base: "#f4f4f2", Wk: 1.06, hem: 208, img: IMG + "unisex-classic-tee-white-front-68c3a5c38d353_600x.png?v=1757653148", bbox: [.023, .042, .978, .958] },
 };
 // Where each product photo's sleeves end, as [left, right] = [sleeve centre x, sleeve bottom y, torso edge x] in fractions of the image.
@@ -1541,7 +1564,6 @@ const SLEEVE = {
   "Mas Tequila Tee (Bay)": [[0.182, 0.472, 0.208], [0.818, 0.468, 0.787]],
   "In My Tequila Era Tee (Military Green)": [[0.182, 0.435, 0.208], [0.819, 0.437, 0.79]],
   "Corrido Logo Tee (Dark Grey Heather)": [[0.263, 0.46, 0.275], [0.748, 0.47, 0.728]],
-  "Pickleball Raglan": [[0.147, 0.588, 0.245], [0.813, 0.585, 0.757]],
   "Tequila On My Mind Tri-Blend Tee": [[.251, .468, 0.263], [.742, .463, 0.727]], "Spirit Animal Tee": [[.182, .435, 0.208], [.819, .437, 0.79]],
 };
 // Product page on ilovetequilacorrido.com for each piece of merch, so a double-click in the creator opens the real item.
@@ -1639,7 +1661,7 @@ const repName = () => (state.avatar.name || "").trim() || "Rep";
 const mixHex = (a, b, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - t) + parseInt(b.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join("");
 function repLook() {
   const A = state.avatar, F = A.gender === "Female", hair = HAIRC[A.hair], h = HAIRS[A.hairStyle](hair, FACES[A.face]), ff = FACE_FIT[A.face],
-    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
+    fit = g => (g ? `<g transform="translate(60 ${16 + ff.dy}) scale(${ff.sx} ${ff.sy}) translate(-60 -16)">${g}</g>` : ""), O = OUTFITS[A.outfit], useF = F && O.imgF, out = humanBody({ F, skin: SKINS[A.skin], base: useF ? O.baseF : O.base, img: useF ? O.imgF : O.img, bbox: useF ? O.bboxF : O.bbox, Wk: O.Wk, long: !!O.long, hem: O.hem, v: !!O.v, polo: !!O.polo, logo: O.logo, dsl: O.dsl, sl: SLEEVE[A.outfit + (useF ? "F" : "")] });
   const over = [
     A.dimples ? '<path d="M41 72Q43 75 45 72M75 72Q77 75 79 72" stroke="#0004" stroke-width="1.5" fill="none" stroke-linecap="round"/>' : "",
     A.freckles ? [[46, 63], [50, 66], [43, 66], [54, 64], [74, 63], [70, 66], [77, 66], [66, 64], [58, 62], [62, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a8683f" opacity=".7"/>`).join("") : "",
