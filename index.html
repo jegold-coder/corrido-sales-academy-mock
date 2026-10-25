@@ -659,6 +659,10 @@ main:has(.maphome){max-width:1180px}
 .sidecard .btn{margin-top:.4rem;padding:.4rem 1rem;font-size:.9rem}.sidecard .btn:disabled{opacity:.55}
 .sidecard .bossrow{display:grid;grid-template-columns:repeat(6,1fr);gap:.2rem;width:100%}.sidecard .bmini svg{width:100%}
 .bigface{width:120px;height:120px;border-radius:50%;overflow:hidden;background:#e9d5b5;border:4px solid #d9532f;box-shadow:0 0 0 4px #e0a42f55;position:relative}.bigface .bface{position:absolute;inset:0;border-radius:0}
+.go{cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.go:hover,.go:focus-visible{border-color:var(--gold);box-shadow:0 0 0 3px #e0a42f55;outline:none}
+.goto{font:700 .72rem Arimo,sans-serif;font-style:normal;color:var(--gold);letter-spacing:.06em;margin-top:.15rem}.go:hover .goto,.go:focus-visible .goto{text-decoration:underline}
+.tierbar.go:hover,.tierbar.go:focus-visible{background:#00000066}
 @media(max-width:1000px){.maphome{display:block}.mside{display:none}}
 @media(max-width:520px){.tierband .tt{display:none}.tierband{--hw:60px}.tierband::before,.tierband::after{display:none}.tierband span{padding:.15rem .7rem;letter-spacing:.1em}}
 .node.boss .bface{position:absolute;inset:6px;border-radius:50%;overflow:hidden;background:#e9d5b5;display:block}.bface svg{width:100%;height:100%;display:block}
@@ -797,25 +801,25 @@ details.gsetup{margin-top:.6rem}details.gsetup>summary{cursor:pointer;font-weigh
 </footer>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-25c"></script>
-<script src="sound.js?v=2026-10-25c"></script>
-<script src="scenarios.js?v=2026-10-25c"></script>
-<script src="progress.js?v=2026-10-25c"></script>
-<script src="criteria.js?v=2026-10-25c"></script>
-<script src="tone.js?v=2026-10-25c"></script>
-<script src="coach.js?v=2026-10-25c"></script>
-<script src="camera.js?v=2026-10-25c"></script>
-<script src="lessons.js?v=2026-10-25c"></script>
-<script src="dashboard.js?v=2026-10-25c"></script>
-<script src="grader.js?v=2026-10-25c"></script>
-<script src="onboarding.js?v=2026-10-25c"></script>
-<script src="tiers.js?v=2026-10-25c"></script>
-<script src="badges.js?v=2026-10-25c"></script>
-<script src="voices.js?v=2026-10-25c"></script>
-<script src="mission.js?v=2026-10-25c"></script>
-<script src="boss.js?v=2026-10-25c"></script>
-<script src="auth.js?v=2026-10-25c"></script>
-<script src="manager.js?v=2026-10-25c"></script>
+<script src="config.js?v=2026-10-25d"></script>
+<script src="sound.js?v=2026-10-25d"></script>
+<script src="scenarios.js?v=2026-10-25d"></script>
+<script src="progress.js?v=2026-10-25d"></script>
+<script src="criteria.js?v=2026-10-25d"></script>
+<script src="tone.js?v=2026-10-25d"></script>
+<script src="coach.js?v=2026-10-25d"></script>
+<script src="camera.js?v=2026-10-25d"></script>
+<script src="lessons.js?v=2026-10-25d"></script>
+<script src="dashboard.js?v=2026-10-25d"></script>
+<script src="grader.js?v=2026-10-25d"></script>
+<script src="onboarding.js?v=2026-10-25d"></script>
+<script src="tiers.js?v=2026-10-25d"></script>
+<script src="badges.js?v=2026-10-25d"></script>
+<script src="voices.js?v=2026-10-25d"></script>
+<script src="mission.js?v=2026-10-25d"></script>
+<script src="boss.js?v=2026-10-25d"></script>
+<script src="auth.js?v=2026-10-25d"></script>
+<script src="manager.js?v=2026-10-25d"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -1047,7 +1051,7 @@ function explorer() {
 // Where the rep is on the six tiers, and which boss is next. Beating a boss is how you move up.
 function tierBar() {
   const t = tierOf(), nb = nextBoss(), st = nb && ALL_STOPS().find(x => x.id === nb.id);
-  return `<div class="tierbar" aria-label="Your tier">
+  return `<div class="tierbar go" data-go="progress" role="link" tabindex="0" title="Open your tier ladder" aria-label="Your tier. Open your progress.">
     <div class="tierrow">${TIERS.map((n, i) => `<div class="tierdot ${i < t ? "done" : i === t ? "now" : ""}" title="Tier ${i}: ${n}"><b>${i}</b></div>`).join("<i class=\"tl\"></i>")}</div>
     <p class="tiernow"><b>Tier ${t} · ${TIERS[t]}</b>${nb && st ? ` <span>Next boss: <b>${esc(st.title)}</b></span>` : ` <span>Season complete. You beat every boss.</span>`}</p></div>`;
 }
@@ -1093,16 +1097,16 @@ function home() {
   const nb = nextBoss(), nbStop = nb && nodes.find(n => n.id === nb.id), nbIdx = nbStop ? nodes.indexOf(nbStop) : -1, nbSc = nbStop && SCENARIOS.find(x => x.id === nbStop.id);
   const nbOpen = nbStop && (PROTO("unlockStops") || (!gated && (nbIdx === 0 || state.done[nodes[nbIdx - 1].id])));
   const sideLeft = `<aside class="mside" aria-label="Your rep">
-    <div class="sidecard repcard"><div class="rav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div><b class="rn">${esc(repName())}</b><span class="rt">Tier ${tNow} · ${TIERS[tNow]}</span>
+    <div class="sidecard repcard go" data-go="progress" role="link" tabindex="0" title="Open your progress"><div class="rav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div><b class="rn">${esc(repName())}</b><span class="rt">Tier ${tNow} · ${TIERS[tNow]}</span>
       <div class="bar" aria-hidden="true"><i style="width:${lpct}%"></i></div><small>Level ${lv + 1}: ${LEVELS[lv][0]}${lnxt ? ` · ${lnxt[1] - state.xp} XP to ${lnxt[0]}` : ""}</small>
-      <div class="sidestats"><span title="Day streak">🔥 ${state.streak || 0}</span><span title="XP">⭐ ${state.xp}</span><span title="Merch unlocked">👕 ${gotMerch}/${allMerch}</span></div></div>
-    ${rewardStop ? `<div class="sidecard"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(nm)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(rewardItems[0])}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small></div>` : ""}</aside>`;
+      <div class="sidestats"><span title="Day streak">🔥 ${state.streak || 0}</span><span title="XP">⭐ ${state.xp}</span><span title="Merch unlocked">👕 ${gotMerch}/${allMerch}</span></div><em class="goto">Your progress ›</em></div>
+    ${rewardStop ? `<div class="sidecard go" data-go="creator" role="link" tabindex="0" title="Open the character creator"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(nm)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(rewardItems[0])}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small><em class="goto">Your outfits ›</em></div>` : ""}</aside>`;
   const sideRight = `<aside class="mside" aria-label="Next boss and badges">
     ${nb && nbStop ? `<div class="sidecard bosscard"><h3>Next boss</h3><div class="bigface">${bossFace(nbStop) || '<span class="bface brain">🧠</span>'}</div><b class="rn">${nbSc ? esc(nbSc.cust.name) : "Brand Brain"}</b><span class="rt">${nbSc ? esc(nbSc.cust.role) : "Ten timed questions"}</span>
       <p>Tier ${nb.tier} boss. Win to become ${aTier(Math.min(5, nb.tier + 1))}.</p><small>${nb.quiz ? `${Math.round(nb.pass * 100)}% or better to win` : `${nb.pass.toFixed(1)} out of 5 on average to win${nb.voice ? ", voice only" : ""}`}</small>
       <button class="btn" id="sidefight" type="button" ${nbOpen ? "" : "disabled"}>${nbOpen ? "See the battle" : "Locked"}</button></div>`
       : '<div class="sidecard"><h3>Season complete</h3><p>You have beaten every boss.</p></div>'}
-    <div class="sidecard"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small></div></aside>`;
+    <div class="sidecard go" data-go="badges" role="link" tabindex="0" title="Open your badges"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small><em class="goto">All badges ›</em></div></aside>`;
   const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 120, 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
@@ -1120,6 +1124,11 @@ function home() {
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
   if ($("#sidefight")) $("#sidefight").onclick = () => launch(nbStop);
+  // the cards and the tier bar open the matching page: badges, progress (ladder) or the character creator
+  app.querySelectorAll(".go[data-go]").forEach(el => {
+    const go = () => (el.dataset.go === "creator" ? creator(home) : dashboard(el.dataset.go));
+    el.onclick = go; el.onkeydown = e => { if (e.target === el && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); go(); } };
+  });
   const popped = app.querySelector(".node.fresh");   // a stop you just finished: bring it into view so you see it pop
   if (popped) setTimeout(() => popped.scrollIntoView({ block: "center", behavior: "smooth" }), 200);
 }
