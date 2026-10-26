@@ -815,6 +815,37 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 .avcheck .avtabs{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.2rem 0 .8rem}.avcheck .avtabs .btn{padding:.3rem .8rem;font-size:.8rem}.avgender{margin-left:auto;display:inline-flex;gap:.4rem}
 .avgrid{display:flex;flex-wrap:wrap;gap:6px}.avcell{display:grid;gap:2px;width:190px}.avcell small{font-size:.7rem;color:#4d443a}.avcell iframe,.avrow iframe{border-radius:6px}
 .avrow{display:flex;gap:4px;align-items:center;margin-bottom:4px}.avrow b{width:78px;font-size:.75rem;flex:none}
+
+/* curveballs, how you sounded, hearing a stronger answer */
+.twist{margin:.5rem 0 0;padding:.5rem .8rem;border-left:5px solid var(--red);background:#fdeceb;border-radius:0 10px 10px 0;font-size:.92rem;color:#7a2a17}
+.chip.twistchip{background:var(--red);color:#fff}
+.deliv{margin:.6rem 0;padding:.5rem .8rem;background:#f6f1e8;border-radius:10px;text-align:left}
+.deliv .delivhead{margin:0 0 .2rem}.deliv .delivhead small{color:#6e6458;font-weight:400}
+.deliv ul{list-style:none;padding:0;margin:.2rem 0}.deliv li{margin:.15rem 0;font-size:.9rem}.deliv li.ok{color:#2d5f2d}.deliv li.no{color:#8a2f2f}
+.deliv li.ok::before{content:"✓ "}.deliv li.no::before{content:"✗ "}
+.hearbtn{padding:.25rem .8rem;font-size:.85rem;margin-left:.3rem;vertical-align:middle}.hearbtn.on{background:var(--teal);color:#fff}
+/* assignments, notes from a manager, the new manager pages */
+.assigned{margin:.5rem 0;padding:.5rem .8rem;background:#fff9ec;border:2px solid var(--gold);border-radius:12px;font-size:.92rem}
+.assigned p{margin:.2rem 0;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}.assigned .late{color:#8a2f2f;font-weight:700}
+.alist{list-style:none;padding:0;margin:0}.alist li{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0;border-top:1px solid #e1d8cb;flex-wrap:wrap}.alist li:first-child{border-top:0}
+.alist small{color:#5c5044}.alist li.late small{color:#8a2f2f;font-weight:700}.alist li.done b{color:#2d5f2d}
+.newnote{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.ndot{display:inline-block;width:.55rem;height:.55rem;border-radius:50%;background:var(--red);margin-left:.3rem;vertical-align:middle}
+.notescard .mnotebox{background:#fff9ec;border-left:4px solid var(--gold);padding:.4rem .7rem;border-radius:0 8px 8px 0}
+.surprisecard{border-left:5px solid var(--red)}
+.massign{background:#f5eee3;border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem}.massign.late{border-left:5px solid var(--red)}.massign small{display:block;color:#5c5044}
+.mabar{height:10px;border-radius:99px;background:#e1d8cb;overflow:hidden;margin:.4rem 0}.mabar i{display:block;height:100%;background:#1f6a77}
+.mcompare{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.5rem 0}@media(max-width:700px){.mcompare{grid-template-columns:1fr}}
+.mcompare h4{margin:0 0 .2rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:#915f1b}
+.acard .said.good{background:#eef6ee;font-style:normal}
+.mnoteitem{background:#fff9ec;border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:.4rem .7rem;margin:.4rem 0}.mnoteitem p{margin:.2rem 0}.mnoteitem small{color:#5c5044}
+.mfilters{display:flex;gap:1rem;align-items:end;flex-wrap:wrap;margin-bottom:1rem}.mfilters label{font-weight:700}.mfilters .minput{min-width:14rem}
+.mhuddle .huddle{padding-left:0;list-style:none;margin:.6rem 0}.mhuddle .huddle li{display:flex;gap:.7rem;padding:.35rem 0;border-top:1px solid #e1d8cb}.mhuddle .huddle li b:first-child{min-width:3rem;color:#915f1b}
+.fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.2rem .8rem}
+.fstatus{padding:.5rem .8rem;border-radius:10px;margin:.4rem 0}.fstatus.draft{background:#fbf0d3;color:#6b4e0d}.fstatus.ok{background:#dff1e0;color:#1f5a2c}
+.fmsg{color:#8a2f2f;font-weight:700}
+.wstatus{text-align:center}
+@media(max-width:700px){.mgrbar{position:static;padding:.5rem 1rem}.mnav{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:.2rem}.mnavbtn{white-space:nowrap;padding:.45rem .8rem}}   /* eight manager pages: one row you can slide, not four rows stuck to the top of a phone */
 </style>
 </head>
 <body>
@@ -873,41 +904,46 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26l"></script>
-<script src="sound.js?v=2026-10-26l"></script>
-<script src="scenarios.js?v=2026-10-26l"></script>
-<script src="progress.js?v=2026-10-26l"></script>
-<script src="criteria.js?v=2026-10-26l"></script>
-<script src="tone.js?v=2026-10-26l"></script>
-<script src="coach.js?v=2026-10-26l"></script>
-<script src="camera.js?v=2026-10-26l"></script>
-<script src="lessons.js?v=2026-10-26l"></script>
-<script src="dashboard.js?v=2026-10-26l"></script>
-<script src="grader.js?v=2026-10-26l"></script>
-<script src="onboarding.js?v=2026-10-26l"></script>
-<script src="tiers.js?v=2026-10-26l"></script>
-<script src="badges.js?v=2026-10-26l"></script>
-<script src="voices.js?v=2026-10-26l"></script>
-<script src="mission.js?v=2026-10-26l"></script>
-<script src="boss.js?v=2026-10-26l"></script>
-<script src="auth.js?v=2026-10-26l"></script>
-<script src="manager.js?v=2026-10-26l"></script>
-<script src="callcard.js?v=2026-10-26l"></script>
-<script src="presenter.js?v=2026-10-26l"></script>
-<script src="avatarcheck.js?v=2026-10-26l"></script>
-<script src="app.js?v=2026-10-26l"></script>
-<script src="dialog.js?v=2026-10-26l"></script>
-<script src="nav.js?v=2026-10-26l"></script>
-<script src="practice.js?v=2026-10-26l"></script>
-<script src="explorer.js?v=2026-10-26l"></script>
-<script src="map.js?v=2026-10-26l"></script>
-<script src="people.js?v=2026-10-26l"></script>
-<script src="hair.js?v=2026-10-26l"></script>
-<script src="merch.js?v=2026-10-26l"></script>
-<script src="avatar.js?v=2026-10-26l"></script>
-<script src="creator.js?v=2026-10-26l"></script>
-<script src="scenes.js?v=2026-10-26l"></script>
-<script src="results.js?v=2026-10-26l"></script>
-<script src="start.js?v=2026-10-26l"></script>
+<script src="config.js?v=2026-10-26n"></script>
+<script src="sound.js?v=2026-10-26n"></script>
+<script src="scenarios.js?v=2026-10-26n"></script>
+<script src="progress.js?v=2026-10-26n"></script>
+<script src="criteria.js?v=2026-10-26n"></script>
+<script src="tone.js?v=2026-10-26n"></script>
+<script src="coach.js?v=2026-10-26n"></script>
+<script src="camera.js?v=2026-10-26n"></script>
+<script src="lessons.js?v=2026-10-26n"></script>
+<script src="dashboard.js?v=2026-10-26n"></script>
+<script src="grader.js?v=2026-10-26n"></script>
+<script src="onboarding.js?v=2026-10-26n"></script>
+<script src="tiers.js?v=2026-10-26n"></script>
+<script src="badges.js?v=2026-10-26n"></script>
+<script src="voices.js?v=2026-10-26n"></script>
+<script src="mission.js?v=2026-10-26n"></script>
+<script src="boss.js?v=2026-10-26n"></script>
+<script src="auth.js?v=2026-10-26n"></script>
+<script src="manager.js?v=2026-10-26n"></script>
+<script src="answers.js?v=2026-10-26n"></script>
+<script src="mgranswers.js?v=2026-10-26n"></script>
+<script src="assign.js?v=2026-10-26n"></script>
+<script src="facts.js?v=2026-10-26n"></script>
+<script src="surprise.js?v=2026-10-26n"></script>
+<script src="callcard.js?v=2026-10-26n"></script>
+<script src="presenter.js?v=2026-10-26n"></script>
+<script src="avatarcheck.js?v=2026-10-26n"></script>
+<script src="app.js?v=2026-10-26n"></script>
+<script src="dialog.js?v=2026-10-26n"></script>
+<script src="nav.js?v=2026-10-26n"></script>
+<script src="practice.js?v=2026-10-26n"></script>
+<script src="explorer.js?v=2026-10-26n"></script>
+<script src="map.js?v=2026-10-26n"></script>
+<script src="people.js?v=2026-10-26n"></script>
+<script src="hair.js?v=2026-10-26n"></script>
+<script src="merch.js?v=2026-10-26n"></script>
+<script src="avatar.js?v=2026-10-26n"></script>
+<script src="creator.js?v=2026-10-26n"></script>
+<script src="scenes.js?v=2026-10-26n"></script>
+<script src="results.js?v=2026-10-26n"></script>
+<script src="start.js?v=2026-10-26n"></script>
 </body>
 </html>

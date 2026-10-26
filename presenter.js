@@ -44,6 +44,9 @@ const Presenter = (() => {
     P.badges = full ? Object.keys(BADGES) : ["first", "check", "flawless", "typed", "streak3"].filter(() => ids.includes("quiet"));
     P.proto = { unlockStops: false, unlockMerch: false, unlimitedTries: true };
     P.camPref = false; P.profile = { mode: "guest", email: "" };
+    // one stop assigned by the manager, due in three days, so the map and the Assign page have something on them (not once the whole game is done)
+    const upNext = PATH[PATH.indexOf(through) + 1];
+    if (!full && upNext && typeof Assign !== "undefined") P.assignments = [{ id: "g-sample", stop: upNext, who: "class", due: Assign.inDays(3), note: "Aim for three stars.", by: "Manager", created: today, cls: "sample" }];
     if (typeof DEMO_TEAM !== "undefined") DEMO_TEAM.forEach(([name, xp, lv, b, s]) => { P.team[name] = { n: name, xp, lv, b, s, demo: true }; });
     // moments to review: a poor and a middling answer on the missions already played, scored by the real coach
     const sample = [];
@@ -66,6 +69,7 @@ const Presenter = (() => {
     state.hearts = 3; state.cam = state.camPref !== false;
     state.avatar = avatar ? cleanAvatar(avatar) : { ...DEFAULT_AVATAR }; state.avatarSaved = !!avatar;
     Progress.save(state);
+    if (typeof Facts !== "undefined") Facts.apply();   // a player's own saved prices and wording go away with their progress, and come back with it
     if (avatar) store.set(AVATAR, JSON.stringify(state.avatar)); else store.del(AVATAR);
     if (typeof syncBadges === "function") syncBadges();
     if (typeof hud === "function") hud();
@@ -128,12 +132,12 @@ const Presenter = (() => {
     finally { window.lipTalk = real; busy(false); }
   }
   const tabs = [["Progress", "progress"], ["Badges", "badges"], ["Team", "team"], ["Review", "review"], ["Knowledge check", "check"], ["Settings", "settings"]];
-  const mgr = [["Cohorts", "cohorts"], ["Coaching", "coaching"], ["Invite", "invite"], ["Leaderboards", "leaderboards"], ["Grader", "grader"]];
+  const mgr = [["Cohorts", "cohorts"], ["Coaching", "coaching"], ["Answers", "answers"], ["Assign", "assign"], ["Brand facts", "facts"], ["Invite", "invite"], ["Leaderboards", "leaderboards"], ["Grader", "grader"]];
   const MENU = () => [
     ["Start", [["Age check", () => location.reload()], ["Create your rep", () => creator(home)], ["Tutorial", () => tutorial(home)]]],
     ["The game", [
       ["Map", () => home()], ["Before you start", () => { home(); openDiff(() => play(scenario("quiet")), stop("quiet")); }], ["Lesson", () => quiz(stop("brand"))],
-      ["Mission question", () => play(scenario("quiet"))], ["Results: a win", () => autoplay("quiet", "R", { through: "brandbrain" })],
+      ["Mission question", () => play(scenario("quiet"))], ["Surprise customer", () => play(surpriseScenario())], ["Results: a win", () => autoplay("quiet", "R", { through: "brandbrain" })],
       ["Results: not this time", () => autoplay("marco", "RHEHR", { through: "quiet" })], ["Boss intro", () => bossIntro(stop("priya"))],
       ["Brand Brain boss", () => bossIntro(stop("brandbrain"))], ["Boss lost", () => autoplay("mia", "E", { through: "sam", boss: true })],
       ["Tier Up", () => autoplay("priya", "R", { through: "quiet", boss: true })],

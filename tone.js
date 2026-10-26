@@ -118,5 +118,41 @@ const Tone = {
     const pts = Math.max(0, Math.round((1 - tx.pen - vo.pen) * 10) / 10);
     return { pts, name: p.name, notes: [...tx.notes, ...vo.notes], stats: vo.stats, voiceUsed: !!voiceMetrics };
   },
+
+  // ---------- how it sounded, in plain words ----------
+  // Shown after an answer and kept in the answer log. Fillers and hedges are counted from the words (typed or heard), so a typed answer gets those two lines;
+  // pace, pauses, volume and variety come from the recording. Browser speech recognition often leaves out "um" and "uh", so a spoken count can be low.
+  // fillers("um, you know, um") is [["um", 2], ["you know", 1]].
+  fillers(text) {
+    const n = {};
+    (String(text || "").match(Tone.FILLER) || []).forEach(w => { const k = w.toLowerCase().replace(/(.)\1+$/, "$1"); n[k] = (n[k] || 0) + 1; });
+    return Object.entries(n).sort((a, b) => b[1] - a[1]);
+  },
+  // stats is the voice part of Tone.score (or null for a typed answer); profile is the customer's tone profile. Returns the lines to show and how many are on target.
+  delivery(text, stats, profile) {
+    const p = profile || {}, [lo, hi] = p.pace || [110, 175], t = String(text || ""), words = t.trim() ? t.trim().split(/\s+/).length : 0, items = [];
+    const fl = Tone.fillers(t), nf = fl.reduce((a, [, c]) => a + c, 0), hedges = (t.match(Tone.HEDGE) || []).map(h => h.toLowerCase());
+    const list = pairs => pairs.map(([w, c]) => (c > 1 ? `"${w}" ×${c}` : `"${w}"`)).join(", ");
+    if (stats && stats.wpm) {
+      const ok = stats.wpm >= lo * .8 && stats.wpm <= hi * 1.15;
+      items.push({ key: "pace", label: "Pace", ok, text: `${stats.wpm} words a minute. ${ok ? "Right for this customer" : stats.wpm > hi ? "Too fast" : "A bit slow"} (aim for ${lo} to ${hi}).` });
+    }
+    const fillOk = nf === 0 || nf / Math.max(1, words) <= .04;
+    items.push({ key: "fillers", label: "Filler words", ok: fillOk, text: nf ? `${nf}: ${list(fl)}. ${fillOk ? "Not many." : "Pause quietly instead of filling the gap."}` : "None. Clean." });
+    if (hedges.length >= 2) {
+      const h = {}; hedges.forEach(w => { h[w] = (h[w] || 0) + 1; });
+      items.push({ key: "hedges", label: "Hedging", ok: false, text: `${hedges.length}: ${list(Object.entries(h))}. Say it as if you are sure.` });
+    }
+    if (stats) {
+      const n = stats.pauses;
+      items.push({ key: "pauses", label: "Long pauses", ok: n < 3, text: n === 0 ? "None." : n < 3 ? `${n}. Fine.` : `${n}. Plan your sentence, then say it smoothly.` });
+      items.push({ key: "volume", label: "Volume", ok: stats.db >= -40 && stats.db <= -8, text: stats.db < -40 ? "Too quiet. Speak up." : stats.db > -8 ? "Very loud. Bring your voice down." : "Comfortable." });
+      if (stats.pitch != null) {
+        const lively = stats.pitch >= 1.8;
+        items.push({ key: "variety", label: "Voice variety", ok: lively || !p.lively, text: lively ? "Your voice rose and fell." : p.lively ? "Flat. This customer needs warmth, so let your voice rise and fall." : "Steady, which suits this customer." });
+      }
+    }
+    return { items, spoke: !!stats, words, fillers: nf, wpm: stats && stats.wpm || null, pauses: stats ? stats.pauses : null, ok: items.filter(i => i.ok).length, total: items.length };
+  },
 };
 if (typeof module !== "undefined") module.exports = { Tone };

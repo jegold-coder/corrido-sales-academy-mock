@@ -120,7 +120,7 @@ const Voices = (() => {
     const vs = all(), key = vs.length + ":" + vs.map(v => v.name).join("|").length;
     if (cache && key === cacheKey) return cache;
     const avoid = new Set(typeof pickVoice === "function" ? [pickVoice(true), pickVoice(false)].filter(Boolean).map(v => v.name) : []);
-    cache = assignVoices(vs, SCENARIOS.map(s => ({ id: s.id, male: s.cust.male })), avoid); cacheKey = key;
+    cache = assignVoices(vs, [...SCENARIOS, ...(typeof SURPRISE_CUSTOMERS !== "undefined" ? Object.values(SURPRISE_CUSTOMERS) : [])].map(s => ({ id: s.id, male: s.cust.male })), avoid); cacheKey = key;   // the surprise customers come after the missions' customers, so nobody's voice moves
     return cache;
   };
   // Some browsers fill in their voice list a moment after the page loads. Wait for it, but not for long.

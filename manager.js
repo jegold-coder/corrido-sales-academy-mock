@@ -1,11 +1,12 @@
 "use strict";
 // Manager mode (prototype). Open to anyone with the link while the game is a prototype: there is no sign-in or permission check.
 // Pages from the journey: Cohorts (class dashboard), Invite (set up a sales class from a CSV) and Leaderboards, plus Coaching (what to
-// work on, with whom, and what to say) and the answer Grader.
+// work on, with whom, and what to say, and the team huddle), Answers (what reps actually said, with notes: mgranswers.js), Assign (a stop with a
+// due date: assign.js), Brand facts (prices and wording: facts.js) and the answer Grader.
 // There is no server yet, so:
 //   - the class on the Cohorts page is SAMPLE DATA (labelled), plus the player on this device as one extra row;
 //   - a class created on the Invite page is saved on this device only, and invites are NOT emailed (you copy an invite message);
-//   - Nudge only records the nudge on this device.
+//   - Nudge only records the nudge on this device, and so do notes, assignments and brand facts.
 // A real version needs a shared database and company sign-in. Uses globals from the page's own scripts (app.js onward) and tiers.js at call time.
 
 const SAMPLE_REPS = [
@@ -30,7 +31,7 @@ function managerMode(tab) {
   document.body.classList.add("mgr");
   mgrTab = tab || mgrTab || "cohorts";
   stopAll(); Cam.stop(); Sound.stop();
-  const pages = [["cohorts", "Cohorts"], ["coaching", "Coaching"], ["invite", "Invite"], ["leaderboards", "Leaderboards"], ["grader", "Grader"]];
+  const pages = [["cohorts", "Cohorts"], ["coaching", "Coaching"], ["answers", "Answers"], ["assign", "Assign"], ["facts", "Brand facts"], ["invite", "Invite"], ["leaderboards", "Leaderboards"], ["grader", "Grader"]];
   app.innerHTML = `<div class="mgrwrap">
     <div class="mgrbar"><div class="mlogo">Tequila Corrido<small>SALES ACADEMY · MANAGER</small></div>
       <nav class="mnav" aria-label="Manager pages">${pages.map(([k, l]) => `<button type="button" class="mnavbtn ${k === mgrTab ? "on" : ""}" data-p="${k}" ${k === mgrTab ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>
@@ -39,7 +40,7 @@ function managerMode(tab) {
     <div id="mbody"></div></div>`;
   app.querySelectorAll(".mnavbtn").forEach(b => b.onclick = () => managerMode(b.dataset.p));
   $("#mback").onclick = leaveManager;
-  ({ cohorts: mgrCohorts, coaching: mgrCoaching, invite: mgrInvite, leaderboards: mgrBoards, grader: mgrGrader })[mgrTab]($("#mbody"));
+  ({ cohorts: mgrCohorts, coaching: mgrCoaching, answers: mgrAnswers, assign: mgrAssign, facts: mgrFacts, invite: mgrInvite, leaderboards: mgrBoards, grader: mgrGrader })[mgrTab]($("#mbody"));
   window.scrollTo(0, 0);
 }
 function leaveManager() {
@@ -60,9 +61,24 @@ function classReps(c) {
   return (c.reps || []).map(r => ({ name: r.name, team: r.team || "—", tier: 0, xp: 0, streak: 0, bosses: 0, focus: "—", idle: null, lost: 0, invited: true }));
 }
 const lastActive = r => (r.idle == null ? "Invited" : r.idle === 0 ? "Today" : r.idle === 1 ? "Yesterday" : `${r.idle} days ago`);
-const csvCell = v => `"${String(v).replace(/"/g, '""')}"`;
+const csvCell = v => { let t = String(v); if (typeof v === "string" && /^[=+\-@\t\r]/.test(t)) t = "'" + t; return `"${t.replace(/"/g, '""')}"`; };   // text that starts with = + - or @ would run as a formula in a spreadsheet
 function download(name, text, type = "text/csv") {
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+// ----- spreadsheets: a progress report, the skills for each rep, and every answer -----
+const ownAnswers = (c, r) => AnswerLog.classAnswers(c).filter(a => a.rep === r.name);
+function progressCsv(c, reps) {
+  const head = "Rep,Team,Tier,XP,Streak,Bosses beaten,Stops finished,Answers scored,Average score (out of 5),Weakest skill,Average pace (words a minute),Filler words an answer,Last active,Assigned stops done,Coached,Nudged";
+  return [head, ...reps.map(r => {
+    const a = AnswerLog.summary(ownAnswers(c, r)), mine = Assign.classList(c).filter(x => Assign.covers(x, [r]).length), done = mine.filter(x => Assign.repDone(x, r)).length;
+    return [r.name, r.team, `${r.tier} ${TIERS[r.tier]}`, r.xp, r.streak, `${r.bosses}/6`, r.you ? Object.keys(state.done).length : r.invited ? 0 : Assign.stopsDone(r).size, a.n, a.avg == null ? "" : a.avg.toFixed(1), a.weakest || r.focus,
+      a.wpm == null ? "" : a.wpm, a.fillers == null ? "" : a.fillers.toFixed(1), lastActive(r), mine.length ? `${done}/${mine.length}` : "", (state.coached || {})[r.name] || "", (state.nudged || {})[r.name] || ""].map(csvCell).join(",");
+  })].join("\n");
+}
+function skillsCsv(c, reps) {
+  const fams = SKILL_FAMILIES.map(f => f[0]);
+  return [["Rep", ...fams.map(f => f + " (percent)")].map(csvCell).join(","), ...reps.map(r => { const m = new Map(AnswerLog.familyScores(ownAnswers(c, r))); return [r.name, ...fams.map(f => (m.has(f) ? m.get(f) : ""))].map(csvCell).join(","); })].join("\n");
 }
 
 // ----- Cohorts: how the class is doing -----
@@ -80,7 +96,7 @@ function mgrCohorts(el) {
   }).filter(Boolean).slice(0, 5);
   el.innerHTML = `<div class="mhead"><div><h1 class="mtitle">${esc(c.name)}</h1><p class="msub">${c.sample ? `${c.week} · ${n} reps · Sample data` : `${n} invited · starts ${esc(c.start || "soon")} · saved on this device`}</p></div>
       <div class="mactions">${allClasses().length > 1 ? `<select id="mclass" aria-label="Choose a class">${allClasses().map(x => `<option value="${x.id}" ${x.id === c.id ? "selected" : ""}>${esc(x.name)}${x.sample ? " (sample)" : ""}</option>`).join("")}</select>` : ""}
-        <button class="mbtn alt" id="mexp" type="button">Export CSV</button><button class="mbtn" id="minv" type="button">Invite reps</button></div></div>
+        <button class="mbtn alt" id="mexp" type="button">Export progress (CSV)</button><button class="mbtn" id="minv" type="button">Invite reps</button></div></div>
     <div class="mstats">
       <div class="mstat"><b>${active} / ${n}</b><span>Active this week</span><small>${idle3} rep${idle3 === 1 ? "" : "s"} idle 3+ days</small></div>
       <div class="mstat"><b>${avgTier.toFixed(1)}</b><span>Average tier</span><small>${c.sample ? "Up from 1.6 last week" : "Everyone starts at Tier 0"}</small></div>
@@ -92,10 +108,15 @@ function mgrCohorts(el) {
         <p class="note2">Prototype: a nudge is only recorded on this device. Sending real nudges needs company sign-in.</p></div></div>
     <div class="mcard"><h2>Roster</h2>${reps.some(r => r.you) ? '<p class="note2">Your own row is highlighted. It is not counted in the class numbers above.</p>' : ""}<div class="mtablewrap"><table class="mtable"><thead><tr><th>Rep</th><th>Tier</th><th>XP</th><th>Streak</th><th>Bosses</th><th>Focus skill</th><th>Last active</th></tr></thead><tbody>
       ${[...reps].sort((a, b) => b.xp - a.xp || b.tier - a.tier).map(r => `<tr class="${r.you ? "you" : ""}"><td><b>${esc(r.name)}</b></td><td>${r.tier} · ${TIERS[r.tier]}</td><td>${r.xp.toLocaleString()}</td><td>${r.streak} day${r.streak === 1 ? "" : "s"}</td><td>${r.bosses} / 6</td><td>${esc(r.focus)}</td><td class="${r.idle == null ? "" : r.idle >= 3 ? "bad" : "good"}">${lastActive(r)}</td></tr>`).join("")}
-    </tbody></table></div></div>`;
+    </tbody></table></div>
+      <div class="mcbtns"><button class="mbtn alt" id="mexp2" type="button">Progress report (CSV)</button><button class="mbtn alt" id="mexpskills" type="button">Skills for each rep (CSV)</button><button class="mbtn alt" id="mexpans" type="button">Every answer (CSV)</button></div>
+      <p class="note2">The progress report has a row for each rep: stops finished, answers scored, average score, weakest skill, pace, filler words, assignments and last active. Spreadsheets run text that starts with = + - or @ as a formula, so the file puts a quote in front of it.</p></div>`;
   if ($("#mclass")) $("#mclass").onchange = e => { mgrClass = e.target.value; managerMode("cohorts"); };
   $("#minv").onclick = () => managerMode("invite");
-  $("#mexp").onclick = () => download(`${c.name.replace(/\W+/g, "-").toLowerCase()}-roster.csv`, ["Rep,Team,Tier,XP,Streak,Bosses,Focus skill,Last active", ...reps.map(r => [r.name, r.team, `${r.tier} ${TIERS[r.tier]}`, r.xp, r.streak, `${r.bosses}/6`, r.focus, lastActive(r)].map(csvCell).join(","))].join("\n"));
+  const slug = c.name.replace(/\W+/g, "-").toLowerCase();
+  $("#mexp").onclick = $("#mexp2").onclick = () => download(`${slug}-progress.csv`, progressCsv(c, reps));
+  $("#mexpskills").onclick = () => download(`${slug}-skills.csv`, skillsCsv(c, reps));
+  $("#mexpans").onclick = () => download(`${slug}-answers.csv`, AnswerLog.csvRows(AnswerLog.classAnswers(c)));
   el.querySelectorAll(".nudgebtn").forEach(b => b.onclick = () => { state.nudged = { ...(state.nudged || {}), [b.dataset.n]: Progress.today() }; Progress.save(state); b.textContent = "Nudged ✓"; b.disabled = true; toast(`Nudge recorded for ${b.dataset.n} (prototype: not delivered).`); });
 }
 
@@ -133,20 +154,25 @@ function mgrCoaching(el) {
   const skills = c.sample ? Object.entries(SAMPLE_SKILLS).sort((a, b) => a[1] - b[1]) : [];
   const lowest = skills[0], drill = lowest && coachPlan(lowest[0], avgTier);
   const team = drill && `Hi team,\n\nThis week's drill is ${drill.topic.name.toLowerCase()}. The class average is ${lowest[1]}%, our lowest skill.\n\nPractice "${drill.stop.title}" and aim for three stars. One tip: ${drill.topic.tip}\n\n${manager}`;
-  const list = reps.map(r => ({ r, why: coachWhy(r), plan: coachPlan(r.focus, r.tier) })).filter(x => x.why);
+  const list = reps.map(r => ({ r, why: coachWhy(r), plan: coachPlan(r.focus, r.tier) })).filter(x => x.why), huddle = huddleStat(c);
   el.innerHTML = `<div class="mhead"><div><h1 class="mtitle">Coaching</h1><p class="msub">${esc(c.name)}${c.sample ? " · Sample data" : ""} · what to work on, with whom, and what to say</p></div></div>
     ${skills.length && drill ? `<div class="mrow2">
       <div class="mcard"><h2>Class skills, lowest first</h2>${skills.map(([k, v], i) => { const p = coachPlan(k, avgTier); return `<div class="cskill ${i === 0 ? "low" : ""}"><span>${esc(k)}</span><span class="cb" aria-hidden="true"><i style="width:${v}%"></i></span><b>${v}</b>${p ? `<small>Practice: ${esc(p.stop.title)}</small>` : ""}</div>`; }).join("")}
         <p class="note2">The stop is the first one that practices the skill, for a rep at the class's average tier (Tier ${avgTier}).</p></div>
       <div class="mcard"><h2>This week's team drill</h2><p><b>${esc(drill.topic.name)}</b>, class average ${lowest[1]}.</p><p>Practice <b>${esc(drill.stop.title)}</b>.</p><p class="mtip">${esc(drill.topic.tip)}</p>
-        <div class="mcbtns"><button class="mbtn" id="copyteam" type="button">Copy the team message</button></div></div></div>`
+        <div class="mcbtns"><button class="mbtn" id="copyteam" type="button">Copy the team message</button><button class="mbtn alt" id="assignteam" type="button">Assign this stop to the class</button></div></div></div>`
       : `<div class="mcard"><p>Class skills appear once reps start practicing. Switch to the sample class on the Cohorts page to see how this page looks.</p></div>`}
+    ${huddle ? huddleCard(c, huddle) : ""}
     <div class="mcard"><h2>Reps to coach one-to-one</h2>${list.length ? list.map(({ r, why, plan }, i) => `<div class="mcoach"><div class="mcwho"><b>${esc(r.name)}</b><span class="mtag">Tier ${r.tier} · ${TIERS[r.tier]}</span><small>${esc(why)} · focus: ${esc(r.focus.toLowerCase())}</small></div>
         <p>${plan ? `Work on <b>${esc(plan.topic.name.toLowerCase())}</b>. Practice <b>${esc(plan.stop.title)}</b>.` : "Pick up the next stop on the map."}</p>${plan ? `<p class="mtip">${esc(plan.topic.tip)}</p>` : ""}
-        <div class="mcbtns"><button class="mbtn alt copybtn" type="button" data-i="${i}">Copy message to ${esc(r.name.split(" ")[0])}</button><button class="mbtn coachedbtn" type="button" data-n="${esc(r.name)}" ${(state.coached || {})[r.name] ? "disabled" : ""}>${(state.coached || {})[r.name] ? "Coached ✓" : "Mark as coached"}</button></div></div>`).join("") : '<p class="note2">Nobody needs one-to-one coaching this week.</p>'}
+        <div class="mcbtns"><button class="mbtn alt copybtn" type="button" data-i="${i}">Copy message to ${esc(r.name.split(" ")[0])}</button>${plan && plan.stop ? `<button class="mbtn alt assignbtn" type="button" data-i="${i}">Assign this stop</button>` : ""}<button class="mbtn coachedbtn" type="button" data-n="${esc(r.name)}" ${(state.coached || {})[r.name] ? "disabled" : ""}>${(state.coached || {})[r.name] ? "Coached ✓" : "Mark as coached"}</button></div></div>`).join("") : '<p class="note2">Nobody needs one-to-one coaching this week.</p>'}
       <p class="note2">Prototype: a message is copied for you to send yourself, and "coached" is only recorded on this device.</p></div>`;
   const copy = (text, what) => navigator.clipboard?.writeText(text).then(() => toast(`${what} copied.`)).catch(() => toast("Copy did not work. Select the text and press Ctrl+C."));
   if ($("#copyteam")) $("#copyteam").onclick = () => copy(team, "Team message");
+  if ($("#assignteam")) $("#assignteam").onclick = () => { Assign.setDraft({ stop: drill.stop.id, who: "class" }); managerMode("assign"); };
+  if ($("#copyhuddle")) $("#copyhuddle").onclick = () => copy(huddleText(huddle, manager), "Huddle plan");
+  if ($("#assignhuddle")) $("#assignhuddle").onclick = () => { Assign.setDraft({ stop: huddle.mid, who: "class" }); managerMode("assign"); };
+  el.querySelectorAll(".assignbtn").forEach(b => b.onclick = () => { const x = list[+b.dataset.i]; Assign.setDraft({ stop: x.plan.stop.id, who: "rep:" + x.r.name }); managerMode("assign"); });
   el.querySelectorAll(".copybtn").forEach(b => b.onclick = () => { const x = list[+b.dataset.i]; copy(coachMessage(x.r, x.plan, manager), "Message"); });
   el.querySelectorAll(".coachedbtn").forEach(b => b.onclick = () => { state.coached = { ...(state.coached || {}), [b.dataset.n]: Progress.today() }; Progress.save(state); b.textContent = "Coached ✓"; b.disabled = true; toast(`Marked ${b.dataset.n} as coached (recorded on this device).`); });
 }

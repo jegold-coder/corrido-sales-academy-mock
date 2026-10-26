@@ -1,5 +1,5 @@
 "use strict";
-// Speech helpers, the coach's summary, and the results screen.
+// Speech helpers, how the rep sounded, hearing a stronger answer, the coach's summary, and the results screen.
 
 let voiceOn = false;
 const spoken = t => (t.match(/"([^"]+)"/) || [0, t])[1].replace(/<[^>]+>/g, "");
@@ -23,6 +23,40 @@ function coachSummary(skills) {
   if (hi[1] === lo[1]) return hi[1] >= 5 ? "Every part of this mission was solid. Try a harder difficulty or typing your answers." : "Review the notes below, then try again.";
   return `Your strongest moment was <b>${hi[0]}</b>. Your biggest chance to improve is <b>${lo[0]}</b>. Check the note for that step below.`;
 }
+
+// ---------- how you sounded, and hearing a stronger answer ----------
+// The delivery lines under an answer (Tone.delivery in tone.js): pace, filler words, long pauses, volume and variety, each marked on target or not.
+const deliveryBlock = d => (!d || !d.items.length ? "" : `<div class="deliv"><p class="delivhead">🎙 <b>How you sounded</b> <small>${d.spoke ? `${d.ok} of ${d.total} on target` : "typed, so there are no voice lines"}</small></p>
+  <ul>${d.items.map(i => `<li class="${i.ok ? "ok" : "no"}"><b>${i.label}:</b> ${esc(i.text)}</li>`).join("")}</ul>
+  ${d.spoke ? '<p class="note2">Speech recognition often leaves out "um" and "uh", so the real filler count can be higher.</p>' : ""}</div>`);
+// One line across a whole mission: average pace, all the filler words and long pauses.
+function missionDelivery(log) {
+  const ds = log.map(l => l.deliv).filter(Boolean), sp = ds.filter(d => d.spoke), paced = sp.filter(d => d.wpm), fill = ds.reduce((a, d) => a + d.fillers, 0), bits = [];
+  if (!ds.length) return "";
+  if (paced.length) bits.push(`average pace <b>${Math.round(paced.reduce((a, d) => a + d.wpm, 0) / paced.length)}</b> words a minute`);
+  bits.push(fill ? `<b>${fill}</b> filler word${fill === 1 ? "" : "s"}` : "<b>no</b> filler words");
+  if (sp.length) { const pz = sp.reduce((a, d) => a + d.pauses, 0); bits.push(`<b>${pz}</b> long pause${pz === 1 ? "" : "s"}`); }
+  return `<p class="note2">How you sounded across this mission: ${bits.join(" · ")}.${sp.length ? "" : " Speak your answers to get pace, pauses and volume as well."}</p>`;
+}
+// "Hear it" plays a stronger answer out loud at the pace that customer calls for, so a rep can copy how it sounds as well as what it says. The pace is the middle
+// of the customer's range (pace in tone.js). On a mission screen the rep's own avatar says it; elsewhere it is just the voice.
+const hearButton = (text, pace) => {
+  if (!window.speechSynthesis || !text) return "";
+  const [lo, hi] = pace || [110, 175], words = String(text).trim().split(/\s+/).length;
+  return `<button class="btn alt hearbtn" type="button" data-t="${esc(text)}" data-pace="${lo},${hi}" title="About ${Math.max(2, Math.round(words / ((lo + hi) / 2) * 60))} seconds at a good pace">▶ Hear it</button>`;
+};
+let hearing = null;   // the Hear it button that is playing now
+function hearModel(b, inMission) {
+  const was = hearing;
+  Voices.halt(); if (window.speechSynthesis) speechSynthesis.cancel();
+  if (was) { was.textContent = "▶ Hear it"; was.classList.remove("on"); hearing = null; }
+  if (was === b) return;   // pressing it again just stops it
+  const [lo, hi] = (b.dataset.pace || "110,175").split(",").map(Number), rate = Math.max(.8, Math.min(1.15, (lo + hi) / 2 / 160)), text = b.dataset.t;
+  const reset = () => { if (hearing === b) { hearing = null; b.textContent = "▶ Hear it"; b.classList.remove("on"); } };
+  hearing = b; b.textContent = "⏹ Stop"; b.classList.add("on");
+  (inMission && $("#pr") ? lipTalk("rep", text, undefined, { force: true, rate }) : Voices.say(text, pickVoice(state.avatar.gender === "Male"), { rate, mood: "warm" })).then(reset, reset);
+}
+const wireHear = (root, inMission) => root.querySelectorAll(".hearbtn").forEach(b => { b.onclick = e => { e.preventDefault(); e.stopPropagation(); hearModel(b, inMission); }; });
 
 // The stars on a results screen: they follow the score (3 for 100, so 50% is 1.5), earned ones pop in one after the other, a half star
 // fills half, and the empty ones wait greyed out.

@@ -1,4 +1,4 @@
-# Demo script: 5 minutes
+# Demo script: 6 minutes
 
 For showing the Corrido Sales Academy mock to the team or the class. It uses **Presenter mode**, which loads a sample player so every page has something on it. Your own progress is kept safe and comes back when you leave.
 
@@ -18,10 +18,11 @@ For showing the Corrido Sales Academy mock to the team or the class. It uses **P
 | 2:00 | Presenter > **Results: not this time**, then **Results: a win**. Press **Try this question again** on a weak answer. | "Each answer is scored out of 5: four points for what you said, one for tone. You can replay just that question." |
 | 2:45 | Presenter > **Boss intro**, then **Tier Up**. | "Beating a boss moves you up a tier, unlocks merch and earns a badge you can share." |
 | 3:15 | Presenter footer > **Complete the game**, then **Dashboard: Progress**. Open **All skills**, then the Badges and Review tabs. | "The skills chart groups thirty-odd skills into seven areas, in the order of a sales call. Every mistake is saved to Review." |
-| 3:45 | Presenter > **Manager: Cohorts**, then **Manager: Grader**. | "A manager sees a class's progress and can paste in any answer to see how it would score." |
-| 4:15 | Presenter > **Character**. Switch men and women, then change the shirt, hair and head shape. | "Reps build their own character and unlock real Corrido merch as they win." |
-| 4:30 | Presenter > **Who is Tequila Corrido?** Open the pour calculator. | "This is the 60-second review before a sale: the promise, the four bottles, do and never, what to say to six objections, and a per-pour cost check." |
-| 5:00 | Close. | "Next: one mission with a real AI customer, and Ken's confirmation of prices and wording." |
+| 3:45 | Presenter > **Manager: Cohorts**, then **Manager: Coaching** (scroll to the team huddle), **Manager: Answers** and **Manager: Assign**. | "A manager sees the class's progress, the one question most reps missed as a five-minute huddle, what reps actually said next to a stronger answer, and can assign a stop with a due date. A note or assignment shows up on the rep's side." |
+| 5:00 | Presenter > **Surprise customer**. Answer one question. | "A harder practice round: customers interrupt, go quiet, change the subject. After each answer, how you sounded: pace, filler words, pauses." |
+| 5:45 | Presenter > **Character**. Switch men and women, then change the shirt, hair and head shape. | "Reps build their own character and unlock real Corrido merch as they win." |
+| 6:00 | Presenter > **Who is Tequila Corrido?** Open the pour calculator. | "This is the 60-second review before a sale: the promise, the four bottles, do and never, what to say to six objections, and a per-pour cost check." |
+| 6:30 | Close. | "Next: one mission with a real AI customer, and Ken's confirmation of prices and wording." |
 
 The footer of the Presenter menu has three buttons to set the scene before you start: **Start over: nothing complete** (the first-day look), **Random sample progress** (a different point part-way through each press) and **Complete the game** (every stop, every badge, every piece of merch).
 

@@ -8,7 +8,7 @@ const html = require("./page").source(), onb = read("onboarding.js"), mission = 
 
 // ---------- the calculator's maths ----------
 const ctx = vm.createContext({ console });
-vm.runInContext(field.replace(/^"use strict";/, "") + ";globalThis.FW = CallCard;", ctx);
+vm.runInContext(read("facts.js").replace(/^"use strict";/, "") + field.replace(/^"use strict";/, "") + ";globalThis.FW = CallCard;", ctx);   // the review reads its wording from Facts (facts.js)
 const near = (a, b) => Math.abs(a - b) < 0.005;
 const m = vm.runInContext(`FW.pourMath({ cost: 44.99, ml: 750, oz: 1.5, menu: 12 })`, ctx);
 ok("a 750 ml bottle at a 1.5 oz pour makes 16 whole pours", m.pours === 16);
@@ -30,7 +30,7 @@ ok("the Who is Tequila Corrido? page is the 60-second review: built from CallCar
 ok("that page has no link to the website: no href, no new-tab link, no shop link, and its merch list is plain rows", !/href=|target=|ilovetequilacorrido|shoplink|sitelink|xsite/.test(explorer + field) && !/<a class="xrow"|<a class="xbottle"/.test(explorer + field) && /<div class="xrow"/.test(explorer));
 const rev = (() => {
   const c = vm.createContext({ console, IMG: "img/", esc: s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), $: () => ({}) });
-  vm.runInContext(html.match(/const LINEUP = \[[\s\S]*?\n\];/)[0] + field.replace(/^"use strict";/, "") + ";globalThis.R = CallCard.review();", c);
+  vm.runInContext(html.match(/const LINEUP = \[[\s\S]*?\n\];/)[0] + read("facts.js").replace(/^"use strict";/, "") + field.replace(/^"use strict";/, "") + ";globalThis.R = CallCard.review();", c);
   return c.R;
 })();
 ok("the review has the one-line promise, four bottles with photos and prices, Do and Never, six things they might say, and a calculator folded away", /Say it in one line/.test(rev) && (rev.match(/class="xbottle"/g) || []).length === 4 && /\$44\.99/.test(rev) && /\$89\.99/.test(rev) && /<h3>Do<\/h3>/.test(rev) && /<h3>Never<\/h3>/.test(rev) && (rev.match(/<dt>/g) || []).length === 6 && /<details class="card xmerch" id="calc">/.test(rev));

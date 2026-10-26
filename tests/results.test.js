@@ -39,10 +39,10 @@ ok("each answer is a row you can open, with its score and one line on top", /<de
 ok("only the answers that need work start open", /r\.score < 3\.5 \? " open" : ""/.test(mission));
 ok("one button opens or closes every answer", /id="toggleAll"/.test(mission) && /ds\.forEach\(d => \{ d\.open = !allOpen; \}\)/.test(mission));
 ok("the score, stars and customer share a header row", /<div class="reshead"><div class="resleft">/.test(mission) && /\.reshead\{display:grid/.test(html));
-ok("the strongest and tone notes share one block", /<div class="resnotes">\$\{retryNote\}\$\{focus\}\$\{toneLine\}<\/div>/.test(mission));
+ok("the strongest and tone notes share one block", /<div class="resnotes">\$\{retryNote\}\$\{focus\}\$\{toneLine\}\$\{missionDelivery\(log\)\}<\/div>/.test(mission));
 ok("the camera reminder is one short line, not a card", /class="camnudge"/.test(mission) && !/card nudge/.test(mission));
 ok("the merch card no longer carries a footnote", !/You can change what you wear any time in Character/.test(read("boss.js")));
-ok("the voice details are still on each answer (pace, pauses, volume)", /words a minute · \$\{r\.tone\.stats\.pauses\} long pauses · volume \$\{r\.tone\.stats\.db\} dB/.test(mission));
+ok("the voice details are still on each answer (pace, pauses, volume), now as the 'How you sounded' lines", /\$\{deliveryBlock\(l\.deliv\)\}/.test(mission) && /words a minute/.test(read("tone.js")) && /label: "Long pauses"/.test(read("tone.js")) && /label: "Volume"/.test(read("tone.js")));
 
 // stars follow the score out of 100, in halves; passing is a separate test
 const vm = require("vm"), sctx = vm.createContext({ console, localStorage: { getItem() { return null; }, setItem() {}, removeItem() {} } });

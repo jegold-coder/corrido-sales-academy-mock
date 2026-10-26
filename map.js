@@ -64,6 +64,7 @@ function home() {
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <h1 class="sr">Your training map</h1>
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
+    ${Assign.strip()}
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     ${tierBar()}
     <p class="lockmsg hidden" id="lockmsg" role="status"></p>
@@ -78,6 +79,7 @@ function home() {
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
   if ($("#sidefight")) $("#sidefight").onclick = () => launch(nbStop);
+  Assign.wire(app);
   // the cards and the tier bar open the matching page: badges, progress (ladder) or the character creator
   app.querySelectorAll(".go[data-go]").forEach(el => {
     const go = () => (el.dataset.go === "creator" ? creator(home) : dashboard(el.dataset.go));

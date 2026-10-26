@@ -12,6 +12,10 @@ const FACTS = [
 const ALL_STOPS = () => PATH.map(id => LESSONS.find(l => l.id === id) || SCENARIOS.find(m => m.id === id) || EXTRA_STOPS[id]);
 const TOTAL_STOPS = () => ALL_STOPS().length;
 
+// A manager's saved prices and wording (manager mode > Brand facts) go into the game's own text before anything is drawn.
+Facts.use([SCENARIOS, OPENERS, LINE_ALTS, MIDS, BANK, LESSONS, CRITERIA, EXTRA_STOPS, LINEUP, SURPRISE], FACTS);
+Facts.apply();
+
 if (location.hash === "#manager") { $("#gate").classList.add("hidden"); managerMode(); } else home();
 // keep the app and the shop photos on this device after the first visit, so a demo still works on bad Wi-Fi (see sw.js)
 if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(() => {});

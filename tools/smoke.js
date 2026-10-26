@@ -92,6 +92,70 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       if (r < 200) throw new Error("only " + r + " drawings");
     });
 
+    // ----- a surprise round, and what a manager does with the answers
+    const ans = k => `(() => { const st = window.__sx.steps[${k}], box = document.querySelector('#ans'); box.value = ${k === 1 ? "st.H[0][0]" : "st.R[0]"}.replace(/^"|"$/g, ""); box.dispatchEvent(new Event("input", { bubbles: true })); document.querySelector('#submit').click(); })()`;
+    await step("a surprise customer round plays through with typed answers, and the results show how the rep sounded", async () => {
+      await chrome.eval("(() => { window.lipTalk = () => Promise.resolve(); document.querySelectorAll('dialog[open]').forEach(d => d.close()); document.body.classList.remove('mgr'); state.answers = []; state.notes = {}; window.__sx = surpriseScenario(); play(window.__sx); })()");
+      for (let k = 0; k < 5; k++) {
+        if (!await chrome.waitFor("!!document.querySelector('#ans') && !document.querySelector('#ans').disabled", 8000)) throw new Error("question " + (k + 1) + " did not appear");
+        if (!await chrome.eval("!!document.querySelector('.qhead .twistchip') && !!document.querySelector('.twist')")) throw new Error("question " + (k + 1) + " has no curveball note");
+        await chrome.eval(ans(k));
+        if (!await chrome.waitFor("!!document.querySelector('#nx')", 30000)) throw new Error("answer " + (k + 1) + " was not scored");
+        await chrome.eval("document.querySelector('#nx').click()");
+      }
+      if (!await chrome.waitFor("!!document.querySelector('.result')", 8000)) throw new Error("no results");
+      const r = await chrome.eval("({ cards: document.querySelectorAll('details.acard').length, deliv: document.querySelectorAll('.deliv').length, logged: state.answers.length, retry: document.querySelectorAll('.retryq').length })");
+      if (r.cards !== 5 || r.deliv !== 5 || r.logged !== 5 || r.retry < 1) throw new Error(JSON.stringify(r));
+    });
+    await step("'Hear it' plays a stronger answer, and 'Try this question again' works for a surprise question", async () => {
+      if (await chrome.eval("typeof speechSynthesis !== 'undefined'")) {
+        if (!await chrome.eval("document.querySelectorAll('.hearbtn').length >= 1")) throw new Error("no Hear it button on a weak answer");
+        await chrome.eval("document.querySelector('.hearbtn').click()"); await sleep(1500);
+        await chrome.eval("Voices.halt(); speechSynthesis.cancel()");
+      }
+      await chrome.eval("document.querySelector('.retryq').click()");
+      if (!await chrome.waitFor("!!document.querySelector('#ans') && !!document.querySelector('.twist')", 8000)) throw new Error("the retry did not start with its curveball");
+      await chrome.eval(`(() => { const sx = SURPRISE.find(x => "surprise:" + x.id === state.sc.steps[0].ckey), box = document.querySelector('#ans'); box.value = sx.R[0].replace(/^"|"$/g, ""); box.dispatchEvent(new Event("input", { bubbles: true })); document.querySelector('#submit').click(); })()`);
+      if (!await chrome.waitFor("!!document.querySelector('#nx')", 30000)) throw new Error("the retry was not scored");
+      await chrome.eval("document.querySelector('#nx').click()");
+      if (!await chrome.waitFor("!!document.querySelector('.result')", 8000)) throw new Error("the retry has no results");
+    });
+    await step("the manager reads the player's answers, leaves a note, and the rep reads it on the Review page", async () => {
+      await chrome.eval("(() => { document.body.classList.add('mgr'); ansRep = AnswerLog.mine()[0].rep; ansLow = false; managerMode('answers'); })()");
+      const n = await chrome.eval("document.querySelectorAll('details.mans').length");
+      if (n < 5) throw new Error("only " + n + " answers on the Answers page");
+      await chrome.eval("(() => { const c = document.querySelector('details.mans'); c.querySelector('.mnote').value = 'Good pause. Keep it.'; c.querySelector('.savenote').click(); })()");
+      if (await chrome.eval("AnswerLog.playerNotes().length") !== 1) throw new Error("the note was not saved");
+      await chrome.eval("document.body.classList.remove('mgr'); dashboard('progress')");
+      if (!await chrome.eval("!!document.querySelector('.newnote') && !!document.querySelector('.ndot')")) throw new Error("the rep is not told about the note");
+      await chrome.eval("document.querySelector('#pnote').click()");
+      if (!await chrome.eval("!!document.querySelector('.notescard') && /Good pause/.test(document.querySelector('.notescard').textContent) && !document.querySelector('.ndot') && AnswerLog.unseen() === 0")) throw new Error("the Review page does not show the note");
+    });
+    await step("the Coaching page has a team huddle, and every spreadsheet has a row for every rep", async () => {
+      await chrome.eval("(() => { document.body.classList.add('mgr'); mgrClass = 'sample'; managerMode('coaching'); })()");
+      if (!await chrome.eval("!!document.querySelector('.mhuddle') && document.querySelectorAll('.huddle li').length === 5")) throw new Error("no team huddle");
+      const r = await chrome.eval("({ n: classReps(SAMPLE_CLASS).length, p: progressCsv(SAMPLE_CLASS, classReps(SAMPLE_CLASS)).split('\\n').length, s: skillsCsv(SAMPLE_CLASS, classReps(SAMPLE_CLASS)).split('\\n').length })");
+      if (r.p < r.n + 1 || r.s !== r.n + 1) throw new Error(JSON.stringify(r));
+    });
+    await step("a manager assigns a stop and the rep sees it on the map, then on their Progress tab", async () => {
+      await chrome.eval("(() => { state.assignments = []; document.body.classList.add('mgr'); managerMode('assign'); })()");
+      await chrome.eval("(() => { document.querySelector('#astop').value = 'quiet'; document.querySelector('#awho').value = 'class'; document.querySelector('#anote').value = 'Aim for three stars'; document.querySelector('#aadd').click(); })()");
+      if (await chrome.eval("document.querySelectorAll('.massign').length") !== 1) throw new Error("the assignment is not in the list");
+      await chrome.eval("document.body.classList.remove('mgr'); state.done = {}; home()");
+      if (!await chrome.eval("!!document.querySelector('.assigned') && /Quiet Bar/.test(document.querySelector('.assigned').textContent)")) throw new Error("no strip on the map");
+      await chrome.eval("dashboard('progress')");
+      if (!await chrome.eval("!!document.querySelector('.alist')")) throw new Error("no card on the Progress tab");
+    });
+    await step("a manager changes a price: the lessons, the review and the calculator follow, and a reset puts it back", async () => {
+      await chrome.eval("(() => { document.body.classList.add('mgr'); managerMode('facts'); document.querySelector('#fp0').value = '46.99'; document.querySelector('#fken').value = 'Ken Phox'; document.querySelector('#fkendate').value = '2026-10-24'; document.querySelector('#fsave').click(); })()");
+      const r = await chrome.eval("({ q: Q('blancoPrice').a, lineup: LINEUP[0][1], review: CallCard.review().includes('$46.99') && /confirmed by ken phox/.test(CallCard.review()), status: Facts.status() })");
+      if (r.q !== "$46.99" || r.lineup !== "$46.99" || !r.review) throw new Error(JSON.stringify(r));
+      await chrome.eval("Facts.reset()");
+      const b = await chrome.eval("({ q: Q('blancoPrice').a, lineup: LINEUP[0][1], draft: Facts.status() })");
+      if (b.q !== "$44.99" || b.lineup !== "$44.99" || !/Draft/.test(b.draft)) throw new Error(JSON.stringify(b));
+      await chrome.eval("document.body.classList.remove('mgr'); home()");
+    });
+
     // ----- the offline copy
     await chrome.go(base); await click("#yes").catch(() => {});
     const sw = await chrome.eval("navigator.serviceWorker.ready.then(r => !!r.active)").catch(() => false);

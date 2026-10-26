@@ -40,7 +40,7 @@ What it loads from the internet:
 | Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges, one of them for finishing the knowledge check), daily streak, team board using share codes |
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
 | Sign-in (journey page 2) | Age check, then "continue as guest", **Sign in with Google** (switches on when a free client ID is added, see below) or an email that is only saved on this device. Company sign-in comes with the rollout |
-| Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, a coaching page, a CSV invite page, leaderboards and the answer grader. Uses sample data. See below |
+| Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, coaching (with a team huddle), what reps actually said (with notes), assignments, brand facts, a CSV invite page, leaderboards and the answer grader. Uses sample data. See below |
 | The map | A winding road with a boss's face on each boss stop (a dark silhouette while it is still locked), a banner at the start of each tier, and on a wide screen a side panel with your rep, the next unlock and the next boss with the boss badges. The rep card and the tier bar open Dashboard > Progress, the badges card opens Dashboard > Badges, and the next unlock opens the character creator (all work from the keyboard). A stop you just finished pops and a light runs along the road to the next one, and a beaten boss makes the next tier's banner pop in. On a phone the side panels hide and the banners shorten to "Tier 3" |
 | Boss battle theme | A corrido-style tune made in code with the browser's Web Audio (no files): a driving oom-pah of bass and strummed guitar, a snare on the backbeat and mariachi trumpets in A minor over the record-player crackle. It plays only on the boss screen, and stops when you go back, go anywhere else, or start the battle (a practice run too). Tier Up has its own victory music in A major, and finishing the season plays a longer one; both are cut off the moment you leave the screen. A lost boss battle plays its own defeat sting (a low toll, a soft snare roll, the Am - G - F - E - Am turn with a trumpet sagging down to A, and a record winding to a stop); an ordinary mission loss keeps the short guitar line |
 | Results screens | Compact: the score, stars and the customer (looking how the conversation left them, with their last words) share one header row, new badges appear as the real medals, and each answer is a row showing its score and one line, which you open for the detail (the ones that need work start open, and one button opens or closes them all). Stars follow the score out of 100 and go up in halves (100% is 3 stars, 50% is 1.5), so a half star is half filled on the results, the map and the history. Passing is a separate test, the mission's pass mark, so a score can show stars and still miss the pass mark. They pop in one after another, and three stars brings confetti. When every answer scores the same it says so instead of naming a strongest and weakest. The footer hearts show only inside a lesson. The page doesn't bounce past the top, so nothing shows behind it |
@@ -50,6 +50,8 @@ What it loads from the internet:
 | Rep dashboard | Progress, badges, team, review, knowledge check (optional) and settings |
 | Quick start (first run) | After the age check and sign-in, a new player creates their rep (every option is there from the start, and it begins from a random look with a clear face), sees a short three-card tutorial (skippable; replayable from Dashboard > Settings > Help), and lands on the open map. Nothing opens by itself: the Next up bar shows where to begin and they can explore first. No knowledge check in the way: it is optional (Dashboard > Knowledge check) |
 | Try this question again | Every answer under 4 out of 5 on a results screen has a button that replays just that question, same customer, with the checklist hidden. It is practice (no stop is marked done) but earns XP, feeds the skill scores, and a good answer clears that moment from Review. The results compare the two scores |
+| How you sounded (and hearing a stronger answer) | After each answer (right after it in coach mode, and on the results screen) a short "How you sounded" list in plain words: pace against the customer's range, filler words (named and counted), hedging, long pauses, volume and voice variety, each marked on target or not. A typed answer gets the filler and hedging lines. A "Hear it" button beside every stronger answer plays it out loud at the pace that customer calls for (on a mission screen your own avatar says it). The Progress tab has a "How you sound" card from your last 20 answers, and the results screen a line across the whole mission. Speech recognition often drops "um" and "uh", so a spoken filler count can be low |
+| Surprise customer | Practice, not a map stop: five curveballs from six customers you haven't met, one of each kind (they interrupt and give you 30 to 40 seconds, go quiet, change the subject, push back hard, or brush you off), a different five each time, scored by the same coach (`surprise.js`, `tests/surprise.test.js`). It opens on the Progress tab once The Quiet Bar is done. It never unlocks anything and can't earn Tough Crowd |
 | Who is Tequila Corrido? (the 60-second review) | The page a rep reads before a sale, as quick reminders only: the promise in one line (with the name, the maker and "no famous fans"), the four bottles with photos at their public shop prices, short Do and Never lists, what to say to six usual objections, and, folded away, a per-pour cost calculator (bottle cost, size, pour size and menu price in; pours per bottle, cost per pour, pour cost, and what a bottle brings in out) and the shop's merch list. It uses only public facts and the numbers typed in, never quotes a margin or wholesale price, and has no links to the website |
 | Time estimates | "About 6 min" shows in the screen before a stop and in the Next up bar (not on every stop, so the map stays clear) |
 | Customers that change | Each customer has a second way to say their later lines (facts, prices and days stay the same). On a replay you never get the same version twice in a row, so you practise the idea, not the wording |
@@ -93,6 +95,16 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 
 **Coaching** (manager mode > Coaching) shows the class's skills lowest first, each with the stop that practices it, a team drill for the week with a message to copy, and the reps who need one-to-one coaching (lost a boss 3 times, or no practice for 3+ days). Each rep gets the skill to work on, the stop to practice (the first one that practices the skill and that the rep has reached, an ordinary stop before a boss), one tip, and a message to copy. "Mark as coached" is recorded on this device only, and nothing is sent.
 
+**Answers** (manager mode > Answers) lists what reps actually said, newest first: the customer's line, the question, the rep's words beside a stronger answer, the score split into what was said and tone, what was missed, the pace and filler words, and a box to leave a note. A note on the player's own answer shows on their Review page (a dot on the tab and a line on the Progress tab tell them; it counts as read once they open Review). A rep's answers are kept as text on their own device (never the recording; Dashboard > Settings can clear them), so in this prototype a manager only sees answers made in this browser. The sample reps have sample answers: real answers from the missions, scored by the real coach, the same every time (`answers.js`).
+
+**Team huddle** (on the Coaching page) is the one question the most reps scored under 3.5 on, with how many, what was missed most, a stronger answer, and a plan for five minutes (read it aloud, one sentence each, compare, say it again in pairs, one line to keep) that can be copied or assigned.
+
+**Assign** (manager mode > Assign) picks a stop, who it is for (the class, a team or one rep) and a due date, with an optional note. It shows how many have finished and who has not, and a message to copy. The rep sees one slim line on their map for each stop still to do (two at most) with a button that goes to it, and a card on the Progress tab. The Coaching page has "Assign this stop" beside the team drill, the huddle and each rep's suggested stop (`assign.js`).
+
+**Brand facts** (manager mode > Brand facts) edits what the game says without touching code: the four public bottle prices, the review's one-line promise, Do, Never and what to say to each objection, the "Did you know?" lines, when the prices were last checked, and who at the brand confirmed the wording (shown on the review, or "draft"). A price change reaches every mission, lesson answer, scoring rule, the review and the calculator in one go, and "Back to the original wording" undoes it exactly. Prices must be 20 to 500, all different, with the Añejo the dearest (a lesson asks which is the priciest). Saved on this device only (`facts.js`, `tests/facts.test.js`).
+
+**Spreadsheets:** the Cohorts page downloads a progress report (a row for each rep: stops finished, answers scored, average score, weakest skill, pace, filler words, assignments, last active), the skills for each rep, and every answer; the Answers page downloads the answers. Text that starts with = + - or @ gets a quote in front so a spreadsheet can't run it as a formula.
+
 **On a phone** (700px wide or less) the header buttons give way to a bottom bar with Map, Dashboard, Character, Brand and Website, with the current page marked. It steps aside during a mission or lesson (the X leaves it) and on the first-run and manager screens; the stats footer sits just above it.
 
 ## Files
@@ -112,14 +124,18 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `coach.js` | the scoring (`Coach.score`: 4 content points plus 1 tone point) and the old optional Gemini judge |
 | `tiers.js` | tiers, bosses, merch rewards and the prototype switches |
 | `boss.js` | the boss battle screen, the Brand Brain quiz, Tier Up and the shareable tier card |
-| `manager.js` | manager mode: cohorts, coaching, invite and leaderboards |
+| `manager.js` | manager mode: cohorts, coaching, invite and leaderboards, and the spreadsheets |
+| `answers.js`, `mgranswers.js` | the answer log, the sample class's sample answers and "the question the class misses most"; manager mode > Answers and the team huddle |
+| `assign.js` | assignments: the manager page, progress against it, and the strip on the rep's map |
+| `facts.js` | brand facts: prices and wording a manager can change, and the swap that carries a price change through the whole game |
+| `surprise.js` | the surprise customer: ten curveball questions, their scoring rules, and the Progress tab card |
 | `callcard.js` | the 60-second review on the Who is Tequila Corrido? page, and the pour-cost calculator |
 | `presenter.js` | presenter mode: the sample player, the jump menu, and safe switching in and out |
 | `avatarcheck.js` | the Presenter menu's Avatar check sheets: every shirt, or every hairstyle on every head shape, on one page |
 | `sw.js` | the offline copy: the app and the shop photos are kept on the device after one visit, so a demo works on bad Wi-Fi |
 | `tools/` | `smoke.js` clicks through the whole game in a real Chrome and fails on any error (`node tools/smoke.js`); `cdp.js` is the tiny Chrome client it uses. No installs |
-| `DEMO.md` | a 5-minute demo script that uses Presenter mode |
-| `tone.js` | how tone is judged from your words and your voice, for the situation |
+| `DEMO.md` | a 6-minute demo script that uses Presenter mode |
+| `tone.js` | how tone is judged from your words and your voice, for the situation, and the "How you sounded" lines |
 | `lessons.js` | brand lessons, question bank, knowledge check |
 | `progress.js` | saving, levels, badges, streak, team codes |
 | `config.js`, `auth.js` | the Google client ID switch, and Sign in with Google (token checks, button, sign out) |
@@ -128,7 +144,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills`, `hair`, `offline` and `avatarcheck` tests |
+| `tests/` | `surprise`, `answers`, `assign`, `facts`, `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills`, `hair`, `offline` and `avatarcheck` tests |
 
 ## Tests
 
@@ -158,6 +174,10 @@ node tests/skills.test.js   # the Skills chart: every skill is in one family, no
 node tests/offline.test.js  # the offline copy: photos kept after the first load and served when the network fails, the app's files network-first, nothing else touched
 node tests/avatarcheck.test.js # the Avatar check sheets: one picture per shirt or hairstyle in its own frame, and the player's avatar put back
 node tests/hair.test.js     # every hairstyle is attached to every head shape (no gap at the temples), and parting or shine lines stay on the head
+node tests/surprise.test.js # the surprise customer: ten curveballs in five kinds, every right answer scores 4.2+ and every wrong one under 3.4, a round is one of each kind, the mission screen handles a short timer and a silent customer
+node tests/answers.test.js  # the answer log (words only), the sample class's answers are real and the same every time, the question the class misses most, a manager's note reaching the rep, and safe spreadsheets
+node tests/assign.test.js   # assignments: who it covers, the sample reps' progress, due dates in words, the one line on the map, and nothing a manager types can inject markup
+node tests/facts.test.js    # brand facts: a price change reaches every mission, lesson, scoring rule and the review, can be undone exactly, bad input is refused
 ```
 
 The unit tests need only Node. `node tools/smoke.js` is a separate click-through test: it opens the game in a real Chrome (set `CHROME` if it is not in the usual place), plays the first run, visits every Presenter menu jump, draws every shirt and hairstyle, checks the offline copy, and fails on any error in the page. It needs an internet connection for the shop photos and installs nothing.
@@ -168,6 +188,8 @@ The unit tests need only Node. `node tools/smoke.js` is a separate click-through
 - **The camera coach was never run on a real webcam.** The Browser pane blocked the camera. The maths is unit-tested with fake landmarks. Expect to tune thresholds.
 - **Voices** depend on what is installed on the computer. Each customer is given their own installed voice by gender and accent (British, Australian, Irish, Indian, South African and American where available), speaks a sentence at a time with natural pauses, and sounds warmer or colder depending on how the rep answered. Dashboard > Settings > Customer voices lists who got which voice, with a play button. Edge's free Natural voices and Premium Mac voices sound much better.
 - **Phone layout** was checked in an emulator at 375 px wide, not on a real phone.
+- **Manager pages show this browser's data.** Answers, notes, assignments and brand facts are saved on one device. A manager sees the answers made in the same browser, a rep only sees a note or an assignment made in the same browser, and the sample reps are sample data. Making it real needs a shared database and company sign-in.
+- **Filler words from speech** are counted from the words the browser heard, and its speech recognition often leaves out "um" and "uh", so the count can be low.
 - **The team board** only updates when someone shares a new code. A real shared leaderboard needs a backend (free tiers exist, but they need an account).
 - **Merch and bottle photos** are the brand's own images, linked live. The merch is photographed flat, so it is trimmed onto the character, not draped.
 - **Content is draft.** Prices and tasting notes come from the public site. Margins, wholesale terms and sales numbers are not public, so right answers never invent them.

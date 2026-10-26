@@ -8,7 +8,7 @@ function dashboard(tab = dashTab) {
   dashTab = tab;
   const lv = levelOf(state.xp), cur = LEVELS[lv][1], nxt = LEVELS[lv + 1];
   const pctNext = nxt ? Math.round((state.xp - cur) / (nxt[1] - cur) * 100) : 100;
-  const tabs = [["progress", "Progress"], ["badges", "Badges"], ["team", "Team"], ["review", "Review" + ((state.mistakes || []).length ? ` (${state.mistakes.length})` : "")], ["check", "Knowledge check"], ["settings", "Settings"]];
+  const tabs = [["progress", "Progress"], ["badges", "Badges"], ["team", "Team"], ["review", "Review" + ((state.mistakes || []).length ? ` (${state.mistakes.length})` : "") + (AnswerLog.unseen() ? ' <span class="ndot" aria-hidden="true"></span><span class="sr">, with a new note from your manager</span>' : "")], ["check", "Knowledge check"], ["settings", "Settings"]];
   app.innerHTML = `<section class="view sheet dash">
     <div class="dhead">
       <div class="dav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div>
@@ -40,7 +40,7 @@ function importProgress(file, done) {
       const d = JSON.parse(r.result);
       if (!d || typeof d !== "object" || typeof d.xp !== "number" || !Array.isArray(d.history)) throw new Error("not a backup");
       const keep = { ...Progress.blank(), ...d };
-      Object.assign(state, keep, { hearts: D().hearts }); Progress.save(state); hud(); done(true);
+      Object.assign(state, keep, { hearts: D().hearts }); Progress.save(state); Facts.apply(); hud(); done(true);   // a backup brings its saved prices and wording with it
     } catch { done(false); }
   };
   r.readAsText(file);
@@ -55,29 +55,56 @@ function dashProgress(el) {
   const rec = !H.length ? "Start with the two lessons, Meet Corrido and Know the Lineup, then The Quiet Bar."
     : weak ? `Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). <button class="btn" id="pweak" type="button">Practice ${weak[0]}</button> A short mix of moments from different customers, picked to train it.` : "";
   const wirePractice = () => { if ($("#pweak")) $("#pweak").onclick = () => playPractice(weak[0]); };
-  el.innerHTML = `${tierCard()}
+  const unseen = AnswerLog.unseen();
+  el.innerHTML = `${unseen ? `<p class="learn newnote">📝 <b>Your manager left you ${unseen === 1 ? "a note" : unseen + " notes"}.</b> <button class="btn" id="pnote" type="button">Read it in Review</button></p>` : ""}${tierCard()}${Assign.card()}
     <div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
     ${!state.pre ? '<p class="learn">Optional: the 2-minute <b>knowledge check</b> shows where you start, so you can see how much you improve. <button class="btn alt" id="pcheck" type="button">Take the check</button></p>' : ""}
     <p class="learn">${rec}</p>
+    ${Surprise.card()}
     <div class="card"><h3>Skills</h3>${fams.length >= 3
       ? `<div class="radarwrap">${skillRadar(fams)}<ul class="skilllist">${[...fams].sort((a, b) => a[1] - b[1]).map(([k, v], i) => `<li${i === 0 ? ' class="weak"' : ""}><span>${esc(k)}${i === 0 ? ' <small class="focus">focus here</small>' : ""}</span><b>${v}%</b><div class="sbar" aria-hidden="true"><i style="width:${v}%"></i></div></li>`).join("")}</ul></div>
         <details class="skilldetail"><summary>All ${skills.length} skills</summary><ul class="skilltable">${skills.map(([k, v], i) => `<li><span>${esc(k)}${i === 0 ? ' <small class="focus">lowest</small>' : ""}</span><b>${v}%</b></li>`).join("")}</ul></details>`
       : skills.length ? skills.map(([k, v], i) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v}%"></i></div><b>${v}%</b>${i === 0 && skills.length > 1 ? '<small class="focus">focus here</small>' : ""}</div>`).join("") + '<p class="note2">The radar chart appears once you have scores in three skill areas.</p>'
       : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
     ${cameraDash(H)}
+    ${soundCard()}
     <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${starGlyphs(h.stars || 0)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
   wirePractice();
+  Assign.wire(el);
+  if ($("#pnote")) $("#pnote").onclick = () => dashboard("review");
+  Surprise.wire(el);
   if ($("#pcheck")) $("#pcheck").onclick = () => knowledgeCheck(home);
 }
 
+// Notes a manager left on the rep's own answers (manager mode > Answers). Showing them marks them as read.
+function notesCard() {
+  const items = AnswerLog.playerNotes();
+  if (!items.length) return "";
+  const html = `<div class="card notescard"><h3>Notes from your manager</h3>${items.map(({ answer: a, notes }) => `<div class="mistake"><small>${esc(a.mission)} · ${esc(a.date)} · ${fmt(a.score)} / 5</small><p><b>You said:</b> ${esc(a.text)}</p>${notes.map(n => `<p class="mnotebox"><b>${esc(n.from)}</b> <small>${esc(n.date)}</small><br>${esc(n.text)}</p>`).join("")}${hearButton(a.better)}</div>`).join("")}</div>`;
+  AnswerLog.markSeen(); document.querySelectorAll(".ndot").forEach(d => d.remove());   // they are read now: the dot on the tab goes
+  return html;
+}
+// How the rep sounds, from the last answers: average pace, filler words and long pauses, and whether the filler words are coming down.
+function soundCard() {
+  const A = (state.answers || []).slice(0, 20);
+  if (A.length < 3) return "";
+  const spoken = A.filter(a => a.spoke && a.wpm), wpm = spoken.length ? Math.round(spoken.reduce((t, a) => t + a.wpm, 0) / spoken.length) : null;
+  const avg = list => list.reduce((t, a) => t + (a.fillers || 0), 0) / list.length, paused = A.filter(a => a.spoke && a.pauses != null);
+  const recent = A.slice(0, 5), before = A.slice(5, 10);
+  const trend = before.length >= 3 ? (avg(recent) < avg(before) - .2 ? "Your filler words are coming down." : avg(recent) > avg(before) + .2 ? "Your filler words are creeping up: pause instead of filling the gap." : "Your filler words are steady.") : "";
+  return `<div class="card"><h3>How you sound</h3><div class="stats3"><div><b>${wpm == null ? "–" : wpm}</b><span>words a minute</span></div><div><b>${avg(A).toFixed(1)}</b><span>filler words an answer</span></div><div><b>${paused.length ? (paused.reduce((t, a) => t + a.pauses, 0) / paused.length).toFixed(1) : "–"}</b><span>long pauses an answer</span></div></div>
+    <p class="note2">From your last ${A.length} answers (${spoken.length} spoken). Most customers like 110 to 175 words a minute. ${trend} Pace and pauses need spoken answers.</p></div>`;
+}
+
 function dashReview(el) {
-  const list = state.mistakes || [];
-  if (!list.length) { el.innerHTML = `<div class="card"><h3>Nothing to review</h3><p class="note2">Any answer that scores under 3.5 out of 5 lands here, with what you missed and a stronger answer next to it. Score 3.5 or more on the same moment later and it clears itself.</p></div>`; return; }
+  const list = state.mistakes || [], notes = notesCard();
+  if (!list.length) { el.innerHTML = notes + `<div class="card"><h3>Nothing to review</h3><p class="note2">Any answer that scores under 3.5 out of 5 lands here, with what you missed and a stronger answer next to it. Score 3.5 or more on the same moment later and it clears itself.</p></div>`; wireHear(el, false); return; }
   const by = {}; list.forEach(m => (by[m.skill] = by[m.skill] || []).push(m));
-  el.innerHTML = `<p class="note2">${list.length} moment${list.length === 1 ? "" : "s"} to review, grouped by skill. Practice a skill to clear them.</p>` +
-    Object.entries(by).sort((a, b) => b[1].length - a[1].length).map(([sk, ms]) => `<div class="card"><h3>${esc(sk)} <span class="chip">${ms.length}</span><button class="btn alt pskill" data-s="${esc(sk)}" type="button">Practice this</button></h3>${ms.map(m => `<div class="mistake"><small>${esc(m.mission)} · ${esc(m.date)}</small><p><b>Customer:</b> ${esc(m.line)}</p><p class="bad"><b>You said</b> (${(+m.score || 0).toFixed(1)} / 5): ${esc(m.text)}</p>${(m.missed || []).length ? `<p class="note2"><b>You missed:</b> ${m.missed.map(esc).join("; ")}.</p>` : ""}${(m.flags || []).length ? `<p class="note2"><b>Knocked points off:</b> ${m.flags.map(esc).join(" ")}</p>` : ""}<p class="better"><b>A stronger answer:</b> <i>${esc(m.better)}</i></p></div>`).join("")}</div>`).join("") +
+  el.innerHTML = notes + `<p class="note2">${list.length} moment${list.length === 1 ? "" : "s"} to review, grouped by skill. Practice a skill to clear them.</p>` +
+    Object.entries(by).sort((a, b) => b[1].length - a[1].length).map(([sk, ms]) => `<div class="card"><h3>${esc(sk)} <span class="chip">${ms.length}</span><button class="btn alt pskill" data-s="${esc(sk)}" type="button">Practice this</button></h3>${ms.map(m => `<div class="mistake"><small>${esc(m.mission)} · ${esc(m.date)}</small><p><b>Customer:</b> ${esc(m.line)}</p><p class="bad"><b>You said</b> (${(+m.score || 0).toFixed(1)} / 5): ${esc(m.text)}</p>${(m.missed || []).length ? `<p class="note2"><b>You missed:</b> ${m.missed.map(esc).join("; ")}.</p>` : ""}${(m.flags || []).length ? `<p class="note2"><b>Knocked points off:</b> ${m.flags.map(esc).join(" ")}</p>` : ""}<p class="better"><b>A stronger answer:</b> <i>${esc(m.better)}</i> ${hearButton(m.better, (TONE_FOR[m.mid] || {}).pace)}</p></div>`).join("")}</div>`).join("") +
     `<p><button class="btn alt" id="clrrev" type="button">Clear the whole list</button></p>`;
   el.querySelectorAll(".pskill").forEach(b => b.onclick = () => playPractice(b.dataset.s));
+  wireHear(el, false);
   $("#clrrev").onclick = () => { if (confirm("Clear every moment from your review list?")) { state.mistakes = []; Progress.save(state); dashboard("review"); } };
 }
 
@@ -195,6 +222,7 @@ function dashSettings(el) {
       <p class="note2">For the most human sound use Microsoft Edge (its free "Natural" voices) or, on a Mac, add a Premium voice in System Settings, Accessibility, Spoken Content, then reload this page.</p></details>
     <div class="card"><h3>Help</h3><button class="btn alt" id="replay" type="button">Replay the tutorial</button></div>
     <div class="card"><h3>Your data</h3><p class="note2">Everything is saved only in this browser, and nothing is uploaded. Clearing browser data erases it, so download a backup now and then.</p>
+      <p class="note2">Your answers (the words and the score, never the recording) are kept here so a manager can read them and leave a note: ${(state.answers || []).length} saved.</p><button class="btn alt" id="clrans" type="button" ${(state.answers || []).length ? "" : "disabled"}>Clear my saved answers</button>
       <button class="btn alt" id="exp" type="button">Download a backup (JSON)</button>
       <label class="btn alt filebtn">Restore from a backup<input type="file" id="imp" accept="application/json,.json" hidden></label>
       <button class="btn alt" id="rst" type="button">Reset all progress</button><p class="note2" id="smsg"></p></div>
@@ -225,7 +253,8 @@ function dashSettings(el) {
   // some browsers list their voices a moment late: redraw this card once they arrive
   if (!Voices.count() && window.speechSynthesis && speechSynthesis.addEventListener) speechSynthesis.addEventListener("voiceschanged", () => { if ($("#vcount")) dashboard("settings"); }, { once: true });
   $("#replay").onclick = () => tutorial(() => dashboard("settings"));
+  $("#clrans").onclick = () => { if (confirm("Delete your saved answers and any notes on them? Your score, stars and badges stay.")) { state.answers = []; state.notes = {}; Progress.save(state); dashboard("settings"); } };
   $("#exp").onclick = exportProgress;
   $("#imp").onchange = e => { const f = e.target.files[0]; if (f) importProgress(f, ok => { $("#smsg").textContent = ok ? "Backup restored." : "That file isn't a Corrido Academy backup."; if (ok) dashboard("settings"); }); };
-  $("#rst").onclick = () => { if (confirm("Reset XP, badges, history and the team board?")) { Progress.reset(); Object.assign(state, Progress.blank()); state.hearts = D().hearts; hud(); dashboard("settings"); } };
+  $("#rst").onclick = () => { if (confirm("Reset XP, badges, history and the team board?")) { Progress.reset(); Object.assign(state, Progress.blank()); state.hearts = D().hearts; Facts.apply(); hud(); dashboard("settings"); } };
 }
