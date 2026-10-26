@@ -45,9 +45,9 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       await chrome.send("Emulation.clearDeviceMetricsOverride");
     };
     const SIZES = [[1440, 800], [1366, 650], [1280, 720], [1024, 768], [800, 600], [768, 1024], [430, 932], [390, 844], [375, 667], [360, 640], [320, 568]];
-    await step("the first screen has its medallion, flags and agave, shows only the age card, and needs no scrolling at laptop and phone sizes", async () => {
-      const r = await chrome.eval("(() => { const g = document.querySelector('#gate'), b = document.querySelector('.emblem').getBoundingClientRect(); return { emblem: Math.round(b.width), flags: getComputedStyle(g, '::before').backgroundImage.startsWith('url('), agave: getComputedStyle(g, '::after').backgroundImage.includes('url('), signinHidden: getComputedStyle(document.querySelector('#signin')).display === 'none', card: !!document.querySelector('.agebadge'), dots: document.querySelectorAll('.stepdots i').length }; })()");
-      if (r.emblem < 60 || !r.flags || !r.agave || !r.signinHidden || !r.card || r.dots !== 2) throw new Error(JSON.stringify(r));
+    await step("the first screen has its logo (or the text title if the logo can't load), flags and agave, shows only the age card, and needs no scrolling at laptop and phone sizes", async () => {
+      const r = await chrome.eval("(() => { const g = document.querySelector('#gate'), t = document.querySelector('.splashtitle'), b = document.querySelector(t.classList.contains('nologo') ? '.brandtext' : '.brandlogo').getBoundingClientRect(); return { logo: Math.round(b.width), flags: getComputedStyle(g, '::before').backgroundImage.startsWith('url('), agave: getComputedStyle(g, '::after').backgroundImage.includes('url('), signinHidden: getComputedStyle(document.querySelector('#signin')).display === 'none', card: !!document.querySelector('.agebadge'), dots: document.querySelectorAll('.stepdots i').length }; })()");
+      if (r.logo < 60 || !r.flags || !r.agave || !r.signinHidden || !r.card || r.dots !== 2) throw new Error(JSON.stringify(r));
       await fits(SIZES, "the age check");
     });
     await step("yes opens sign-in, and guest leads to the character creator", async () => {

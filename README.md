@@ -21,7 +21,7 @@ What it loads from the internet:
 | What | From | When |
 |---|---|---|
 | Fonts | Google Fonts | always |
-| Tequila Corrido bottle, record and merch photos | the brand's own site (`ilovetequilacorrido.com`, linked live) | always. Needs internet. Swap for approved files from Ken before sharing outside the team. |
+| Tequila Corrido bottle, record and merch photos, and the logo on the first screen | the brand's own site (`ilovetequilacorrido.com`, linked live) | always. Needs internet. Swap for approved files from Ken before sharing outside the team. |
 | Face model for the camera coach | jsDelivr and Google storage (MediaPipe, open source) | only if you turn the camera coach on |
 | Gemini free tier | Google | only if you paste your own free key into the optional AI judge |
 
@@ -78,8 +78,8 @@ The game has three ladders, and each has its own word so a rep never has to gues
 - **The camera reminder** shows on the first question of a mission only, with an "x" that switches it off for good.
 - **Feedback** after an answer shows what to fix first (two things at most) and a stronger answer with its Hear it button. What went well, tone and how you sounded are one tap away.
 - **Photos** show a soft shimmer in their own space while they load, and stop for anyone who asks for less motion.
-- **The manager pages** are full width: the brown header bar runs edge to edge on any screen, with the logo on the left, your name and the way back on the right, and the eight pages as one even row of tabs under them. Its logo lines up with the content column (1200px). On a small phone the back button shrinks to an arrow and the tabs slide sideways.
-- **The first screen** (age check, then sign-in) is a night market drawn entirely in code: papel picado flags on a string across the top, agave plants along the bottom, a spotlit gold medallion with an agave and a star, a sunburst behind the title, a cream age-check card with a red 21+ coin, and a glass card for sign-in. It shows one card at a time: the age check first, then, after "Yes" (which becomes a small "21+ confirmed"), the sign-in card in its place, so it needs no scrolling on a laptop or a phone from 1440x800 down to 320x568 (the medallion and tagline shrink or give way on short screens). It never grows wider than the screen, down to 300px (`tests/usability.test.js`, the click-through test, and `tests/a11y.test.js` for its colours).
+- **The manager pages** are full width: the brown header bar runs edge to edge on any screen, with the Tequila Corrido logo, a thin rule and SALES ACADEMY with a MANAGER tag on the left (the same logo as the first screen and the map header), your name and the way back on the right, and the eight pages as one even row of tabs under them. Its logo lines up with the content column (1200px). On a small phone the back button shrinks to an arrow and the tabs slide sideways.
+- **The first screen** (age check, then sign-in) is a night market drawn entirely in code: papel picado flags on a string across the top, agave plants along the bottom, the Tequila Corrido logo (their white script) in a gold spotlight where the title goes, a sunburst behind it, a cream age-check card with a red 21+ coin, and a glass card for sign-in. It shows one card at a time: the age check first, then, after "Yes" (which becomes a small "21+ confirmed"), the sign-in card in its place, so it needs no scrolling on a laptop or a phone from 1440x800 down to 320x568 (the logo is one size on both steps and shrinks only as the screen gets shorter, and the tagline gives way on short screens). It never grows wider than the screen, down to 300px (`tests/usability.test.js`, the click-through test, and `tests/a11y.test.js` for its colours).
 
 ## Tiers, bosses and merch
 

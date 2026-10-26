@@ -19,9 +19,13 @@ button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .hidden{display:none!important}
 
 /* top bar */
-.top{background:var(--brown);color:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;position:sticky;top:0;z-index:5}
-.logo{font-family:Rye,serif;font-size:1.3rem;line-height:1}
-.logo small{display:block;font:700 .7rem Arimo;letter-spacing:.25em}
+.top{background:var(--brown);color:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;position:sticky;top:0;z-index:5;border-bottom:2px solid var(--gold);box-shadow:0 4px 12px #0004}
+.logo,.mlogo{display:flex;align-items:center;gap:.75rem;font-family:Rye,serif;font-size:1.3rem;line-height:1}
+/* the brand lockup in the map and manager headers, the same pairing as the first screen: the logo, a thin rule, then SALES ACADEMY (and a MANAGER tag on the manager page) */
+.logo .brandlogo,.mlogo .brandlogo{width:104px;margin:0;flex:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
+.logo small,.mlogo small{display:block;padding-left:.75rem;border-left:1px solid rgba(255,243,207,.45);font:700 .75rem/1.4 Arimo,sans-serif;letter-spacing:.25em;color:#fff}
+.mlogo .mrole{text-transform:uppercase}.mlogo .mdot{padding:0 .3em;color:var(--gold-t)}   /* SALES ACADEMY · MANAGER, with the dot in gold; on a phone (below) the word drops under SALES ACADEMY and the dot goes */
+.logo.nologo small,.mlogo.nologo small{margin-left:0}
 .stats{display:flex;gap:1.1rem;font-weight:700}
 .mock{background:var(--ink);color:var(--gold);text-align:center;font-size:.8rem;padding:.25rem;letter-spacing:.08em}
 
@@ -298,7 +302,7 @@ details.card summary{cursor:pointer;font-weight:700}
 .stats{flex-wrap:wrap;gap:.4rem .9rem;align-items:center;justify-content:flex-end}
 .stats>span{white-space:nowrap}
 @media(max-width:700px){
-  .logo{font-size:1.05rem}.top{padding:.5rem .8rem}
+  .logo,.mlogo{font-size:1.05rem}.logo .brandlogo,.mlogo .brandlogo{width:84px}.top{padding:.5rem .8rem}.logo small,.mlogo small{letter-spacing:.2em}
   .stats{width:100%;justify-content:flex-start;font-size:.82rem;gap:.35rem .6rem}
   .diffbtn{padding:.1rem .6rem;font-size:.72rem}
   main{padding:.8rem}.sheet{padding:.9rem}
@@ -459,7 +463,14 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .gate.splash::before{content:"";position:fixed;left:0;right:0;top:0;height:64px;background:var(--papel) repeat-x top center/180px 64px;pointer-events:none;filter:drop-shadow(0 5px 6px rgba(0,0,0,.45))}
 .gate.splash::after{content:"";position:fixed;left:0;right:0;bottom:0;height:84px;background:var(--agave) repeat-x bottom center/300px 84px,linear-gradient(0deg,rgba(224,164,47,.2),transparent 80%);pointer-events:none}
 .splashbox{position:relative;z-index:1;width:100%;max-width:440px;text-align:center;color:var(--cream);padding:.2rem 0 1.2rem}
-.emblem{width:92px;height:92px;display:block;margin:0 auto;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}
+/* the brand logo (their white script, loaded from their site like the shop photos) is the spotlit centrepiece: a soft gold halo behind it, a dark shadow under it. If it can't load, onerror turns it off and the title is plain Rye text again. */
+.splashbox{--logo-w:min(200px,62vw)}   /* one size on both steps; it only shrinks as the screen gets shorter */
+.brandlogo{display:block;width:var(--logo-w);height:auto;aspect-ratio:735/325;margin:0 auto;filter:drop-shadow(0 0 14px rgba(246,207,120,.35)) drop-shadow(0 8px 12px rgba(0,0,0,.65))}
+.splashtitle{position:relative}
+.splashtitle::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;width:100%;aspect-ratio:2/1;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(246,207,120,.22),transparent);pointer-events:none}
+.brandtext{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.nologo .brandlogo,.splashtitle.nologo::before{display:none}
+.nologo .brandtext{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
 .splashtitle{font:clamp(2rem,9.5vw,2.8rem)/1.05 Rye,serif;text-transform:none;margin:.5rem 0 0;color:#fff3cf;text-shadow:0 2px 0 #a87a1a,0 10px 24px rgba(0,0,0,.6)}
 .splashsub{display:flex;align-items:center;justify-content:center;gap:.8rem;font:700 .85rem Arimo;letter-spacing:.35em;color:var(--gold-t);margin:.4rem 0 .7rem}
 .splashsub::before,.splashsub::after{content:"";width:38px;height:1px;background:linear-gradient(90deg,transparent,#e0a42f)}.splashsub::after{transform:scaleX(-1)}
@@ -486,17 +497,20 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .signnote{font-size:.82rem;color:#e0d3ba;margin:.5rem 0 0}.signnote.bad{color:#ffb4a3}
 .splashfoot{font-size:.82rem;color:#d9ccb4;margin:.9rem .5rem .1rem}
 .mgrlink{font-size:.85rem;margin:0}.mgrlink a{display:inline-block;padding:.4rem 0;color:var(--gold-t)}
-@media(max-width:420px){.gate.splash{padding:.8rem;padding-top:3.6rem}.gate.splash::before{height:52px;background-size:146px 52px}.emblem{width:88px;height:88px}.agecard{padding:2.2rem 1rem 1.1rem}.signin{padding:1rem .9rem}}
+@media(max-width:420px){.gate.splash{padding:.8rem;padding-top:3.6rem}.gate.splash::before{height:52px;background-size:146px 52px}.agecard{padding:2.2rem 1rem 1.1rem}.signin{padding:1rem .9rem}}
 /* the sign-in card takes the age card's place, and the header gets smaller with it */
-.gate.step2 .splashtag{display:none}.gate.step2 .emblem{width:64px;height:64px}.gate.step2 .splashtitle{font-size:clamp(1.7rem,8vw,2.2rem)}.gate.step2 .splashsub{margin-bottom:.5rem}.gate.step2 .stepdots{margin-bottom:.9rem}.gate.step2 .agecard{margin-top:0}
+.gate.step2 .splashtag{display:none}.gate.step2 .splashtitle{font-size:clamp(1.7rem,8vw,2.2rem)}.gate.step2 .splashsub{margin-bottom:.5rem}.gate.step2 .stepdots{margin-bottom:.9rem}.gate.step2 .agecard{margin-top:0}
 .gate.step2 .splashfoot{display:none}.gate:not(.step2) .presentrow{display:none}
 .splashlinks{display:flex;justify-content:center;align-items:center;gap:0 1.1rem;flex-wrap:wrap;margin-top:.5rem}.splashlinks p{margin:0}
 .gsoon{padding:.45rem .8rem;font-size:.78rem}
-@media(max-height:700px){.gate.step2 .emblem{display:none}.gate.step2 .splashtitle{margin-top:0}}
-@media(max-height:760px){.emblem{width:76px;height:76px}.splashtag{display:none}.stepdots{margin-bottom:1.3rem}.gate.splash{padding-top:3.9rem}}
-@media(max-height:620px){.emblem{width:60px;height:60px}.splashtitle{font-size:clamp(1.6rem,7vw,2.1rem);margin-top:.3rem}.splashsub{margin-bottom:.4rem}.stepdots{margin-bottom:1.1rem}.agecard{padding-top:1.9rem}.agecard p{margin-bottom:.7rem}.gate.step2 .emblem{width:48px;height:48px}.gate.splash{padding-top:3.7rem}.gate.splash::before{height:52px;background-size:146px 52px}
+@media(max-height:700px){.gate.step2 .splashtitle{margin-top:0}.gate.step2 .splashsub{margin:.3rem 0 .4rem}.gate.step2 .stepdots{display:none}.gate.step2 .signin{padding:.7rem .9rem .6rem;margin-top:.5rem}.gate.step2 .guestbtn{padding:.65rem}.gate.step2 .emailrow input{padding:.5rem .8rem}.gate.step2 .emailrow .btn{padding:.5rem 1rem}.gate.step2 .or{margin:.6rem 0 .4rem}.gate.step2 .signnote{margin-top:.4rem}}
+@media(max-height:760px){.splashbox{--logo-w:190px}.splashtag{display:none}.stepdots{margin-bottom:1.3rem}.gate.splash{padding-top:3.9rem}}
+@media(max-height:620px){.splashtitle{font-size:clamp(1.6rem,7vw,2.1rem);margin-top:.3rem}.splashsub{margin-bottom:.4rem}.stepdots{margin-bottom:1.1rem}.agecard{padding-top:1.9rem}.agecard p{margin-bottom:.7rem}.gate.splash{padding-top:3.7rem}.gate.splash::before{height:52px;background-size:146px 52px}
 .signin{padding:.7rem .9rem .6rem;margin-top:.5rem}.guestbtn{padding:.65rem}.emailrow input{padding:.5rem .8rem}.emailrow .btn{padding:.5rem 1rem}.or{margin:.6rem 0 .4rem}.signnote{font-size:.78rem;margin-top:.4rem}.gate.splash{padding-top:3.4rem}}
-@media(max-height:580px){.splashsub,.stepdots{display:none}.splashtitle{margin-bottom:1.1rem}.emblem{width:48px;height:48px}.agecard{margin-top:1.8rem}.agecard p{font-size:.9rem;margin-bottom:.6rem}.agecard h2{font-size:1.3rem}.agebtns .btn{padding:.7rem .8rem}.gate.step2 .splashtitle{margin-bottom:.8rem}}
+@media(max-height:580px){.splashsub,.stepdots{display:none}.splashtitle{margin-bottom:1.1rem}.agecard{margin-top:1.8rem}.agecard p{font-size:.9rem;margin-bottom:.6rem}.agecard h2{font-size:1.3rem}.agebtns .btn{padding:.7rem .8rem}.gate.step2 .splashtitle{margin-bottom:.8rem}}
+@media(max-height:640px){.splashbox{--logo-w:160px}}
+@media(max-height:600px){.splashbox{--logo-w:120px}}
+@media(max-height:580px){.splashbox{--logo-w:80px}}
 #toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);background:var(--deep);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:.6rem 1rem;max-width:90vw;z-index:60;opacity:0;pointer-events:none;transition:.25s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -563,8 +577,8 @@ main:has(.mgrwrap){max-width:none;padding:0 0 3rem}   /* the manager page is ful
 .mgrpage{max-width:1200px;margin:0 auto;padding:0 1.2rem}
 .mgrwrap{color:var(--ink)}
 /* the manager header: the logo on the left and who you are and the way back on the right, then the eight pages as one even row of tabs under them (it was one wrapping line, which left the name and the button stranded below the tabs) */
-.mgrbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"logo user" "nav nav";align-items:center;gap:.55rem 1rem;background:#915f1b;color:#fff;margin:0 0 1rem;padding:.7rem max(1.4rem,calc((100% - 1200px)/2 + 1.2rem)) .6rem;position:sticky;top:0;z-index:7}
-.mlogo{grid-area:logo;font:1.3rem Rye,serif;line-height:1}.mlogo small{display:block;font:700 .7rem Arimo;letter-spacing:.28em;margin-top:.25rem}
+.mgrbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"logo user" "nav nav";align-items:center;gap:.55rem 1rem;background:#915f1b;color:#fff;margin:0 0 1rem;border-bottom:2px solid var(--gold);box-shadow:0 4px 12px #0004;padding:.7rem max(1.4rem,calc((100% - 1200px)/2 + 1.2rem)) .6rem;position:sticky;top:0;z-index:7}
+.mlogo{grid-area:logo}
 .mnav{grid-area:nav;display:flex;gap:.3rem;padding-top:.55rem;border-top:1px solid #ffffff2e;overflow-x:auto;scrollbar-width:thin}
 .mnavbtn{flex:1 1 auto;text-align:center;white-space:nowrap;background:none;border:0;color:#fff;font-weight:700;padding:.5rem .9rem;border-radius:10px}
 .mnavbtn.on{background:#3a2410;color:var(--gold)}.mnavbtn:hover:not(.on){background:#ffffff22}
@@ -899,6 +913,10 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 @media(max-width:900px){.mnavbtn{padding:.5rem .6rem}}   /* so all eight tabs still fit on a small laptop or a tablet */
 @media(max-width:700px){.mgrbar{position:static;padding:.6rem 1rem .5rem}.mnav{padding-bottom:.2rem}.mnavbtn{flex:0 0 auto;padding:.45rem .8rem}}
 @media(max-width:560px){.muser span,.mback .mbtext{display:none}.mback{padding:.35rem .85rem;font-size:1.05rem}}   /* eight manager pages: one row you can slide, not four rows stuck to the top of a phone */
+/* on a tablet the header's buttons need the room: "Who is Tequila Corrido?" becomes "Brand" under 940px, and the SALES ACADEMY words give way under 800px (the logo stays), so it stays one row */
+@media(max-width:700px){.mlogo .mdot{display:none}.mlogo .mrole{display:block}}
+@media(max-width:940px){.brandbtn .lg{display:none}.brandbtn .sm{display:inline}}
+@media(min-width:701px) and (max-width:800px){.logo small{display:none}}
 </style>
 </head>
 <body>
@@ -911,8 +929,7 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 
 <div class="gate splash" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
   <div class="splashbox">
-    <svg class="emblem" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="emb-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".5" stop-color="#e0a42f"/><stop offset="1" stop-color="#a87a1a"/></linearGradient><radialGradient id="emb-d" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#4a2c12"/><stop offset="1" stop-color="#1a0f06"/></radialGradient></defs><circle cx="60" cy="60" r="57" fill="url(#emb-g)"/><circle cx="60" cy="60" r="51" fill="url(#emb-d)"/><circle cx="60" cy="60" r="46" fill="none" stroke="url(#emb-g)" stroke-width="1.6" stroke-dasharray="1.2 4.2" stroke-linecap="round"/><path d="M58.5 97.3Q42.8 98.0 34.0 84.6Q48.6 77.9 61.5 86.7Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M58.5 86.7Q71.4 77.9 86.0 84.6Q77.2 98.0 61.5 97.3Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M56.9 96.6Q39.1 90.5 32.6 73.5Q50.8 73.2 63.1 87.4Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M56.9 87.4Q69.2 73.2 87.4 73.5Q80.9 90.5 63.1 96.6Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M55.7 95.4Q38.6 81.5 36.0 61.3Q55.0 68.7 64.3 88.6Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M55.7 88.6Q65.0 68.7 84.0 61.3Q81.4 81.5 64.3 95.4Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M54.8 93.8Q42.2 72.5 45.7 50.4Q62.0 65.7 65.2 90.2Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M54.8 90.2Q58.0 65.7 74.3 50.4Q77.8 72.5 65.2 93.8Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M54.5 92.0Q49.5 65.0 60.0 43.0Q70.5 65.0 65.5 92.0Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><polygon points="60.0,19.5 61.5,23.9 66.2,24.0 62.5,26.8 63.8,31.3 60.0,28.6 56.2,31.3 57.5,26.8 53.8,24.0 58.5,23.9" fill="url(#emb-g)"/><path d="M44 96h32" stroke="url(#emb-g)" stroke-width="2" stroke-linecap="round"/></svg>
-    <h1 class="splashtitle">Tequila Corrido</h1>
+    <h1 class="splashtitle"><img class="brandlogo" src="https://ilovetequilacorrido.com/cdn/shop/files/tequila-corrido-logo-wht.png?v=1723729407" width="735" height="325" alt="" fetchpriority="high" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('nologo')"><span class="brandtext">Tequila Corrido</span></h1>
     <p class="splashsub">SALES ACADEMY</p>
     <p class="splashtag">Learn the brand. Pitch real buyers. Climb from Trainee to Seasoned Seller.</p>
     <div class="stepdots" aria-hidden="true"><i></i><i></i></div>
@@ -940,7 +957,7 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 </div>
 
 <header class="top">
-  <div class="logo" id="logo" role="button" tabindex="0" title="Back to the map" style="cursor:pointer"><span>Tequila Corrido</span><small>SALES ACADEMY</small></div>
+  <div class="logo" id="logo" role="button" tabindex="0" title="Back to the map" style="cursor:pointer"><img class="brandlogo" src="https://ilovetequilacorrido.com/cdn/shop/files/tequila-corrido-logo-wht.png?v=1723729407" width="735" height="325" alt="" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('nologo')"><span class="brandtext">Tequila Corrido</span><small>SALES ACADEMY</small></div>
   <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button><span class="navsep" aria-hidden="true"></span><button class="diffbtn brandbtn" id="brandBtn" type="button" title="What Tequila Corrido is: the promise, the lineup and the story"><span class="lg">Who is Tequila Corrido?</span><span class="sm">Brand</span></button><a class="diffbtn brandbtn" id="siteBtn" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer" title="The real Tequila Corrido website (opens in a new tab)">Website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a></div>
 </header>
 
