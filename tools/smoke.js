@@ -79,6 +79,20 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       for (const t of ["progress", "badges", "team", "review", "check", "settings"]) { await chrome.eval(`dashboard(${JSON.stringify(t)})`); if (!await chrome.eval("!!document.querySelector('.dash, .dhead')")) throw new Error("tab " + t); }
     });
 
+    await step("the Team tab's code is short, a teammate's short code and an old long one both add a row, and a bad one is refused", async () => {
+      await chrome.eval("dashboard('team')");
+      const mine = await chrome.eval("document.querySelector('#mycode').value");
+      if (!/^csa2\.[0-9a-z]+\.Taylor$/.test(mine) || mine.length > 30) throw new Error("the code is " + mine);
+      const add = code => chrome.eval(`(() => { document.querySelector('#tcode').value = ${JSON.stringify(code)}; document.querySelector('#addcode').click(); return [...document.querySelectorAll('.lb li')].map(li => li.textContent).join('|'); })()`);
+      let rows = await add(await chrome.eval("Progress.shareCode({ xp: 300, badges: [1, 2], streak: 4 }, 'Sam')"));
+      if (!/Sam/.test(rows) || !/300 XP/.test(rows)) throw new Error("the short code did not add Sam: " + rows);
+      rows = await add(await chrome.eval("'csa1.' + btoa(unescape(encodeURIComponent(JSON.stringify({ n: 'Old Pal', xp: 120, lv: 1, b: 1, s: 1, d: '2026-10-01' })))).replace(/=+$/, '')"));
+      if (!/Old Pal/.test(rows)) throw new Error("an old long code did not add a row: " + rows);
+      await chrome.eval("(() => { document.querySelector('#tcode').value = 'csa2.nonsense.Bad'; document.querySelector('#addcode').click(); })()");
+      if (!await chrome.eval("/valid code/.test(document.querySelector('#tmsg').textContent)")) throw new Error("a bad code was not refused");
+      await chrome.eval("state.team = {}; Progress.save(state)");
+    });
+
     // ----- Presenter mode: every page its menu reaches
     await chrome.go(base); await chrome.eval("localStorage.clear()"); await chrome.go(base);
     await click("#yes"); await chrome.waitFor("!document.querySelector('#presentGo').disabled"); await click("#presentGo");

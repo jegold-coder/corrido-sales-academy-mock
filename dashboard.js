@@ -179,10 +179,10 @@ function dashTeam(el) {
   const me = { n: repName(), xp: state.xp, lv: levelOf(state.xp), b: state.badges.length, s: state.streak || 0, me: true };
   const rows = [me, ...Object.values(state.team || {})].sort((a, b) => b.xp - a.xp);
   const code = Progress.shareCode(state, repName());
-  el.innerHTML = `<p class="note2">No server and no cost: each rep copies their code and shares it in the team chat. Paste a teammate's code to add them. Codes are just a name, XP and rank, and they only update when a teammate shares a new one.</p>
+  el.innerHTML = `<p class="note2">No server and no cost: each rep copies their code and shares it in the team chat. Paste a teammate's code to add them. A code is short, like csa2.2fuxlp1.Taylor, and holds just a name, XP, rank, badges and streak. It only updates when a teammate shares a new one.</p>
     <div class="card"><h3>Leaderboard</h3><ol class="lb">${rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span>${i + 1}. ${esc(r.n)}${r.demo ? " <small>(demo)</small>" : ""}</span><span>${esc((LEVELS[r.lv] || LEVELS[0])[0])} · ${r.xp} XP · 🔥 ${r.s}${r.me ? "" : ` <button class="x2" data-k="${esc(r.n)}" aria-label="Remove ${esc(r.n)}">✕</button>`}</span></li>`).join("")}</ol></div>
     <div class="card"><h3>Your code</h3><input id="mycode" readonly value="${code}" aria-label="Your share code"><button class="btn alt" id="cpycode" type="button">Copy</button></div>
-    <div class="card"><h3>Add a teammate</h3><input id="tcode" placeholder="Paste a code that starts with csa1." aria-label="Teammate code"><button class="btn" id="addcode" type="button">Add</button><p class="note2" id="tmsg"></p>
+    <div class="card"><h3>Add a teammate</h3><input id="tcode" placeholder="Paste a code that starts with csa2." aria-label="Teammate code"><button class="btn" id="addcode" type="button">Add</button><p class="note2" id="tmsg"></p>
       <button class="btn alt" id="demo" type="button">Add demo teammates (for presenting)</button></div>
     <div class="card"><h3>Managing a team?</h3><p class="note2">Manager mode shows a class's progress, invites reps from a CSV and ranks them. It is a prototype, open to anyone with the link, and uses sample data.</p><button class="btn alt" id="gomgr3" type="button">👔 Open manager mode</button></div>`;
   $("#gomgr3").onclick = () => managerMode();

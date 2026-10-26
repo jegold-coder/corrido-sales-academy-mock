@@ -37,7 +37,7 @@ What it loads from the internet:
 | Grading | A free rule-based rubric (see `criteria.js`) scores each answer. No account, no cost. The old optional Gemini judge is still in `coach.js` but is not wired into the new flow |
 | Voice input | Record button in every mission (browser speech recognition, Chrome or Edge). Typing always works |
 | Body-language rating (stretch) | Camera coach is on by default and highly recommended: eye contact, posture, presence and smile, scored out of 5. Video never leaves the device |
-| Points, ranks, badges, leaderboard (stretch) | XP and six ranks (Rookie, Opener, Closer, Rainmaker, Corrido Legend, Master Rep), 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges, one of them for finishing the knowledge check), daily streak, team board using share codes |
+| Points, ranks, badges, leaderboard (stretch) | XP and six ranks (Rookie, Opener, Closer, Rainmaker, Corrido Legend, Master Rep), 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges, one of them for finishing the knowledge check), daily streak, team board using short share codes (about 20 characters, like `csa2.297x1hx.Taylor`, with a check letter for typos; codes from the first version still work; `tests/teamcode.test.js`) |
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
 | Sign-in (journey page 2) | Age check, then "continue as guest", **Sign in with Google** (switches on when a free client ID is added, see below) or an email that is only saved on this device. Company sign-in comes with the rollout |
 | Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, coaching (with a team huddle), what reps actually said (with notes), assignments, brand facts, a CSV invite page, leaderboards and the answer grader. Uses sample data. See below |
@@ -151,14 +151,14 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `DEMO.md` | a 6-minute demo script that uses Presenter mode |
 | `tone.js` | how tone is judged from your words and your voice, for the situation, and the "How you sounded" lines |
 | `lessons.js` | brand lessons, question bank, knowledge check |
-| `progress.js` | saving, ranks, badges, streak, team codes |
+| `progress.js` | saving, ranks, badges, streak, team share codes |
 | `config.js`, `auth.js` | the Google client ID switch, and Sign in with Google (token checks, button, sign out) |
 | `badges.js` | the badge medals (boss faces, metals, ribbons), awarding boss badges |
 | `voices.js` | giving each customer a distinct voice and accent, and speaking like a person |
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `usability`, `surprise`, `answers`, `assign`, `facts`, `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills`, `hair`, `offline` and `avatarcheck` tests |
+| `tests/` | `teamcode`, `usability`, `surprise`, `answers`, `assign`, `facts`, `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills`, `hair`, `offline` and `avatarcheck` tests |
 
 ## Tests
 
@@ -189,6 +189,7 @@ node tests/offline.test.js  # the offline copy: photos kept after the first load
 node tests/avatarcheck.test.js # the Avatar check sheets: one picture per shirt or hairstyle in its own frame, and the player's avatar put back
 node tests/hair.test.js     # every hairstyle is attached to every head shape (no gap at the temples), and parting or shine lines stay on the head
 node tests/usability.test.js # each ladder has its own word, the Record button is pinned on a phone, the map opens on the next stop, the camera reminder shows once, feedback folds, photos have a placeholder
+node tests/teamcode.test.js # the team board's share codes: about 20 characters, read back exactly, any one typo is caught, forged values refused, old long codes still read
 node tests/surprise.test.js # the surprise customer: ten curveballs in five kinds, every right answer scores 4.2+ and every wrong one under 3.4, a round is one of each kind, the mission screen handles a short timer and a silent customer
 node tests/answers.test.js  # the answer log (words only), the sample class's answers are real and the same every time, the question the class misses most, a manager's note reaching the rep, and safe spreadsheets
 node tests/assign.test.js   # assignments: who it covers, the sample reps' progress, due dates in words, the one line on the map, and nothing a manager types can inject markup

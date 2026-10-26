@@ -56,14 +56,27 @@ const Progress = {
     P.history.slice(-40).forEach(h => Object.entries(h.skills || {}).forEach(([k, v]) => { (acc[k] = acc[k] || []).push(v / 5 * 100); }));
     return Object.entries(acc).map(([k, v]) => [k, Math.round(v.reduce((a, b) => a + b, 0) / v.length), v.length]).sort((a, b) => a[1] - b[1]);
   },
-  // Team board: a share code is the player's name, XP and rank, packed as text so teammates can paste it in.
+  // Team board: a share code is the player's rank, XP, badges and streak packed into one number written in base 36, then a check letter and the name:
+  // "csa2.2fuxlp1.Taylor" (about 20 characters). The check letter catches any one wrong digit or letter, and most codes cut short; it is not a lock (anyone can make a code), so a code
+  // is for a friendly team board, not a contest. Codes from the first version ("csa1." and a long run of letters) are still read.
+  CODE_NAME: 14,
+  check: t => ([...t].reduce((a, c) => (a * 31 + (Number.isNaN(parseInt(c, 36)) ? c.charCodeAt(0) : parseInt(c, 36))) % 36, 7)).toString(36),   // any one wrong digit or letter changes it
   shareCode(P, name) {
-    const o = { n: name, xp: P.xp, lv: levelOf(P.xp), b: P.badges.length, s: P.streak, d: Progress.today() };
-    return "csa1." + btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/, "");
+    const xp = Math.max(0, Math.min(1e6, P.xp | 0)), lv = Math.min(7, levelOf(xp)), b = Math.min(31, (P.badges || []).length), s = Math.max(0, Math.min(1023, P.streak | 0));
+    const n = String(name || "Rep").replace(/[\u0000-\u001f]/g, "").slice(0, Progress.CODE_NAME) || "Rep", body = (((xp * 8 + lv) * 32 + b) * 1024 + s).toString(36);
+    return `csa2.${body}${Progress.check(body + n)}.${n}`;
   },
   readCode(code) {
-    try {
-      const raw = code.trim().replace(/^csa1\./, ""), o = JSON.parse(decodeURIComponent(escape(atob(raw))));
+    const t = String(code == null ? "" : code).trim(), m = /^csa2\.([0-9a-z]{2,10})\.([\s\S]{1,14})$/.exec(t);
+    if (m) {
+      const body = m[1].slice(0, -1), n = m[2];
+      if (Progress.check(body + n) !== m[1].slice(-1)) return null;
+      const v = parseInt(body, 36), xp = Math.floor(v / 262144), lv = Math.floor(v / 32768) % 8;
+      if (!(v >= 0) || xp > 1e6 || lv > 5) return null;
+      return { n, xp, lv, b: Math.floor(v / 1024) % 32, s: v % 1024, d: Progress.today() };
+    }
+    try {   // the first version's codes
+      const raw = t.replace(/^csa1\./, ""), o = JSON.parse(decodeURIComponent(escape(atob(raw))));
       if (typeof o.n !== "string" || typeof o.xp !== "number") return null;
       return { n: o.n.slice(0, 14), xp: Math.max(0, Math.min(1e6, o.xp | 0)), lv: o.lv | 0, b: o.b | 0, s: o.s | 0, d: String(o.d || "").slice(0, 10) };
     } catch { return null; }
