@@ -40,7 +40,9 @@ document.addEventListener("visibilitychange", () => { if (document.hidden) Sound
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
 $("#yes").onclick = () => {
   $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>'; $("#agecard").classList.add("done");   // the card gives way to a small confirmation
-  $("#signin").classList.remove("off"); ["#guest", "#email", "#sendlink", "#presentGo"].forEach(x => { $(x).disabled = false; });
+  // one card at a time: the sign-in card takes the age card's place, so the first screen never needs scrolling
+  $("#signin").classList.remove("off"); $("#gate").classList.add("step2");
+  ["#guest", "#email", "#sendlink", "#presentGo"].forEach(x => { $(x).disabled = false; });
   const p = state.profile || {};
   if (p.email) { $("#email").value = p.email; $("#guest").textContent = "Continue as " + (p.mode === "google" && p.name ? p.name : p.email); }
   showGoogleButton();
