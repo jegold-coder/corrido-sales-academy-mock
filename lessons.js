@@ -15,7 +15,7 @@ const BANK = [
   { id: "contrast", topic: "Story", q: `Who does the brand set itself against?`, a: `Mass-produced, overpriced competitors`, w: [`Craft cocktail bars`, `Local farmers`, `Wine makers`], why: `The messaging contrasts Corrido with mass-produced, overpriced tequila.` },
   // ----- Lineup, notes and prices
   { id: "count", topic: "Lineup", q: `How many tequila expressions are on the site?`, a: `Four: Blanco, Overproof, Reposado, Añejo`, w: [`Two: Blanco and Añejo`, `Three: Blanco, Reposado, Añejo`, `Six, including a mezcal`], why: `The lineup is Blanco, Overproof, Reposado and Añejo.` },
-  { id: "priciest", topic: "Prices", q: `Which expression is the priciest on the site?`, a: `Añejo ($89.99)`, w: [`Blanco ($44.99)`, `Reposado ($54.99)`, `Overproof ($56.99)`], why: `Blanco $44.99, Reposado $54.99, Overproof $56.99, Añejo $89.99.` },
+  { id: "priciest", topic: "Prices", q: `Which expression is the priciest on the site?`, a: `Añejo`, w: [`Blanco`, `Reposado`, `Overproof`], why: `The Añejo is the priciest at $89.99. Blanco $44.99, Reposado $54.99, Overproof $56.99.` },
   { id: "blancoPrice", topic: "Prices", q: `What does the Blanco cost on the site?`, a: `$44.99`, w: [`$54.99`, `$56.99`, `$89.99`], why: `The Blanco is $44.99.` },
   { id: "overproofPrice", topic: "Prices", q: `What does the Overproof cost on the site?`, a: `$56.99`, w: [`$44.99`, `$54.99`, `$89.99`], why: `The Overproof is $56.99.` },
   { id: "reposadoPrice", topic: "Prices", q: `What does the Reposado cost on the site?`, a: `$54.99`, w: [`$44.99`, `$56.99`, `$89.99`], why: `The Reposado is $54.99.` },
