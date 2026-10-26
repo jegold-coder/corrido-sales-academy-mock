@@ -451,24 +451,42 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 .playmine{padding:.2rem .8rem;font-size:.8rem;margin:.2rem 0}
 
 /* ===== v25: sign-in splash, boss nodes, merch locks, toast ===== */
-.gate.splash{z-index:50;background:radial-gradient(ellipse at 50% -10%,#7a4d22 0%,#33200f 55%,#1a0f06 100%);overflow:auto;place-items:start center;padding:1.2rem}
-.splashbox{width:100%;max-width:440px;text-align:center;color:var(--cream);padding:1rem 0 2rem}
-.bottleicon{width:46px;height:70px}
-.splashtitle{font:2.3rem Rye,serif;text-transform:none;margin:.3rem 0 0;color:#fff}
-.splashsub{font:700 .85rem Arimo;letter-spacing:.35em;color:var(--gold-t);margin:.1rem 0 .8rem}
-.splashtag{color:#eadfcc;margin:0 .5rem 1.2rem}
-.agecard{background:var(--cream);color:var(--ink);border-radius:18px;padding:1.1rem 1.2rem;text-align:left}
-.agecard h2{font-size:1.4rem;margin:0 0 .3rem}
-.agebtns{display:flex;gap:.6rem}.agebtns .btn{flex:1}.agebtns .btn.alt{flex:.45}
-.ageok{margin:0;font-weight:700;color:var(--green)}
-.signin{margin-top:1.2rem;text-align:left}.signin.off{opacity:.45;pointer-events:none}
+/* the first screen: a night market. Papel picado flags on a string, agave fields on the horizon, a spotlit gold medallion, and two proper cards (the age check, then sign-in). Nothing here is a photo, so it costs nothing to load. */
+.gate.splash{z-index:50;overflow:auto;place-items:start center;grid-template-columns:minmax(0,1fr);padding:1.2rem;padding-top:4.4rem;   /* minmax(0,1fr): the column can shrink to a small phone instead of growing to its widest line */
+ 
+  --papel:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22180%22 height=%2264%22 viewBox=%220 0 180 64%22%3E%3Cpath d=%22M0 8Q90.0 28 180 8%22 fill=%22none%22 stroke=%22%23c9a15a%22 stroke-width=%221.4%22/%3E%3Cpath d=%22M15 14.055555555555555H45V48.05555555555556L40 54.05555555555556L35 48.05555555555556L30 54.05555555555556L25 48.05555555555556L20 54.05555555555556L15 48.05555555555556ZM30 20.055555555555557l8 8l-8 8l-8 -8zM30 24.055555555555557l4 4l-4 4l-4 -4zM21 39.05555555555556l2.6 2.6l-2.6 2.6l-2.6 -2.6zM30 39.05555555555556l2.6 2.6l-2.6 2.6l-2.6 -2.6zM39 39.05555555555556l2.6 2.6l-2.6 2.6l-2.6 -2.6zM18 16.055555555555557h5l-2.5 3zM37 16.055555555555557h5l-2.5 3z%22 fill=%22%23e0a42f%22 fill-rule=%22evenodd%22/%3E%3Cpath d=%22M75 18.5H105V52.5L100 58.5L95 52.5L90 58.5L85 52.5L80 58.5L75 52.5ZM90 24.5l8 8l-8 8l-8 -8zM90 28.5l4 4l-4 4l-4 -4zM81 43.5l2.6 2.6l-2.6 2.6l-2.6 -2.6zM90 43.5l2.6 2.6l-2.6 2.6l-2.6 -2.6zM99 43.5l2.6 2.6l-2.6 2.6l-2.6 -2.6zM78 20.5h5l-2.5 3zM97 20.5h5l-2.5 3z%22 fill=%22%231f7583%22 fill-rule=%22evenodd%22/%3E%3Cpath d=%22M135 14.055555555555554H165V48.05555555555556L160 54.05555555555556L155 48.05555555555556L150 54.05555555555556L145 48.05555555555556L140 54.05555555555556L135 48.05555555555556ZM150 20.055555555555554l8 8l-8 8l-8 -8zM150 24.055555555555554l4 4l-4 4l-4 -4zM141 39.05555555555556l2.6 2.6l-2.6 2.6l-2.6 -2.6zM150 39.05555555555556l2.6 2.6l-2.6 2.6l-2.6 -2.6zM159 39.05555555555556l2.6 2.6l-2.6 2.6l-2.6 -2.6zM138 16.055555555555554h5l-2.5 3zM157 16.055555555555554h5l-2.5 3z%22 fill=%22%23d9532f%22 fill-rule=%22evenodd%22/%3E%3C/svg%3E");--agave:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%2284%22 viewBox=%220 0 300 84%22%3E%3Cpath d=%22M53.6 97.5Q36.3 102.2 28.2 81.1Q45.2 66.2 58.4 78.5Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M53.6 78.5Q66.8 66.2 83.8 81.1Q75.7 102.2 58.4 97.5Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M50.8 96.3Q28.0 92.3 22.9 67.3Q47.6 60.9 61.2 79.7Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M50.8 79.7Q64.4 60.9 89.1 67.3Q84.0 92.3 61.2 96.3Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M48.5 94.3Q24.3 79.1 24.2 50.2Q52.7 55.3 63.5 81.7Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M48.5 81.7Q59.3 55.3 87.8 50.2Q87.7 79.1 63.5 94.3Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M47.0 91.7Q27.0 65.8 34.6 35.0Q61.4 51.9 65.0 84.3Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M47.0 84.3Q50.6 51.9 77.4 35.0Q85.0 65.8 65.0 91.7Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M46.3 89.2Q33.4 56.2 48.4 26.1Q70.2 51.7 65.7 86.8Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M46.3 86.8Q41.8 51.7 63.6 26.1Q78.6 56.2 65.7 89.2Z%22 fill=%22%230f0803%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M168.5 95.8Q157.8 98.7 152.9 85.7Q163.4 76.6 171.5 84.2Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M168.5 84.2Q176.6 76.6 187.1 85.7Q182.2 98.7 171.5 95.8Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M166.8 95.1Q152.8 92.7 149.6 77.3Q164.8 73.3 173.2 84.9Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M166.8 84.9Q175.2 73.3 190.4 77.3Q187.2 92.7 173.2 95.1Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M165.4 93.9Q150.5 84.5 150.5 66.7Q168.0 69.9 174.6 86.1Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M165.4 86.1Q172.0 69.9 189.5 66.7Q189.5 84.5 174.6 93.9Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M164.4 92.2Q152.2 76.3 156.8 57.4Q173.3 67.8 175.6 87.8Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M164.4 87.8Q166.7 67.8 183.2 57.4Q187.8 76.3 175.6 92.2Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M164.0 90.7Q156.1 70.4 165.3 51.9Q178.7 67.6 176.0 89.3Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M164.0 89.3Q161.3 67.6 174.7 51.9Q183.9 70.4 176.0 90.7Z%22 fill=%22%23170d05%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M244.0 96.0Q229.3 100.0 222.5 82.1Q236.9 69.6 248.0 80.0Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M244.0 80.0Q255.1 69.6 269.5 82.1Q262.7 100.0 248.0 96.0Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M241.6 95.0Q222.3 91.7 218.0 70.5Q238.9 65.1 250.4 81.0Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M241.6 81.0Q253.1 65.1 274.0 70.5Q269.7 91.7 250.4 95.0Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M239.7 93.3Q219.2 80.5 219.1 56.0Q243.2 60.3 252.3 82.7Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M239.7 82.7Q248.8 60.3 272.9 56.0Q272.8 80.5 252.3 93.3Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M238.4 91.1Q221.5 69.2 227.9 43.1Q250.6 57.4 253.6 84.9Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M238.4 84.9Q241.4 57.4 264.1 43.1Q270.5 69.2 253.6 91.1Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M237.8 89.0Q226.9 61.1 239.6 35.6Q258.0 57.3 254.2 87.0Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M237.8 87.0Q234.0 57.3 252.4 35.6Q265.1 61.1 254.2 89.0Z%22 fill=%22%230d0702%22 stroke=%22%23e0a42f%22 stroke-width=%22.9%22 stroke-opacity=%22.55%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E");
+  background:radial-gradient(ellipse 60% 40% at 50% 13%,rgba(246,207,120,.14),transparent 72%),repeating-conic-gradient(from 0deg at 50% 10%,rgba(255,241,196,.045) 0 3deg,transparent 3deg 9deg),radial-gradient(ellipse at 50% 0%,#4a2c12 0%,#27160a 52%,#120a04 100%)}
+.gate.splash::before{content:"";position:fixed;left:0;right:0;top:0;height:64px;background:var(--papel) repeat-x top center/180px 64px;pointer-events:none;filter:drop-shadow(0 5px 6px rgba(0,0,0,.45))}
+.gate.splash::after{content:"";position:fixed;left:0;right:0;bottom:0;height:84px;background:var(--agave) repeat-x bottom center/300px 84px,linear-gradient(0deg,rgba(224,164,47,.2),transparent 80%);pointer-events:none}
+.splashbox{position:relative;z-index:1;width:100%;max-width:440px;text-align:center;color:var(--cream);padding:.4rem 0 6.5rem}
+.emblem{width:104px;height:104px;display:block;margin:0 auto;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}
+.splashtitle{font:clamp(2rem,9.5vw,2.8rem)/1.05 Rye,serif;text-transform:none;margin:.7rem 0 0;color:#fff3cf;text-shadow:0 2px 0 #a87a1a,0 10px 24px rgba(0,0,0,.6)}
+.splashsub{display:flex;align-items:center;justify-content:center;gap:.8rem;font:700 .85rem Arimo;letter-spacing:.35em;color:var(--gold-t);margin:.5rem 0 1rem}
+.splashsub::before,.splashsub::after{content:"";width:38px;height:1px;background:linear-gradient(90deg,transparent,#e0a42f)}.splashsub::after{transform:scaleX(-1)}
+.splashtag{color:#f3e7d0;margin:0 auto 1.6rem;max-width:34ch;font-size:1.02rem;text-wrap:balance}
+.agecard{position:relative;margin-top:2.3rem;background:linear-gradient(180deg,#fffaf0,#f6edd9);color:var(--ink);border-radius:22px;padding:2.3rem 1.3rem 1.3rem;text-align:center;border:2px solid #e0a42f;box-shadow:0 0 0 6px rgba(224,164,47,.16),0 26px 50px rgba(0,0,0,.55)}
+.agebadge{position:absolute;top:-31px;left:50%;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font:1.3rem Rye,serif;color:#fff;background:radial-gradient(circle at 35% 30%,#c9472a,#7a2410);border:3px solid #ffe29a;box-shadow:0 6px 14px rgba(0,0,0,.45)}
+.agecard h2{font-size:1.5rem;margin:0 0 .4rem}
+.agecard p{margin:0 0 1.1rem;color:#3a2c1c}
+.agebtns{display:flex;gap:.6rem}.agebtns .btn{flex:1;padding:.9rem 1rem;font-size:1rem}.agebtns .btn.alt{flex:.45}
+.agecard small{display:block;margin-top:.8rem;color:#7a2a17}
+.agecard.done{margin-top:1.1rem;padding:.2rem 0;background:none;border:0;box-shadow:none}
+.ageok{margin:0!important;display:inline-flex;align-items:center;gap:.5rem;font-weight:700;color:#1f5a2c;background:#dff1e0;border-radius:99px;padding:.55rem 1.1rem}
+.splash .btn:not(.alt){background:linear-gradient(180deg,#f6cf78,#e0a42f);color:#2a1708;border-bottom-color:#a87a1a}
+.splash .btn.alt{background:transparent;color:var(--cream);border:2px solid rgba(246,207,120,.6)}
+.agecard .btn.alt{color:#5a3a12;border-color:#b79a64}
+.signin{margin-top:1.5rem;text-align:left;background:rgba(255,248,232,.07);border:1px solid rgba(246,207,120,.38);border-radius:22px;padding:1.1rem 1.1rem 1rem;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 16px 36px rgba(0,0,0,.4)}
+.signin.off{pointer-events:none}.signin.off .guestbtn,.signin.off .emailrow,.signin.off .or,.signin.off .signnote,.signin.off .presentrow{opacity:.38}
 .signhead{font:700 .8rem Arimo;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-t);text-align:center;margin:0 0 .6rem}
-.guestbtn{width:100%;padding:.9rem;font-size:1rem}
-.or{margin:.9rem 0 .4rem;color:#eadfcc}
-.emailrow{display:flex;gap:.5rem}.emailrow input{flex:1;min-width:0;border:0;border-radius:10px;padding:.7rem .8rem;font:inherit}
-.signnote{font-size:.8rem;color:#d9ccb4;margin:.5rem 0 0}.signnote.bad{color:#ffb4a3}
-.splashfoot{font-size:.8rem;color:#cdbfa6;margin:1.6rem .5rem .4rem}
+.lockline{display:flex;align-items:center;justify-content:center;gap:.4rem;color:#f3e7d0;font-size:.9rem;margin:0 0 .8rem}.signin:not(.off) .lockline{display:none}
+.guestbtn{width:100%;padding:.95rem;font-size:1rem}
+.or{display:flex;align-items:center;gap:.8rem;margin:1rem 0 .6rem;color:#eadfcc;font-size:.9rem}.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(246,207,120,.32)}
+.emailrow{display:flex;gap:.5rem}.emailrow input{flex:1 1 0;width:0;min-width:0;border:1px solid rgba(255,241,196,.3);border-radius:10px;padding:.75rem .85rem;font:inherit;background:rgba(10,5,2,.5);color:#fff}
+.emailrow input::placeholder{color:#cdbfa6}
+.signnote{font-size:.82rem;color:#e0d3ba;margin:.6rem 0 0}.signnote.bad{color:#ffb4a3}
+.splashfoot{font-size:.82rem;color:#d9ccb4;margin:1.6rem .5rem .4rem}
 .mgrlink{font-size:.85rem;margin:.2rem 0}.mgrlink a{display:inline-block;padding:.4rem 0;color:var(--gold-t)}
+@media(max-width:420px){.gate.splash{padding:.8rem;padding-top:3.6rem}.gate.splash::before{height:52px;background-size:146px 52px}.emblem{width:88px;height:88px}.agecard{padding:2.2rem 1rem 1.1rem}.signin{padding:1rem .9rem}}
 #toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);background:var(--deep);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:.6rem 1rem;max-width:90vw;z-index:60;opacity:0;pointer-events:none;transition:.25s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -878,18 +896,20 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 
 <div class="gate splash" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
   <div class="splashbox">
-    <svg class="bottleicon" viewBox="0 0 40 64" aria-hidden="true"><path d="M15 3h10v4h-2v7c6 4 10 10 10 18v26a4 4 0 0 1-4 4H11a4 4 0 0 1-4-4V32c0-8 4-14 10-18V7h-2z" fill="none" stroke="#e0a42f" stroke-width="3" stroke-linejoin="round"/><rect x="10" y="34" width="20" height="18" rx="2" fill="none" stroke="#e0a42f" stroke-width="3"/></svg>
+    <svg class="emblem" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="emb-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".5" stop-color="#e0a42f"/><stop offset="1" stop-color="#a87a1a"/></linearGradient><radialGradient id="emb-d" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#4a2c12"/><stop offset="1" stop-color="#1a0f06"/></radialGradient></defs><circle cx="60" cy="60" r="57" fill="url(#emb-g)"/><circle cx="60" cy="60" r="51" fill="url(#emb-d)"/><circle cx="60" cy="60" r="46" fill="none" stroke="url(#emb-g)" stroke-width="1.6" stroke-dasharray="1.2 4.2" stroke-linecap="round"/><path d="M58.5 97.3Q42.8 98.0 34.0 84.6Q48.6 77.9 61.5 86.7Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M58.5 86.7Q71.4 77.9 86.0 84.6Q77.2 98.0 61.5 97.3Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M56.9 96.6Q39.1 90.5 32.6 73.5Q50.8 73.2 63.1 87.4Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M56.9 87.4Q69.2 73.2 87.4 73.5Q80.9 90.5 63.1 96.6Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M55.7 95.4Q38.6 81.5 36.0 61.3Q55.0 68.7 64.3 88.6Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M55.7 88.6Q65.0 68.7 84.0 61.3Q81.4 81.5 64.3 95.4Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M54.8 93.8Q42.2 72.5 45.7 50.4Q62.0 65.7 65.2 90.2Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M54.8 90.2Q58.0 65.7 74.3 50.4Q77.8 72.5 65.2 93.8Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><path d="M54.5 92.0Q49.5 65.0 60.0 43.0Q70.5 65.0 65.5 92.0Z" fill="url(#emb-g)" stroke="#7a5212" stroke-width=".8" stroke-linejoin="round"/><polygon points="60.0,19.5 61.5,23.9 66.2,24.0 62.5,26.8 63.8,31.3 60.0,28.6 56.2,31.3 57.5,26.8 53.8,24.0 58.5,23.9" fill="url(#emb-g)"/><path d="M44 96h32" stroke="url(#emb-g)" stroke-width="2" stroke-linecap="round"/></svg>
     <h1 class="splashtitle">Tequila Corrido</h1>
     <p class="splashsub">SALES ACADEMY</p>
     <p class="splashtag">Learn the brand. Pitch real buyers. Climb from Trainee to Seasoned Seller.</p>
     <div class="agecard" id="agecard">
+      <span class="agebadge" aria-hidden="true">21+</span>
       <h2 id="gateTitle">Hold up. Age check.</h2>
       <p>Tell us if you're old enough to know better, but young enough to still enjoy a good time.</p>
       <div class="agebtns"><button class="btn" id="yes" type="button">Yes, I'm 21+</button><button class="btn alt" id="no" type="button">No</button></div>
       <small id="underMsg" class="hidden">Come back when you're 21. This training is for adults of legal drinking age.</small>
     </div>
     <div class="signin off" id="signin">
-      <h3 class="signhead">Then sign in</h3>
+      <h3 class="signhead">Step 2 · Sign in</h3>
+      <p class="lockline"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 7V5a4 4 0 0 1 8 0v2h1v7H3V7zm2 0h4V5a2 2 0 0 0-4 0z" fill="currentColor"/></svg> Unlocks after the age check</p>
       <button class="btn guestbtn" id="guest" type="button" disabled>Continue as guest</button>
       <div class="googlerow" id="googlerow"><div id="gbtn" class="gbtn"></div><button class="btn alt gsoon" id="gsoon" type="button" disabled hidden>Sign in with Google · not set up yet</button></div>
       <p class="or">Or sign in with your company email</p>
@@ -924,46 +944,46 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26r"></script>
-<script src="sound.js?v=2026-10-26r"></script>
-<script src="scenarios.js?v=2026-10-26r"></script>
-<script src="progress.js?v=2026-10-26r"></script>
-<script src="criteria.js?v=2026-10-26r"></script>
-<script src="tone.js?v=2026-10-26r"></script>
-<script src="coach.js?v=2026-10-26r"></script>
-<script src="camera.js?v=2026-10-26r"></script>
-<script src="lessons.js?v=2026-10-26r"></script>
-<script src="dashboard.js?v=2026-10-26r"></script>
-<script src="grader.js?v=2026-10-26r"></script>
-<script src="onboarding.js?v=2026-10-26r"></script>
-<script src="tiers.js?v=2026-10-26r"></script>
-<script src="badges.js?v=2026-10-26r"></script>
-<script src="voices.js?v=2026-10-26r"></script>
-<script src="mission.js?v=2026-10-26r"></script>
-<script src="boss.js?v=2026-10-26r"></script>
-<script src="auth.js?v=2026-10-26r"></script>
-<script src="manager.js?v=2026-10-26r"></script>
-<script src="answers.js?v=2026-10-26r"></script>
-<script src="mgranswers.js?v=2026-10-26r"></script>
-<script src="assign.js?v=2026-10-26r"></script>
-<script src="facts.js?v=2026-10-26r"></script>
-<script src="surprise.js?v=2026-10-26r"></script>
-<script src="callcard.js?v=2026-10-26r"></script>
-<script src="presenter.js?v=2026-10-26r"></script>
-<script src="avatarcheck.js?v=2026-10-26r"></script>
-<script src="app.js?v=2026-10-26r"></script>
-<script src="dialog.js?v=2026-10-26r"></script>
-<script src="nav.js?v=2026-10-26r"></script>
-<script src="practice.js?v=2026-10-26r"></script>
-<script src="explorer.js?v=2026-10-26r"></script>
-<script src="map.js?v=2026-10-26r"></script>
-<script src="people.js?v=2026-10-26r"></script>
-<script src="hair.js?v=2026-10-26r"></script>
-<script src="merch.js?v=2026-10-26r"></script>
-<script src="avatar.js?v=2026-10-26r"></script>
-<script src="creator.js?v=2026-10-26r"></script>
-<script src="scenes.js?v=2026-10-26r"></script>
-<script src="results.js?v=2026-10-26r"></script>
-<script src="start.js?v=2026-10-26r"></script>
+<script src="config.js?v=2026-10-26s"></script>
+<script src="sound.js?v=2026-10-26s"></script>
+<script src="scenarios.js?v=2026-10-26s"></script>
+<script src="progress.js?v=2026-10-26s"></script>
+<script src="criteria.js?v=2026-10-26s"></script>
+<script src="tone.js?v=2026-10-26s"></script>
+<script src="coach.js?v=2026-10-26s"></script>
+<script src="camera.js?v=2026-10-26s"></script>
+<script src="lessons.js?v=2026-10-26s"></script>
+<script src="dashboard.js?v=2026-10-26s"></script>
+<script src="grader.js?v=2026-10-26s"></script>
+<script src="onboarding.js?v=2026-10-26s"></script>
+<script src="tiers.js?v=2026-10-26s"></script>
+<script src="badges.js?v=2026-10-26s"></script>
+<script src="voices.js?v=2026-10-26s"></script>
+<script src="mission.js?v=2026-10-26s"></script>
+<script src="boss.js?v=2026-10-26s"></script>
+<script src="auth.js?v=2026-10-26s"></script>
+<script src="manager.js?v=2026-10-26s"></script>
+<script src="answers.js?v=2026-10-26s"></script>
+<script src="mgranswers.js?v=2026-10-26s"></script>
+<script src="assign.js?v=2026-10-26s"></script>
+<script src="facts.js?v=2026-10-26s"></script>
+<script src="surprise.js?v=2026-10-26s"></script>
+<script src="callcard.js?v=2026-10-26s"></script>
+<script src="presenter.js?v=2026-10-26s"></script>
+<script src="avatarcheck.js?v=2026-10-26s"></script>
+<script src="app.js?v=2026-10-26s"></script>
+<script src="dialog.js?v=2026-10-26s"></script>
+<script src="nav.js?v=2026-10-26s"></script>
+<script src="practice.js?v=2026-10-26s"></script>
+<script src="explorer.js?v=2026-10-26s"></script>
+<script src="map.js?v=2026-10-26s"></script>
+<script src="people.js?v=2026-10-26s"></script>
+<script src="hair.js?v=2026-10-26s"></script>
+<script src="merch.js?v=2026-10-26s"></script>
+<script src="avatar.js?v=2026-10-26s"></script>
+<script src="creator.js?v=2026-10-26s"></script>
+<script src="scenes.js?v=2026-10-26s"></script>
+<script src="results.js?v=2026-10-26s"></script>
+<script src="start.js?v=2026-10-26s"></script>
 </body>
 </html>

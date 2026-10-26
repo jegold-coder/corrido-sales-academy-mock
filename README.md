@@ -78,6 +78,7 @@ The game has three ladders, and each has its own word so a rep never has to gues
 - **The camera reminder** shows on the first question of a mission only, with an "x" that switches it off for good.
 - **Feedback** after an answer shows what to fix first (two things at most) and a stronger answer with its Hear it button. What went well, tone and how you sounded are one tap away.
 - **Photos** show a soft shimmer in their own space while they load, and stop for anyone who asks for less motion.
+- **The first screen** (age check, then sign-in) is a night market drawn entirely in code: papel picado flags on a string across the top, agave plants along the bottom, a spotlit gold medallion with an agave and a star, a sunburst behind the title, a cream age-check card with a red 21+ coin, and a second glass card for sign-in that shows a lock until the age check is passed. After "Yes" the age card gives way to a small "21+ confirmed". It never grows wider than the screen, down to 300px (`tests/usability.test.js`, `tests/a11y.test.js` for its colours).
 
 ## Tiers, bosses and merch
 

@@ -36,8 +36,19 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       if (!await chrome.waitFor("!!document.querySelector('#yes')")) throw new Error("no age check");
       if (await chrome.eval("document.querySelector('#guest').disabled") !== true) throw new Error("sign-in is open before the age check");
     });
+    await step("the first screen has its medallion, flags and agave, and never grows wider than the screen at any phone width", async () => {
+      const r = await chrome.eval("(() => { const g = document.querySelector('#gate'), b = document.querySelector('.emblem').getBoundingClientRect(); return { emblem: Math.round(b.width), flags: getComputedStyle(g, '::before').backgroundImage.startsWith('url('), agave: getComputedStyle(g, '::after').backgroundImage.includes('url('), steps: /step 2/i.test(g.innerText) && /unlocks after the age check/i.test(g.innerText)   /* the heading is drawn in capitals, and innerText follows that */, card: !!document.querySelector('.agebadge') }; })()");
+      if (r.emblem < 80 || !r.flags || !r.agave || !r.steps || !r.card) throw new Error(JSON.stringify(r));
+      for (const w of [320, 360, 390, 430, 768, 1100]) {
+        await chrome.send("Emulation.setDeviceMetricsOverride", { width: w, height: 800, deviceScaleFactor: 1, mobile: w < 700 }); await sleep(200);
+        const o = await chrome.eval("({ w: innerWidth, scrollW: document.querySelector('#gate').scrollWidth, clientW: document.querySelector('#gate').clientWidth })");
+        if (o.scrollW > o.clientW) throw new Error("at " + w + "px the first screen is " + o.scrollW + "px wide");
+      }
+      await chrome.send("Emulation.clearDeviceMetricsOverride");
+    });
     await step("yes opens sign-in, and guest leads to the character creator", async () => {
       await click("#yes"); if (!await chrome.waitFor("!document.querySelector('#guest').disabled")) throw new Error("sign-in stayed locked");
+      if (!await chrome.eval("document.querySelector('#agecard').classList.contains('done') && /21\\+ confirmed/.test(document.querySelector('#agecard').innerText) && !document.querySelector('#signin').classList.contains('off')")) throw new Error("the age card did not give way to the confirmation");
       await click("#guest"); if (!await chrome.waitFor("!!document.querySelector('#cname') && !!document.querySelector('#cprev')")) throw new Error("no creator");
     });
     await step("a name and Save and continue lead to the three-card tutorial, which can be skipped", async () => {

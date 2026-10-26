@@ -39,7 +39,7 @@ document.addEventListener("visibilitychange", () => { if (document.hidden) Sound
 // is set) and an email that is only saved on this device. Company sign-in is not live yet.
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
 $("#yes").onclick = () => {
-  $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>';
+  $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>'; $("#agecard").classList.add("done");   // the card gives way to a small confirmation
   $("#signin").classList.remove("off"); ["#guest", "#email", "#sendlink", "#presentGo"].forEach(x => { $(x).disabled = false; });
   const p = state.profile || {};
   if (p.email) { $("#email").value = p.email; $("#guest").textContent = "Continue as " + (p.mode === "google" && p.name ? p.name : p.email); }
