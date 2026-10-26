@@ -1,5 +1,5 @@
 "use strict";
-// Tiers, boss battles and merch rewards. From the UI/UX journey: six tiers, a boss battle at the end of each, and real Corrido
+// Tiers, boss battles and merch rewards: six tiers, a boss battle at the end of each, and real Corrido
 // merch unlocked as you beat levels. Beating boss N moves you up to tier N+1. Nothing here needs a server: it is all worked out
 // from state.done, so progress and unlocks follow the rep's saved progress on this device.
 

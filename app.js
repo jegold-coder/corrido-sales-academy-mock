@@ -35,7 +35,7 @@ new MutationObserver(() => {
 }).observe(app, { childList: true });
 // and it goes quiet while the page is hidden (another tab or window) instead of playing on in the background
 document.addEventListener("visibilitychange", () => { if (document.hidden) Sound.pause(); else Sound.resume(); });
-// Page 2 of the journey: age check, then sign in. The options are "continue as guest", Sign in with Google (auth.js, once a client ID
+// The first screen: age check, then sign in. The options are "continue as guest", Sign in with Google (auth.js, once a client ID
 // is set) and an email that is only saved on this device. Company sign-in is not live yet.
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
 $("#yes").onclick = () => {

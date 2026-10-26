@@ -1,6 +1,6 @@
 "use strict";
 // Manager mode (prototype). Open to anyone with the link while the game is a prototype: there is no sign-in or permission check.
-// Pages from the journey: Cohorts (class dashboard), Invite (set up a sales class from a CSV) and Leaderboards, plus Coaching (what to
+// Pages: Cohorts (class dashboard), Invite (set up a sales class from a CSV) and Leaderboards, plus Coaching (what to
 // work on, with whom, and what to say, and the team huddle), Answers (what reps actually said, with notes: mgranswers.js), Assign (a stop with a
 // due date: assign.js), Brand facts (prices and wording: facts.js) and the answer Grader.
 // There is no server yet, so:
@@ -211,7 +211,7 @@ function mgrInvite(el) {
         <label class="mlab" for="cname2">Cohort name</label><input id="cname2" class="minput" value="${esc(d.name)}" placeholder="Florida new hires" maxlength="60">
         <label class="mlab" for="cstart">Start date</label><input id="cstart" class="minput" type="date" value="${esc(d.start)}">
         <label class="mlab" for="cmgr">Instructor or manager</label><input id="cmgr" class="minput" value="${esc(d.manager)}" maxlength="40">
-        <label class="mlab">Journey</label><div class="mjourney"><b>Season 1: Trainee to Seasoned Seller</b><small>Six tiers, six boss battles. Custom journeys arrive in Release 2.</small></div></div>
+        <label class="mlab">Journey</label><div class="mjourney"><b>Season 1: Trainee to Seasoned Seller</b><small>Six tiers, six boss battles. Custom journeys come later.</small></div></div>
       <div class="mcard"><h2>Add reps</h2>
         <div class="mdrop" id="mdrop"><div><b id="mfile">${d.file ? esc(d.file) + " · " + d.rows.length + " rows" : "Drop a CSV here"}</b><small>Columns: name, email, team. Drop a new file to replace it.</small></div>
           <label class="mbtn alt mfilebtn">Choose file<input type="file" id="mfileinput" accept=".csv,text/csv" hidden></label></div>
