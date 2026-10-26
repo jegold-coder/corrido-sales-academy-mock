@@ -559,13 +559,16 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 body.mgr{background:#e3dcd6!important}
 body.mgr .bg,body.mgr header.top,body.mgr .foot,body.mgr #camBox{display:none!important}
 body.mgr .mock{background:#2b1a05}
-main:has(.mgrwrap){max-width:1200px;padding:0 1.2rem 3rem}
+main:has(.mgrwrap){max-width:none;padding:0 0 3rem}   /* the manager page is full width: the bar runs edge to edge, and the content below it keeps its 1200px column */
+.mgrpage{max-width:1200px;margin:0 auto;padding:0 1.2rem}
 .mgrwrap{color:var(--ink)}
-.mgrbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:#915f1b;color:#fff;margin:0 -1.2rem 1rem;padding:.7rem 1.4rem;position:sticky;top:0;z-index:7}
-.mlogo{font:1.3rem Rye,serif;line-height:1}.mlogo small{display:block;font:700 .7rem Arimo;letter-spacing:.28em;margin-top:.25rem}
-.mnav{display:flex;gap:.3rem;flex-wrap:wrap}.mnavbtn{background:none;border:0;color:#fff;font-weight:700;padding:.45rem 1rem;border-radius:10px}
+/* the manager header: the logo on the left and who you are and the way back on the right, then the eight pages as one even row of tabs under them (it was one wrapping line, which left the name and the button stranded below the tabs) */
+.mgrbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"logo user" "nav nav";align-items:center;gap:.55rem 1rem;background:#915f1b;color:#fff;margin:0 0 1rem;padding:.7rem max(1.4rem,calc((100% - 1200px)/2 + 1.2rem)) .6rem;position:sticky;top:0;z-index:7}
+.mlogo{grid-area:logo;font:1.3rem Rye,serif;line-height:1}.mlogo small{display:block;font:700 .7rem Arimo;letter-spacing:.28em;margin-top:.25rem}
+.mnav{grid-area:nav;display:flex;gap:.3rem;padding-top:.55rem;border-top:1px solid #ffffff2e;overflow-x:auto;scrollbar-width:thin}
+.mnavbtn{flex:1 1 auto;text-align:center;white-space:nowrap;background:none;border:0;color:#fff;font-weight:700;padding:.5rem .9rem;border-radius:10px}
 .mnavbtn.on{background:#3a2410;color:var(--gold)}.mnavbtn:hover:not(.on){background:#ffffff22}
-.muser{display:flex;align-items:center;gap:.8rem;font-weight:700}.mback{background:#0003;border:1px solid #ffffff99;color:#fff;border-radius:99px;padding:.25rem .8rem;font-weight:700}
+.muser{grid-area:user;display:flex;align-items:center;gap:.8rem;font-weight:700}.mback{background:#0003;border:1px solid #ffffff99;color:#fff;border-radius:99px;padding:.25rem .8rem;font-weight:700}
 .mproto{background:#fff9ec;border:1px dashed #915f1b;border-radius:10px;padding:.4rem .8rem;font-size:.88rem;margin:0 0 1rem}
 .mhead{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
 .mtitle{font:2.2rem Rye,serif;color:#3a2410;margin:0}.msub{margin:.2rem 0 0;color:#5c5044}
@@ -893,7 +896,9 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
   .mission .recpanel>*{margin:.5rem 0}
   .mission .recpanel>.recdock{position:sticky;bottom:54px;z-index:6;background:var(--cream);margin:.5rem -.4rem;padding:.55rem .7rem;border-radius:14px;box-shadow:0 -4px 14px #0003}
 }
-@media(max-width:700px){.mgrbar{position:static;padding:.5rem 1rem}.mnav{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:.2rem}.mnavbtn{white-space:nowrap;padding:.45rem .8rem}}   /* eight manager pages: one row you can slide, not four rows stuck to the top of a phone */
+@media(max-width:900px){.mnavbtn{padding:.5rem .6rem}}   /* so all eight tabs still fit on a small laptop or a tablet */
+@media(max-width:700px){.mgrbar{position:static;padding:.6rem 1rem .5rem}.mnav{padding-bottom:.2rem}.mnavbtn{flex:0 0 auto;padding:.45rem .8rem}}
+@media(max-width:560px){.muser span,.mback .mbtext{display:none}.mback{padding:.35rem .85rem;font-size:1.05rem}}   /* eight manager pages: one row you can slide, not four rows stuck to the top of a phone */
 </style>
 </head>
 <body>
@@ -956,46 +961,46 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26t"></script>
-<script src="sound.js?v=2026-10-26t"></script>
-<script src="scenarios.js?v=2026-10-26t"></script>
-<script src="progress.js?v=2026-10-26t"></script>
-<script src="criteria.js?v=2026-10-26t"></script>
-<script src="tone.js?v=2026-10-26t"></script>
-<script src="coach.js?v=2026-10-26t"></script>
-<script src="camera.js?v=2026-10-26t"></script>
-<script src="lessons.js?v=2026-10-26t"></script>
-<script src="dashboard.js?v=2026-10-26t"></script>
-<script src="grader.js?v=2026-10-26t"></script>
-<script src="onboarding.js?v=2026-10-26t"></script>
-<script src="tiers.js?v=2026-10-26t"></script>
-<script src="badges.js?v=2026-10-26t"></script>
-<script src="voices.js?v=2026-10-26t"></script>
-<script src="mission.js?v=2026-10-26t"></script>
-<script src="boss.js?v=2026-10-26t"></script>
-<script src="auth.js?v=2026-10-26t"></script>
-<script src="manager.js?v=2026-10-26t"></script>
-<script src="answers.js?v=2026-10-26t"></script>
-<script src="mgranswers.js?v=2026-10-26t"></script>
-<script src="assign.js?v=2026-10-26t"></script>
-<script src="facts.js?v=2026-10-26t"></script>
-<script src="surprise.js?v=2026-10-26t"></script>
-<script src="callcard.js?v=2026-10-26t"></script>
-<script src="presenter.js?v=2026-10-26t"></script>
-<script src="avatarcheck.js?v=2026-10-26t"></script>
-<script src="app.js?v=2026-10-26t"></script>
-<script src="dialog.js?v=2026-10-26t"></script>
-<script src="nav.js?v=2026-10-26t"></script>
-<script src="practice.js?v=2026-10-26t"></script>
-<script src="explorer.js?v=2026-10-26t"></script>
-<script src="map.js?v=2026-10-26t"></script>
-<script src="people.js?v=2026-10-26t"></script>
-<script src="hair.js?v=2026-10-26t"></script>
-<script src="merch.js?v=2026-10-26t"></script>
-<script src="avatar.js?v=2026-10-26t"></script>
-<script src="creator.js?v=2026-10-26t"></script>
-<script src="scenes.js?v=2026-10-26t"></script>
-<script src="results.js?v=2026-10-26t"></script>
-<script src="start.js?v=2026-10-26t"></script>
+<script src="config.js?v=2026-10-26v"></script>
+<script src="sound.js?v=2026-10-26v"></script>
+<script src="scenarios.js?v=2026-10-26v"></script>
+<script src="progress.js?v=2026-10-26v"></script>
+<script src="criteria.js?v=2026-10-26v"></script>
+<script src="tone.js?v=2026-10-26v"></script>
+<script src="coach.js?v=2026-10-26v"></script>
+<script src="camera.js?v=2026-10-26v"></script>
+<script src="lessons.js?v=2026-10-26v"></script>
+<script src="dashboard.js?v=2026-10-26v"></script>
+<script src="grader.js?v=2026-10-26v"></script>
+<script src="onboarding.js?v=2026-10-26v"></script>
+<script src="tiers.js?v=2026-10-26v"></script>
+<script src="badges.js?v=2026-10-26v"></script>
+<script src="voices.js?v=2026-10-26v"></script>
+<script src="mission.js?v=2026-10-26v"></script>
+<script src="boss.js?v=2026-10-26v"></script>
+<script src="auth.js?v=2026-10-26v"></script>
+<script src="manager.js?v=2026-10-26v"></script>
+<script src="answers.js?v=2026-10-26v"></script>
+<script src="mgranswers.js?v=2026-10-26v"></script>
+<script src="assign.js?v=2026-10-26v"></script>
+<script src="facts.js?v=2026-10-26v"></script>
+<script src="surprise.js?v=2026-10-26v"></script>
+<script src="callcard.js?v=2026-10-26v"></script>
+<script src="presenter.js?v=2026-10-26v"></script>
+<script src="avatarcheck.js?v=2026-10-26v"></script>
+<script src="app.js?v=2026-10-26v"></script>
+<script src="dialog.js?v=2026-10-26v"></script>
+<script src="nav.js?v=2026-10-26v"></script>
+<script src="practice.js?v=2026-10-26v"></script>
+<script src="explorer.js?v=2026-10-26v"></script>
+<script src="map.js?v=2026-10-26v"></script>
+<script src="people.js?v=2026-10-26v"></script>
+<script src="hair.js?v=2026-10-26v"></script>
+<script src="merch.js?v=2026-10-26v"></script>
+<script src="avatar.js?v=2026-10-26v"></script>
+<script src="creator.js?v=2026-10-26v"></script>
+<script src="scenes.js?v=2026-10-26v"></script>
+<script src="results.js?v=2026-10-26v"></script>
+<script src="start.js?v=2026-10-26v"></script>
 </body>
 </html>

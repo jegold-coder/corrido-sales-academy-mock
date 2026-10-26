@@ -35,9 +35,10 @@ function managerMode(tab) {
   app.innerHTML = `<div class="mgrwrap">
     <div class="mgrbar"><div class="mlogo">Tequila Corrido<small>SALES ACADEMY · MANAGER</small></div>
       <nav class="mnav" aria-label="Manager pages">${pages.map(([k, l]) => `<button type="button" class="mnavbtn ${k === mgrTab ? "on" : ""}" data-p="${k}" ${k === mgrTab ? 'aria-current="page"' : ""}>${l}</button>`).join("")}</nav>
-      <div class="muser"><span>${esc(state.mgrName || "Manager")}</span><button type="button" class="mback" id="mback">← Back to the game</button></div></div>
+      <div class="muser"><span>${esc(state.mgrName || "Manager")}</span><button type="button" class="mback" id="mback" aria-label="Back to the game">← <span class="mbtext">Back to the game</span></button></div></div>
+    <div class="mgrpage">
     <p class="mproto" role="note"><b>Prototype.</b> Manager mode is open to anyone with the link, and the class below is sample data. Nothing here is saved to a server.</p>
-    <div id="mbody"></div></div>`;
+    <div id="mbody"></div></div></div>`;   // the bar runs edge to edge; mgrpage is the column under it
   app.querySelectorAll(".mnavbtn").forEach(b => b.onclick = () => managerMode(b.dataset.p));
   $("#mback").onclick = leaveManager;
   ({ cohorts: mgrCohorts, coaching: mgrCoaching, answers: mgrAnswers, assign: mgrAssign, facts: mgrFacts, invite: mgrInvite, leaderboards: mgrBoards, grader: mgrGrader })[mgrTab]($("#mbody"));

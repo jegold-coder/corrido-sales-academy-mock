@@ -139,6 +139,19 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       await chrome.eval("document.querySelector('#nx').click()");
       if (!await chrome.waitFor("!!document.querySelector('.result')", 8000)) throw new Error("the retry has no results");
     });
+    await step("the manager header runs edge to edge at every width, and the logo lines up with the content on a wide screen", async () => {
+      await chrome.eval("(() => { document.body.classList.add('mgr'); managerMode('cohorts'); })()");
+      for (const w of [2000, 1600, 1280, 1000, 800, 700, 375]) {
+        await chrome.send("Emulation.setDeviceMetricsOverride", { width: w, height: 800, deviceScaleFactor: 1, mobile: w < 700 }); await sleep(250);
+        const r = await chrome.eval("(() => { const b = document.querySelector('.mgrbar').getBoundingClientRect(), l = document.querySelector('.mlogo').getBoundingClientRect(), c = document.querySelector('.mproto').getBoundingClientRect(), de = document.documentElement; return { left: Math.round(b.left), right: Math.round(b.right), cw: de.clientWidth, logo: Math.round(l.left), content: Math.round(c.left), side: de.scrollWidth > de.clientWidth }; })()");
+        if (r.left !== 0 || r.right !== r.cw || r.side) throw new Error("at " + w + "px: " + JSON.stringify(r));
+        const h = await chrome.eval("(() => { const q = s => document.querySelector(s).getBoundingClientRect(), logo = q('.mlogo'), user = q('.muser'), nav = q('.mnav'), back = q('#mback'), n = document.querySelector('.mnav'); return { sameRow: Math.abs(logo.top - user.top) < 24, navBelow: nav.top >= logo.bottom - 1, backInside: back.right <= document.documentElement.clientWidth && back.left >= 0, navScrolls: n.scrollWidth > n.clientWidth + 1 }; })()");
+        if (!h.sameRow || !h.navBelow || !h.backInside || (w >= 800 && h.navScrolls)) throw new Error("the header's rows are wrong at " + w + "px: " + JSON.stringify(h));
+        if (w >= 1400 && Math.abs(r.logo - r.content) > 2) throw new Error("at " + w + "px the logo is not lined up with the content: " + JSON.stringify(r));
+      }
+      await chrome.send("Emulation.clearDeviceMetricsOverride");
+      await chrome.eval("document.body.classList.remove('mgr'); home()");
+    });
     await step("the manager reads the player's answers, leaves a note, and the rep reads it on the Review page", async () => {
       await chrome.eval("(() => { document.body.classList.add('mgr'); ansRep = AnswerLog.mine()[0].rep; ansLow = false; managerMode('answers'); })()");
       const n = await chrome.eval("document.querySelectorAll('details.mans').length");
