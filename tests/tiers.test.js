@@ -31,17 +31,20 @@ ok("boss pass marks only go up", R.BOSSES.filter(b => !b.quiz).every((b, i, a) =
 
 // the Military Green Era tee is the men's cut only: a woman never sees it, and gets a different shirt at that stop instead
 const MG = "In My Tequila Era Tee (Military Green)", men = outfits.filter(n => !new RegExp(`"${n.replace(/[()]/g, "\\$&")}": \\{ g: "f"`).test(html));
-ok("the Military Green Era tee is marked men's only, and sits right behind the grey one in the picker", new RegExp(`"${MG.replace(/[()]/g, "\\$&")}": \\{ g: "m", after: "In My Tequila Era Tee \\(Charcoal\\)"`).test(html));
-// the picker's order: unlocked pieces first, but a piece that asks to sit behind another one does, whether it is locked or not
-const order = html.match(/const unlockedFirst = list => \{[\s\S]*?\n\};/)[0];
-const pick = vm.createContext({ OUTFITS: { "A": {}, "In My Tequila Era Tee (Charcoal)": {}, "B": {}, "C": {}, [MG]: { after: "In My Tequila Era Tee (Charcoal)" } }, merchUnlocked: n => unlocked.has(n) });
-let unlocked = new Set(["A", "In My Tequila Era Tee (Charcoal)", "B"]);
-vm.runInContext(order, pick);
-const list = ["A", "In My Tequila Era Tee (Charcoal)", "B", "C", MG];
-ok("a locked piece that asks for it sits right behind its sibling, and the other locked pieces still go last", vm.runInContext(`unlockedFirst(${JSON.stringify(list)})`, pick).join() === ["A", "In My Tequila Era Tee (Charcoal)", MG, "B", "C"].join());
-unlocked = new Set([...unlocked, MG]);
-ok("once it is unlocked it stays behind the grey one", vm.runInContext(`unlockedFirst(${JSON.stringify(list)})`, pick).join() === ["A", "In My Tequila Era Tee (Charcoal)", MG, "B", "C"].join());
-ok("for a woman (no Military Green in her list) the order is unchanged", vm.runInContext(`unlockedFirst(${JSON.stringify(list.filter(n => n !== MG))})`, pick).join() === ["A", "In My Tequila Era Tee (Charcoal)", "B", "C"].join());
+ok("the Military Green Era tee is marked men's only, and no longer asks to sit behind the grey one (it sits where it unlocks)", new RegExp(`"${MG.replace(/[()]/g, "\\$&")}": \\{ g: "m", price:`).test(html) && !/\bafter: "/.test(html.slice(html.indexOf("const OUTFITS = {"), html.indexOf("const SLEEVE = {"))));
+// the picker's order: what you can wear first, and inside each half the pieces in the order they unlock (starters, then the map's stops in order), so Military Green sits next to the shirt earned at the same stop
+vm.runInContext("globalThis.ALL_STOPS = () => PATH.map(id => ({ id }))", ctx);
+vm.runInContext(html.match(/const unlockOrder = name => \{[\s\S]*?\n\};\nconst unlockedFirst = list => \{[\s\S]*?\n\};/)[0], ctx);
+const stopAt = n => { const st = vm.runInContext(`merchStop(${JSON.stringify(n)})`, ctx); return st ? R.PATH.indexOf(st) : -1; };
+const picker = (done, gender, names) => { ctx.state.done = done; ctx.state.avatar = { gender }; const r = vm.runInContext(`unlockedFirst(${JSON.stringify(names)})`, ctx), have = r.map(n => vm.runInContext(`merchUnlocked(${JSON.stringify(n)})`, ctx)), at = r.map(stopAt); ctx.state.done = {}; ctx.state.avatar = undefined; return { r, have, at }; };   // the stop of each piece is read while this player's gender is set (a woman's Priya stop gives a different shirt)
+const DGH = "Corrido Logo Tee (Dark Grey Heather)", nondecreasing = a => a.every((v, i) => !i || v >= a[i - 1]);
+const start = picker({}, "Male", men), startOrder = men.filter(n => stopAt(n) === -1);
+ok("for a man at the start the free starters come first in their usual order, then the locked pieces in the order the map unlocks them", start.have.slice(0, startOrder.length).every(Boolean) && start.have.slice(startOrder.length).every(h => !h) && start.r.slice(0, startOrder.length).join() === startOrder.join() && nondecreasing(start.at.slice(startOrder.length)));
+ok("Military Green sits right behind the other piece from Priya's stop, the Dark Grey Heather logo tee, so the shirts read in unlock order", start.r.indexOf(MG) === start.r.indexOf(DGH) + 1 && start.r.indexOf(DGH) > startOrder.length);
+const mid = picker({ brand: true, lineup: true, brandbrain: true, quiet: true, priya: true }, "Male", men), nUn = mid.have.filter(Boolean).length;
+ok("after five stops the earned pieces follow the starters in the order they were earned, with the Priya pair side by side, and the still-locked ones carry on in map order", mid.have.slice(0, nUn).every(Boolean) && mid.have.slice(nUn).every(h => !h) && nondecreasing(mid.at.slice(0, nUn)) && nondecreasing(mid.at.slice(nUn)) && mid.r.indexOf(MG) === mid.r.indexOf(DGH) + 1 && mid.r.indexOf(MG) < nUn);
+const women = outfits.filter(n => !new RegExp(`"${n.replace(/[()]/g, "\\$&")}": \\{ g: "m"`).test(html)), wmn = picker({}, "Female", women);
+ok("for a woman (no Military Green in her list) the order is the same idea: starters, then the locked pieces in map order", !wmn.r.includes(MG) && nondecreasing(wmn.r.map((n, i) => (wmn.have[i] ? 0 : 1) * 1000 + wmn.at[i] + 1)) && wmn.r.length === women.length);
 const F = vm.runInContext("({ f: rewardsFor('Female'), m: rewardsFor('Male'), unknown: rewardsFor(''), total: g => merchTotal(g) })", ctx);
 const givenF = Object.values(F.f).flat(), onceF = [...R.STARTER_MERCH, ...givenF], allF = all.filter(m => m !== MG);
 ok("men still get Military Green at Priya's stop, as before", F.m.priya.includes(MG) && F.m === R.REWARDS && F.unknown === R.REWARDS);

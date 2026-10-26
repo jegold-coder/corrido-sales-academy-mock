@@ -4,12 +4,18 @@
 // ---------- character creator ----------
 // Options depend on the chosen gender. Corrido merch supplies the shirts and hats.
 const swatchCol = (g, v) => (g.match ? (v === -1 ? "" : HAIRC[v]) : v);
-// What you can wear comes first, so the locked pieces never push your options down the page.
+// What you can wear comes first, so the locked pieces never push your options down the page. Inside each half the pieces sit in the order they are
+// unlocked: the free starters, then each stop's rewards in the order the map reaches them, so the list reads like the map and a piece sits next to
+// the one earned at the same stop.
+const unlockOrder = name => {
+  const stop = merchStop(name);
+  if (!stop) return -1;   // a starter
+  const at = ALL_STOPS().findIndex(s => s.id === stop);
+  return (at < 0 ? 999 : at) * 10 + stopRewards(stop).indexOf(name);
+};
 const unlockedFirst = list => {
-  const ord = [...list.filter(merchUnlocked), ...list.filter(n => !merchUnlocked(n))];
-  // a piece can ask to sit right behind another one (a colourway next to its sibling), even if one is locked and the other is not
-  ord.filter(n => OUTFITS[n] && OUTFITS[n].after && ord.includes(OUTFITS[n].after)).forEach(n => { ord.splice(ord.indexOf(n), 1); ord.splice(ord.indexOf(OUTFITS[n].after) + 1, 0, n); });
-  return ord;
+  const byUnlock = (a, b) => unlockOrder(a) - unlockOrder(b);
+  return [...list.filter(merchUnlocked).sort(byUnlock), ...list.filter(n => !merchUnlocked(n)).sort(byUnlock)];
 };
 function groupsFor(A) {
   const F = A.gender === "Female";
