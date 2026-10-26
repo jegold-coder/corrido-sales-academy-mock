@@ -72,14 +72,16 @@ function startBoss(stop, boss, rehearsal) {
 }
 
 // ---------- Brand Brain: ten timed brand questions ----------
+// Stars follow the score out of 100, like a mission: 10 of 10 is 3 stars and 9 of 10 is 2.5. (They used to be left out, so every win showed one star.)
+const quizStars = (right, total) => starsFor(Math.round(right / total * 100));
 function brandBrain(stop, boss, rehearsal) {
   const picks = shuffle(BANK).slice(0, boss.count), total = picks.length, missed = [];
   let i = 0, right = 0, tm = null;
   const finish = () => {
     clearInterval(tm); Sound.stop();
     const pct = right / total, won = pct >= boss.pass, first = won && !rehearsal && !state.done[stop.id];
-    const score = `${right} / ${total}`;
-    const ctx = { boss, stop, won, rehearsal, score, pct, missed, first, kind: "quiz", avgText: `${Math.round(pct * 100)}%` };
+    const score = `${right} / ${total}`, stars = quizStars(right, total);
+    const ctx = { boss, stop, won, rehearsal, score, pct, stars, missed, first, kind: "quiz", avgText: `${Math.round(pct * 100)}%` };
     bossOutcome(ctx);
   };
   const show = () => {
@@ -119,6 +121,7 @@ function brandBrain(stop, boss, rehearsal) {
 function bossApplyWin({ boss, stop, first, stars, perfect }) {
   const tierFrom = tierOf(), items = stopRewards(stop.id), bonus = 100 * (boss.tier + 3);
   if (first) { state.done[stop.id] = true; state.stars[stop.id] = Math.max(state.stars[stop.id] || 0, stars || 1); state.xp += bonus; wearFirst(items); Progress.save(state); hud(); }
+  else if ((stars || 0) > (state.stars[stop.id] || 0)) { state.stars[stop.id] = stars; Progress.save(state); hud(); }   // a replay that scores higher raises the stars
   const badges = awardBadges(["boss-" + stop.id, ...(perfect ? ["bossperfect"] : [])]).concat(syncBadges());
   return { tierFrom, tierTo: tierOf(), items: first ? items : [], bonus: first ? bonus : 0, first, badges };
 }

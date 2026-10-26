@@ -177,6 +177,7 @@ node tests/smile.test.js    # the rep's smile styles: shapes, the creator row, s
 node tests/phone.test.js    # the phone bottom bar: its five places, when it shows, and that tapping it never sends you home
 node tests/coaching.test.js # the manager Coaching page: every skill has a topic, the suggested stop is real and within reach, the messages read well
 node tests/results.test.js  # medals, stars, the customer on the results, the tie line, hearts only in lessons
+node tests/bossstars.test.js # the Brand Brain boss gives stars for its score (10 of 10 is 3, 9 of 10 is 2.5, not always one), and a better replay raises them
 node tests/auth.test.js     # Google token checks: wrong app, expired, unverified, wrong company
 node tests/natural.test.js  # answers in ordinary words score fairly; hype, health claims and pushiness are caught; a question can't lose a boss battle
 node tests/globals.test.js  # no two scripts declare the same name (a clash stops a file loading), and the page's own scripts are the last ones, in the order `tests/page.js` lists (that file puts them back into one text for the tests that search the page)
