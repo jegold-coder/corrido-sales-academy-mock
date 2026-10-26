@@ -74,6 +74,8 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
         await chrome.eval(`(() => { document.querySelectorAll("dialog[open]").forEach(d => d.close()); document.body.classList.toggle("mgr", ${/^Manager/.test(jumps[k])}); const f = Presenter.MENU().flatMap(([, items]) => items)[${k}][1]; const r = f(); if (r && r.catch) r.catch(() => {}); })()`);
         await sleep(350);
         if (!await chrome.waitFor("!document.querySelector('#prbtn').disabled", 30000)) throw new Error("a sample run never finished");
+        const stale = await chrome.eval("(document.body.innerText.match(/\\bLv\\b|\\b[Ll]evel \\d/) || [])[0] || ''");   // the old names for rank and difficulty are gone from every page
+        if (stale) throw new Error("a page still says '" + stale + "'");
       });
     }
     await step("the three progress buttons in the menu work: start over, random sample, complete the game", async () => {
@@ -154,6 +156,57 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       const b = await chrome.eval("({ q: Q('blancoPrice').a, lineup: LINEUP[0][1], draft: Facts.status() })");
       if (b.q !== "$44.99" || b.lineup !== "$44.99" || !/Draft/.test(b.draft)) throw new Error(JSON.stringify(b));
       await chrome.eval("document.body.classList.remove('mgr'); home()");
+    });
+
+    // ----- usability: the footer rank, the camera reminder, the feedback fold, the map, the photo placeholders
+    await step("the footer shows a rank's name, not 'Lv', and the history table says Difficulty", async () => {
+      await chrome.eval("(() => { document.body.classList.remove('mgr'); home(); })()");
+      const r = await chrome.eval("({ rank: document.querySelector('#stLvl').textContent, want: LEVELS[levelOf(state.xp)][0], title: document.querySelector('#ftLvl').title, lv: /\\bLv\\b|Level \\d/.test(document.body.innerText) })");
+      if (r.rank !== r.want || !/Your rank/.test(r.title) || r.lv) throw new Error(JSON.stringify(r));
+      await chrome.eval("dashboard('progress')");
+      if (!await chrome.eval("[...document.querySelectorAll('.hist th')].some(h => h.textContent === 'Difficulty') && !/Level \\d/.test(document.querySelector('.hist').textContent)")) throw new Error("the history table still says Level");
+    });
+    await step("the camera reminder shows on the first question only, and 'x' switches it off for good", async () => {
+      await chrome.eval("(() => { window.lipTalk = () => Promise.resolve(); state.cam = false; state.camNudgeOff = false; document.querySelectorAll('dialog[open]').forEach(d => d.close()); window.__sx = surpriseScenario(); play(window.__sx); })()");
+      if (!await chrome.waitFor("!!document.querySelector('#camNudge') && !!document.querySelector('#camDismiss')", 8000)) throw new Error("no reminder on the first question");
+      await chrome.eval(ans(0)); if (!await chrome.waitFor("!!document.querySelector('#nx')", 30000)) throw new Error("not scored"); await chrome.eval("document.querySelector('#nx').click()");
+      if (!await chrome.waitFor("!!document.querySelector('#ans') && !document.querySelector('#ans').disabled", 8000)) throw new Error("question 2 did not appear");
+      if (await chrome.eval("!!document.querySelector('#camNudge')")) throw new Error("the reminder came back on question 2");
+      await chrome.eval("(() => { window.__sx = surpriseScenario(); play(window.__sx); })()");
+      await chrome.waitFor("!!document.querySelector('#camDismiss')", 8000);
+      await chrome.eval("document.querySelector('#camDismiss').click()");
+      if (await chrome.eval("!!document.querySelector('#camNudge') || state.camNudgeOff !== true")) throw new Error("the x did not dismiss it");
+      await chrome.eval("(() => { window.__sx = surpriseScenario(); play(window.__sx); })()");
+      await sleep(600);
+      if (await chrome.eval("!!document.querySelector('#camNudge')")) throw new Error("it came back after being dismissed");
+      await chrome.eval("state.camNudgeOff = false; home()");
+    });
+    await step("coach mode puts what to fix first and a stronger answer in view, and folds the rest", async () => {
+      await chrome.eval("(() => { window.lipTalk = () => Promise.resolve(); state.coachPref = true; play(SCENARIOS.find(m => m.id === 'quiet')); })()");
+      if (!await chrome.waitFor("!!document.querySelector('#ans') && !document.querySelector('#ans').disabled", 8000)) throw new Error("no question");
+      await chrome.eval("(() => { const st = SCENARIOS.find(m => m.id === 'quiet').steps[1], box = document.querySelector('#ans'); box.value = st.H[0][0].replace(/^\"|\"$/g, ''); box.dispatchEvent(new Event('input', { bubbles: true })); document.querySelector('#submit').click(); })()");
+      if (!await chrome.waitFor("!!document.querySelector('.feed.coach')", 30000)) throw new Error("no coach card");
+      const r = await chrome.eval("(() => { const c = document.querySelector('.feed.coach'), d = c.querySelector('details.coachmore'); return { fix: c.querySelectorAll('.fixfirst li').length, open: d.open, betterFirst: c.querySelector('.better').compareDocumentPosition(d) & Node.DOCUMENT_POSITION_FOLLOWING, inside: d.querySelectorAll('li, .deliv').length }; })()");
+      if (r.fix < 1 || r.fix > 2 || r.open || !r.betterFirst || r.inside < 1) throw new Error(JSON.stringify(r));
+      await chrome.eval("state.coachPref = undefined; home()");
+    });
+    await step("the map opens on the next stop to play, and a first-day map stays at the top", async () => {
+      for (let k = 0; k < 3; k++) {   // a different point in the season each time
+        await chrome.eval("(() => { Presenter.sample(); home(); })()");
+        await sleep(1500);   // the scroll is smooth: let it finish
+        const r = await chrome.eval("(() => { const n = document.querySelector('.node.cur'); if (!n) return { none: true }; const b = n.getBoundingClientRect(); return { top: Math.round(b.top), bottom: Math.round(b.bottom), vh: innerHeight, idx: ALL_STOPS().findIndex(x => x.id === n.dataset.id) }; })()");
+        if (r.none || r.idx < 2 || r.bottom < 0 || r.top > r.vh) throw new Error("the next stop is out of view: " + JSON.stringify(r));
+      }
+      await chrome.eval("(() => { Presenter.reset(); window.scrollTo(0, 0); home(); })()");
+      await sleep(800);
+      if (await chrome.eval("window.scrollY") > 60) throw new Error("a first-day map scrolled away from the top");   // a few pixels of settling is normal; the first stop is already in view
+    });
+    await step("shop photos get a placeholder while they load and lose it when they arrive", async () => {
+      await chrome.eval("(() => { state.proto = { ...state.proto, unlockMerch: true }; creator(home); })()");
+      await sleep(6000);
+      const r = await chrome.eval("(() => { const imgs = [...document.querySelectorAll('.tile img')]; return { n: imgs.length, stuck: imgs.filter(i => i.complete && !i.classList.contains('ld')).length, marked: imgs.filter(i => i.classList.contains('ld')).length }; })()");
+      if (r.n < 5 || r.stuck > 0) throw new Error(JSON.stringify(r));
+      await chrome.eval("home()");
     });
 
     // ----- the offline copy

@@ -300,7 +300,7 @@ details.card summary{cursor:pointer;font-weight:700}
 @media(max-width:700px){
   .logo{font-size:1.05rem}.top{padding:.5rem .8rem}
   .stats{width:100%;justify-content:flex-start;font-size:.82rem;gap:.35rem .6rem}
-  .lvname{display:none}.diffbtn{padding:.1rem .6rem;font-size:.72rem}
+  .diffbtn{padding:.1rem .6rem;font-size:.72rem}
   main{padding:.8rem}.sheet{padding:.9rem}
 }
 
@@ -332,14 +332,14 @@ body.onboarding .soundfab{display:none}
 .foot{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;align-items:center;gap:.6rem;padding:.45rem .8rem;background:var(--brown);border-top:2px solid var(--gold);box-shadow:0 -4px 14px #0004}
 .foot .pill{display:inline-flex;align-items:center;gap:.4rem;background:#0003;border:1px solid #e3b34155;border-radius:99px;padding:.15rem .8rem;color:var(--cream);font-weight:700;white-space:nowrap;line-height:1.5}
 .foot .pill b{color:var(--gold-t);font-size:1.05rem}
+.foot #stLvl{color:var(--gold-t)}
 .foot .pill em{font-style:normal;font-weight:400;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
-.foot .lvname{color:var(--gold-t)}
 .xpbar{display:inline-block;width:70px;height:8px;border-radius:9px;background:#0005;overflow:hidden}
 .xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#f5d27a);transition:width .5s}
 main{padding-bottom:5rem}
 body.onboarding .foot{display:none}
 .soundfab{bottom:64px!important}#camBox{bottom:66px!important}
-@media(max-width:700px){.foot{gap:.3rem;padding:.4rem .4rem}.foot .pill{padding:.1rem .5rem;font-size:.8rem}.foot .pill em,.foot .lvname{display:none}.xpbar{width:44px}}
+@media(max-width:700px){.foot{gap:.3rem;padding:.4rem .4rem}.foot .pill{padding:.1rem .5rem;font-size:.8rem}.foot .pill em{display:none}.xpbar{width:44px}}
 
 /* ===== v20: clearer map, stop popup, meters, footer, sound label ===== */
 .nextup{display:flex;justify-content:space-between;align-items:center;gap:.8rem;background:#fff9ec;border:2px solid var(--gold);border-radius:14px;padding:.6rem .9rem;margin:.4rem 0 .8rem}
@@ -845,6 +845,22 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 .fstatus{padding:.5rem .8rem;border-radius:10px;margin:.4rem 0}.fstatus.draft{background:#fbf0d3;color:#6b4e0d}.fstatus.ok{background:#dff1e0;color:#1f5a2c}
 .fmsg{color:#8a2f2f;font-weight:700}
 .wstatus{text-align:center}
+/* photos on the way: a soft shimmer in their own space (the class ld is added when the photo has loaded or failed) */
+.tile img:not(.ld),.piece img:not(.ld),.xrow img:not(.ld),.xbottle img:not(.ld){background:linear-gradient(100deg,#e6dcc9 30%,#f4eee2 50%,#e6dcc9 70%) 0 0/200% 100%;animation:shim 1.3s linear infinite}
+@keyframes shim{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.tile img:not(.ld),.piece img:not(.ld),.xrow img:not(.ld),.xbottle img:not(.ld){animation:none}}
+/* feedback: what to fix first and a stronger answer stay in view, the rest folds */
+.coachmore{margin:.5rem 0 0;font-weight:400;text-align:left}
+.coachmore>summary{cursor:pointer;color:var(--teal-d);font-weight:700;font-size:.9rem;padding:.2rem 0}
+.coachmore[open]>summary{margin-bottom:.3rem}
+.fixfirst{margin:.4rem 0;padding:.4rem .7rem;border-left:4px solid var(--red);background:#fdeceb;border-radius:0 8px 8px 0;font-weight:400;color:#7a2a17;text-align:left}
+.fixfirst ul{list-style:none;padding:0;margin:.2rem 0 0}.fixfirst li{margin:.15rem 0;font-size:.92rem}
+/* on a phone the Record button stays pinned above the stats bar while you read the question, so it is never below the fold */
+@media(max-width:700px){
+  .mission .recpanel{display:contents}
+  .mission .recpanel>*{margin:.5rem 0}
+  .mission .recpanel>.recdock{position:sticky;bottom:54px;z-index:6;background:var(--cream);margin:.5rem -.4rem;padding:.55rem .7rem;border-radius:14px;box-shadow:0 -4px 14px #0003}
+}
 @media(max-width:700px){.mgrbar{position:static;padding:.5rem 1rem}.mnav{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:.2rem}.mnavbtn{white-space:nowrap;padding:.45rem .8rem}}   /* eight manager pages: one row you can slide, not four rows stuck to the top of a phone */
 </style>
 </head>
@@ -890,7 +906,7 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 <main id="app" tabindex="-1"></main>
 <footer class="foot" aria-label="Your stats">
   <span class="pill" title="Days practiced in a row (not clickable)"><i aria-hidden="true">🔥</i><b id="stStreak">0</b><em>day streak</em></span>
-  <span class="pill lvl clickable" id="ftLvl" title="Open your dashboard" role="button" tabindex="0"><span id="stLvl">Lv 1</span><span class="xpbar" aria-hidden="true"><i id="xpFill"></i></span></span>
+  <span class="pill lvl clickable" id="ftLvl" title="Open your dashboard" role="button" tabindex="0"><span id="stLvl">Rookie</span><span class="xpbar" aria-hidden="true"><i id="xpFill"></i></span></span>
   <span class="pill clickable" id="ftXp" title="Open your dashboard" role="button" tabindex="0"><i aria-hidden="true">⭐</i><b id="stXp">0</b><em>XP</em></span>
   <button class="pill soundpill soundfab" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound is on. Click to mute." title="Turn sound on or off">🔊</button>
   <span class="pill" id="stHearts" title="Hearts left in this lesson (not clickable)">❤️❤️❤️</span>
@@ -904,46 +920,46 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26n"></script>
-<script src="sound.js?v=2026-10-26n"></script>
-<script src="scenarios.js?v=2026-10-26n"></script>
-<script src="progress.js?v=2026-10-26n"></script>
-<script src="criteria.js?v=2026-10-26n"></script>
-<script src="tone.js?v=2026-10-26n"></script>
-<script src="coach.js?v=2026-10-26n"></script>
-<script src="camera.js?v=2026-10-26n"></script>
-<script src="lessons.js?v=2026-10-26n"></script>
-<script src="dashboard.js?v=2026-10-26n"></script>
-<script src="grader.js?v=2026-10-26n"></script>
-<script src="onboarding.js?v=2026-10-26n"></script>
-<script src="tiers.js?v=2026-10-26n"></script>
-<script src="badges.js?v=2026-10-26n"></script>
-<script src="voices.js?v=2026-10-26n"></script>
-<script src="mission.js?v=2026-10-26n"></script>
-<script src="boss.js?v=2026-10-26n"></script>
-<script src="auth.js?v=2026-10-26n"></script>
-<script src="manager.js?v=2026-10-26n"></script>
-<script src="answers.js?v=2026-10-26n"></script>
-<script src="mgranswers.js?v=2026-10-26n"></script>
-<script src="assign.js?v=2026-10-26n"></script>
-<script src="facts.js?v=2026-10-26n"></script>
-<script src="surprise.js?v=2026-10-26n"></script>
-<script src="callcard.js?v=2026-10-26n"></script>
-<script src="presenter.js?v=2026-10-26n"></script>
-<script src="avatarcheck.js?v=2026-10-26n"></script>
-<script src="app.js?v=2026-10-26n"></script>
-<script src="dialog.js?v=2026-10-26n"></script>
-<script src="nav.js?v=2026-10-26n"></script>
-<script src="practice.js?v=2026-10-26n"></script>
-<script src="explorer.js?v=2026-10-26n"></script>
-<script src="map.js?v=2026-10-26n"></script>
-<script src="people.js?v=2026-10-26n"></script>
-<script src="hair.js?v=2026-10-26n"></script>
-<script src="merch.js?v=2026-10-26n"></script>
-<script src="avatar.js?v=2026-10-26n"></script>
-<script src="creator.js?v=2026-10-26n"></script>
-<script src="scenes.js?v=2026-10-26n"></script>
-<script src="results.js?v=2026-10-26n"></script>
-<script src="start.js?v=2026-10-26n"></script>
+<script src="config.js?v=2026-10-26o"></script>
+<script src="sound.js?v=2026-10-26o"></script>
+<script src="scenarios.js?v=2026-10-26o"></script>
+<script src="progress.js?v=2026-10-26o"></script>
+<script src="criteria.js?v=2026-10-26o"></script>
+<script src="tone.js?v=2026-10-26o"></script>
+<script src="coach.js?v=2026-10-26o"></script>
+<script src="camera.js?v=2026-10-26o"></script>
+<script src="lessons.js?v=2026-10-26o"></script>
+<script src="dashboard.js?v=2026-10-26o"></script>
+<script src="grader.js?v=2026-10-26o"></script>
+<script src="onboarding.js?v=2026-10-26o"></script>
+<script src="tiers.js?v=2026-10-26o"></script>
+<script src="badges.js?v=2026-10-26o"></script>
+<script src="voices.js?v=2026-10-26o"></script>
+<script src="mission.js?v=2026-10-26o"></script>
+<script src="boss.js?v=2026-10-26o"></script>
+<script src="auth.js?v=2026-10-26o"></script>
+<script src="manager.js?v=2026-10-26o"></script>
+<script src="answers.js?v=2026-10-26o"></script>
+<script src="mgranswers.js?v=2026-10-26o"></script>
+<script src="assign.js?v=2026-10-26o"></script>
+<script src="facts.js?v=2026-10-26o"></script>
+<script src="surprise.js?v=2026-10-26o"></script>
+<script src="callcard.js?v=2026-10-26o"></script>
+<script src="presenter.js?v=2026-10-26o"></script>
+<script src="avatarcheck.js?v=2026-10-26o"></script>
+<script src="app.js?v=2026-10-26o"></script>
+<script src="dialog.js?v=2026-10-26o"></script>
+<script src="nav.js?v=2026-10-26o"></script>
+<script src="practice.js?v=2026-10-26o"></script>
+<script src="explorer.js?v=2026-10-26o"></script>
+<script src="map.js?v=2026-10-26o"></script>
+<script src="people.js?v=2026-10-26o"></script>
+<script src="hair.js?v=2026-10-26o"></script>
+<script src="merch.js?v=2026-10-26o"></script>
+<script src="avatar.js?v=2026-10-26o"></script>
+<script src="creator.js?v=2026-10-26o"></script>
+<script src="scenes.js?v=2026-10-26o"></script>
+<script src="results.js?v=2026-10-26o"></script>
+<script src="start.js?v=2026-10-26o"></script>
 </body>
 </html>

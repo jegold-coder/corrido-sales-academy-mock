@@ -28,9 +28,9 @@ function mgrGrader(el) {
       <div>
         <div class="mcard">
           <div class="grow">
-            <label>Customer<select id="gmis">${sorted.map(s => `<option value="${s.id}" ${s.id === g.id ? "selected" : ""}>Level ${s.level} · ${esc(s.title)} (${esc(s.cust.name)})</option>`).join("")}</select></label>
+            <label>Customer<select id="gmis">${sorted.map(s => `<option value="${s.id}" ${s.id === g.id ? "selected" : ""}>${MLEVEL[s.level].name} · ${esc(s.title)} (${esc(s.cust.name)})</option>`).join("")}</select></label>
             <label>Question<select id="gstep">${sc().steps.map((st, i) => `<option value="${i}" ${i === idx ? "selected" : ""}>${i + 1}. ${esc(st.skill)}: ${esc(plain(st.q))}</option>`).join("")}</select></label>
-            <label>Difficulty<select id="glvl">${[1, 2, 3, 4, 5].map(n => `<option value="${n}" ${n === lvl() ? "selected" : ""}>Level ${n} · ${MLEVEL[n].name} (pass mark ${MLEVEL[n].pass})</option>`).join("")}</select></label>
+            <label>Difficulty<select id="glvl">${[1, 2, 3, 4, 5].map(n => `<option value="${n}" ${n === lvl() ? "selected" : ""}>${MLEVEL[n].name} (pass mark ${MLEVEL[n].pass})</option>`).join("")}</select></label>
           </div>
           <p class="gr-says"><b>${esc(cust.name)} says:</b> ${esc(spoken(S.line).slice(0, 400))}</p>
           <p class="note2"><b>The question:</b> ${esc(plain(S.q))}</p>
@@ -60,7 +60,7 @@ function mgrGrader(el) {
     const reply = S.reply && (S.reply[tier] || (tier === "mid" ? (MIDS[sci.id] || [])[idx] : null) || S.reply[tier === "mid" ? "bad" : tier]);
     const cls = res.score >= 4 ? "hi" : res.score >= 2.5 ? "mid" : "lo", f1 = n => n.toFixed(1);
     out.innerHTML = `<div class="mcard"><div class="gr-top"><div class="gr-face"><svg viewBox="14 -2 92 112" aria-hidden="true"><g data-x="${face}">${person(custLook(sci))}</g></svg></div>
-      <div><div class="gr-score ${cls}">${f1(res.score)}<small> out of 5</small></div><p class="note2">${esc(cust.name)} ${tier === "best" ? "is won over." : tier === "mid" ? "isn't sure yet." : "isn't impressed."} At Level ${lvl()} a mission needs ${pass} on average to pass, so on its own this answer ${res.score >= pass ? "would help a rep clear" : "falls short of"} that.</p></div></div>
+      <div><div class="gr-score ${cls}">${f1(res.score)}<small> out of 5</small></div><p class="note2">${esc(cust.name)} ${tier === "best" ? "is won over." : tier === "mid" ? "isn't sure yet." : "isn't impressed."} At ${MLEVEL[lvl()].name} difficulty a mission needs ${pass} on average to pass, so on its own this answer ${res.score >= pass ? "would help a rep clear" : "falls short of"} that.</p></div></div>
       ${reply ? `<p class="gr-reply"><b>${esc(cust.name)} would say:</b> ${esc(spoken(reply))}</p>` : ""}
       ${res.compliance ? '<p class="gr-reply" style="border-color:#9a2f2f;background:#fdeceb"><b>⛔ Compliance miss.</b> A health claim or a pressure tactic loses a boss battle instantly.</p>' : ""}
       <h3 class="gr-h">How the score adds up</h3>

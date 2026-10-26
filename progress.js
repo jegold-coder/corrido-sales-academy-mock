@@ -1,10 +1,12 @@
 "use strict";
-// Progress, levels, badges, streaks and the team board. Everything is saved in this browser only (localStorage).
+// Progress, ranks, badges, streaks and the team board. Everything is saved in this browser only (localStorage).
 // Nothing is sent anywhere. The "team board" works by pasting share codes, so it needs no server and costs nothing.
 
 const LEVELS = [["Rookie", 0], ["Opener", 100], ["Closer", 250], ["Rainmaker", 450], ["Corrido Legend", 700], ["Master Rep", 1000]];
 // Stars follow the score out of 100, three stars for 100: 50% is 1.5 stars, and halves are the smallest step.
 const starsFor = pct => Math.round(Math.max(0, Math.min(100, pct)) / 100 * 6) / 2;
+// A history made before the rename says "Level 4": show the difficulty's name (Easy, Medium, Hard, Expert) instead.
+const diffLabel = d => { const m = /^Level ([1-5])$/.exec(d || ""); return m ? MLEVEL[m[1]].name : d; };
 const levelOf = xp => { let i = 0; LEVELS.forEach((l, n) => { if (xp >= l[1]) i = n; }); return i; };
 
 // Each badge: [name, how to earn it, test(session, P)]. session = the mission that was just finished.
@@ -12,7 +14,7 @@ const BADGES = {
   first: ["First Pitch", "Finish any mission", () => true],
   check: ["Knowledge Check", "Complete the knowledge check", () => false],   // awarded by syncBadges once the check is finished
   flawless: ["Flawless", "Earn 3 stars on a mission", s => s.stars === 3],
-  hard: ["Tough Crowd", "Pass a Level 4 or 5 mission", s => s.won && /Level [45]/.test(s.diff || "")],
+  hard: ["Tough Crowd", "Pass a Hard or Expert mission", s => s.won && /^(Hard|Expert)$|Level [45]/.test(s.diff || "")],   // a history made before the rename says "Level 4" or "Level 5"
   typed: ["Perfect Answer", "Score 5 out of 5 on a single answer", s => s.perfect],
   voice: ["Say It Out Loud", "Answer a mission question by speaking", s => s.voice],
   brain: ["Brand Brain", "Get every question right in a brand lesson", s => s.lesson && s.won && s.pct === 100],
@@ -24,7 +26,7 @@ const BADGES = {
 
 const Progress = {
   KEY: "csa_progress_v1",
-  blank: () => ({ xp: 0, done: {}, stars: {}, history: [], badges: [], lastDay: null, streak: 0, diff: "medium", mode: "choice", pre: null, post: null, team: {}, llmKey: "", tutorialSeen: false, mistakes: [], opener: {}, camPref: true, voiceOff: false, proto: {}, bossTries: {}, profile: { mode: "", email: "" }, cohorts: [], nudged: {}, mgrName: "Manager", answers: [], notes: {}, assignments: [], facts: null }),
+  blank: () => ({ xp: 0, done: {}, stars: {}, history: [], badges: [], lastDay: null, streak: 0, diff: "medium", mode: "choice", pre: null, post: null, team: {}, llmKey: "", tutorialSeen: false, mistakes: [], opener: {}, camPref: true, voiceOff: false, proto: {}, bossTries: {}, profile: { mode: "", email: "" }, cohorts: [], nudged: {}, mgrName: "Manager", answers: [], notes: {}, assignments: [], facts: null, camNudgeOff: false }),
   load() {
     try { return { ...Progress.blank(), ...JSON.parse(localStorage.getItem(Progress.KEY) || "{}") }; } catch { return Progress.blank(); }
   },
@@ -54,7 +56,7 @@ const Progress = {
     P.history.slice(-40).forEach(h => Object.entries(h.skills || {}).forEach(([k, v]) => { (acc[k] = acc[k] || []).push(v / 5 * 100); }));
     return Object.entries(acc).map(([k, v]) => [k, Math.round(v.reduce((a, b) => a + b, 0) / v.length), v.length]).sort((a, b) => a[1] - b[1]);
   },
-  // Team board: a share code is the player's name, XP and level, packed as text so teammates can paste it in.
+  // Team board: a share code is the player's name, XP and rank, packed as text so teammates can paste it in.
   shareCode(P, name) {
     const o = { n: name, xp: P.xp, lv: levelOf(P.xp), b: P.badges.length, s: P.streak, d: Progress.today() };
     return "csa1." + btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/, "");

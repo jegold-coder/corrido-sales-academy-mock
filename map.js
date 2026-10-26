@@ -42,7 +42,7 @@ function home() {
       <button class="node ${BOSS_BY[n.id] ? "boss" : ""} ${done ? "done" : ""} ${cur ? "cur" : ""} ${open ? "" : "locked"} ${fresh.includes(n.id) ? "fresh" : ""}" data-id="${n.id}" data-prev="${i ? esc(nodes[i - 1].title) : ""}" ${open ? "" : 'aria-disabled="true"'} aria-label="${n.title}${open ? "" : " (locked)"}">
         ${cur ? '<span class="start">START</span>' : ""}${face ? `${face}${done ? '<span class="bchk">✓</span>' : open ? "" : '<span class="blk">🔒</span>'}` : done ? "✓" : open ? n.icon : "🔒"}
         ${done ? `<span class="stars">${starGlyphs(state.stars[n.id] || 0)}</span>` : ""}
-      </button><div class="lab">${BOSS_BY[n.id] ? `<span class="bosstag">Boss · Tier ${BOSS_BY[n.id].tier}</span>` : ""}${n.title}<small>${open ? (BOSS_BY[n.id] ? `Beat it to become ${aTier(Math.min(5, BOSS_BY[n.id].tier + 1))}` : `${n.sub} · ${n.qs ? "lesson" : "level " + n.level + " " + MLEVEL[n.level].name.toLowerCase()}`) : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
+      </button><div class="lab">${BOSS_BY[n.id] ? `<span class="bosstag">Boss · Tier ${BOSS_BY[n.id].tier}</span>` : ""}${n.title}<small>${open ? (BOSS_BY[n.id] ? `Beat it to become ${aTier(Math.min(5, BOSS_BY[n.id].tier + 1))}` : `${n.sub} · ${n.qs ? "lesson" : MLEVEL[n.level].name}`) : gated ? "Locked: take the knowledge check first" : `Locked: pass “${esc(nodes[i - 1].title)}” first`}</small></div></div>`;
   });
   const lv = levelOf(state.xp), lcur = LEVELS[lv][1], lnxt = LEVELS[lv + 1], lpct = lnxt ? Math.round((state.xp - lcur) / (lnxt[1] - lcur) * 100) : 100;
   const gotMerch = merchEarned().size, allMerch = merchTotal();
@@ -51,7 +51,7 @@ function home() {
   const nbOpen = nbStop && (PROTO("unlockStops") || (!gated && (nbIdx === 0 || state.done[nodes[nbIdx - 1].id])));
   const sideLeft = `<aside class="mside" aria-label="Your rep">
     <div class="sidecard repcard go" data-go="progress" role="link" tabindex="0" title="Open your progress"><div class="rav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div><b class="rn">${esc(repName())}</b><span class="rt">Tier ${tNow} · ${TIERS[tNow]}</span>
-      <div class="bar" aria-hidden="true"><i style="width:${lpct}%"></i></div><small>Level ${lv + 1}: ${LEVELS[lv][0]}${lnxt ? ` · ${lnxt[1] - state.xp} XP to ${lnxt[0]}` : ""}</small>
+      <div class="bar" aria-hidden="true"><i style="width:${lpct}%"></i></div><small>Rank: ${LEVELS[lv][0]}${lnxt ? ` · ${lnxt[1] - state.xp} XP to ${lnxt[0]}` : ""}</small>
       <div class="sidestats"><span title="Day streak">🔥 ${state.streak || 0}</span><span title="XP">⭐ ${state.xp}</span><span title="Merch unlocked">👕 ${gotMerch}/${allMerch}</span></div><em class="goto">Your progress ›</em></div>
     ${rewardStop ? `<div class="sidecard go" data-go="creator" role="link" tabindex="0" title="Open the character creator"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(merchView(nm, state.avatar.gender).label)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(merchView(rewardItems[0], state.avatar.gender).label)}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small><em class="goto">Your outfits ›</em></div>` : ""}</aside>`;
   const sideRight = `<aside class="mside" aria-label="Next boss and badges">
@@ -85,8 +85,12 @@ function home() {
     const go = () => (el.dataset.go === "creator" ? creator(home) : dashboard(el.dataset.go));
     el.onclick = go; el.onkeydown = e => { if (e.target === el && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); go(); } };
   });
-  const popped = app.querySelector(".node.fresh");   // a stop you just finished: bring it into view so you see it pop
-  if (popped) setTimeout(() => popped.scrollIntoView({ block: "center", behavior: "smooth" }), 200);
+  const popped = [...app.querySelectorAll(".node.fresh")].pop(), here = app.querySelector(".node.cur");   // the last stop finished since the map was drawn, and the next one to play
+  if (popped) setTimeout(() => {   // a stop you just finished: bring it into view so you see it pop, with the next stop in view too when the window is tall enough
+    const a = popped.getBoundingClientRect(), b = here ? here.getBoundingClientRect() : a;
+    window.scrollTo({ top: Math.max(0, scrollY + (Math.min(a.top, b.top) + Math.max(a.bottom, b.bottom)) / 2 - innerHeight / 2), behavior: "smooth" });
+  }, 200);
+  else if (here && nodes.indexOf(nextStop) >= 2) setTimeout(() => here.scrollIntoView({ block: "center" }), 60);   // coming back to the map: open on the next stop, not at the top of a long road (the first two stops are in view already)
 }
 
 // ---------- lesson chrome (the quizzes live in lessons.js) ----------

@@ -9,13 +9,13 @@
 //      and 1 for tone, judged for the situation from your words and your voice (tone.js). Scored by Coach.score in coach.js.
 // Uses globals from the page's own scripts (state, app, $, esc, barScene, lessonTop, wireX, finish helpers) at call time.
 
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition, PHONE = window.matchMedia("(max-width:700px)");
 let voiceUsed = false, coachOn = false, hintsUsed = 0;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const wordCount = t => (t.trim() ? t.trim().split(/\s+/).length : 0);
 const lvlOf = (sc, view) => (view && view.level) || sc.level || 3;
-// Coach mode shows how each answer did right after it, instead of at the end. It is on by default for the two easy levels, never in a real boss battle,
-// and the rep's own choice (the checkbox before a mission) wins. A hint (levels 3 and up, and retries, where the checklist is hidden) costs a little XP.
+// Coach mode shows how each answer did right after it, instead of at the end. It is on by default for the Easy missions, never in a real boss battle,
+// and the rep's own choice (the checkbox before a mission) wins. A hint (Medium and up, and retries, where the checklist is hidden) costs a little XP.
 const HINT_COST = 5;
 const coachFor = sc => !sc.boss && (state.coachPref === true || state.coachPref === false ? state.coachPref : (sc.level || 3) <= 2);
 
@@ -138,13 +138,22 @@ async function playOwnVoice(blob) {
 // Coach mode: a short card right after an answer. What you said and what tone, what you hit, what you missed, and a stronger answer.
 function coachCard(l) {
   const r = l.res, off = r.tone.notes.find(x => !x.ok);
+  // fix first: a mistake that cost points, then what was missed, then tone, two at most. The rest, and what went well, is one tap away.
+  const fix = [...r.flags.map(f => "⚠ " + f.msg), ...r.misses.map(m => "✗ Missing: " + m), ...(off ? ["🎭 " + off.msg] : [])], first = fix.slice(0, 2);
   return `<div class="feed coach ${band(r.score)}"><p><b>Coach: ${fmt(r.score)} / 5</b> <span class="note2">what you said ${fmt(r.content)} / 4 · tone ${fmt(r.tone.pts)} / 1</span></p>
-    ${r.hits.length ? `<ul class="hits">${r.hits.map(h => `<li class="ok">✓ ${esc(h)}</li>`).join("")}</ul>` : ""}
-    ${r.misses.length ? `<ul class="misses">${r.misses.map(h => `<li class="no">✗ Missing: ${esc(h)}</li>`).join("")}</ul>` : ""}
-    ${r.flags.length ? `<ul class="flags">${r.flags.slice(0, 2).map(f => `<li>⚠ ${esc(f.msg)}</li>`).join("")}</ul>` : ""}
-    ${off ? `<p class="note2">🎭 ${esc(off.msg)}</p>` : ""}
-    ${deliveryBlock(l.deliv)}
-    ${r.score < 5 ? `<p class="better"><b>A stronger answer might sound like:</b> <i>${esc(l.model)}</i> ${hearButton(l.model, l.pace)}</p>` : `<p class="better"><b>Nothing to fix.</b> That answer hit everything.</p>`}</div>`;
+    ${first.length ? `<div class="fixfirst"><b>Fix first</b><ul>${first.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${r.score < 5 ? `<p class="better"><b>A stronger answer might sound like:</b> <i>${esc(l.model)}</i> ${hearButton(l.model, l.pace)}</p>` : `<p class="better"><b>Nothing to fix.</b> That answer hit everything.</p>`}
+    <details class="coachmore"><summary>${moreLabel(l)}</summary>
+      ${r.hits.length ? `<ul class="hits">${r.hits.map(h => `<li class="ok">✓ ${esc(h)}</li>`).join("")}</ul>` : ""}
+      ${r.misses.length ? `<ul class="misses">${r.misses.map(h => `<li class="no">✗ Missing: ${esc(h)}</li>`).join("")}</ul>` : ""}
+      ${r.flags.length ? `<ul class="flags">${r.flags.map(f => `<li>⚠ ${esc(f.msg)}</li>`).join("")}</ul>` : ""}
+      ${off ? `<p class="note2">🎭 ${esc(off.msg)}</p>` : ""}
+      ${deliveryBlock(l.deliv)}</details></div>`;
+}
+// The label on the fold under an answer: what is in it, and how many things in it are worth a look (tone and voice lines that missed).
+function moreLabel(l) {
+  const bad = l.res.tone.notes.filter(x => !x.ok).length + (l.deliv ? l.deliv.items.filter(i => !i.ok).length : 0);
+  return `Tone, how you sounded and what went well${bad ? ` (${bad} to check)` : ""}`;
 }
 
 // ---------- one question ----------
@@ -160,12 +169,13 @@ function question(i, M, log) {
     <p class="tonecue">🎭 <b>Tone for this customer: ${prof.name}.</b> ${prof.cue || ""} <small>Aim for about ${prof.pace[0]} to ${prof.pace[1]} words a minute.</small></p></div>`;
   const camBlock = state.cam
     ? `<p class="camline" id="camLine" role="status">📷 ${esc(Cam.msg || "Starting camera…")}</p>`
-    : `<p class="camnudge" id="camNudge">📷 <b>Camera coach is off.</b> Turn it on for a delivery score and +25% XP. <button class="btn alt" id="camEnable" type="button">Turn on camera</button></p>`;
+    : i > 0 || state.camNudgeOff ? ""   // the reminder shows on the first question only, and a rep can switch it off for good
+    : `<p class="camnudge" id="camNudge">📷 <b>Camera coach is off.</b> Turn it on for a delivery score and +25% XP. <button class="btn alt" id="camEnable" type="button">Turn on camera</button><button class="x2" id="camDismiss" type="button" aria-label="Don't remind me about the camera again" title="Don't remind me again">✕</button></p>`;
   app.innerHTML = `<section class="view sheet mission">${lessonTop(i / n, true, sc.title)}
     <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, view)}</div>
     <div class="names"><span>${cust.name} · ${cust.role}</span><span>${esc(repName())} · Rep</span></div>
     ${camBlock}
-    <div class="qhead"><span class="chip">Question ${i + 1} of ${n} · ${esc(S.skill)}</span><span class="chip lvlchip">Level ${lvl} · ${L.name}</span>${boss ? `<span class="chip bosschip">Boss battle · Tier ${boss.tier}</span>` : sc.rehearsal ? '<span class="chip">Practice run</span>' : ""}${S.twist ? '<span class="chip twistchip">⚡ Curveball</span>' : ""}</div>
+    <div class="qhead"><span class="chip">Question ${i + 1} of ${n} · ${esc(S.skill)}</span><span class="chip lvlchip" title="How hard this mission is">${L.name}</span>${boss ? `<span class="chip bosschip">Boss battle · Tier ${boss.tier}</span>` : sc.rehearsal ? '<span class="chip">Practice run</span>' : ""}${S.twist ? '<span class="chip twistchip">⚡ Curveball</span>' : ""}</div>
     <div class="bubble" id="bub" aria-live="polite">${S.line}</div>
     ${S.twist ? `<p class="twist" role="note">⚡ <b>Curveball:</b> ${esc(S.twist)}</p>` : ""}
     <div class="needs">${need("Trust", M.trust, "t", "How much they believe you and like you.")}${need("Interest", M.interest, "i", "How curious they are about Tequila Corrido.")}${need(cust.meter, M.price, "p", `A bonus meter for this customer: ${cust.meter.toLowerCase()}.`)}</div>
@@ -174,7 +184,7 @@ function question(i, M, log) {
     ${boss ? `<p class="bossrule">⚔️ Boss rules: ${boss.pass.toFixed(1)} / 5 to win. A health claim or a pressure tactic loses instantly.${voiceOnly ? " Voice only: speak your answer." : ""}</p>` : ""}
     <div class="recpanel" id="recpanel">
       <div class="rtimer" aria-hidden="true"><i id="rbar"></i></div>
-      <div class="rrow"><button class="btn recbtn" id="recbtn" type="button" ${SR ? "" : "hidden"}>🎙 Start recording</button><span id="rtime" class="rtime">${SR ? `0:00 of ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}` : ""}</span><span id="micMsg" class="note2" role="status"></span></div>
+      <div class="rrow recdock"><button class="btn recbtn" id="recbtn" type="button" ${SR ? "" : "hidden"}>🎙 Start recording</button><span id="rtime" class="rtime">${SR ? `0:00 of ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}` : ""}</span><span id="micMsg" class="note2" role="status"></span></div>
       <label class="sr" for="ans">Your answer</label>
       <textarea id="ans" rows="4" maxlength="1200" ${voiceOnly ? "readonly" : ""} placeholder="${voiceOnly ? "Voice only for this boss. Press Start recording and say your answer. Your words appear here." : SR ? "Press Start recording and say your answer out loud. Your words appear here, and you can fix or type them before you submit." : "Type what you would say out loud."}" autocomplete="off"></textarea>
       <div class="rrow"><button class="btn alt" id="redo" type="button">Start over (1 left)</button><button class="btn" id="submit" type="button" disabled>Submit answer</button><small id="cnt" class="note2"></small></div>
@@ -186,6 +196,7 @@ function question(i, M, log) {
   ans.oninput = refresh;
   if ($("#hintbtn")) $("#hintbtn").onclick = () => { hintsUsed++; $("#hintslot").innerHTML = tips + `<p class="note2">Hint used: −${HINT_COST} XP.</p>`; };
   $("#vo").onclick = () => { voiceOn = !voiceOn; state.voiceOff = !voiceOn; Progress.save(state); $("#vo").textContent = voiceOn ? "🔊 Voice on" : "🔇 Voice off"; if (!voiceOn && window.speechSynthesis) { Voices.halt(); speechSynthesis.cancel(); } };
+  if ($("#camDismiss")) $("#camDismiss").onclick = () => { state.camNudgeOff = true; Progress.save(state); $("#camNudge").remove(); };
   if ($("#camEnable")) $("#camEnable").onclick = () => {
     state.cam = true; state.camPref = true; Progress.save(state); Cam.reset(); Cam.begin();
     $("#camNudge").outerHTML = `<p class="camline" id="camLine" role="status">📷 ${esc(Cam.msg || "Starting camera…")}</p>`;
@@ -249,7 +260,7 @@ function question(i, M, log) {
     listening = true; Cam.sampling = true; startRecorder();
     const b = $("#recbtn"); b.classList.add("on"); b.textContent = "⏹ Stop recording";
     clearInterval(tick); tick = setInterval(() => { elapsed += .25; paintTime(); if (elapsed >= secs) stopListening("Time's up. Read your answer, fix anything, then submit."); }, 250);
-    $("#recpanel").scrollIntoView({ block: "nearest", behavior: "smooth" });
+    (PHONE.matches ? $("#ans") : $("#recpanel")).scrollIntoView({ block: "nearest", behavior: "smooth" });   // on a phone the Record button stays pinned, so follow the words
   }
   if ($("#recbtn")) $("#recbtn").onclick = () => (listening ? stopListening() : startListening());
   $("#redo").onclick = () => {
@@ -335,7 +346,7 @@ function missionResults(M, log) {
   const newItems = counts && won && firstTime ? stopRewards(sc.id) : [];
   if (counts && won) { state.done[sc.id] = true; state.stars[sc.id] = Math.max(state.stars[sc.id] || 0, stars); }
   const tierInfo = boss && won && !sc.rehearsal ? bossApplyWin({ boss, stop: sc, first: firstTime, stars, perfect: avg >= 4.8 }) : null;
-  const earned = Progress.record(state, { id: sc.id, title: sc.title, diff: sc.surprise ? "Surprise round" : `Level ${lvl}`,   // a surprise round is practice, so it can't earn "Tough Crowd" (pass a Level 4 or 5 mission)
+  const earned = Progress.record(state, { id: sc.id, title: sc.title, diff: sc.surprise ? "Surprise round" : L.name,   // a surprise round is practice, so it can't earn "Tough Crowd" (pass a Hard or Expert mission)
     mode: voiceUsed ? "speak" : "type", pct, stars, won, xp, skills, lesson: false, voice: voiceUsed, camera: !!cam, cameraScores: cam, perfect }, TOTAL_STOPS());
   syncBadges().forEach(k => { if (!earned.includes(k)) earned.push(k); });
   hud();
@@ -370,13 +381,15 @@ function missionResults(M, log) {
         <p class="said"><small>What you said:</small> ${esc(l.text)}</p>
         ${l.blob ? `<button class="btn alt playmine" type="button" data-i="${j}">▶ Hear yourself</button>` : ""}
         <p class="split"><span>What you said: <b>${fmt(r.content)} / 4</b></span><span>Tone: <b>${fmt(r.tone.pts)} / 1</b></span></p>
-        ${r.hits.length ? `<ul class="hits">${r.hits.map(h => `<li class="ok">✓ ${esc(h)} <b>+${fmt(per)}</b></li>`).join("")}</ul>` : ""}
         ${r.misses.length ? `<ul class="misses">${r.misses.map(h => `<li class="no">✗ Missing: ${esc(h)} <b>−${fmt(per)}</b></li>`).join("")}</ul>` : ""}
-        <ul class="tonelist"><li class="tonehead">🎭 Tone for this customer: ${esc(r.tone.name)}${r.tone.voiceUsed ? "" : " <small>(judged from your words, no voice recording)</small>"}</li>${r.tone.notes.map(x => `<li class="${x.ok ? "ok" : "no"}">${x.ok ? "✓" : "✗"} ${esc(x.msg)} ${x.ok ? "" : `<b>−${fmt(x.pts)}</b>`}</li>`).join("")}</ul>
-        ${deliveryBlock(l.deliv)}
         ${r.flags.length ? `<ul class="flags">${r.flags.map(f => `<li>⚠ ${esc(f.msg)} ${f.pts ? `<b>−${fmt(f.pts)}</b>` : ""}</li>`).join("")}</ul>` : ""}
         ${r.score < 5 ? `<p class="better"><b>A stronger answer might sound like:</b> <i>${esc(l.model)}</i> ${hearButton(l.model, l.pace)}</p>` : `<p class="better"><b>Nothing to fix here.</b> That answer hit everything.</p>`}
         ${r.score < 4 ? `<p class="retryrow"><button class="btn alt retryq" type="button" data-i="${j}">↻ Try this question again</button> <small>Same customer, one question, and the checklist is hidden.</small></p>` : ""}
+        <details class="coachmore"><summary>${moreLabel(l)}</summary>
+          ${r.hits.length ? `<ul class="hits">${r.hits.map(h => `<li class="ok">✓ ${esc(h)} <b>+${fmt(per)}</b></li>`).join("")}</ul>` : ""}
+          <ul class="tonelist"><li class="tonehead">🎭 Tone for this customer: ${esc(r.tone.name)}${r.tone.voiceUsed ? "" : " <small>(judged from your words, no voice recording)</small>"}</li>${r.tone.notes.map(x => `<li class="${x.ok ? "ok" : "no"}">${x.ok ? "✓" : "✗"} ${esc(x.msg)} ${x.ok ? "" : `<b>−${fmt(x.pts)}</b>`}</li>`).join("")}</ul>
+          ${deliveryBlock(l.deliv)}
+        </details>
         </div>
       </details>`;
     }).join("");
@@ -387,7 +400,7 @@ function missionResults(M, log) {
     app.innerHTML = `<section class="view result sheet">
       <div class="reshead"><div class="resleft">
         <h1>${won ? "Nice work, " + esc(repName()) + "!" : "Not this time"}</h1>
-        <span class="chip">${boss ? `Boss battle · Tier ${boss.tier}` : `Level ${lvl} · ${L.name}`} · ${esc(sc.title)}</span>
+        <span class="chip">${boss ? `Boss battle · Tier ${boss.tier}` : L.name} · ${esc(sc.title)}</span>
         <div class="bigscore ${band(avg)}" aria-label="Average score ${fmt(avg)} out of 5"><b>${fmt(avg)}</b><span>/ 5</span></div>
         ${starRow(stars)}</div>
       ${custBlock}</div>

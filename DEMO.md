@@ -13,7 +13,7 @@ For showing the Corrido Sales Academy mock to the team or the class. It uses **P
 | Time | Do | Say |
 |---|---|---|
 | 0:00 | Click **Yes, I'm 21+**, then **Presenting this? Skip setup with sample progress**. | "A training game for new Tequila Corrido reps: practise sales calls before they go into the field. This sample rep is part-way through." |
-| 0:30 | The **map**. Point at the locked stops, the **Next up** bar and the tier row. | "Each stop stays locked until the one before it is done. A boss ends each level and moves you up a tier." |
+| 0:30 | The **map**. Point at the locked stops, the **Next up** bar and the tier row. | "Each stop stays locked until the one before it is done. A boss ends each tier of missions and moves you up." |
 | 1:00 | Presenter menu (bottom left) > **Mission question** (The Quiet Bar). Type an answer. Open **Show a hint**. | "The customer speaks, you answer out loud or typed. Coach mode tells you what you got right and missed after every answer. A hint costs 5 XP." |
 | 2:00 | Presenter > **Results: not this time**, then **Results: a win**. Press **Try this question again** on a weak answer. | "Each answer is scored out of 5: four points for what you said, one for tone. You can replay just that question." |
 | 2:45 | Presenter > **Boss intro**, then **Tier Up**. | "Beating a boss moves you up a tier, unlocks merch and earns a badge you can share." |

@@ -35,7 +35,7 @@ const Presenter = (() => {
       else skills[id === "brand" ? "Story" : "Product knowledge"] = 4.1;
       const vals = Object.values(skills), avg = vals.reduce((a, b) => a + b, 0) / vals.length;
       n += 1;
-      P.history.push({ id, title: sc ? sc.title : lesson.title, diff: sc ? `Level ${sc.level}` : "medium", mode: sc ? "typed" : "quiz", pct: Math.round(avg / 5 * 100), stars: P.stars[id], won: true, xp: sc ? 90 : 60, date: today, skills, camera: null });
+      P.history.push({ id, title: sc ? sc.title : lesson.title, diff: sc ? MLEVEL[sc.level].name : "medium", mode: sc ? "typed" : "quiz", pct: Math.round(avg / 5 * 100), stars: P.stars[id], won: true, xp: sc ? 90 : 60, date: today, skills, camera: null });
     });
     P.xp = through === "sam" ? 520 : Math.max(full ? LEVELS[LEVELS.length - 1][1] : 60, P.history.reduce((a, h) => a + h.xp, 0));
     P.streak = full ? 14 : 5; P.lastDay = today; P.tutorialSeen = true;

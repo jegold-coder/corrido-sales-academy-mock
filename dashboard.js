@@ -12,8 +12,8 @@ function dashboard(tab = dashTab) {
   app.innerHTML = `<section class="view sheet dash">
     <div class="dhead">
       <div class="dav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div>
-      <div class="dwho"><h1>${esc(repName())}</h1><p>Level ${lv + 1}: ${LEVELS[lv][0]} · ${state.xp} XP · 🔥 ${state.streak || 0}-day streak</p>
-        <div class="bar" aria-label="Progress to the next level"><i style="width:${pctNext}%"></i></div><small>${nxt ? `${nxt[1] - state.xp} XP to ${nxt[0]}` : "Top level reached"}</small></div>
+      <div class="dwho"><h1>${esc(repName())}</h1><p>Rank: ${LEVELS[lv][0]} · ${state.xp} XP · 🔥 ${state.streak || 0}-day streak</p>
+        <div class="bar" aria-label="Progress to the next rank"><i style="width:${pctNext}%"></i></div><small>${nxt ? `${nxt[1] - state.xp} XP to ${nxt[0]}` : "Top rank reached"}</small></div>
       <button class="btn alt" id="dback" type="button">← Map</button>
     </div>
     <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" class="tab" data-t="${k}" aria-selected="${k === tab}">${l}</button>`).join("")}</div>
@@ -68,7 +68,7 @@ function dashProgress(el) {
       : '<p class="note2">Finish a mission to see your skills.</p>'}</div>
     ${cameraDash(H)}
     ${soundCard()}
-    <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Level</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(h.diff)}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${starGlyphs(h.stars || 0)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
+    <div class="card"><h3>Recent missions</h3>${H.length ? `<table class="hist"><thead><tr><th>Date</th><th>Mission</th><th>Difficulty</th><th>Score</th><th>Stars</th></tr></thead><tbody>${H.slice(-10).reverse().map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.title)}</td><td>${esc(diffLabel(h.diff))}${h.mode === "speak" ? " · spoken" : h.mode === "type" ? " · typed" : h.mode === "choice" ? " · quiz" : ""}</td><td>${(h.pct / 20).toFixed(1)} / 5</td><td>${starGlyphs(h.stars || 0)}</td></tr>`).join("")}</tbody></table>` : '<p class="note2">Nothing yet.</p>'}</div>`;
   wirePractice();
   Assign.wire(el);
   if ($("#pnote")) $("#pnote").onclick = () => dashboard("review");
@@ -122,7 +122,7 @@ function tierCard() {
     <ol class="ladder">${steps}</ol>
     <p class="lnext">${nb && st ? `Next boss: <b>${esc(st.title)}</b>, ${nb.quiz ? `${Math.round(nb.pass * 100)}% to win` : `${nb.pass.toFixed(1)} out of 5 to win`}. Win to become ${aTier(Math.min(5, nb.tier + 1))}.` : "<b>Season complete.</b> You have beaten every boss."}</p>
     <div class="row"><span>Merch unlocked</span><div class="bar"><i style="width:${Math.round(got / total * 100)}%"></i></div><b>${got}/${total}</b></div>
-    <p class="note2">Beat a level to unlock its merch. Beat a boss to move up a tier. ${state.done.mean ? "You have the Legend frame." : ""}</p></div>`;
+    <p class="note2">Finish a mission to unlock its merch. Beat a boss to move up a tier. ${state.done.mean ? "You have the Legend frame." : ""}</p></div>`;
 }
 
 // Where each of N skills sits on a radar: values 0 to 1, drawn around a circle starting at the top.
@@ -179,8 +179,8 @@ function dashTeam(el) {
   const me = { n: repName(), xp: state.xp, lv: levelOf(state.xp), b: state.badges.length, s: state.streak || 0, me: true };
   const rows = [me, ...Object.values(state.team || {})].sort((a, b) => b.xp - a.xp);
   const code = Progress.shareCode(state, repName());
-  el.innerHTML = `<p class="note2">No server and no cost: each rep copies their code and shares it in the team chat. Paste a teammate's code to add them. Codes are just a name, XP and level, and they only update when a teammate shares a new one.</p>
-    <div class="card"><h3>Leaderboard</h3><ol class="lb">${rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span>${i + 1}. ${esc(r.n)}${r.demo ? " <small>(demo)</small>" : ""}</span><span>Lv ${r.lv + 1} · ${r.xp} XP · 🔥 ${r.s}${r.me ? "" : ` <button class="x2" data-k="${esc(r.n)}" aria-label="Remove ${esc(r.n)}">✕</button>`}</span></li>`).join("")}</ol></div>
+  el.innerHTML = `<p class="note2">No server and no cost: each rep copies their code and shares it in the team chat. Paste a teammate's code to add them. Codes are just a name, XP and rank, and they only update when a teammate shares a new one.</p>
+    <div class="card"><h3>Leaderboard</h3><ol class="lb">${rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span>${i + 1}. ${esc(r.n)}${r.demo ? " <small>(demo)</small>" : ""}</span><span>${esc((LEVELS[r.lv] || LEVELS[0])[0])} · ${r.xp} XP · 🔥 ${r.s}${r.me ? "" : ` <button class="x2" data-k="${esc(r.n)}" aria-label="Remove ${esc(r.n)}">✕</button>`}</span></li>`).join("")}</ol></div>
     <div class="card"><h3>Your code</h3><input id="mycode" readonly value="${code}" aria-label="Your share code"><button class="btn alt" id="cpycode" type="button">Copy</button></div>
     <div class="card"><h3>Add a teammate</h3><input id="tcode" placeholder="Paste a code that starts with csa1." aria-label="Teammate code"><button class="btn" id="addcode" type="button">Add</button><p class="note2" id="tmsg"></p>
       <button class="btn alt" id="demo" type="button">Add demo teammates (for presenting)</button></div>

@@ -8,13 +8,15 @@ state.cam = state.camPref !== false;   // the camera coach is on by default and 
 
 const DIFF = {
   easy:   { label: "Easy",   hearts: 5, hints: 99, win: 50, timer: 0,  meh: 0,  start: [50, 40, 40], xp: 1,   desc: "5 hearts, unlimited hints, a friendly customer, one obvious wrong answer." },
-  medium: { label: "Medium", hearts: 3, hints: 1,  win: 60, timer: 60, meh: 0,  start: [40, 30, 30], xp: 1.5, desc: "3 hearts, 1 hint per level, 60-second timer, a fair customer.", descType: "3 hearts, 1 hint per level, 2-minute timer (it pauses while you speak), a fair customer." },
+  medium: { label: "Medium", hearts: 3, hints: 1,  win: 60, timer: 60, meh: 0,  start: [40, 30, 30], xp: 1.5, desc: "3 hearts, 1 hint per lesson, 60-second timer, a fair customer.", descType: "3 hearts, 1 hint per lesson, 2-minute timer (it pauses while you speak), a fair customer." },
   hard:   { label: "Hard",   hearts: 2, hints: 0,  win: 70, timer: 30, meh: -5, start: [30, 20, 20], xp: 2,   desc: "2 hearts, no hints, 30-second timer, a tough customer.", descType: "2 hearts, no hints, 75-second timer (it pauses while you speak), a tough customer." },
 };
 const D = () => DIFF[state.diff];
 // Typing or speaking takes longer than tapping an answer, so typed missions get longer timers.
 
 $("#yes").focus();
+// A shop photo that is still on its way shows a soft shimmer in its own space, so nothing jumps when it arrives. Load and error don't bubble, so listen on the way down.
+["load", "error"].forEach(ev => document.addEventListener(ev, e => { if (e.target.tagName === "IMG") e.target.classList.add("ld"); }, true));
 const toast = msg => { let t = $("#toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); } t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3200); };
 // Move keyboard focus to the new screen whenever the view changes.
 // The room's background music belongs to a mission scene, and the boss theme to the boss screen. Whatever way you leave (the X, the
@@ -67,7 +69,7 @@ const hud = () => {
   $("#stXp").textContent = state.xp;
   $("#stStreak").textContent = state.streak || 0;
   { const lv = levelOf(state.xp), nx = LEVELS[lv + 1], lo = LEVELS[lv][1];
-    $("#stLvl").innerHTML = `Lv ${lv + 1} <span class="lvname">${LEVELS[lv][0]}</span>`;
+    $("#stLvl").textContent = LEVELS[lv][0]; $("#ftLvl").title = `Your rank: ${LEVELS[lv][0]}. Open your dashboard.`;   // XP is a rank (Rookie to Master Rep). "Tier" is for bosses and "Easy to Expert" is for difficulty
     $("#xpFill").style.width = (nx ? Math.round((state.xp - lo) / (nx[1] - lo) * 100) : 100) + "%"; }
     $("#stHearts").textContent = "❤️".repeat(state.hearts) + "🖤".repeat(Math.max(0, D().hearts - state.hearts));
 };

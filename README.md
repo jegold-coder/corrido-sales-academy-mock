@@ -31,13 +31,13 @@ What it loads from the internet:
 |---|---|
 | Personas with hidden objections | 13 missions, each customer hides a worry that is revealed on the scorecard |
 | Behavioral chat | Spoken sales-script conversations: the customer talks, you answer out loud (or type), your avatar plays your answer back in your own recorded voice with its mouth moving with the sound, and the customer replies to what you said |
-| Coach mode and hints | A checkbox in the screen before each mission (on by default for Levels 1 and 2). With it on, you see what your answer got right and missed right after each answer, before the next question. On Levels 3 and up the checklist is hidden, and a **Show a hint** button gives the same help for 5 XP. Boss battles have neither, so they are scored only at the end |
+| Coach mode and hints | A checkbox in the screen before each mission (on by default for Easy missions). With it on, you see what your answer got right and missed right after each answer, before the next question. On Levels 3 and up the checklist is hidden, and a **Show a hint** button gives the same help for 5 XP. Boss battles have neither, so they are scored only at the end |
 | Post-session scorecard | Every answer scored out of 5 at the end: 4 points for what you said (what you mentioned, what you missed, what knocked points off) and 1 for tone, with a stronger answer to compare to and a button to hear yourself again. Plus a delivery score from the camera |
 | Edge-case library | Pricing pushback (Marco, Dana), competitor comparison (Ray), compliance (Jess), gatekeeper (Sam), product matching (Mia), a store owner who says no (Tony), reading the buyer (Rafael), a store robbery (Ben) |
 | Grading | A free rule-based rubric (see `criteria.js`) scores each answer. No account, no cost. The old optional Gemini judge is still in `coach.js` but is not wired into the new flow |
 | Voice input | Record button in every mission (browser speech recognition, Chrome or Edge). Typing always works |
 | Body-language rating (stretch) | Camera coach is on by default and highly recommended: eye contact, posture, presence and smile, scored out of 5. Video never leaves the device |
-| Points, levels, badges, leaderboard (stretch) | XP, 6 levels, 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges, one of them for finishing the knowledge check), daily streak, team board using share codes |
+| Points, ranks, badges, leaderboard (stretch) | XP and six ranks (Rookie, Opener, Closer, Rainmaker, Corrido Legend, Master Rep), 20 badges (6 boss badges with each boss's face on a medal in bronze, silver, gold, emerald, ruby and diamond, plus boss feats and 12 mission badges, one of them for finishing the knowledge check), daily streak, team board using share codes |
 | Tiers, bosses and merch rewards (UI/UX journey, pages 1, 8, 9) | Six tiers from Trainee to Seasoned Seller. A boss battle ends each tier: Brand Brain (ten timed questions), Priya, Mia, Rafael, Dana and the Bad-Tempered Owner. Beating a boss moves you up a tier. Beating any level unlocks real Corrido merch for your character |
 | Sign-in (journey page 2) | Age check, then "continue as guest", **Sign in with Google** (switches on when a free client ID is added, see below) or an email that is only saved on this device. Company sign-in comes with the rollout |
 | Manager mode (journey pages 14 and 15) | Open to anyone with the link while in prototype: a class dashboard, coaching (with a team huddle), what reps actually said (with notes), assignments, brand facts, a CSV invite page, leaderboards and the answer grader. Uses sample data. See below |
@@ -59,7 +59,7 @@ What it loads from the internet:
 | "Help people understand who Corrido is" (Ken) | 4 brand lessons, quizzes that get harder with difficulty and a "Who is Tequila Corrido?" page with the promise, lineup, story and selling rules (reached from the header on every screen, next to a link to the real website that opens in a new tab) |
 | Practice and review | The Dashboard's Review tab (with a count) collects every wrong answer with a stronger one, and its Progress tab has a Practice button that replays your weakest skill across different customers. Neither is on the map. Missions also open with a different line on replay |
 
-Missions get harder as you go. Each has a level from 1 (Easy) to 5 (Expert) that sets the pass mark, how long an answer can be, how warm the customer starts and whether you see what a strong answer should mention. The ladder runs from an empty bar and a friendly new shop owner, through a gatekeeper, a hotel lounge, a buyer you have to read and a confused gas-station clerk, up to a price-focused distributor, a skeptical bar owner, a crisis, a compliance trap, a flat "no" and finally a bad-tempered bar owner. Brand lessons stay as short quizzes.
+Missions get harder as you go. Each has a difficulty (Easy, Easy, Medium, Hard, Expert, from 1 to 5 in the code) that sets the pass mark, how long an answer can be, how warm the customer starts and whether you see what a strong answer should mention. The ladder runs from an empty bar and a friendly new shop owner, through a gatekeeper, a hotel lounge, a buyer you have to read and a confused gas-station clerk, up to a price-focused distributor, a skeptical bar owner, a crisis, a compliance trap, a flat "no" and finally a bad-tempered bar owner. Brand lessons stay as short quizzes.
 
 How scoring works: each answer is worth 5 points. Four are for what you say, split equally across the things it should mention (for example "give a specific day"), with a point knocked off for each mistake (hype, a health claim, running down another brand, being vague). One point is for **tone**, judged for the situation: a nervous shop owner needs a slow, warm voice, a rude bar owner needs you calm and steady (no snapping, no grovelling), a distributor wants confidence. Tone looks at your words (warmth, pushiness, jargon, hedging) and, when you speak, your voice (pace, long pauses, volume and how flat or lively you sound). Scores are shown only at the end, like a recorded interview.
 
@@ -67,9 +67,21 @@ Your voice is recorded on your device with the browser's MediaRecorder so your a
 
 Three missions come from advice from the team's contact Ken. **The Hard No** (Tony): when an owner says no, find a way in by learning who he sells to and what appeals to them. **Know Your Buyer** (Rafael): fit the pitch to the buyer and stay honest. **Trouble at the Store** (Ben): a robbery. The right answers teach staying calm, complying, calling 911, staying with the owner and checking in later. They do not teach physically stopping the robber, because confronting an armed person can get people hurt. Confirm with Ken what they meant by "try to stop it".
 
+## Rank, tier and difficulty (three different words)
+
+The game has three ladders, and each has its own word so a rep never has to guess: **Rank** is XP (Rookie, Opener, Closer, Rainmaker, Corrido Legend, Master Rep: shown by name in the footer, on the Dashboard and on the map card). **Tier** is bosses beaten (Trainee to Seasoned Seller). **Difficulty** is how hard a mission is (Easy, Medium, Hard or Expert, with no number). `tests/usability.test.js` checks that no screen says "Lv" or "Level 4" and that the three sets of names never share a word. An older saved history that says "Level 4" is shown as "Hard".
+
+## Small usability rules
+
+- **On a phone** (700px or less) the Record button on a mission stays pinned above the stats bar while you read the question, so it is never below the fold.
+- **The map** opens on the next stop to play (not at the top of a long road), and a stop you just finished scrolls into view with the next one beside it.
+- **The camera reminder** shows on the first question of a mission only, with an "x" that switches it off for good.
+- **Feedback** after an answer shows what to fix first (two things at most) and a stronger answer with its Hear it button. What went well, tone and how you sounded are one tap away.
+- **Photos** show a soft shimmer in their own space while they load, and stop for anyone who asks for less motion.
+
 ## Tiers, bosses and merch
 
-- **Tiers:** Trainee, Associate Rep, Field Rep, Senior Rep, Key Account Rep, Seasoned Seller. Your tier is how many bosses you have beaten. Each boss is the last stop of its difficulty level, so the five mission levels line up with tiers 1 to 5 (`tests/tiers.test.js` checks it).
+- **Tiers:** Trainee, Associate Rep, Field Rep, Senior Rep, Key Account Rep, Seasoned Seller. Your tier is how many bosses you have beaten. Each boss is the last stop of its difficulty, so the five mission difficulties line up with tiers 1 to 5 (`tests/tiers.test.js` checks it).
 - **Bosses** use the existing missions, so their timings are unchanged: Priya (3.5 / 5 to win), Mia (3.5), Rafael (4.0, voice only if your browser can record), Dana (4.0, voice only) and the Bad-Tempered Owner (4.2, voice only). A health claim or a pressure tactic loses a boss battle instantly. Brand Brain is ten questions, fifteen seconds each, 80% to win. Three tries a day per boss, and a Practice first option that does not count.
 - **Merch:** 42 pieces (36 shirts and polos, 6 hats). The creator shows them as one tabbed photo grid (T-shirts, Polos, Hats) so the page stays short. Twenty are free from the start (fifteen shirts, five hats) so there is a choice in the creator on day one. The other 22 are each unlocked by beating a level (what a stop unlocks is shown on the screen before you start it, not on the map) (see `REWARDS` in `tiers.js`; `tests/tiers.test.js` checks every piece is unlocked exactly once). A boss win also moves you up a tier and shows the Tier Up screen with a shareable tier card (name, avatar and tier only). Some pieces come in one cut only. The Tequila Era tee has a women's cut (its own photo, name and shop page), and a woman sees that one. The Military Green Era tee is the men's cut, so it sits next to the grey one for men only, and a woman gets the Tequila Smuggler Tee at Priya's stop instead (41 pieces for a woman, 42 for a man; `tests/tiers.test.js` checks every piece is still unlocked once). Shirts whose product photo has sleeves splayed out sideways (Mas Tequila, Classic, Delivery, Smuggler, Worth the Shot, Spirit Animal, the Era tees and the Pickleball Raglan) keep the photo's body, and their sleeves are drawn over the arms in the shirt's colour: cap sleeves for a man (shaped like the Tequila On My Mind tee's), a boxier sleeve for a woman (like the women's Era tee). The numbers for each shirt are measured from its photo (the `DRAWN` table in `merch.js`).
 - **Smile:** the creator has a Smile row under Lip color (or Facial hair): Neutral, Soft smile, Warm smile, Big smile, Grin, Smirk and Laugh. The smile is drawn over the plain mouth and hides while your character talks, so the lip-sync in missions still works, then it comes back. Older saved characters start Neutral. Randomize picks one too.
@@ -118,7 +130,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `people.js`, `hair.js` | the drawn people (hands, bodies, polos, faces, smiles); skin and hair colours and the hairstyles |
 | `merch.js`, `avatar.js`, `creator.js` | the merch photos and the numbers measured from them; the rep's avatar; the character creator |
 | `scenes.js`, `results.js`, `start.js` | customers and the bar scene; speech helpers and the results screen; the start of the game (last script) |
-| `scenarios.js` | mission scripts, levels and the three replies a customer can give (edit here to change missions) |
+| `scenarios.js` | mission scripts, difficulties and the three replies a customer can give (edit here to change missions) |
 | `mission.js` | the spoken mission flow: recording, avatar playback with lip movement, customer reply and the scorecard |
 | `criteria.js` | the rubric for each question: what to mention and what costs points (draft) |
 | `coach.js` | the scoring (`Coach.score`: 4 content points plus 1 tone point) and the old optional Gemini judge |
@@ -137,14 +149,14 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `DEMO.md` | a 6-minute demo script that uses Presenter mode |
 | `tone.js` | how tone is judged from your words and your voice, for the situation, and the "How you sounded" lines |
 | `lessons.js` | brand lessons, question bank, knowledge check |
-| `progress.js` | saving, levels, badges, streak, team codes |
+| `progress.js` | saving, ranks, badges, streak, team codes |
 | `config.js`, `auth.js` | the Google client ID switch, and Sign in with Google (token checks, button, sign out) |
 | `badges.js` | the badge medals (boss faces, metals, ribbons), awarding boss badges |
 | `voices.js` | giving each customer a distinct voice and accent, and speaking like a person |
 | `dashboard.js` | the rep dashboard |
 | `grader.js` | the manager Grader page: good and not-good answers, and score any answer to see why |
 | `camera.js` | optional camera coach |
-| `tests/` | `surprise`, `answers`, `assign`, `facts`, `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills`, `hair`, `offline` and `avatarcheck` tests |
+| `tests/` | `usability`, `surprise`, `answers`, `assign`, `facts`, `scoring`, `tone`, `tiers`, `badges`, `voices`, `reactions`, `sound`, `map`, `phone`, `coaching`, `results`, `auth`, `natural`, `globals`, `camera`, `smile`, `presenter`, `callcard`, `learning`, `a11y`, `outfits`, `skills`, `hair`, `offline` and `avatarcheck` tests |
 
 ## Tests
 
@@ -174,6 +186,7 @@ node tests/skills.test.js   # the Skills chart: every skill is in one family, no
 node tests/offline.test.js  # the offline copy: photos kept after the first load and served when the network fails, the app's files network-first, nothing else touched
 node tests/avatarcheck.test.js # the Avatar check sheets: one picture per shirt or hairstyle in its own frame, and the player's avatar put back
 node tests/hair.test.js     # every hairstyle is attached to every head shape (no gap at the temples), and parting or shine lines stay on the head
+node tests/usability.test.js # each ladder has its own word, the Record button is pinned on a phone, the map opens on the next stop, the camera reminder shows once, feedback folds, photos have a placeholder
 node tests/surprise.test.js # the surprise customer: ten curveballs in five kinds, every right answer scores 4.2+ and every wrong one under 3.4, a round is one of each kind, the mission screen handles a short timer and a silent customer
 node tests/answers.test.js  # the answer log (words only), the sample class's answers are real and the same every time, the question the class misses most, a manager's note reaching the rep, and safe spreadsheets
 node tests/assign.test.js   # assignments: who it covers, the sample reps' progress, due dates in words, the one line on the map, and nothing a manager types can inject markup

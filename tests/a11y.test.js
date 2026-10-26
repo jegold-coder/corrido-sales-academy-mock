@@ -31,7 +31,7 @@ pairs.forEach(([n, a, b]) => { const r = ratio(a, b); ok(`${n} reach 4.5:1`, r >
 ok("the cream page background keeps the teal text at 4.5:1 too", ratio(tok.teal, tok.cream) >= 4.5, ratio(tok.teal, tok.cream).toFixed(2));
 
 // the CSS actually uses those colours
-ok("the gold that sits on brown is the lighter gold token", [".foot .pill b{color:var(--gold-t)", ".foot .lvname{color:var(--gold-t)}", ".splashsub{", ".tu-tier{", ".tu-kicker{"].every(s => html.includes(s)) && !/\.foot \.pill b\{color:var\(--gold\);/.test(html));
+ok("the gold that sits on brown is the lighter gold token", [".foot .pill b{color:var(--gold-t)", ".foot #stLvl{color:var(--gold-t)}", ".splashsub{", ".tu-tier{", ".tu-kicker{"].every(s => html.includes(s)) && !/\.foot \.pill b\{color:var\(--gold\);/.test(html));
 ok("the locked badges are no longer faded as a whole (fading cut the text contrast), only their pictures", /\.bcard:not\(\.on\)\{opacity:1\}\.bcard:not\(\.on\) \.bart,\.bcard:not\(\.on\) \.bi\{opacity:\.7\}/.test(html));
 
 // headings: every full page has one h1, even where it is not drawn

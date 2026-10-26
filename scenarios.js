@@ -830,7 +830,7 @@ const MIDS = {
 
 // The tone each situation calls for. Tone is worth 1 of the 5 points on every answer. A profile says how the rep should
 // sound: warm (friendly wording), plain (no jargon), steady (calm, no snapping and no grovelling), firm (sure of yourself,
-// few hedges), lively (a voice with life in it), and a pace range in words a minute. cue is shown on Level 1 and 2 missions.
+// few hedges), lively (a voice with life in it), and a pace range in words a minute. cue is shown on Easy missions.
 const TONE_FOR = {
   quiet:   { name: "warm and friendly", warm: true, lively: true, pace: [115, 175], cue: "She has time and is open to you. Sound glad to be there, relaxed and friendly." },
   priya:   { name: "warm and reassuring", warm: true, plain: true, lively: true, pace: [100, 150], cue: "She is nervous. Slow down, be encouraging and keep the words simple." },
