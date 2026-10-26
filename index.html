@@ -42,10 +42,10 @@ main{max-width:760px;margin:0 auto;padding:1.2rem}
 .hello{background:var(--deep);color:var(--cream);border-radius:12px;padding:1.2rem;margin-bottom:1.2rem}
 .hello p{margin:.2rem 0;color:#e8d9c2}
 .path{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:1rem 0}
-.node{width:92px;height:92px;border-radius:50%;border:0;border-bottom:8px solid var(--teal-d);background:var(--teal);color:var(--cream);font-size:2.2rem;position:relative;display:grid;place-items:center}
+.node{width:92px;height:92px;border-radius:50%;border:5px solid var(--teal-d);background:var(--teal);color:var(--cream);font-size:2.2rem;position:relative;display:grid;place-items:center}
 .node:hover:not(:disabled){transform:translateY(-3px)}
-.node.done{background:var(--gold);border-bottom-color:#a87a1a}
-.node:disabled{background:#c9bfb4;border-bottom-color:#a99d90;cursor:not-allowed;color:#857a6e}
+.node.done{background:var(--gold);border-color:#fff1c4}   /* every finished stop has the white ring, like a finished boss */
+.node:disabled{background:#c9bfb4;border-color:#a99d90;cursor:not-allowed;color:#857a6e}
 .node .stars{position:absolute;bottom:-22px;font-size:.8rem;color:var(--gold);white-space:nowrap}
 .lab{font-weight:700;text-align:center;margin-bottom:.8rem}
 .lab small{display:block;font-weight:400;color:#6e6458}
@@ -345,7 +345,7 @@ body.onboarding .foot{display:none}
 .nextup{display:flex;justify-content:space-between;align-items:center;gap:.8rem;background:#fff9ec;border:2px solid var(--gold);border-radius:14px;padding:.6rem .9rem;margin:.4rem 0 .8rem}
 .nextup small{color:var(--brown);text-transform:uppercase;letter-spacing:.06em}
 .lockmsg{background:#fff;border-left:5px solid var(--red);border-radius:8px;padding:.5rem .8rem;margin:.2rem 0 .8rem;font-weight:700}
-.node.locked{background:#c9bfb4;border-bottom-color:#a99d90;color:#857a6e;cursor:not-allowed}
+.node.locked{background:#c9bfb4;border-color:#a99d90;color:#857a6e;cursor:not-allowed}
 .sumline{margin:.2rem 0 .6rem;font-size:1.05rem}
 .dactions{display:flex;gap:.6rem;flex-wrap:wrap;margin:.4rem 0 .8rem}
 details.dcustom{border-top:1px solid #d8cdc0;padding-top:.5rem}
@@ -727,12 +727,12 @@ body.mgr #presenter{bottom:12px}
 .tierband.now span{background:#fff1c4;color:var(--deep);box-shadow:0 0 0 4px #e0a42f55}.tierband.next{opacity:.6}
 .tierband.new span{animation:bandpop 1.1s .5s both cubic-bezier(.2,1.5,.4,1)}
 @keyframes bandpop{0%{transform:scale(.5);opacity:0}100%{transform:none;opacity:1}}
-.node.fresh{animation:nodepop .9s cubic-bezier(.2,1.5,.4,1)}.node.fresh::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:4px solid #fff1c4;animation:nodering 1.4s ease-out 2;pointer-events:none}
+.node.fresh{animation:nodepop .9s cubic-bezier(.2,1.5,.4,1)}.node.fresh::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:4px solid #fff1c4;animation:nodering 1.4s ease-out 2 forwards;pointer-events:none}
 @keyframes nodepop{0%{transform:scale(.6)}60%{transform:scale(1.22)}100%{transform:scale(1)}}
 @keyframes nodering{from{opacity:.9;transform:scale(.9)}to{opacity:0;transform:scale(1.7)}}
 .rd-glow{fill:none;stroke:#fffbe6;stroke-width:7;stroke-linecap:round;stroke-dasharray:14 70;filter:drop-shadow(0 0 5px #ffe9a0);animation:roadrun 1.5s linear 4}
 @keyframes roadrun{to{stroke-dashoffset:-84}}
-@media(prefers-reduced-motion:reduce){.node.fresh,.node.fresh::after,.rd-glow,.tierband.new span{animation:none}.rd-glow{stroke-dasharray:none;opacity:.7}}
+@media(prefers-reduced-motion:reduce){.node.fresh::after{display:none}.node.fresh,.rd-glow,.tierband.new span{animation:none}.rd-glow{stroke-dasharray:none;opacity:.7}}
 /* ===== v35: dashboard tier ladder and skill radar ===== */
 .ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;list-style:none;margin:.2rem 0 .6rem;padding:0;text-align:center}
 .lstep{border-radius:12px;padding:.4rem .2rem;background:#f4ecdd;display:grid;justify-items:center;align-content:start;gap:.1rem;border:2px solid transparent}
@@ -845,6 +845,10 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 .fstatus{padding:.5rem .8rem;border-radius:10px;margin:.4rem 0}.fstatus.draft{background:#fbf0d3;color:#6b4e0d}.fstatus.ok{background:#dff1e0;color:#1f5a2c}
 .fmsg{color:#8a2f2f;font-weight:700}
 .wstatus{text-align:center}
+/* nothing slides sideways: no sideways bounce or swipe, and whatever shows past the edge of the page is its own dark brown, never white. Wide tables and the manager tabs keep their own sideways scroll. */
+html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
+#app,.top,.foot,.tabbar{touch-action:pan-y pinch-zoom}
+.mtablewrap,.mnav{touch-action:pan-x pan-y}
 /* photos on the way: a soft shimmer in their own space (the class ld is added when the photo has loaded or failed) */
 .tile img:not(.ld),.piece img:not(.ld),.xrow img:not(.ld),.xbottle img:not(.ld){background:linear-gradient(100deg,#e6dcc9 30%,#f4eee2 50%,#e6dcc9 70%) 0 0/200% 100%;animation:shim 1.3s linear infinite}
 @keyframes shim{to{background-position:-200% 0}}
@@ -920,46 +924,46 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26o"></script>
-<script src="sound.js?v=2026-10-26o"></script>
-<script src="scenarios.js?v=2026-10-26o"></script>
-<script src="progress.js?v=2026-10-26o"></script>
-<script src="criteria.js?v=2026-10-26o"></script>
-<script src="tone.js?v=2026-10-26o"></script>
-<script src="coach.js?v=2026-10-26o"></script>
-<script src="camera.js?v=2026-10-26o"></script>
-<script src="lessons.js?v=2026-10-26o"></script>
-<script src="dashboard.js?v=2026-10-26o"></script>
-<script src="grader.js?v=2026-10-26o"></script>
-<script src="onboarding.js?v=2026-10-26o"></script>
-<script src="tiers.js?v=2026-10-26o"></script>
-<script src="badges.js?v=2026-10-26o"></script>
-<script src="voices.js?v=2026-10-26o"></script>
-<script src="mission.js?v=2026-10-26o"></script>
-<script src="boss.js?v=2026-10-26o"></script>
-<script src="auth.js?v=2026-10-26o"></script>
-<script src="manager.js?v=2026-10-26o"></script>
-<script src="answers.js?v=2026-10-26o"></script>
-<script src="mgranswers.js?v=2026-10-26o"></script>
-<script src="assign.js?v=2026-10-26o"></script>
-<script src="facts.js?v=2026-10-26o"></script>
-<script src="surprise.js?v=2026-10-26o"></script>
-<script src="callcard.js?v=2026-10-26o"></script>
-<script src="presenter.js?v=2026-10-26o"></script>
-<script src="avatarcheck.js?v=2026-10-26o"></script>
-<script src="app.js?v=2026-10-26o"></script>
-<script src="dialog.js?v=2026-10-26o"></script>
-<script src="nav.js?v=2026-10-26o"></script>
-<script src="practice.js?v=2026-10-26o"></script>
-<script src="explorer.js?v=2026-10-26o"></script>
-<script src="map.js?v=2026-10-26o"></script>
-<script src="people.js?v=2026-10-26o"></script>
-<script src="hair.js?v=2026-10-26o"></script>
-<script src="merch.js?v=2026-10-26o"></script>
-<script src="avatar.js?v=2026-10-26o"></script>
-<script src="creator.js?v=2026-10-26o"></script>
-<script src="scenes.js?v=2026-10-26o"></script>
-<script src="results.js?v=2026-10-26o"></script>
-<script src="start.js?v=2026-10-26o"></script>
+<script src="config.js?v=2026-10-26r"></script>
+<script src="sound.js?v=2026-10-26r"></script>
+<script src="scenarios.js?v=2026-10-26r"></script>
+<script src="progress.js?v=2026-10-26r"></script>
+<script src="criteria.js?v=2026-10-26r"></script>
+<script src="tone.js?v=2026-10-26r"></script>
+<script src="coach.js?v=2026-10-26r"></script>
+<script src="camera.js?v=2026-10-26r"></script>
+<script src="lessons.js?v=2026-10-26r"></script>
+<script src="dashboard.js?v=2026-10-26r"></script>
+<script src="grader.js?v=2026-10-26r"></script>
+<script src="onboarding.js?v=2026-10-26r"></script>
+<script src="tiers.js?v=2026-10-26r"></script>
+<script src="badges.js?v=2026-10-26r"></script>
+<script src="voices.js?v=2026-10-26r"></script>
+<script src="mission.js?v=2026-10-26r"></script>
+<script src="boss.js?v=2026-10-26r"></script>
+<script src="auth.js?v=2026-10-26r"></script>
+<script src="manager.js?v=2026-10-26r"></script>
+<script src="answers.js?v=2026-10-26r"></script>
+<script src="mgranswers.js?v=2026-10-26r"></script>
+<script src="assign.js?v=2026-10-26r"></script>
+<script src="facts.js?v=2026-10-26r"></script>
+<script src="surprise.js?v=2026-10-26r"></script>
+<script src="callcard.js?v=2026-10-26r"></script>
+<script src="presenter.js?v=2026-10-26r"></script>
+<script src="avatarcheck.js?v=2026-10-26r"></script>
+<script src="app.js?v=2026-10-26r"></script>
+<script src="dialog.js?v=2026-10-26r"></script>
+<script src="nav.js?v=2026-10-26r"></script>
+<script src="practice.js?v=2026-10-26r"></script>
+<script src="explorer.js?v=2026-10-26r"></script>
+<script src="map.js?v=2026-10-26r"></script>
+<script src="people.js?v=2026-10-26r"></script>
+<script src="hair.js?v=2026-10-26r"></script>
+<script src="merch.js?v=2026-10-26r"></script>
+<script src="avatar.js?v=2026-10-26r"></script>
+<script src="creator.js?v=2026-10-26r"></script>
+<script src="scenes.js?v=2026-10-26r"></script>
+<script src="results.js?v=2026-10-26r"></script>
+<script src="start.js?v=2026-10-26r"></script>
 </body>
 </html>

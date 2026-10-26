@@ -27,7 +27,7 @@ ok("the side panels hide on small screens, where the page is one column", /@medi
 ok("the rep card and the tier bar open Progress, the badges card opens Badges, and the next unlock opens the character creator", /class="sidecard repcard go" data-go="progress"/.test(html) && /class="sidecard go" data-go="badges"[^>]*><h3>Boss badges/.test(html) && /class="sidecard go" data-go="creator"[^>]*><h3>Next unlock/.test(html) && /class="tierbar go" data-go="progress"/.test(html));
 ok("those cards work from the keyboard (link role, tab stop, Enter and Space) and the boss button is not inside one", (html.match(/ go" data-go="[a-z]+" role="link" tabindex="0"/g) || []).length === 4 && /e\.key === "Enter" \|\| e\.key === " "\)\) \{ e\.preventDefault\(\); go\(\)/.test(html) && /dashboard\(el\.dataset\.go\)/.test(html) && !/class="sidecard bosscard go"/.test(html));
 ok("a stop you just finished pops and lights the road to the next one", /fresh\.includes\(n\.id\) \? "fresh"/.test(html) && /class="rd-glow"/.test(html) && /@keyframes roadrun/.test(html));
-ok("people who prefer less motion get no pop or running light", /prefers-reduced-motion:reduce\)\{\.node\.fresh,\.node\.fresh::after,\.rd-glow/.test(html));
+ok("people who prefer less motion get no pop or running light", /prefers-reduced-motion:reduce\)\{\.node\.fresh::after\{display:none\}\.node\.fresh,\.rd-glow/.test(html));
 ok("Tier Up plays the victory music, the longer one for the season finale", /Sound\.sfx\(final \? "season" : "tierup"\)/.test(read("boss.js")));
 
 // the START tag floats 80 units above a stop's centre (24 tall); the tier banner chip is about 30 tall. Neither may touch.

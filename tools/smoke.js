@@ -197,9 +197,35 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
         const r = await chrome.eval("(() => { const n = document.querySelector('.node.cur'); if (!n) return { none: true }; const b = n.getBoundingClientRect(); return { top: Math.round(b.top), bottom: Math.round(b.bottom), vh: innerHeight, idx: ALL_STOPS().findIndex(x => x.id === n.dataset.id) }; })()");
         if (r.none || r.idx < 2 || r.bottom < 0 || r.top > r.vh) throw new Error("the next stop is out of view: " + JSON.stringify(r));
       }
+      const rings = await chrome.eval("[...document.querySelectorAll('.node:not(.boss)')].map(n => { const c = getComputedStyle(n), b = n.getBoundingClientRect(); return [c.borderTopWidth, c.borderRightWidth, c.borderBottomWidth, c.borderLeftWidth].every(w => w === c.borderTopWidth) && Math.round(b.width) === Math.round(b.height); }).filter(ok => !ok).length");
+      if (rings) throw new Error(rings + " stop circles are not true circles with an even ring");
       await chrome.eval("(() => { Presenter.reset(); window.scrollTo(0, 0); home(); })()");
       await sleep(800);
       if (await chrome.eval("window.scrollY") > 60) throw new Error("a first-day map scrolled away from the top");   // a few pixels of settling is normal; the first stop is already in view
+    });
+    await step("when the whole game is complete every finished circle has the white ring, the first stops as much as the last, before and after the map is redrawn", async () => {
+      const rings = "[...document.querySelectorAll('.node.done')].map(n => { const c = getComputedStyle(n); return [c.borderTopColor, c.borderRightColor, c.borderBottomColor, c.borderLeftColor].every(x => x === 'rgb(255, 241, 196)'); })";
+      for (const wait of [300, 4500]) {   // right after it is finished, and once the pop animation is long over
+        await chrome.eval("(() => { Presenter.reset(); home(); Presenter.finish(); home(); })()");
+        await sleep(wait);
+        const r = await chrome.eval(`(() => { const a = ${rings}; return { n: a.length, missing: a.filter(x => !x).length, total: ALL_STOPS().length }; })()`);
+        if (r.n !== r.total || r.missing) throw new Error(JSON.stringify(r));
+      }
+      await chrome.eval("home()"); await sleep(300);   // a plain redraw, with nothing new to pop
+      const r2 = await chrome.eval(`(() => { const a = ${rings}; return a.filter(x => !x).length + a.length * 100; })()`);
+      if (r2 !== 1600) throw new Error("after a redraw: " + r2);
+    });
+    await step("the map page is never wider than the screen at any phone or tablet width, and the page can't bounce sideways", async () => {
+      await chrome.eval("(() => { Presenter.finish(); document.body.classList.remove('mgr'); home(); })()");
+      for (const w of [320, 360, 390, 430, 768, 1100]) {
+        await chrome.send("Emulation.setDeviceMetricsOverride", { width: w, height: 800, deviceScaleFactor: 1, mobile: w < 700 });
+        await chrome.eval("home()"); await sleep(500);
+        const r = await chrome.eval("({ w: innerWidth, scrollW: document.documentElement.scrollWidth, x: (() => { scrollTo(300, 0); return scrollX; })() })");
+        if (r.scrollW > r.w || r.x !== 0) throw new Error("at " + w + "px the page is " + r.scrollW + "px wide and scrolls sideways by " + r.x);
+      }
+      await chrome.send("Emulation.clearDeviceMetricsOverride");
+      const s = await chrome.eval("({ bg: getComputedStyle(document.documentElement).backgroundColor, ob: getComputedStyle(document.documentElement).overscrollBehaviorX, ta: getComputedStyle(document.querySelector('#app')).touchAction })");
+      if (s.bg !== "rgb(36, 21, 10)" || s.ob !== "none" || !/pan-y/.test(s.ta) || /pan-x/.test(s.ta)) throw new Error(JSON.stringify(s));
     });
     await step("shop photos get a placeholder while they load and lose it when they arrive", async () => {
       await chrome.eval("(() => { state.proto = { ...state.proto, unlockMerch: true }; creator(home); })()");
