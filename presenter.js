@@ -160,7 +160,7 @@ const Presenter = (() => {
   function mount() {
     if (!q("#presenter")) {
       const d = document.createElement("div"); d.id = "presenter";
-      d.innerHTML = '<button type="button" id="prbtn" aria-expanded="false" aria-controls="prpanel">🎤 Presenter <small>sample data</small></button><div id="prpanel" role="dialog" aria-label="Presenter menu" hidden></div>';
+      d.innerHTML = '<button type="button" id="prbtn" aria-expanded="false" aria-controls="prpanel" title="Presenter menu (sample data)">' + ic("mic") + ' <span class="prlabel">Presenter</span> <small>sample data</small></button><div id="prpanel" role="dialog" aria-label="Presenter menu" hidden></div>';
       document.body.appendChild(d);
       q("#prbtn").onclick = () => { const p = q("#prpanel"), open = p.hidden; if (open) render(); p.hidden = !open; q("#prbtn").setAttribute("aria-expanded", String(open)); };
       document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });

@@ -917,9 +917,35 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 @media(max-width:700px){.mlogo .mdot{display:none}.mlogo .mrole{display:block}}
 @media(max-width:940px){.brandbtn .lg{display:none}.brandbtn .sm{display:inline}}
 @media(min-width:701px) and (max-width:800px){.logo small{display:none}}
+/* ===== v46: drawn icons, and the Presenter button sits in the footer bar ===== */
+/* The streak, XP, merch, sound, heart and mic icons are drawn, so they look the same on every device. Their shapes are the sprite at the top of the page. */
+.ic{width:1em;height:1em;vertical-align:-.15em;fill:currentColor;flex:none}
+.foot .pill>i{display:inline-flex;font-style:normal;font-size:1.1rem}
+.foot .pill .ic,.sidestats .ic{color:var(--gold-t)}
+.sidestats .ic{width:1.15em;height:1.15em}
+.foot .pill .ic.ic-heart{color:var(--red)}.foot .pill .ic.ic-heart.lost{color:#ffffff3d}
+#stHearts{gap:.15rem}
+/* "Sound on" and the words "day streak" and "XP" in the footer, and "sample data" by the Presenter button, are the same white as SALES ACADEMY in the header */
+.foot .soundfab span,#prbtn small{color:#fff}
+.foot .pill em{color:#fff;opacity:1}
+#prbtn .ic{width:1.15em;height:1.15em}
+/* The Presenter button used to float over the page and could cover a button on the left. On a laptop it now sits at the left end of the footer bar, which has no page content in it. */
+@media(min-width:801px){body:not(.mgr) #presenter{bottom:7px}}
+@media(max-width:1080px){#prbtn .prlabel,#prbtn small{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}#prbtn{padding:.4rem .6rem}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-flame" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2c1 4 5.5 6.7 5.5 12.5a5.5 5.5 0 0 1-11 0c0-2.2.9-3.9 2-5.2.2 1.5.8 2.5 1.6 3C10 9.3 10.6 5.3 12 2zM12 18.7a2.4 2.4 0 0 1-2.4-2.4c0-1.4 1.1-2.2 2.4-3.6 1.3 1.4 2.4 2.2 2.4 3.6a2.4 2.4 0 0 1-2.4 2.4z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></symbol>
+<symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8.5 3.5L3 6l1.8 4.6 2.7-.9v10.8h9V9.7l2.7.9L21 6l-5.5-2.5c-.4 1.5-1.8 2.5-3.5 2.5s-3.1-1-3.5-2.5z"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3.5 3.5 0 0 0-3.5 3.5v6a3.5 3.5 0 0 0 7 0v-6A3.5 3.5 0 0 0 12 2zM5.5 11a1 1 0 0 1 2 0 4.5 4.5 0 0 0 9 0 1 1 0 0 1 2 0 6.5 6.5 0 0 1-5.5 6.42V20h2a1 1 0 1 1 0 2h-6a1 1 0 1 1 0-2h2v-2.58A6.5 6.5 0 0 1 5.5 11z"/></symbol>
+<symbol id="i-sound" viewBox="0 0 24 24"><path d="M3 9.5v5h3.6l4.9 4.5V5L6.6 9.5z"/><path d="M15 9a4.2 4.2 0 0 1 0 6M17.8 6.4a8 8 0 0 1 0 11.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-mute" viewBox="0 0 24 24"><path d="M3 9.5v5h3.6l4.9 4.5V5L6.6 9.5z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21s-8.5-5.2-8.5-11.2A4.8 4.8 0 0 1 12 7a4.8 4.8 0 0 1 8.5 2.8C20.5 15.8 12 21 12 21z"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M9 4L7.6 6H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2.6L15 4zM12 8a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-4 12.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3A7 7 0 0 0 12 2zM9.5 20h5a.8.8 0 0 1 0 1.6h-5a.8.8 0 0 1 0-1.6z"/></symbol>
+</defs></svg>
 <a class="skip" href="#app">Skip to main content</a>
 <div class="bg" aria-hidden="true">
   <div class="photo a"></div><div class="photo b"></div>
@@ -963,11 +989,11 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 
 <main id="app" tabindex="-1"></main>
 <footer class="foot" aria-label="Your stats">
-  <span class="pill" title="Days practiced in a row (not clickable)"><i aria-hidden="true">🔥</i><b id="stStreak">0</b><em>day streak</em></span>
+  <span class="pill" title="Days practiced in a row (not clickable)"><i aria-hidden="true"><svg class="ic ic-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-flame"/></svg></i><b id="stStreak">0</b><em>day streak</em></span>
   <span class="pill lvl clickable" id="ftLvl" title="Open your dashboard" role="button" tabindex="0"><span id="stLvl">Rookie</span><span class="xpbar" aria-hidden="true"><i id="xpFill"></i></span></span>
-  <span class="pill clickable" id="ftXp" title="Open your dashboard" role="button" tabindex="0"><i aria-hidden="true">⭐</i><b id="stXp">0</b><em>XP</em></span>
-  <button class="pill soundpill soundfab" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound is on. Click to mute." title="Turn sound on or off">🔊</button>
-  <span class="pill" id="stHearts" title="Hearts left in this lesson (not clickable)">❤️❤️❤️</span>
+  <span class="pill clickable" id="ftXp" title="Open your dashboard" role="button" tabindex="0"><i aria-hidden="true"><svg class="ic ic-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-star"/></svg></i><b id="stXp">0</b><em>XP</em></span>
+  <button class="pill soundpill soundfab" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound is on. Click to mute." title="Turn sound on or off"><svg class="ic ic-sound" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-sound"/></svg></button>
+  <span class="pill" id="stHearts" role="img" aria-label="3 of 3 hearts left" title="Hearts left in this lesson (not clickable)"><svg class="ic ic-heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg><svg class="ic ic-heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg><svg class="ic ic-heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg></span>
 </footer>
 <nav class="tabbar" id="tabbar" aria-label="Main">
   <button type="button" data-tab="map"><i aria-hidden="true">🗺️</i><span>Map</span></button>
@@ -978,46 +1004,47 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26z"></script>
-<script src="sound.js?v=2026-10-26z"></script>
-<script src="scenarios.js?v=2026-10-26z"></script>
-<script src="progress.js?v=2026-10-26z"></script>
-<script src="criteria.js?v=2026-10-26z"></script>
-<script src="tone.js?v=2026-10-26z"></script>
-<script src="coach.js?v=2026-10-26z"></script>
-<script src="camera.js?v=2026-10-26z"></script>
-<script src="lessons.js?v=2026-10-26z"></script>
-<script src="dashboard.js?v=2026-10-26z"></script>
-<script src="grader.js?v=2026-10-26z"></script>
-<script src="onboarding.js?v=2026-10-26z"></script>
-<script src="tiers.js?v=2026-10-26z"></script>
-<script src="badges.js?v=2026-10-26z"></script>
-<script src="voices.js?v=2026-10-26z"></script>
-<script src="mission.js?v=2026-10-26z"></script>
-<script src="boss.js?v=2026-10-26z"></script>
-<script src="auth.js?v=2026-10-26z"></script>
-<script src="manager.js?v=2026-10-26z"></script>
-<script src="answers.js?v=2026-10-26z"></script>
-<script src="mgranswers.js?v=2026-10-26z"></script>
-<script src="assign.js?v=2026-10-26z"></script>
-<script src="facts.js?v=2026-10-26z"></script>
-<script src="surprise.js?v=2026-10-26z"></script>
-<script src="callcard.js?v=2026-10-26z"></script>
-<script src="presenter.js?v=2026-10-26z"></script>
-<script src="avatarcheck.js?v=2026-10-26z"></script>
-<script src="app.js?v=2026-10-26z"></script>
-<script src="dialog.js?v=2026-10-26z"></script>
-<script src="nav.js?v=2026-10-26z"></script>
-<script src="practice.js?v=2026-10-26z"></script>
-<script src="explorer.js?v=2026-10-26z"></script>
-<script src="map.js?v=2026-10-26z"></script>
-<script src="people.js?v=2026-10-26z"></script>
-<script src="hair.js?v=2026-10-26z"></script>
-<script src="merch.js?v=2026-10-26z"></script>
-<script src="avatar.js?v=2026-10-26z"></script>
-<script src="creator.js?v=2026-10-26z"></script>
-<script src="scenes.js?v=2026-10-26z"></script>
-<script src="results.js?v=2026-10-26z"></script>
-<script src="start.js?v=2026-10-26z"></script>
+<script src="config.js?v=2026-10-26zz"></script>
+<script src="icons.js?v=2026-10-26zz"></script>
+<script src="sound.js?v=2026-10-26zz"></script>
+<script src="scenarios.js?v=2026-10-26zz"></script>
+<script src="progress.js?v=2026-10-26zz"></script>
+<script src="criteria.js?v=2026-10-26zz"></script>
+<script src="tone.js?v=2026-10-26zz"></script>
+<script src="coach.js?v=2026-10-26zz"></script>
+<script src="camera.js?v=2026-10-26zz"></script>
+<script src="lessons.js?v=2026-10-26zz"></script>
+<script src="dashboard.js?v=2026-10-26zz"></script>
+<script src="grader.js?v=2026-10-26zz"></script>
+<script src="onboarding.js?v=2026-10-26zz"></script>
+<script src="tiers.js?v=2026-10-26zz"></script>
+<script src="badges.js?v=2026-10-26zz"></script>
+<script src="voices.js?v=2026-10-26zz"></script>
+<script src="mission.js?v=2026-10-26zz"></script>
+<script src="boss.js?v=2026-10-26zz"></script>
+<script src="auth.js?v=2026-10-26zz"></script>
+<script src="manager.js?v=2026-10-26zz"></script>
+<script src="answers.js?v=2026-10-26zz"></script>
+<script src="mgranswers.js?v=2026-10-26zz"></script>
+<script src="assign.js?v=2026-10-26zz"></script>
+<script src="facts.js?v=2026-10-26zz"></script>
+<script src="surprise.js?v=2026-10-26zz"></script>
+<script src="callcard.js?v=2026-10-26zz"></script>
+<script src="presenter.js?v=2026-10-26zz"></script>
+<script src="avatarcheck.js?v=2026-10-26zz"></script>
+<script src="app.js?v=2026-10-26zz"></script>
+<script src="dialog.js?v=2026-10-26zz"></script>
+<script src="nav.js?v=2026-10-26zz"></script>
+<script src="practice.js?v=2026-10-26zz"></script>
+<script src="explorer.js?v=2026-10-26zz"></script>
+<script src="map.js?v=2026-10-26zz"></script>
+<script src="people.js?v=2026-10-26zz"></script>
+<script src="hair.js?v=2026-10-26zz"></script>
+<script src="merch.js?v=2026-10-26zz"></script>
+<script src="avatar.js?v=2026-10-26zz"></script>
+<script src="creator.js?v=2026-10-26zz"></script>
+<script src="scenes.js?v=2026-10-26zz"></script>
+<script src="results.js?v=2026-10-26zz"></script>
+<script src="start.js?v=2026-10-26zz"></script>
 </body>
 </html>

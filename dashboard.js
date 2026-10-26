@@ -12,7 +12,7 @@ function dashboard(tab = dashTab) {
   app.innerHTML = `<section class="view sheet dash">
     <div class="dhead">
       <div class="dav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div>
-      <div class="dwho"><h1>${esc(repName())}</h1><p>Rank: ${LEVELS[lv][0]} · ${state.xp} XP · 🔥 ${state.streak || 0}-day streak</p>
+      <div class="dwho"><h1>${esc(repName())}</h1><p>Rank: ${LEVELS[lv][0]} · ${state.xp} XP · ${ic("flame")} ${state.streak || 0}-day streak</p>
         <div class="bar" aria-label="Progress to the next rank"><i style="width:${pctNext}%"></i></div><small>${nxt ? `${nxt[1] - state.xp} XP to ${nxt[0]}` : "Top rank reached"}</small></div>
       <button class="btn alt" id="dback" type="button">← Map</button>
     </div>
@@ -180,7 +180,7 @@ function dashTeam(el) {
   const rows = [me, ...Object.values(state.team || {})].sort((a, b) => b.xp - a.xp);
   const code = Progress.shareCode(state, repName());
   el.innerHTML = `<p class="note2">No server and no cost: each rep copies their code and shares it in the team chat. Paste a teammate's code to add them. A code is short, like csa2.2fuxlp1.Taylor, and holds just a name, XP, rank, badges and streak. It only updates when a teammate shares a new one.</p>
-    <div class="card"><h3>Leaderboard</h3><ol class="lb">${rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span>${i + 1}. ${esc(r.n)}${r.demo ? " <small>(demo)</small>" : ""}</span><span>${esc((LEVELS[r.lv] || LEVELS[0])[0])} · ${r.xp} XP · 🔥 ${r.s}${r.me ? "" : ` <button class="x2" data-k="${esc(r.n)}" aria-label="Remove ${esc(r.n)}">✕</button>`}</span></li>`).join("")}</ol></div>
+    <div class="card"><h3>Leaderboard</h3><ol class="lb">${rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span>${i + 1}. ${esc(r.n)}${r.demo ? " <small>(demo)</small>" : ""}</span><span>${esc((LEVELS[r.lv] || LEVELS[0])[0])} · ${r.xp} XP · ${ic("flame")} ${r.s}${r.me ? "" : ` <button class="x2" data-k="${esc(r.n)}" aria-label="Remove ${esc(r.n)}">✕</button>`}</span></li>`).join("")}</ol></div>
     <div class="card"><h3>Your code</h3><input id="mycode" readonly value="${code}" aria-label="Your share code"><button class="btn alt" id="cpycode" type="button">Copy</button></div>
     <div class="card"><h3>Add a teammate</h3><input id="tcode" placeholder="Paste a code that starts with csa2." aria-label="Teammate code"><button class="btn" id="addcode" type="button">Add</button><p class="note2" id="tmsg"></p>
       <button class="btn alt" id="demo" type="button">Add demo teammates (for presenting)</button></div>
@@ -210,7 +210,7 @@ function accountCard() {
 }
 
 function dashSettings(el) {
-  el.innerHTML = `<div class="card"><h3>Sound</h3><button class="btn alt" id="snd" type="button">${Sound.on ? "🔊 Sound is on. Mute" : "🔇 Sound is off. Turn on"}</button><p class="note2">Background vinyl and guitar, plus short effects. You can also use the speaker button in the bottom-left corner.</p></div>
+  el.innerHTML = `<div class="card"><h3>Sound</h3><button class="btn alt" id="snd" type="button">${Sound.on ? ic("sound") + " Sound is on. Mute" : ic("mute") + " Sound is off. Turn on"}</button><p class="note2">Background vinyl and guitar, plus short effects. You can also use the speaker button in the bottom-left corner.</p></div>
     <div class="card"><h3>Prototype tools</h3><p class="note2">The game is in prototype, so these switches make it easy to test everything. Turn them off to play it the way it will really work.</p>
       ${[["unlockStops", "Every stop is open (no need to beat the one before)"], ["unlockMerch", "Every piece of merch is unlocked"], ["unlimitedTries", "Unlimited boss tries (otherwise 3 a day per boss)"]].map(([k, l]) => `<label class="protorow"><input type="checkbox" data-p="${k}" ${PROTO(k) ? "checked" : ""}> ${l}</label>`).join("")}
       <button class="btn alt" id="gomgr2" type="button">Open manager mode</button>

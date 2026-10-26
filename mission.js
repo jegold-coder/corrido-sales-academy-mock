@@ -172,7 +172,7 @@ function question(i, M, log) {
     : i > 0 || state.camNudgeOff ? ""   // the reminder shows on the first question only, and a rep can switch it off for good
     : `<p class="camnudge" id="camNudge">📷 <b>Camera coach is off.</b> Turn it on for a delivery score and +25% XP. <button class="btn alt" id="camEnable" type="button">Turn on camera</button><button class="x2" id="camDismiss" type="button" aria-label="Don't remind me about the camera again" title="Don't remind me again">✕</button></p>`;
   app.innerHTML = `<section class="view sheet mission">${lessonTop(i / n, true, sc.title)}
-    <div class="stage"><button class="vbtn" id="vo">${voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>${barScene(avg, view)}</div>
+    <div class="stage"><button class="vbtn" id="vo">${voiceOn ? ic("sound") + " Voice on" : ic("mute") + " Voice off"}</button>${barScene(avg, view)}</div>
     <div class="names"><span>${cust.name} · ${cust.role}</span><span>${esc(repName())} · Rep</span></div>
     ${camBlock}
     <div class="qhead"><span class="chip">Question ${i + 1} of ${n} · ${esc(S.skill)}</span><span class="chip lvlchip" title="How hard this mission is">${L.name}</span>${boss ? `<span class="chip bosschip">Boss battle · Tier ${boss.tier}</span>` : sc.rehearsal ? '<span class="chip">Practice run</span>' : ""}${S.twist ? '<span class="chip twistchip">⚡ Curveball</span>' : ""}</div>
@@ -195,7 +195,7 @@ function question(i, M, log) {
   const ans = $("#ans"), refresh = () => { const w = wordCount(ans.value); $("#submit").disabled = submitted || w < 3; $("#cnt").textContent = w ? w + " words" : ""; };
   ans.oninput = refresh;
   if ($("#hintbtn")) $("#hintbtn").onclick = () => { hintsUsed++; $("#hintslot").innerHTML = tips + `<p class="note2">Hint used: −${HINT_COST} XP.</p>`; };
-  $("#vo").onclick = () => { voiceOn = !voiceOn; state.voiceOff = !voiceOn; Progress.save(state); $("#vo").textContent = voiceOn ? "🔊 Voice on" : "🔇 Voice off"; if (!voiceOn && window.speechSynthesis) { Voices.halt(); speechSynthesis.cancel(); } };
+  $("#vo").onclick = () => { voiceOn = !voiceOn; state.voiceOff = !voiceOn; Progress.save(state); $("#vo").innerHTML = voiceOn ? ic("sound") + " Voice on" : ic("mute") + " Voice off"; if (!voiceOn && window.speechSynthesis) { Voices.halt(); speechSynthesis.cancel(); } };
   if ($("#camDismiss")) $("#camDismiss").onclick = () => { state.camNudgeOff = true; Progress.save(state); $("#camNudge").remove(); };
   if ($("#camEnable")) $("#camEnable").onclick = () => {
     state.cam = true; state.camPref = true; Progress.save(state); Cam.reset(); Cam.begin();
@@ -404,7 +404,7 @@ function missionResults(M, log) {
         <div class="bigscore ${band(avg)}" aria-label="Average score ${fmt(avg)} out of 5"><b>${fmt(avg)}</b><span>/ 5</span></div>
         ${starRow(stars)}</div>
       ${custBlock}</div>
-      <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span>${cam ? '<span class="rw">📷 +25% camera bonus</span>' : ""}${hintsUsed ? `<span class="rw">💡 ${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} (−${hintsUsed * HINT_COST} XP)</span>` : ""}</div>
+      <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">${ic("flame")} ${state.streak}-day streak</span>${cam ? `<span class="rw">${ic("camera")} +25% camera bonus</span>` : ""}${hintsUsed ? `<span class="rw">${ic("bulb")} ${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} (−${hintsUsed * HINT_COST} XP)</span>` : ""}</div>
       ${badgeMedals(earned)}
       ${rewardChips(newItems)}
       <div class="resnotes">${retryNote}${focus}${toneLine}${missionDelivery(log)}</div>

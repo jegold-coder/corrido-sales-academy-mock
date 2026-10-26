@@ -16,7 +16,7 @@ function paintTabs() {
 $("#brandBtn").onclick = () => { if ($(".explore")) return home(); if ($("#pc") && !confirm("Leave this mission? Your answers so far won't count.")) return; explorer(); };
 // tapping your level or XP in the footer opens the dashboard, but only from the map so a mission is never interrupted
 ["#ftLvl", "#ftXp"].forEach(id => { const el = $(id), go = () => { if ($(".map")) dashboard(); }; el.onclick = go; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } }; });
-const paintSound = () => { const b = $("#soundBtn"); b.innerHTML = Sound.on ? '🔊 <span>Sound on</span>' : '🔇 <span>Sound off</span>'; b.setAttribute("aria-pressed", String(Sound.on)); b.setAttribute("aria-label", Sound.on ? "Sound is on. Click to mute." : "Sound is off. Click to turn on."); };
+const paintSound = () => { const b = $("#soundBtn"); b.innerHTML = Sound.on ? ic("sound") + ' <span>Sound on</span>' : ic("mute") + ' <span>Sound off</span>'; b.setAttribute("aria-pressed", String(Sound.on)); b.setAttribute("aria-label", Sound.on ? "Sound is on. Click to mute." : "Sound is off. Click to turn on."); };
 $("#soundBtn").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); };
 paintSound();
 const goHome = () => { if (!document.body.classList.contains("onboarding")) home(); };

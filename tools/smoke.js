@@ -97,6 +97,14 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
     await chrome.go(base); await chrome.eval("localStorage.clear()"); await chrome.go(base);
     await click("#yes"); await chrome.waitFor("!document.querySelector('#presentGo').disabled"); await click("#presentGo");
     ok("Presenter mode opens with sample progress and its menu button", await chrome.waitFor("!!document.querySelector('#prbtn') && !!document.querySelector('.maphome')"));
+    await step("the Presenter button sits inside the footer bar on a laptop, so it covers no page content", async () => {
+      for (const w of [1440, 1100, 1000, 820]) {
+        await chrome.send("Emulation.setDeviceMetricsOverride", { width: w, height: 800, deviceScaleFactor: 1, mobile: false }); await sleep(250);
+        const inside = await chrome.eval("(() => { const p = document.querySelector('#prbtn').getBoundingClientRect(), f = document.querySelector('.foot').getBoundingClientRect(); const pills = [...document.querySelectorAll('.foot .pill')].map(e => e.getBoundingClientRect()).filter(r => r.width); return p.top >= f.top && p.bottom <= f.bottom && p.left >= f.left && pills.every(r => r.left >= p.right); })()");
+        if (!inside) throw new Error(`the Presenter button is outside the footer bar, or touches a stat pill, at ${w}px wide`);
+      }
+      await chrome.send("Emulation.clearDeviceMetricsOverride");
+    });
     const jumps = await chrome.eval("Presenter.MENU().flatMap(([, items]) => items.map(i => i[0]))");
     ok(`the Presenter menu has ${jumps.length} jumps`, jumps.length >= 26);
     for (let k = 0; k < jumps.length; k++) {

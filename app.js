@@ -73,7 +73,8 @@ const hud = () => {
   { const lv = levelOf(state.xp), nx = LEVELS[lv + 1], lo = LEVELS[lv][1];
     $("#stLvl").textContent = LEVELS[lv][0]; $("#ftLvl").title = `Your rank: ${LEVELS[lv][0]}. Open your dashboard.`;   // XP is a rank (Rookie to Master Rep). "Tier" is for bosses and "Easy to Expert" is for difficulty
     $("#xpFill").style.width = (nx ? Math.round((state.xp - lo) / (nx[1] - lo) * 100) : 100) + "%"; }
-    $("#stHearts").textContent = "❤️".repeat(state.hearts) + "🖤".repeat(Math.max(0, D().hearts - state.hearts));
+    $("#stHearts").innerHTML = ic("heart").repeat(state.hearts) + ic("heart", "lost").repeat(Math.max(0, D().hearts - state.hearts));
+    $("#stHearts").setAttribute("aria-label", `${state.hearts} of ${D().hearts} hearts left`);
 };
 let tmr = null, tmrS = null;
 const stopTimer = () => { clearInterval(tmr); tmr = null; tmrS = null; };
