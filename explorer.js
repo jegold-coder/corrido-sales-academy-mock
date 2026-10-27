@@ -51,7 +51,7 @@ const LINEUP = [
 ];
 function explorer() {
   stopAll(); Cam.stop(); Sound.stop();
-  // This page is the 60-second review before a sale: quick reminders only (CallCard.review), then the shop's merch folded away. No links out to the website.
+  // This page is the 60-second review before a sale: quick reminders only (CallCard.review), then the shop's merch folded away. The only links out are the four bottles, each to its shop page.
   app.innerHTML = `<section class="view sheet explore callcard">
     <div class="dhead"><div class="dwho"><h1>Who is Tequila Corrido?</h1><p>Your 60-second review before a call. Quick reminders, public facts only.</p></div><button class="btn alt" id="xback" type="button">← Map</button></div>
     ${CallCard.review()}

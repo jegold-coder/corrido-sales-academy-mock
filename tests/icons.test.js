@@ -22,7 +22,7 @@ vm.runInContext(read("icons.js").replace(/^"use strict";/, "") + ";globalThis.ic
 const ic = ctx.ic;
 ok("ic() draws one icon from the sprite, hidden from screen readers", ic("flame") === '<svg class="ic ic-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-flame"/></svg>');
 ok("ic() takes an extra class, used for a lost heart", /class="ic ic-heart lost"/.test(ic("heart", "lost")));
-ok("icons.js adds one new global name and loads right after config.js, before the page's scripts", (read("icons.js").match(/^const [A-Za-z]+ =/gm) || []).length === 1 && html.indexOf('<script src="icons.js') === html.indexOf('<script src="config.js') + '<script src="config.js?v=2026-10-26zz"></script>\n'.length && html.indexOf('<script src="icons.js') < html.indexOf('<script src="app.js'));
+ok("icons.js adds one new global name and loads right after config.js, before the page's scripts", (read("icons.js").match(/^const [A-Za-z]+ =/gm) || []).length === 1 && html.indexOf('<script src="icons.js') === html.indexOf("</script>\n", html.indexOf('<script src="config.js')) + "</script>\n".length && html.indexOf('<script src="icons.js') < html.indexOf('<script src="app.js'));
 
 // ---------- the stat and toggle icons are drawn, not emoji ----------
 const covered = ["app.js", "nav.js", "map.js", "dashboard.js", "mission.js", "results.js", "presenter.js"];

@@ -16,6 +16,7 @@ const CallCard = (() => {
     return out;
   }
   const money = n => "$" + n.toFixed(2);
+  const SHOP_URL = "https://ilovetequilacorrido.com/products/";   // each bottle in LINEUP carries its shop handle, so a tap opens that bottle's page
 
   // ---------- the 60-second review ----------
   const DO = ["Ask about their guests and what they pour first.", "Offer 60 seconds, or a quieter time.", "Use the brand's own words and offer a taste.", "Ask for one small, dated next step."];
@@ -37,7 +38,7 @@ const CallCard = (() => {
     const R = Facts.review(), F = Facts.get();
     return `<div class="card"><h3>Say it in one line</h3><p>${promiseLine(R.promise)}</p>
         <ul class="xlist"><li><b>The name:</b> a corrido is a Mexican ballad. The brand borrows its music-and-rebellion spirit.</li><li><b>The maker:</b> stamped by one of the first female master distillers.</li><li><b>No famous fans:</b> the tequila does the talking, so never claim any.</li></ul></div>
-      <div class="card"><h3>The four bottles</h3><div class="xlineup">${LINEUP.map(([n, pr, notes, , img]) => `<div class="xbottle"><img src="${IMG}${img}" alt="A bottle of Tequila Corrido ${n}" loading="lazy"><div class="xtext"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small></div></div>`).join("")}</div>
+      <div class="card"><h3>The four bottles</h3><div class="xlineup">${LINEUP.map(([n, pr, notes, handle, img]) => `<a class="xbottle" href="${SHOP_URL}${handle}" target="_blank" rel="noopener noreferrer"><img src="${IMG}${img}" alt="A bottle of Tequila Corrido ${n}" loading="lazy"><div class="xtext"><b>${n}</b><span class="xprice">${pr}</span><small>${notes}</small><em>Shop page ↗</em></div><span class="sr"> (opens in a new tab)</span></a>`).join("")}</div>
         <p class="note2">These are the public shop prices. Wholesale terms aren't public, so say you'll confirm them in writing.${F.checked ? ` Prices last checked ${Facts.dateLabel(F.checked)}.` : ""}</p></div>
       <div class="ccrow"><div class="card"><h3>Do</h3><ul class="xlist">${R.doList.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div><div class="card"><h3>Never</h3><ul class="xlist nev">${R.neverList.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></div>
       <div class="card"><h3>If they say…</h3><dl class="ifthey">${IFTHEY.map(([a], i) => `<dt>${a}</dt><dd>${esc(R.replies[i] || IFTHEY[i][1])}</dd>`).join("")}</dl></div>

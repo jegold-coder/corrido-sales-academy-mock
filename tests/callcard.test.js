@@ -27,7 +27,7 @@ ok("the Never list covers under 21, health claims, invented numbers, other brand
 // ---------- the Who is Tequila Corrido? page is the 60-second review ----------
 const explorer = html.slice(html.indexOf("function explorer() {"), html.indexOf("// ---------- home / map ----------"));
 ok("the Who is Tequila Corrido? page is the 60-second review: built from CallCard.review(), with its calculator wired, and no separate Before a call page or button", /\$\{CallCard\.review\(\)\}/.test(explorer) && /CallCard\.wire\(\);/.test(explorer) && !/beforeCall|id="xcall"|Before a call/.test(html + field + read("presenter.js")) && /your 60-second review before a call/i.test(explorer));
-ok("that page has no link to the website: no href, no new-tab link, no shop link, and its merch list is plain rows", !/href=|target=|ilovetequilacorrido|shoplink|sitelink|xsite/.test(explorer + field) && !/<a class="xrow"|<a class="xbottle"/.test(explorer + field) && /<div class="xrow"/.test(explorer));
+ok("that page links out only from the four bottles: no shop link, site link or new-tab link anywhere else, and its merch list is plain rows", !/shoplink|sitelink|xsite|ilovetequilacorrido/.test(explorer) && !/target=/.test(explorer) && (field.match(/target="_blank"/g) || []).length === 1 && !/<a class="xrow"/.test(explorer + field) && /<div class="xrow"/.test(explorer));
 const rev = (() => {
   const c = vm.createContext({ console, IMG: "img/", esc: s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), $: () => ({}) });
   vm.runInContext(html.match(/const LINEUP = \[[\s\S]*?\n\];/)[0] + read("facts.js").replace(/^"use strict";/, "") + field.replace(/^"use strict";/, "") + ";globalThis.R = CallCard.review();", c);
@@ -35,7 +35,9 @@ const rev = (() => {
 })();
 ok("the review has the one-line promise, four bottles with photos and prices, Do and Never, six things they might say, and a calculator folded away", /Say it in one line/.test(rev) && (rev.match(/class="xbottle"/g) || []).length === 4 && /\$44\.99/.test(rev) && /\$89\.99/.test(rev) && /<h3>Do<\/h3>/.test(rev) && /<h3>Never<\/h3>/.test(rev) && (rev.match(/<dt>/g) || []).length === 6 && /<details class="card xmerch" id="calc">/.test(rev));
 ok("it is condensed: each Do, Never and objection answer is one short line (under 80 characters)", vm.runInContext("[...FW.DO, ...FW.NEVER, ...FW.IFTHEY.map(x => x[1])]", ctx).every(x => x.length < 80));
-ok("the review itself has no links at all", !/<a /.test(rev) && !/href/.test(rev));
+const links = [...rev.matchAll(/<a [^>]*>/g)].map(m => m[0]);
+ok("the review's only links are the four bottles, each to its own shop page in a new tab", links.length === 4 && (rev.match(/<a class="xbottle"/g) || []).length === 4 && ["blanco", "reposado", "overproof", "anejo"].every(h => links.some(a => a.includes(`href="https://ilovetequilacorrido.com/products/${h}"`))) && links.every(a => /target="_blank" rel="noopener noreferrer"/.test(a)) && (rev.match(/opens in a new tab/g) || []).length === 4);
+ok("each bottle link names the bottle (photo alt text) and says it opens a new tab, so a screen reader hears where it goes", ["Blanco", "Reposado", "Overproof", "Añejo"].every(n => rev.includes(`alt="A bottle of Tequila Corrido ${n}"`)) && /\.xbottle:focus-visible\{outline:3px solid var\(--teal\)/.test(html));
 
 // ---------- the Field log is gone ----------
 ok("there is no Field log: no tab, no code, no styles, and the card has no link to one", !/Field log|dashField|FieldWork|fieldwork|state\.field|fform|flist/.test(html + dash + field + read("presenter.js")) && !fs.existsSync(path.join(root, "fieldwork.js")));
