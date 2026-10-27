@@ -161,7 +161,14 @@ body{background:
 .talking .ppl{animation:talk .45s infinite alternate}
 .person .plumb{position:absolute;left:50%;transform:translateX(-50%);top:-16px}
 .person{position:relative}
-.vbtn{position:absolute;right:10px;top:34px;background:#0007;color:var(--cream);border:1px solid var(--gold);border-radius:99px;padding:.2rem .7rem;font-size:.78rem;z-index:3}
+/* the Voice on/off switch on a mission's stage: a small toggle (label, track and knob, state word), not a big button */
+.vbtn{position:absolute;right:10px;top:10px;display:inline-flex;align-items:center;gap:.4rem;background:#0008;color:#fff;border:1px solid var(--gold);border-radius:99px;padding:.15rem .6rem .15rem .7rem;font:700 .72rem Arimo,sans-serif;letter-spacing:.04em;text-transform:uppercase;z-index:3}
+.vbtn::after{content:"";position:absolute;inset:-8px}   /* the tap area is bigger than the switch looks */
+.vtrack{position:relative;flex:none;width:28px;height:16px;border-radius:99px;background:#6b5b48;transition:background .15s}
+.vtrack i{position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .15s}
+.vbtn[aria-checked=true] .vtrack{background:var(--gold)}.vbtn[aria-checked=true] .vtrack i{transform:translateX(12px)}
+.vbtn b{min-width:1.7em;text-align:left}
+@media(prefers-reduced-motion:reduce){.vtrack,.vtrack i{transition:none}}
 
 /* ===== v3: difficulty + illustrated bar scene ===== */
 .diff{display:flex;gap:.5rem;margin:.8rem 0 .3rem;flex-wrap:wrap}
@@ -171,7 +178,6 @@ body{background:
 .chip{display:inline-block;background:var(--deep);color:var(--gold);border-radius:99px;padding:.05rem .7rem;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 .stage{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--deep);background:#2d1b0b}
 .stage svg{display:block;width:100%;height:auto}
-.stage .vbtn{top:10px}
 .names{display:flex;justify-content:space-around;margin:.5rem 0}
 .names span{font-size:.8rem;font-weight:700;background:var(--deep);color:var(--cream);border-radius:6px;padding:.1rem .6rem}
 .bubble{margin-top:.6rem;background:#f4ead8;border:2px solid var(--deep)}
@@ -997,47 +1003,47 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-26zzzz"></script>
-<script src="icons.js?v=2026-10-26zzzz"></script>
-<script src="sound.js?v=2026-10-26zzzz"></script>
-<script src="scenarios.js?v=2026-10-26zzzz"></script>
-<script src="progress.js?v=2026-10-26zzzz"></script>
-<script src="criteria.js?v=2026-10-26zzzz"></script>
-<script src="tone.js?v=2026-10-26zzzz"></script>
-<script src="coach.js?v=2026-10-26zzzz"></script>
-<script src="camera.js?v=2026-10-26zzzz"></script>
-<script src="lessons.js?v=2026-10-26zzzz"></script>
-<script src="dashboard.js?v=2026-10-26zzzz"></script>
-<script src="grader.js?v=2026-10-26zzzz"></script>
-<script src="onboarding.js?v=2026-10-26zzzz"></script>
-<script src="tiers.js?v=2026-10-26zzzz"></script>
-<script src="badges.js?v=2026-10-26zzzz"></script>
-<script src="voices.js?v=2026-10-26zzzz"></script>
-<script src="mission.js?v=2026-10-26zzzz"></script>
-<script src="boss.js?v=2026-10-26zzzz"></script>
-<script src="auth.js?v=2026-10-26zzzz"></script>
-<script src="manager.js?v=2026-10-26zzzz"></script>
-<script src="answers.js?v=2026-10-26zzzz"></script>
-<script src="mgranswers.js?v=2026-10-26zzzz"></script>
-<script src="assign.js?v=2026-10-26zzzz"></script>
-<script src="facts.js?v=2026-10-26zzzz"></script>
-<script src="surprise.js?v=2026-10-26zzzz"></script>
-<script src="callcard.js?v=2026-10-26zzzz"></script>
-<script src="presenter.js?v=2026-10-26zzzz"></script>
-<script src="avatarcheck.js?v=2026-10-26zzzz"></script>
-<script src="app.js?v=2026-10-26zzzz"></script>
-<script src="dialog.js?v=2026-10-26zzzz"></script>
-<script src="nav.js?v=2026-10-26zzzz"></script>
-<script src="practice.js?v=2026-10-26zzzz"></script>
-<script src="explorer.js?v=2026-10-26zzzz"></script>
-<script src="map.js?v=2026-10-26zzzz"></script>
-<script src="people.js?v=2026-10-26zzzz"></script>
-<script src="hair.js?v=2026-10-26zzzz"></script>
-<script src="merch.js?v=2026-10-26zzzz"></script>
-<script src="avatar.js?v=2026-10-26zzzz"></script>
-<script src="creator.js?v=2026-10-26zzzz"></script>
-<script src="scenes.js?v=2026-10-26zzzz"></script>
-<script src="results.js?v=2026-10-26zzzz"></script>
-<script src="start.js?v=2026-10-26zzzz"></script>
+<script src="config.js?v=2026-10-27a"></script>
+<script src="icons.js?v=2026-10-27a"></script>
+<script src="sound.js?v=2026-10-27a"></script>
+<script src="scenarios.js?v=2026-10-27a"></script>
+<script src="progress.js?v=2026-10-27a"></script>
+<script src="criteria.js?v=2026-10-27a"></script>
+<script src="tone.js?v=2026-10-27a"></script>
+<script src="coach.js?v=2026-10-27a"></script>
+<script src="camera.js?v=2026-10-27a"></script>
+<script src="lessons.js?v=2026-10-27a"></script>
+<script src="dashboard.js?v=2026-10-27a"></script>
+<script src="grader.js?v=2026-10-27a"></script>
+<script src="onboarding.js?v=2026-10-27a"></script>
+<script src="tiers.js?v=2026-10-27a"></script>
+<script src="badges.js?v=2026-10-27a"></script>
+<script src="voices.js?v=2026-10-27a"></script>
+<script src="mission.js?v=2026-10-27a"></script>
+<script src="boss.js?v=2026-10-27a"></script>
+<script src="auth.js?v=2026-10-27a"></script>
+<script src="manager.js?v=2026-10-27a"></script>
+<script src="answers.js?v=2026-10-27a"></script>
+<script src="mgranswers.js?v=2026-10-27a"></script>
+<script src="assign.js?v=2026-10-27a"></script>
+<script src="facts.js?v=2026-10-27a"></script>
+<script src="surprise.js?v=2026-10-27a"></script>
+<script src="callcard.js?v=2026-10-27a"></script>
+<script src="presenter.js?v=2026-10-27a"></script>
+<script src="avatarcheck.js?v=2026-10-27a"></script>
+<script src="app.js?v=2026-10-27a"></script>
+<script src="dialog.js?v=2026-10-27a"></script>
+<script src="nav.js?v=2026-10-27a"></script>
+<script src="practice.js?v=2026-10-27a"></script>
+<script src="explorer.js?v=2026-10-27a"></script>
+<script src="map.js?v=2026-10-27a"></script>
+<script src="people.js?v=2026-10-27a"></script>
+<script src="hair.js?v=2026-10-27a"></script>
+<script src="merch.js?v=2026-10-27a"></script>
+<script src="avatar.js?v=2026-10-27a"></script>
+<script src="creator.js?v=2026-10-27a"></script>
+<script src="scenes.js?v=2026-10-27a"></script>
+<script src="results.js?v=2026-10-27a"></script>
+<script src="start.js?v=2026-10-27a"></script>
 </body>
 </html>
