@@ -31,13 +31,16 @@ ok("people who prefer less motion get no pop or running light", /prefers-reduced
 ok("Tier Up plays the victory music, the longer one for the season finale", /Sound\.sfx\(final \? "season" : "tierup"\)/.test(read("boss.js")));
 
 // the START tag floats 80 units above a stop's centre (24 tall); the tier banner chip is about 30 tall. Neither may touch.
-// bandUp gives the banner's height above its stop: 88 for Tier 0 once its first stop is not the current one (no START tag), and 120 otherwise.
-const top = Number((html.match(/TOP = (\d+)/) || [])[1]), near = Number((html.match(/const bandUp = .*? \? (\d+) : (\d+)\)/) || [])[1]), off = Number((html.match(/const bandUp = .*? \? (\d+) : (\d+)\)/) || [])[2]), minY = Number((html.match(/Math\.max\(ys\[f\] - bandUp\(f, t\), (\d+)\)/) || [])[1]);
-const chipBottom = (y0, first) => (first ? Math.max(y0 - off, minY) : y0 - off) + 15, startTop = y0 => y0 - 80;
-ok("the first stop's tier banner clears its START tag by a good margin", chipBottom(top, true) + 12 <= startTop(top), `chip bottom ${chipBottom(top, true)}, START top ${startTop(top)}`);
-ok("every other tier's banner clears the START tag too", chipBottom(top + 175 * 3, false) + 12 <= startTop(top + 175 * 3));
-ok("the first banner is not cut off by the top of the map, whether it hangs 120 or 88 above the stop", Math.max(top - off, minY) - 15 >= 0 && Math.max(top - near, minY) - 15 >= 0);
-ok("Tier 0's banner sits closer once there is no START tag to leave room for (88 against 120), and still clears the stop's top edge (a 92px circle) by a margin", near === 88 && off === 120 && near < off && (top - near) + 15 + 12 <= top - 46);
+// The Tier 0 banner sits a fixed 26 from the top of the map (bandUp is TOP - 26). The first stop hangs below it at TOP: 134 while it is the current stop (with the START tag between), 114 otherwise. Every other tier's banner hangs 120 above its stop.
+const tops = html.match(/TOP = !gated && nodes\[0\] === nextStop \? (\d+) : (\d+)/) || [], withStart = Number(tops[1]), noStart = Number(tops[2]);
+const bandM = html.match(/const bandUp = \(f, t\) => \(t === 0 \? TOP - (\d+) : (\d+)\)/) || [], bandY = Number(bandM[1]), up = Number(bandM[2]);
+const minY = Number((html.match(/Math\.max\(ys\[f\] - bandUp\(f, t\), (\d+)\)/) || [])[1]);
+const startTop = y0 => y0 - 80;
+ok("the first stop's tier banner clears its START tag by a good margin", Math.max(bandY, minY) + 15 + 12 <= startTop(withStart), `chip bottom ${Math.max(bandY, minY) + 15}, START top ${startTop(withStart)}`);
+ok("every other tier's banner clears the START tag too", up === 120 && (withStart + 175 * 3 - up) + 15 + 12 <= startTop(withStart + 175 * 3));
+ok("the first banner is not cut off by the top of the map", Math.max(bandY, minY) - 15 >= 0);
+ok("the first stop is placed after the banner's 26, 134 with the START tag and 114 without, and clears the banner by a margin either way (a 92px circle)", bandY === 26 && withStart === 134 && noStart === 114 && noStart - 46 - (bandY + 15) >= 12 && withStart - 46 - (bandY + 15) >= 12);
+ok("nextStop and gated are declared before TOP uses them (a const used early would crash the map)", html.indexOf("const nextStop =") > -1 && html.indexOf("const nextStop =") < html.indexOf("TOP = !gated") && html.indexOf("gated = needsCheck()") < html.indexOf("TOP = !gated"));
 
 // the dashboard: ladder and radar
 const dash = read("dashboard.js");

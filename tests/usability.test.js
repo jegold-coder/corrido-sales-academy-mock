@@ -123,6 +123,8 @@ ok("the Settings page has no The real brand card or website link (the website is
 
 ok("the line at the top of the map reads Ready to sell, then the rep's name, with Welcome kept for the locked first-run map (you don't pick a stop, the road does)", /<p class="lede">\$\{gated \? `Welcome, \$\{esc\(repName\(\)\)\}` : `Ready to sell, \$\{esc\(repName\(\)\)\}\?`\}<\/p>/.test(read("map.js")) && !/Pick your next stop/.test(read("map.js")));
 
-ok("the Tier 0 banner sits close above the first stop (88px) once that stop is no longer the current one, and keeps its 120px for the START tag while it is; the other tier banners are unchanged", /const bandUp = \(f, t\) => \(t === 0 && !\(!gated && nodes\[f\] === nextStop\) \? 88 : 120\);/.test(read("map.js")) && /top:\$\{Math\.max\(ys\[f\] - bandUp\(f, t\), 22\) \/ H \* 100\}%/.test(read("map.js")));
+ok("the Tier 0 banner sits near the top of the map (26px down) and the first stop hangs close below it (114px, or 134px while it is the current stop so the START tag fits); the other tier banners are unchanged at 120px above their stop", /const bandUp = \(f, t\) => \(t === 0 \? TOP - 26 : 120\);/.test(read("map.js")) && /TOP = !gated && nodes\[0\] === nextStop \? 134 : 114/.test(read("map.js")) && /top:\$\{Math\.max\(ys\[f\] - bandUp\(f, t\), 22\) \/ H \* 100\}%/.test(read("map.js")));
+
+ok("a tier banner reads \"Tier 0 · Trainee\", with a space before the dot (the banner is a flex row, which drops a space at the start of the tier name unless it is kept)", /\.tierband \.tt\{font-style:normal;white-space:pre\}/.test(css) && /<i class="tt"> · \$\{TIERS\[t\]\}<\/i>/.test(read("map.js")));
 
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

@@ -23,7 +23,9 @@ function home() {
   stopAll(); Cam.stop(); Sound.stop(); document.body.classList.remove("onboarding");
   state.hearts = D().hearts; hud();
   const nodes = ALL_STOPS();
-  const GAP = 175, TOP = 158, H = nodes.length * GAP + TOP - 60;   // TOP leaves room above the first stop for its tier banner and the START tag
+  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck() && !PROTO("unlockStops");
+  // The Tier 0 banner sits near the top of the map and the first stop hangs below it. TOP is that stop's height: 20 more while it is the current stop, so the START tag fits between the two.
+  const GAP = 175, TOP = !gated && nodes[0] === nextStop ? 134 : 114, H = nodes.length * GAP + TOP - 60;
   const xs = nodes.map((_, i) => (i % 2 ? 295 : 105)), ys = nodes.map((_, i) => TOP + i * GAP);
   let roads = "", stops = "";
   const doneIds = nodes.filter(n => state.done[n.id]).map(n => n.id), fresh = newlyDone(mapSeen, doneIds), tNow = tierOf(), starts = tierStarts(nodes.map(n => n.id));
@@ -34,7 +36,6 @@ function home() {
     const c = state.done[nodes[i].id] ? "done" : "";
     roads += `<path class="rd-base ${c}" d="${d}"/><path class="rd-mid ${c}" d="${d}"/>${fresh.includes(nodes[i].id) ? `<path class="rd-glow" d="${d}"/>` : ""}`;
   }
-  const nextStop = nodes.find(x => !state.done[x.id]), gated = needsCheck() && !PROTO("unlockStops");
   nodes.forEach((n, i) => {
     const done = state.done[n.id], open = PROTO("unlockStops") || (!gated && (i === 0 || done || state.done[nodes[i - 1].id])), cur = !gated && n === nodes.find(x => !state.done[x.id]);
     const pos = `left:${xs[i] / 4}%;top:${ys[i] / H * 100}%`, face = BOSS_BY[n.id] ? bossFace(n) : null;
@@ -60,8 +61,8 @@ function home() {
       <button class="btn" id="sidefight" type="button" ${nbOpen ? "" : "disabled"}>${nbOpen ? "See the battle" : "Locked"}</button></div>`
       : '<div class="sidecard"><h3>Season complete</h3><p>You have beaten every boss.</p></div>'}
     <div class="sidecard go" data-go="badges" role="link" tabindex="0" title="Open your badges"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small><em class="goto">All badges ›</em></div></aside>`;
-  // A tier banner hangs 120px above its first stop so the START tag fits between them. Tier 0 has no stop above it to bump into, so once its first stop is no longer the current one (no START tag) the banner sits closer.
-  const bandUp = (f, t) => (t === 0 && !(!gated && nodes[f] === nextStop) ? 88 : 120);
+  // A tier banner hangs 120px above its first stop so the START tag fits between them. Tier 0 has no stop above it to bump into, so its banner sits 26px from the top of the map.
+  const bandUp = (f, t) => (t === 0 ? TOP - 26 : 120);
   const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - bandUp(f, t), 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <h1 class="sr">Your training map</h1>
