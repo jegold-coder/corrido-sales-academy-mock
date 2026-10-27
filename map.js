@@ -63,7 +63,7 @@ function home() {
   const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 120, 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <h1 class="sr">Your training map</h1>
-    <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Pick your next stop, ${esc(repName())}`}</p>
+    <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Ready to sell, ${esc(repName())}?`}</p>
     ${Assign.strip()}
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     ${tierBar()}

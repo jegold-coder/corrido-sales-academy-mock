@@ -121,4 +121,6 @@ ok("the longer explanation of what clearing browser data does is still in Settin
 
 ok("the Settings page has no The real brand card or website link (the website is still one tap away in the header and the phone bar)", !/The real brand|sitelink|See the real Tequila Corrido website/.test(dash) && /ilovetequilacorrido\.com/.test(html) && /<a href="https:\/\/ilovetequilacorrido\.com" target="_blank"/.test(html));
 
+ok("the line at the top of the map reads Ready to sell, then the rep's name, with Welcome kept for the locked first-run map (you don't pick a stop, the road does)", /<p class="lede">\$\{gated \? `Welcome, \$\{esc\(repName\(\)\)\}` : `Ready to sell, \$\{esc\(repName\(\)\)\}\?`\}<\/p>/.test(read("map.js")) && !/Pick your next stop/.test(read("map.js")));
+
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);
