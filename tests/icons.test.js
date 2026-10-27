@@ -42,7 +42,7 @@ ok("under 1081px it shrinks to the mic icon, and its words stay for screen reade
 const white = /\.logo small,\.mlogo small\{[^}]*color:#fff\}/.test(css);
 ok("\"Sound on/off\", \"day streak\" and \"XP\" in the footer and \"sample data\" by the Presenter button are the same white as SALES ACADEMY in the header", white && /\.foot \.soundfab span,#prbtn small\{color:#fff\}/.test(css) && /\.foot \.pill em\{color:#fff;opacity:1\}/.test(css) && css.lastIndexOf(".foot .pill em{") > css.indexOf(".foot .pill em{font-style") && css.lastIndexOf("#prbtn small{") > css.indexOf("#prbtn small{font-weight:400"));
 const tabs = (html.match(/<nav class="tabbar"[\s\S]*?<\/nav>/) || [""])[0];
-ok("the phone bottom bar keeps its emoji icons (they are not drawn)", ["🗺️", "📊", "👤", "🥃", "🌐"].every(e => tabs.includes(`<i aria-hidden="true">${e}</i>`)) && !/<use /.test(tabs));
+ok("the phone bottom bar keeps its emoji icons (they are not drawn)", ["🗺️", "📊", "👤", "🥃", "🔗"].every(e => tabs.includes(`<i aria-hidden="true">${e}</i>`)) && !/<use /.test(tabs));
 ok("the phone bar's words are white, and the page you are on turns gold", /\.tabbar button,\.tabbar a\{[^}]*border-radius:10px;color:#fff;/.test(css) && /\.tabbar \[aria-current="page"\]\{color:var\(--gold\);background:#e0a42f26\}/.test(css));
 ok("the footer bar is still the only place that reserves room: main keeps its bottom padding", /main\{padding-bottom:5rem\}/.test(css));
 
