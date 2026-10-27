@@ -23,7 +23,7 @@ function dashboard(tab = dashTab) {
   const body = $("#dbody");
   ({ progress: dashProgress, badges: dashBadges, team: dashTeam, review: dashReview, check: dashCheck, settings: dashSettings })[tab](body);
   if (tab === "progress") {
-    body.insertAdjacentHTML("afterbegin", `<div class="savenote"><span><b>Your progress is saved only in this browser.</b> Clearing browser data, or opening the game on another computer, starts you over. Download a backup to keep it safe.</span><button class="btn alt" id="bak" type="button">Download backup</button></div>`);
+    body.insertAdjacentHTML("afterbegin", `<p class="savenote"><span>Progress is saved only in this browser.</span><button class="linkbtn" id="bak" type="button">Download backup</button></p>`);
     $("#bak").onclick = exportProgress;
   }
 }
@@ -53,13 +53,13 @@ function dashProgress(el) {
   const weak = skills[0];
   const done = ALL_STOPS().filter(x => state.done[x.id]).length;
   const rec = !H.length ? "Start with the two lessons, Meet Corrido and Know the Lineup, then The Quiet Bar."
-    : weak ? `Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). <button class="btn" id="pweak" type="button">Practice ${weak[0]}</button> A short mix of moments from different customers, picked to train it.` : "";
+    : weak ? `<span>Your lowest skill is <b>${weak[0]}</b> (${weak[1]}%). A short mix of moments from different customers, picked to train it.</span><button class="btn" id="pweak" type="button">Practice ${weak[0]}</button>` : "";
   const wirePractice = () => { if ($("#pweak")) $("#pweak").onclick = () => playPractice(weak[0]); };
   const unseen = AnswerLog.unseen();
   el.innerHTML = `${unseen ? `<p class="learn newnote">📝 <b>Your manager left you ${unseen === 1 ? "a note" : unseen + " notes"}.</b> <button class="btn" id="pnote" type="button">Read it in Review</button></p>` : ""}${tierCard()}${Assign.card()}
     <div class="stats3"><div><b>${done}/${ALL_STOPS().length}</b><span>stops finished</span></div><div><b>${wins}</b><span>missions won</span></div><div><b>${H.length ? (avg / 20).toFixed(1) + " / 5" : "–"}</b><span>average score</span></div></div>
-    ${!state.pre ? '<p class="learn">Optional: the 2-minute <b>knowledge check</b> shows where you start, so you can see how much you improve. <button class="btn alt" id="pcheck" type="button">Take the check</button></p>' : ""}
-    <p class="learn">${rec}</p>
+    ${!state.pre ? '<p class="learn withbtn"><span>Optional: the 2-minute <b>knowledge check</b> shows where you start, so you can see how much you improve.</span><button class="btn alt" id="pcheck" type="button">Take the check</button></p>' : ""}
+    <p class="learn${H.length && weak ? " withbtn" : ""}">${rec}</p>
     ${Surprise.card()}
     <div class="card"><h3>Skills</h3>${fams.length >= 3
       ? `<div class="radarwrap">${skillRadar(fams)}<ul class="skilllist">${[...fams].sort((a, b) => a[1] - b[1]).map(([k, v], i) => `<li${i === 0 ? ' class="weak"' : ""}><span>${esc(k)}${i === 0 ? ' <small class="focus">focus here</small>' : ""}</span><b>${v}%</b><div class="sbar" aria-hidden="true"><i style="width:${v}%"></i></div></li>`).join("")}</ul></div>
@@ -226,7 +226,6 @@ function dashSettings(el) {
       <button class="btn alt" id="exp" type="button">Download a backup (JSON)</button>
       <label class="btn alt filebtn">Restore from a backup<input type="file" id="imp" accept="application/json,.json" hidden></label>
       <button class="btn alt" id="rst" type="button">Reset all progress</button><p class="note2" id="smsg"></p></div>
-    <div class="card"><h3>The real brand</h3><p class="note2">See the real Tequila Corrido website. It opens in a new tab, so Sales Academy stays open.</p><a class="btn alt sitelink" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer">🌐 ilovetequilacorrido.com ↗</a></div>
     <div class="card"><h3>About this mock</h3><p class="note2">Free and offline: no accounts, no paid services. The coach is a built-in rule checker, not a live AI. Mission scripts are draft ideas for the team, not approved by Tequila Corrido.</p></div>`;
   $("#snd").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); dashboard("settings"); };
   el.querySelectorAll("[data-p]").forEach(c => c.onchange = () => { state.proto = { ...(state.proto || {}), [c.dataset.p]: c.checked }; Progress.save(state); state.avatar = cleanAvatar(state.avatar); hud(); });

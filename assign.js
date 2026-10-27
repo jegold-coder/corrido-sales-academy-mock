@@ -48,13 +48,14 @@ const Assign = (() => {
     const n = ALL_STOPS();
     return `<div class="assigned" role="note">${todo.slice(0, 2).map(a => {
       const i = n.findIndex(x => x.id === a.stop);
-      return `<p><span aria-hidden="true">📌</span> <b>${esc(a.by)} assigned:</b> ${esc(stopTitle(a.stop))}, <span class="${dayDiff(a.due) < 0 ? "late" : ""}">${dueText(a.due)}</span>${a.note ? ` <i>“${esc(a.note)}”</i>` : ""} ${isOpen(a.stop) ? `<button class="btn alt agostart" type="button" data-id="${a.stop}">Go to it</button>` : `<small>It opens after ${esc(n[i - 1].title)}.</small>`}</p>`;
+      const open = isOpen(a.stop);   // the text wraps inside its own box, so the button always stays on the same line
+      return `<p><span class="atext"><span aria-hidden="true">📌</span> <b>${esc(a.by)} assigned:</b> ${esc(stopTitle(a.stop))}, <span class="${dayDiff(a.due) < 0 ? "late" : ""}">${dueText(a.due)}</span>${a.note ? ` <i>“${esc(a.note)}”</i>` : ""}${open ? "" : ` <small>It opens after ${esc(n[i - 1].title)}.</small>`}</span>${open ? `<button class="btn alt agostart" type="button" data-id="${a.stop}">Go to it</button>` : ""}</p>`;
     }).join("")}${todo.length > 2 ? `<small>${todo.length - 2} more in your progress.</small>` : ""}</div>`;
   }
   // The Progress tab's card: everything assigned to the rep, done or not.
   function card() {
     const all = forPlayer(); if (!all.length) return "";
-    return `<div class="card"><h3>Assigned to you</h3><ul class="alist">${all.map(a => { const done = !!state.done[a.stop];
+    return `<div class="card acard"><h3>Assigned to you</h3><ul class="alist">${all.map(a => { const done = !!state.done[a.stop];
       return `<li class="${done ? "done" : dayDiff(a.due) < 0 ? "late" : ""}"><span><b>${esc(stopTitle(a.stop))}</b> <small>${done ? "Done ✓" : `${dueText(a.due)} · ${dateLabel(a.due)}`}${a.note ? ` · “${esc(a.note)}”` : ""}</small></span>${!done && isOpen(a.stop) ? `<button class="btn alt agostart" type="button" data-id="${a.stop}">Go to it</button>` : ""}</li>`; }).join("")}</ul></div>`;
   }
   function start(id) { if (!$(".map")) home(); const b = $(`.node[data-id="${id}"]`); if (b) b.click(); }

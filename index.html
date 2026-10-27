@@ -37,9 +37,10 @@ main{max-width:760px;margin:0 auto;padding:1.2rem}
 .gate{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:20;padding:1rem}
 .gate .box{background:var(--brown);color:var(--cream);text-align:center;padding:2rem 1.5rem;max-width:420px;border:3px solid var(--deep);border-radius:6px}
 .gate h2{font-size:1.5rem}
-.btn{background:var(--teal);color:var(--cream);border:0;border-bottom:4px solid var(--teal-d);border-radius:10px;padding:.7rem 1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+/* one button style: gold is the main action; .alt is a quiet outline (red is only for recording) */
+.btn{background:linear-gradient(180deg,#f6cf78,#e0a42f);color:#2a1708;border:0;border-bottom:4px solid #a87a1a;border-radius:10px;padding:.7rem 1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 .btn:active{transform:translateY(2px);border-bottom-width:2px}
-.btn.alt{background:var(--sand);color:var(--ink);border-bottom-color:#b7ab9f}
+.btn.alt{background:transparent;color:var(--deep);border:2px solid #b79a64}.btn.alt:hover:not(:disabled){background:#e0a42f26}
 .btn.gold{background:var(--gold);color:var(--deep);border-bottom-color:#a87a1a}
 
 /* path map */
@@ -352,8 +353,9 @@ body.onboarding .foot{display:none}
 @media(max-width:700px){.foot{gap:.3rem;padding:.4rem .4rem}.foot .pill{padding:.1rem .5rem;font-size:.8rem}.foot .pill em{display:none}.xpbar{width:44px}}
 
 /* ===== v20: clearer map, stop popup, meters, footer, sound label ===== */
-.nextup{display:flex;justify-content:space-between;align-items:center;gap:.8rem;background:#fff9ec;border:2px solid var(--gold);border-radius:14px;padding:.6rem .9rem;margin:.4rem 0 .8rem}
-.nextup small{color:var(--brown);text-transform:uppercase;letter-spacing:.06em}
+.nextup{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:#fff9ec;border:2px solid var(--gold);border-radius:12px;padding:.3rem .7rem;margin:.3rem 0 .6rem;font-size:.9rem}
+.nextup>span{flex:1;min-width:0}.nextup .btn{flex:none;padding:.2rem .85rem;font-size:.8rem}
+.nextup small{color:var(--brown);text-transform:uppercase;letter-spacing:.03em;font-size:.7rem;white-space:nowrap}
 .lockmsg{background:#fff;border-left:5px solid var(--red);border-radius:8px;padding:.5rem .8rem;margin:.2rem 0 .8rem;font-weight:700}
 .node.locked{background:#c9bfb4;border-color:#a99d90;color:#857a6e;cursor:not-allowed}
 .sumline{margin:.2rem 0 .6rem;font-size:1.05rem}
@@ -374,8 +376,9 @@ details.dcustom>summary{cursor:pointer;font-weight:700;color:var(--brown);paddin
 .foot .pill.clickable{cursor:pointer}.foot .pill.clickable:hover{background:#0005;border-color:var(--gold)}
 .soundfab{width:auto!important;height:40px!important;border-radius:99px!important;padding:0 .8rem!important;font-size:1rem!important;display:flex;align-items:center;gap:.3rem;font-weight:700}
 .soundfab span{font-size:.78rem;letter-spacing:.04em}
-@media(max-width:700px){.soundfab span{display:none}.soundfab{padding:0 .6rem!important}.nextup{flex-wrap:wrap}}
-.savenote{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;background:#fff9ec;border:2px solid var(--gold);border-radius:12px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
+@media(max-width:700px){.soundfab span{display:none}.soundfab{padding:0 .6rem!important}}
+.savenote{display:flex;align-items:center;gap:.2rem .7rem;flex-wrap:wrap;background:#fff9ec;border:1px solid #e0a42f88;border-radius:10px;padding:.15rem .7rem;margin:0 0 .8rem;font-size:.85rem}
+.savenote .linkbtn{background:none;border:0;margin:0;padding:.35rem .1rem;color:var(--teal-d);font-weight:700;text-decoration:underline}
 .filebtn{display:inline-block;cursor:pointer}
 
 .foot .soundfab{position:static!important;height:auto!important;width:auto!important;box-shadow:none!important;background:#0003!important;border:1px solid #e3b34155!important;color:var(--cream)!important;padding:.15rem .8rem!important;font-size:1rem!important;border-radius:99px!important}
@@ -877,7 +880,7 @@ input[type=checkbox]{width:1.5rem;height:1.5rem;accent-color:var(--teal);vertica
 .hearbtn{padding:.25rem .8rem;font-size:.85rem;margin-left:.3rem;vertical-align:middle}.hearbtn.on{background:var(--teal);color:#fff}
 /* assignments, notes from a manager, the new manager pages */
 .assigned{margin:.5rem 0;padding:.5rem .8rem;background:#fff9ec;border:2px solid var(--gold);border-radius:12px;font-size:.92rem}
-.assigned p{margin:.2rem 0;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}.assigned .late{color:#8a2f2f;font-weight:700}
+.assigned p{margin:.2rem 0;display:flex;gap:.6rem;align-items:center;justify-content:space-between}.assigned .atext{flex:1;min-width:0}.assigned .btn{flex:none;padding:.2rem .85rem;font-size:.8rem}.assigned .late{color:#8a2f2f;font-weight:700}
 .alist{list-style:none;padding:0;margin:0}.alist li{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0;border-top:1px solid #e1d8cb;flex-wrap:wrap}.alist li:first-child{border-top:0}
 .alist small{color:#5c5044}.alist li.late small{color:#8a2f2f;font-weight:700}.alist li.done b{color:#2d5f2d}
 .newnote{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
@@ -936,6 +939,16 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 /* The Presenter button used to float over the page and could cover a button on the left. On a laptop it now sits at the left end of the footer bar, which has no page content in it. */
 @media(min-width:801px){body:not(.mgr) #presenter{bottom:7px}}
 @media(max-width:1080px){#prbtn .prlabel,#prbtn small{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}#prbtn{padding:.4rem .6rem}}
+/* ===== v47: tidier "assigned" strip and card, and the skill line's button beside its text ===== */
+/* Assigned to you (Progress tab): a slim card with a small title and tight rows. */
+.acard{padding:.55rem .9rem;margin-bottom:.6rem}
+.acard h3{font-size:.95rem;margin:0 0 .1rem}
+.acard .alist li{padding:.25rem 0;flex-wrap:nowrap}.acard .alist li>span{flex:1;min-width:0}
+.acard .btn{padding:.2rem .85rem;font-size:.8rem}
+/* A note on the Progress tab with a button: the text on the left, the button at the right, and under the text on a narrow screen. */
+.learn.withbtn{display:flex;align-items:center;justify-content:space-between;gap:.5rem 1rem;flex-wrap:wrap}
+.learn.withbtn>span{flex:1 1 18rem}
+.learn.withbtn .btn{flex:none;padding:.4rem 1rem;font-size:.85rem}
 </style>
 </head>
 <body>
@@ -1003,47 +1016,47 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-27a"></script>
-<script src="icons.js?v=2026-10-27a"></script>
-<script src="sound.js?v=2026-10-27a"></script>
-<script src="scenarios.js?v=2026-10-27a"></script>
-<script src="progress.js?v=2026-10-27a"></script>
-<script src="criteria.js?v=2026-10-27a"></script>
-<script src="tone.js?v=2026-10-27a"></script>
-<script src="coach.js?v=2026-10-27a"></script>
-<script src="camera.js?v=2026-10-27a"></script>
-<script src="lessons.js?v=2026-10-27a"></script>
-<script src="dashboard.js?v=2026-10-27a"></script>
-<script src="grader.js?v=2026-10-27a"></script>
-<script src="onboarding.js?v=2026-10-27a"></script>
-<script src="tiers.js?v=2026-10-27a"></script>
-<script src="badges.js?v=2026-10-27a"></script>
-<script src="voices.js?v=2026-10-27a"></script>
-<script src="mission.js?v=2026-10-27a"></script>
-<script src="boss.js?v=2026-10-27a"></script>
-<script src="auth.js?v=2026-10-27a"></script>
-<script src="manager.js?v=2026-10-27a"></script>
-<script src="answers.js?v=2026-10-27a"></script>
-<script src="mgranswers.js?v=2026-10-27a"></script>
-<script src="assign.js?v=2026-10-27a"></script>
-<script src="facts.js?v=2026-10-27a"></script>
-<script src="surprise.js?v=2026-10-27a"></script>
-<script src="callcard.js?v=2026-10-27a"></script>
-<script src="presenter.js?v=2026-10-27a"></script>
-<script src="avatarcheck.js?v=2026-10-27a"></script>
-<script src="app.js?v=2026-10-27a"></script>
-<script src="dialog.js?v=2026-10-27a"></script>
-<script src="nav.js?v=2026-10-27a"></script>
-<script src="practice.js?v=2026-10-27a"></script>
-<script src="explorer.js?v=2026-10-27a"></script>
-<script src="map.js?v=2026-10-27a"></script>
-<script src="people.js?v=2026-10-27a"></script>
-<script src="hair.js?v=2026-10-27a"></script>
-<script src="merch.js?v=2026-10-27a"></script>
-<script src="avatar.js?v=2026-10-27a"></script>
-<script src="creator.js?v=2026-10-27a"></script>
-<script src="scenes.js?v=2026-10-27a"></script>
-<script src="results.js?v=2026-10-27a"></script>
-<script src="start.js?v=2026-10-27a"></script>
+<script src="config.js?v=2026-10-27e"></script>
+<script src="icons.js?v=2026-10-27e"></script>
+<script src="sound.js?v=2026-10-27e"></script>
+<script src="scenarios.js?v=2026-10-27e"></script>
+<script src="progress.js?v=2026-10-27e"></script>
+<script src="criteria.js?v=2026-10-27e"></script>
+<script src="tone.js?v=2026-10-27e"></script>
+<script src="coach.js?v=2026-10-27e"></script>
+<script src="camera.js?v=2026-10-27e"></script>
+<script src="lessons.js?v=2026-10-27e"></script>
+<script src="dashboard.js?v=2026-10-27e"></script>
+<script src="grader.js?v=2026-10-27e"></script>
+<script src="onboarding.js?v=2026-10-27e"></script>
+<script src="tiers.js?v=2026-10-27e"></script>
+<script src="badges.js?v=2026-10-27e"></script>
+<script src="voices.js?v=2026-10-27e"></script>
+<script src="mission.js?v=2026-10-27e"></script>
+<script src="boss.js?v=2026-10-27e"></script>
+<script src="auth.js?v=2026-10-27e"></script>
+<script src="manager.js?v=2026-10-27e"></script>
+<script src="answers.js?v=2026-10-27e"></script>
+<script src="mgranswers.js?v=2026-10-27e"></script>
+<script src="assign.js?v=2026-10-27e"></script>
+<script src="facts.js?v=2026-10-27e"></script>
+<script src="surprise.js?v=2026-10-27e"></script>
+<script src="callcard.js?v=2026-10-27e"></script>
+<script src="presenter.js?v=2026-10-27e"></script>
+<script src="avatarcheck.js?v=2026-10-27e"></script>
+<script src="app.js?v=2026-10-27e"></script>
+<script src="dialog.js?v=2026-10-27e"></script>
+<script src="nav.js?v=2026-10-27e"></script>
+<script src="practice.js?v=2026-10-27e"></script>
+<script src="explorer.js?v=2026-10-27e"></script>
+<script src="map.js?v=2026-10-27e"></script>
+<script src="people.js?v=2026-10-27e"></script>
+<script src="hair.js?v=2026-10-27e"></script>
+<script src="merch.js?v=2026-10-27e"></script>
+<script src="avatar.js?v=2026-10-27e"></script>
+<script src="creator.js?v=2026-10-27e"></script>
+<script src="scenes.js?v=2026-10-27e"></script>
+<script src="results.js?v=2026-10-27e"></script>
+<script src="start.js?v=2026-10-27e"></script>
 </body>
 </html>

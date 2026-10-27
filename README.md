@@ -191,7 +191,7 @@ node tests/skills.test.js   # the Skills chart: every skill is in one family, no
 node tests/offline.test.js  # the offline copy: photos kept after the first load and served when the network fails, the app's files network-first, nothing else touched
 node tests/avatarcheck.test.js # the Avatar check sheets: one picture per shirt or hairstyle in its own frame, and the player's avatar put back
 node tests/hair.test.js     # every hairstyle is attached to every head shape (no gap at the temples), and parting or shine lines stay on the head
-node tests/usability.test.js # each ladder has its own word, the Record button is pinned on a phone, the map opens on the next stop, the camera reminder shows once, feedback folds, photos have a placeholder
+node tests/usability.test.js # each ladder has its own word, the Record button is pinned on a phone, the map opens on the next stop, the camera reminder shows once, feedback folds, photos have a placeholder, one gold button style, the one-line save note
 node tests/teamcode.test.js # the team board's share codes: about 20 characters, read back exactly, any one typo is caught, forged values refused, old long codes still read
 node tests/surprise.test.js # the surprise customer: ten curveballs in five kinds, every right answer scores 4.2+ and every wrong one under 3.4, a round is one of each kind, the mission screen handles a short timer and a silent customer
 node tests/answers.test.js  # the answer log (words only), the sample class's answers are real and the same every time, the question the class misses most, a manager's note reaching the rep, and safe spreadsheets
