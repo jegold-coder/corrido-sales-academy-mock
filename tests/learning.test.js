@@ -23,7 +23,7 @@ ok("the box before a mission has a Coach mode checkbox that remembers the choice
 // ---------- hints ----------
 ok("levels 3 and up, and retries, get a Hint button where the checklist is hidden, and a boss battle gets neither", /\$\{boss \? "" : L\.tips && !sc\.retry \? tips : `<div id="hintslot"><button class="btn alt" id="hintbtn"/.test(mission));
 ok("a hint costs 5 XP each, counted per hint and never takes the reward below zero", ev("HINT_COST") === 5 && /Math\.max\(0, Math\.round\(\(avg \* 14 \+ \(won \? 25 : 0\)\) \* \(L\.mult \|\| 1\) \* \(cam \? 1\.25 : 1\)\) - hintsUsed \* HINT_COST\)/.test(mission));
-ok("the results say how many hints were used and what they cost", /hintsUsed \? `<span class="rw">\$\{ic\("bulb"\)\} \$\{hintsUsed\} hint/.test(mission) && /hintsUsed = 0; coachOn = coachFor\(sc\)/.test(mission));
+ok("the results say how many hints were used and what they cost", /hintsUsed \? `<span class="rw">💡 \$\{hintsUsed\} hint/.test(mission) && /hintsUsed = 0; coachOn = coachFor\(sc\)/.test(mission));
 
 // ---------- the second version of every question ----------
 const alts = ev("LINE_ALTS"), missions = ev("SCENARIOS");

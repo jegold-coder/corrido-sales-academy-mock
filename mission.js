@@ -404,7 +404,7 @@ function missionResults(M, log) {
         <div class="bigscore ${band(avg)}" aria-label="Average score ${fmt(avg)} out of 5"><b>${fmt(avg)}</b><span>/ 5</span></div>
         ${starRow(stars)}</div>
       ${custBlock}</div>
-      <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">${ic("flame")} ${state.streak}-day streak</span>${cam ? `<span class="rw">${ic("camera")} +25% camera bonus</span>` : ""}${hintsUsed ? `<span class="rw">${ic("bulb")} ${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} (−${hintsUsed * HINT_COST} XP)</span>` : ""}</div>
+      <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span>${cam ? `<span class="rw">📷 +25% camera bonus</span>` : ""}${hintsUsed ? `<span class="rw">💡 ${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} (−${hintsUsed * HINT_COST} XP)</span>` : ""}</div>
       ${badgeMedals(earned)}
       ${rewardChips(newItems)}
       <div class="resnotes">${retryNote}${focus}${toneLine}${missionDelivery(log)}</div>

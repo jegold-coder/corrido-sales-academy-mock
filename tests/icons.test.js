@@ -24,17 +24,18 @@ ok("ic() draws one icon from the sprite, hidden from screen readers", ic("flame"
 ok("ic() takes an extra class, used for a lost heart", /class="ic ic-heart lost"/.test(ic("heart", "lost")));
 ok("icons.js adds one new global name and loads right after config.js, before the page's scripts", (read("icons.js").match(/^const [A-Za-z]+ =/gm) || []).length === 1 && html.indexOf('<script src="icons.js') === html.indexOf("</script>\n", html.indexOf('<script src="config.js')) + "</script>\n".length && html.indexOf('<script src="icons.js') < html.indexOf('<script src="app.js'));
 
-// ---------- the stat and toggle icons are drawn, not emoji ----------
+// ---------- the sound, heart and mic icons are drawn; the streak, XP, merch and reward-chip icons stay emoji ----------
 const covered = ["app.js", "nav.js", "map.js", "dashboard.js", "mission.js", "results.js", "presenter.js"];
-const stray = covered.filter(f => /[🔥⭐🎤🔊🔇👕❤🖤]/u.test(code(f)));
-ok("the streak, XP, merch, sound, heart and mic icons are not emoji on the map, dashboard, missions, results or Presenter menu", stray.length === 0, stray.join());
-ok("the reward chips after a mission (streak, camera bonus, hints) are all drawn, so the row matches", !/class="rw">[^<]*[🔥📷💡]/u.test(code("mission.js") + code("results.js")));
+const stray = covered.filter(f => /[🎤🔊🔇❤🖤]/u.test(code(f)));
+ok("the sound, heart and mic icons are not emoji on the map, dashboard, missions, results or Presenter menu", stray.length === 0, stray.join());
+ok("the streak, XP and merch icons on the map are emoji (🔥 ⭐ 👕), not drawn", /<span title="Day streak">🔥 /.test(code("map.js")) && /<span title="XP">⭐ /.test(code("map.js")) && /<span title="Merch unlocked">👕 /.test(code("map.js")) && !/ic\("(flame|star|shirt)"\)/.test(covered.map(code).join("\n")));
+ok("the reward chips after a mission (streak, camera bonus, hints) are all emoji, so the row matches", /class="rw">🔥 /.test(code("mission.js")) && /class="rw">📷 /.test(code("mission.js")) && /class="rw">💡 /.test(code("mission.js")) && /class="rw">🔥 /.test(code("results.js")) && !/class="rw">\$\{ic\(/.test(code("mission.js") + code("results.js")));
 const bar = html.slice(html.indexOf('<footer class="foot"'), html.indexOf("</footer>"));
-ok("the footer bar's icons are drawn too", !/[🔥⭐🔊🔇❤🖤]/u.test(bar) && (bar.match(/<use href="#i-/g) || []).length >= 6);
+ok("the footer bar keeps its 🔥 and ⭐ emoji, and its sound and heart icons are drawn", /<i aria-hidden="true">🔥<\/i>/.test(bar) && /<i aria-hidden="true">⭐<\/i>/.test(bar) && !/[🔊🔇❤🖤]/u.test(bar) && (bar.match(/<use href="#i-/g) || []).length >= 4);
 ok("the footer's hearts are drawn, say how many are left, and the lost ones are dim", /\$\("#stHearts"\)\.innerHTML = ic\("heart"\)\.repeat\(state\.hearts\) \+ ic\("heart", "lost"\)/.test(code("app.js")) && /\$\("#stHearts"\)\.setAttribute\("aria-label", `\$\{state\.hearts\} of \$\{D\(\)\.hearts\} hearts left`\)/.test(code("app.js")) && /ic-heart\.lost\{color:#ffffff3d\}/.test(css));
 ok("the sound and voice toggles swap between a speaker and a muted speaker", /ic\("sound"\)[^;]*ic\("mute"\)/.test(code("nav.js")) && /ic\("sound"\)[^;]*ic\("mute"\)/.test(code("dashboard.js")) && (code("mission.js").match(/ic\("sound"\)[^;]*ic\("mute"\)/g) || []).length >= 2);
 ok("the voice button's text is set as markup, so its icon survives a click", /\$\("#vo"\)\.innerHTML = voiceOn/.test(code("mission.js")) && !/\$\("#vo"\)\.textContent/.test(code("mission.js")));
-ok("the icon takes the text's colour and size, gold in the stat rows", /\.ic\{width:1em;height:1em;[^}]*fill:currentColor/.test(css) && /\.foot \.pill \.ic,\.sidestats \.ic\{color:var\(--gold-t\)\}/.test(css));
+ok("the icon takes the text's colour and size, gold in the footer", /\.ic\{width:1em;height:1em;[^}]*fill:currentColor/.test(css) && /\.foot \.pill \.ic\{color:var\(--gold-t\)\}/.test(css));
 
 // ---------- the Presenter button ----------
 ok("on a laptop the Presenter button sits inside the footer bar (it used to float over the page and could cover a button)", /@media\(min-width:801px\)\{body:not\(\.mgr\) #presenter\{bottom:7px\}\}/.test(css));

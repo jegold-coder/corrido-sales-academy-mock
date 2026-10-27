@@ -85,7 +85,7 @@ function finish(L, passed, xp, skills, summary, hidden, extra = {}) {
     <span class="chip">${D().label} · ${L.qs ? "Lesson" : state.mode === "type" ? "Typed" : "Pick an answer"} · ×${D().xp} XP</span>
     ${starRow(stars)}
     <p>${summary}</p>
-    <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">${ic("flame")} ${state.streak}-day streak</span><span class="rw">${pct}% score</span></div>
+    <div class="rewards"><span class="rw">+${xp} XP</span><span class="rw">🔥 ${state.streak}-day streak</span><span class="rw">${pct}% score</span></div>
     ${badgeMedals(earned)}
     ${rewardChips(newItems)}
     <div class="card"><h3>Scorecard</h3>${Object.entries(skills).map(([k, v]) => `<div class="row"><span>${k}</span><div class="bar"><i style="width:${v / 5 * 100}%"></i></div><b>${v}</b></div>`).join("")}</div>

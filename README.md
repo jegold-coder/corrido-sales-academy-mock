@@ -144,7 +144,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `facts.js` | brand facts: prices and wording a manager can change, and the swap that carries a price change through the whole game |
 | `surprise.js` | the surprise customer: ten curveball questions, their scoring rules, and the Progress tab card |
 | `callcard.js` | the 60-second review on the Who is Tequila Corrido? page, and the pour-cost calculator |
-| `icons.js` | `ic(name)`: the drawn icons (streak, XP, merch, sound, hearts, mic) that replace emoji, so they look the same on every device; the shapes are the sprite at the top of `index.html` |
+| `icons.js` | `ic(name)`: the drawn icons (sound, hearts, mic) that replace emoji, so they look the same on every device (streak, XP and merch stay emoji); the shapes are the sprite at the top of `index.html` |
 | `presenter.js` | presenter mode: the sample player, the jump menu, and safe switching in and out |
 | `avatarcheck.js` | the Presenter menu's Avatar check sheets: every shirt, or every hairstyle on every head shape, on one page |
 | `sw.js` | the offline copy: the app and the shop photos are kept on the device after one visit, so a demo works on bad Wi-Fi |
@@ -178,7 +178,7 @@ node tests/smile.test.js    # the rep's smile styles: shapes, the creator row, s
 node tests/phone.test.js    # the phone bottom bar: its five places, when it shows, and that tapping it never sends you home
 node tests/coaching.test.js # the manager Coaching page: every skill has a topic, the suggested stop is real and within reach, the messages read well
 node tests/results.test.js  # medals, stars, the customer on the results, the tie line, hearts only in lessons
-node tests/icons.test.js # every icon a screen asks for is in the sprite, the stat and toggle icons are drawn not emoji, and the Presenter button sits in the footer bar
+node tests/icons.test.js # every icon a screen asks for is in the sprite, the heart, sound and mic icons are drawn not emoji (streak, XP and merch are emoji), and the Presenter button sits in the footer bar
 node tests/bossstars.test.js # the Brand Brain boss gives stars for its score (10 of 10 is 3, 9 of 10 is 2.5, not always one), and a better replay raises them
 node tests/auth.test.js     # Google token checks: wrong app, expired, unverified, wrong company
 node tests/natural.test.js  # answers in ordinary words score fairly; hype, health claims and pushiness are caught; a question can't lose a boss battle
