@@ -60,7 +60,9 @@ function home() {
       <button class="btn" id="sidefight" type="button" ${nbOpen ? "" : "disabled"}>${nbOpen ? "See the battle" : "Locked"}</button></div>`
       : '<div class="sidecard"><h3>Season complete</h3><p>You have beaten every boss.</p></div>'}
     <div class="sidecard go" data-go="badges" role="link" tabindex="0" title="Open your badges"><h3>Boss badges</h3>${bossBadgeRow()}<small>${state.badges.filter(k => k.startsWith("boss-")).length} of 6 earned</small><em class="goto">All badges ›</em></div></aside>`;
-  const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - 120, 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
+  // A tier banner hangs 120px above its first stop so the START tag fits between them. Tier 0 has no stop above it to bump into, so once its first stop is no longer the current one (no START tag) the banner sits closer.
+  const bandUp = (f, t) => (t === 0 && !(!gated && nodes[f] === nextStop) ? 88 : 120);
+  const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - bandUp(f, t), 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
   app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
     <h1 class="sr">Your training map</h1>
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Ready to sell, ${esc(repName())}?`}</p>

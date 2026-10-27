@@ -21,7 +21,7 @@ ok("a stop already seen does not pop again", ev("newlyDone(new Set(['brand', 'li
 // the map page
 const html = require("./page").source();
 ok("boss stops show the boss's face, and a still-locked boss is a dark silhouette", /const bossFace = n =>/.test(html) && /\.node\.boss\.locked \.bface svg\{filter:grayscale\(1\) brightness/.test(html));
-ok("tier banners sit over the first stop of each tier, on that stop's side, clear of the boss's label, and stay inside the map", /class="tierband /.test(html) && /tierStarts\(nodes\.map/.test(html) && /style="--x:\$\{xs\[f\] \/ 4\}%;top:\$\{Math\.max\(ys\[f\] - 120, 22\)/.test(html) && /left:clamp\(var\(--hw\),var\(--x\),calc\(100% - var\(--hw\)\)\)/.test(html));
+ok("tier banners sit over the first stop of each tier, on that stop's side, clear of the boss's label, and stay inside the map", /class="tierband /.test(html) && /tierStarts\(nodes\.map/.test(html) && /style="--x:\$\{xs\[f\] \/ 4\}%;top:\$\{Math\.max\(ys\[f\] - bandUp\(f, t\), 22\)/.test(html) && /left:clamp\(var\(--hw\),var\(--x\),calc\(100% - var\(--hw\)\)\)/.test(html));
 ok("the map has a side panel on each side with the rep, the next unlock, the next boss and the badges", ["Your rep", "Next unlock", "Next boss", "Boss badges"].every(t => html.includes(t)) && /<aside class="mside"/.test(html));
 ok("the side panels hide on small screens, where the page is one column", /@media\(max-width:1000px\)\{\.maphome\{display:block\}\.mside\{display:none\}\}/.test(html));
 ok("the rep card and the tier bar open Progress, the badges card opens Badges, and the next unlock opens the character creator", /class="sidecard repcard go" data-go="progress"/.test(html) && /class="sidecard go" data-go="badges"[^>]*><h3>Boss badges/.test(html) && /class="sidecard go" data-go="creator"[^>]*><h3>Next unlock/.test(html) && /class="tierbar go" data-go="progress"/.test(html));
@@ -31,11 +31,13 @@ ok("people who prefer less motion get no pop or running light", /prefers-reduced
 ok("Tier Up plays the victory music, the longer one for the season finale", /Sound\.sfx\(final \? "season" : "tierup"\)/.test(read("boss.js")));
 
 // the START tag floats 80 units above a stop's centre (24 tall); the tier banner chip is about 30 tall. Neither may touch.
-const top = Number((html.match(/TOP = (\d+)/) || [])[1]), off = Number((html.match(/Math\.max\(ys\[f\] - (\d+), (\d+)\)/) || [])[1]), minY = Number((html.match(/Math\.max\(ys\[f\] - (\d+), (\d+)\)/) || [])[2]);
+// bandUp gives the banner's height above its stop: 88 for Tier 0 once its first stop is not the current one (no START tag), and 120 otherwise.
+const top = Number((html.match(/TOP = (\d+)/) || [])[1]), near = Number((html.match(/const bandUp = .*? \? (\d+) : (\d+)\)/) || [])[1]), off = Number((html.match(/const bandUp = .*? \? (\d+) : (\d+)\)/) || [])[2]), minY = Number((html.match(/Math\.max\(ys\[f\] - bandUp\(f, t\), (\d+)\)/) || [])[1]);
 const chipBottom = (y0, first) => (first ? Math.max(y0 - off, minY) : y0 - off) + 15, startTop = y0 => y0 - 80;
 ok("the first stop's tier banner clears its START tag by a good margin", chipBottom(top, true) + 12 <= startTop(top), `chip bottom ${chipBottom(top, true)}, START top ${startTop(top)}`);
 ok("every other tier's banner clears the START tag too", chipBottom(top + 175 * 3, false) + 12 <= startTop(top + 175 * 3));
-ok("the first banner is not cut off by the top of the map", Math.max(top - off, minY) - 15 >= 0);
+ok("the first banner is not cut off by the top of the map, whether it hangs 120 or 88 above the stop", Math.max(top - off, minY) - 15 >= 0 && Math.max(top - near, minY) - 15 >= 0);
+ok("Tier 0's banner sits closer once there is no START tag to leave room for (88 against 120), and still clears the stop's top edge (a 92px circle) by a margin", near === 88 && off === 120 && near < off && (top - near) + 15 + 12 <= top - 46);
 
 // the dashboard: ladder and radar
 const dash = read("dashboard.js");

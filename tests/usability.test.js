@@ -123,4 +123,6 @@ ok("the Settings page has no The real brand card or website link (the website is
 
 ok("the line at the top of the map reads Ready to sell, then the rep's name, with Welcome kept for the locked first-run map (you don't pick a stop, the road does)", /<p class="lede">\$\{gated \? `Welcome, \$\{esc\(repName\(\)\)\}` : `Ready to sell, \$\{esc\(repName\(\)\)\}\?`\}<\/p>/.test(read("map.js")) && !/Pick your next stop/.test(read("map.js")));
 
+ok("the Tier 0 banner sits close above the first stop (88px) once that stop is no longer the current one, and keeps its 120px for the START tag while it is; the other tier banners are unchanged", /const bandUp = \(f, t\) => \(t === 0 && !\(!gated && nodes\[f\] === nextStop\) \? 88 : 120\);/.test(read("map.js")) && /top:\$\{Math\.max\(ys\[f\] - bandUp\(f, t\), 22\) \/ H \* 100\}%/.test(read("map.js")));
+
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);
