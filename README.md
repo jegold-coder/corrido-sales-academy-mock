@@ -222,16 +222,18 @@ The unit tests need only Node. `node tools/smoke.js` is a separate click-through
 5. Replace hotlinked images with approved assets.
 6. Split work by skill: personas and prompts, rubric and grading, front end and gamification, voice and camera, content and QA.
 
-## Tools to ask the instructor about before installing (none are installed)
+## Design tools (approved for this solo mock)
 
-All four are free and could help the site's design. All come from outside ASU, so the rule is to ask first and install nothing until the answer is yes.
+Four free, MIT-licensed outside tools are installed for the mock's design work, in a local `.claude/` folder that is not part of this repo (the push leaves it out). They are reference material and skills for the AI assistant; nothing in the game's code depends on them.
 
-| Tool | What it is | What to ask |
-|---|---|---|
-| [UI UX Pro Max skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (nextlevelbuilder) | A design skill for an AI coding assistant: a Python search script, CSV style data and templates. Installs as a Claude Code plugin or with an npm command-line tool. MIT licence. Its README says the scripts use only the standard library and make no network calls. | Is installing third-party code (a plugin or an npm package) on a university computer allowed? Its security policy is linked from its page but was not read. |
-| [Awesome DESIGN.md](https://github.com/VoltAgent/awesome-design-md) (VoltAgent) | About 84 plain-text design guides (a `DESIGN.md` per company: colours, type, buttons, spacing) to copy into a project so an AI tool builds pages in that style. MIT licence. Nothing to install and no code to run: you copy a markdown file. | Is it fine to borrow another company's design guide for a class project? The guides describe other brands' looks, so Tequila Corrido's own look should not copy theirs. |
-| [Emil Kowalski's skills](https://github.com/attentiondotnet/emilkowalski_skills) (written by Emil Kowalski, in the attentiondotnet organisation) | Four design skills for an AI coding assistant, mostly about animation: a main design-engineering skill, an animation reviewer, an animation vocabulary helper, and Apple's interface and motion principles adapted for the web. MIT licence. The README gives one install command (`npx skills@latest add emilkowalski/skills`), which downloads and runs a package from the internet. The page shows no scripts. | Is running an `npx` install allowed on a university computer? The skill files themselves were not read, and it is unclear how the attentiondotnet repo relates to the `emilkowalski/skills` package in the command. |
-| [Taste skill](https://github.com/Leonxlnx/taste-skill) (Leonxlnx) | One design skill (`design-taste-frontend`) that pushes an AI assistant toward more distinct art direction and real photos, and checks pages in a browser at three widths. MIT licence. Installs with `npx`, as a Claude Code or Codex plugin, or with an `install.sh` script. It runs scripts that need Node 22 or newer and Chrome, and it fetches images from open collections over the internet. | Is it allowed to run scripts that open a browser and use the network? What `install.sh` does was not read. The photos it finds need credit, so ask what the class expects for images (the mock links the brand's own photos). |
+| Tool | What was installed |
+|---|---|
+| [UI UX Pro Max skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | The `ui-ux-pro-max` skill only (its search script, style data and references). The repo's other bundled skills (brand, slides, design-system and so on) were left out. |
+| [Awesome DESIGN.md](https://github.com/VoltAgent/awesome-design-md) | The 84 company design guides, kept as reference only. Tequila Corrido keeps its own look and does not copy another brand's. |
+| [Emil Kowalski's skills](https://github.com/attentiondotnet/emilkowalski_skills) | Four skills copied as plain files: `emil-design-eng`, `review-animations`, `animation-vocabulary`, `apple-design`. |
+| [Taste skill](https://github.com/Leonxlnx/taste-skill) | The `design-taste-frontend` skill. Its scripts need Node 22 or newer and Chrome, and its photo search sends only the search words to open image collections. |
+
+Each was cloned, read and scanned for network calls and commands before it was copied. None was installed with `npx`, a plugin command or an install script.
 
 ## Questions for Ken (nothing here blocks the mock)
 
