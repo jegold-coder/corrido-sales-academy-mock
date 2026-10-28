@@ -227,7 +227,7 @@ The unit tests need only Node. `node tools/smoke.js` is a separate click-through
 
 ## Design tools (approved for this solo mock)
 
-Four free, MIT-licensed outside tools are installed for the mock's design work, in a local `.claude/` folder that is not part of this repo (the push leaves it out). They are reference material and skills for the AI assistant; nothing in the game's code depends on them.
+Five free, MIT-licensed outside tools are installed for the mock's design and quality work, in a local `.claude/` folder that is not part of this repo (the push leaves it out). They are reference material and skills for the AI assistant; nothing in the game's code depends on them.
 
 | Tool | What was installed |
 |---|---|
@@ -235,6 +235,7 @@ Four free, MIT-licensed outside tools are installed for the mock's design work, 
 | [Awesome DESIGN.md](https://github.com/VoltAgent/awesome-design-md) | The 84 company design guides, kept as reference only. Tequila Corrido keeps its own look and does not copy another brand's. |
 | [Emil Kowalski's skills](https://github.com/attentiondotnet/emilkowalski_skills) | Four skills copied as plain files: `emil-design-eng`, `review-animations`, `animation-vocabulary`, `apple-design`. |
 | [Taste skill](https://github.com/Leonxlnx/taste-skill) | The `design-taste-frontend` skill. Its scripts need Node 22 or newer and Chrome, and its photo search sends only the search words to open image collections. |
+| [Web Quality Skills](https://github.com/addyosmani/web-quality-skills) (Addy Osmani) | Six skills copied as plain files: `accessibility`, `performance`, `core-web-vitals`, `best-practices`, `seo` and `web-quality-audit`. Its one script, `analyze.sh`, only reads HTML files and prints what it finds (it needs `jq`); nothing in it touches the network or writes a file. |
 
 Each was cloned, read and scanned for network calls and commands before it was copied. None was installed with `npx`, a plugin command or an install script.
 
