@@ -70,12 +70,13 @@ function home() {
     ${Assign.strip()}
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     ${tierBar()}
-    <p class="lockmsg hidden" id="lockmsg" role="status"></p>
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${bands}${stops}</div></div>${sideRight}</section>`;
   const launch = st => (BOSS_BY[st.id] ? bossIntro(st) : openDiff(() => (st.qs ? quiz(st) : play(st)), st));
   app.querySelectorAll(".node").forEach(b => b.onclick = () => {
-    if (b.getAttribute("aria-disabled")) {   // locked: say why instead of doing nothing
-      const m = $("#lockmsg"); m.textContent = gated ? "Locked. Take the knowledge check above first to open the map." : `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`; m.classList.remove("hidden"); return;
+    if (b.getAttribute("aria-disabled")) {   // locked: say why in the toast (always in view, however far down the map you are) and nudge the circle
+      toast(gated ? "Locked. Take the knowledge check above first to open the map." : `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`);
+      b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope"); b.addEventListener("animationend", () => b.classList.remove("nope"), { once: true });
+      return;
     }
     launch(nodes.find(x => x.id === b.dataset.id));
   });

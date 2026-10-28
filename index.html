@@ -356,7 +356,6 @@ body.onboarding .foot{display:none}
 .nextup{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:#fff9ec;border:2px solid var(--gold);border-radius:12px;padding:.3rem .7rem;margin:.3rem 0 .6rem;font-size:.9rem}
 .nextup>span{flex:1;min-width:0}.nextup .btn{flex:none;padding:.2rem .85rem;font-size:.8rem}
 .nextup small{color:var(--brown);text-transform:uppercase;letter-spacing:.03em;font-size:.7rem;white-space:nowrap}
-.lockmsg{background:#fff;border-left:5px solid var(--red);border-radius:8px;padding:.5rem .8rem;margin:.2rem 0 .8rem;font-weight:700}
 .node.locked{background:#c9bfb4;border-color:#a99d90;color:#857a6e;cursor:not-allowed}
 .sumline{margin:.2rem 0 .6rem;font-size:1.05rem}
 .dactions{display:flex;gap:.6rem;flex-wrap:wrap;margin:.4rem 0 .8rem}
@@ -969,6 +968,13 @@ button,a,[role=button]{-webkit-tap-highlight-color:transparent}
 /* headings break into even lines and paragraphs avoid a lone last word (browsers without it ignore these) */
 h1,h2,h3,.lede{text-wrap:balance}
 p,li{text-wrap:pretty}
+/* Map: a locked stop sits back, so the stop you are on is the brightest circle on the road; the message about a locked stop shows in the toast and the circle gives a short nudge. */
+.node.locked,.node:disabled{background:#a89e92;border-color:#8c8276;color:#6f6559}
+.node.boss.locked{background:#a89e92;border-color:#8c8276}
+.node.boss.locked .bface{background:#b8ac9b}
+@keyframes nope{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+.node.nope{animation:nope .24s var(--ease-out)}
+#toast{transition:opacity .2s var(--ease-out),transform .2s var(--ease-out)}
 </style>
 </head>
 <body>
@@ -1036,47 +1042,47 @@ p,li{text-wrap:pretty}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-27h"></script>
-<script src="icons.js?v=2026-10-27h"></script>
-<script src="sound.js?v=2026-10-27h"></script>
-<script src="scenarios.js?v=2026-10-27h"></script>
-<script src="progress.js?v=2026-10-27h"></script>
-<script src="criteria.js?v=2026-10-27h"></script>
-<script src="tone.js?v=2026-10-27h"></script>
-<script src="coach.js?v=2026-10-27h"></script>
-<script src="camera.js?v=2026-10-27h"></script>
-<script src="lessons.js?v=2026-10-27h"></script>
-<script src="dashboard.js?v=2026-10-27h"></script>
-<script src="grader.js?v=2026-10-27h"></script>
-<script src="onboarding.js?v=2026-10-27h"></script>
-<script src="tiers.js?v=2026-10-27h"></script>
-<script src="badges.js?v=2026-10-27h"></script>
-<script src="voices.js?v=2026-10-27h"></script>
-<script src="mission.js?v=2026-10-27h"></script>
-<script src="boss.js?v=2026-10-27h"></script>
-<script src="auth.js?v=2026-10-27h"></script>
-<script src="manager.js?v=2026-10-27h"></script>
-<script src="answers.js?v=2026-10-27h"></script>
-<script src="mgranswers.js?v=2026-10-27h"></script>
-<script src="assign.js?v=2026-10-27h"></script>
-<script src="facts.js?v=2026-10-27h"></script>
-<script src="surprise.js?v=2026-10-27h"></script>
-<script src="callcard.js?v=2026-10-27h"></script>
-<script src="presenter.js?v=2026-10-27h"></script>
-<script src="avatarcheck.js?v=2026-10-27h"></script>
-<script src="app.js?v=2026-10-27h"></script>
-<script src="dialog.js?v=2026-10-27h"></script>
-<script src="nav.js?v=2026-10-27h"></script>
-<script src="practice.js?v=2026-10-27h"></script>
-<script src="explorer.js?v=2026-10-27h"></script>
-<script src="map.js?v=2026-10-27h"></script>
-<script src="people.js?v=2026-10-27h"></script>
-<script src="hair.js?v=2026-10-27h"></script>
-<script src="merch.js?v=2026-10-27h"></script>
-<script src="avatar.js?v=2026-10-27h"></script>
-<script src="creator.js?v=2026-10-27h"></script>
-<script src="scenes.js?v=2026-10-27h"></script>
-<script src="results.js?v=2026-10-27h"></script>
-<script src="start.js?v=2026-10-27h"></script>
+<script src="config.js?v=2026-10-27i"></script>
+<script src="icons.js?v=2026-10-27i"></script>
+<script src="sound.js?v=2026-10-27i"></script>
+<script src="scenarios.js?v=2026-10-27i"></script>
+<script src="progress.js?v=2026-10-27i"></script>
+<script src="criteria.js?v=2026-10-27i"></script>
+<script src="tone.js?v=2026-10-27i"></script>
+<script src="coach.js?v=2026-10-27i"></script>
+<script src="camera.js?v=2026-10-27i"></script>
+<script src="lessons.js?v=2026-10-27i"></script>
+<script src="dashboard.js?v=2026-10-27i"></script>
+<script src="grader.js?v=2026-10-27i"></script>
+<script src="onboarding.js?v=2026-10-27i"></script>
+<script src="tiers.js?v=2026-10-27i"></script>
+<script src="badges.js?v=2026-10-27i"></script>
+<script src="voices.js?v=2026-10-27i"></script>
+<script src="mission.js?v=2026-10-27i"></script>
+<script src="boss.js?v=2026-10-27i"></script>
+<script src="auth.js?v=2026-10-27i"></script>
+<script src="manager.js?v=2026-10-27i"></script>
+<script src="answers.js?v=2026-10-27i"></script>
+<script src="mgranswers.js?v=2026-10-27i"></script>
+<script src="assign.js?v=2026-10-27i"></script>
+<script src="facts.js?v=2026-10-27i"></script>
+<script src="surprise.js?v=2026-10-27i"></script>
+<script src="callcard.js?v=2026-10-27i"></script>
+<script src="presenter.js?v=2026-10-27i"></script>
+<script src="avatarcheck.js?v=2026-10-27i"></script>
+<script src="app.js?v=2026-10-27i"></script>
+<script src="dialog.js?v=2026-10-27i"></script>
+<script src="nav.js?v=2026-10-27i"></script>
+<script src="practice.js?v=2026-10-27i"></script>
+<script src="explorer.js?v=2026-10-27i"></script>
+<script src="map.js?v=2026-10-27i"></script>
+<script src="people.js?v=2026-10-27i"></script>
+<script src="hair.js?v=2026-10-27i"></script>
+<script src="merch.js?v=2026-10-27i"></script>
+<script src="avatar.js?v=2026-10-27i"></script>
+<script src="creator.js?v=2026-10-27i"></script>
+<script src="scenes.js?v=2026-10-27i"></script>
+<script src="results.js?v=2026-10-27i"></script>
+<script src="start.js?v=2026-10-27i"></script>
 </body>
 </html>
