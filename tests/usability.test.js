@@ -127,4 +127,13 @@ ok("the Tier 0 banner sits near the top of the map (26px down) and the first sto
 
 ok("a tier banner reads \"Tier 0 · Trainee\", with a space before the dot (the banner is a flex row, which drops a space at the start of the tier name unless it is kept)", /\.tierband \.tt\{font-style:normal;white-space:pre\}/.test(css) && /<i class="tt"> · \$\{TIERS\[t\]\}<\/i>/.test(read("map.js")));
 
+// ---------- feel: press, hover and screen-change motion (from the installed design skills) ----------
+const feel = css.slice(css.indexOf("/* Feel:"));
+const times = [...feel.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/\.(\d+)s\b/g)].map(m => Number("0." + m[1]));
+ok("the feel block has one easing curve, kept in a variable, and every time in it is under 300ms (UI motion stays quick)", /:root\{--ease-out:cubic-bezier\(\.23,1,\.32,1\)\}/.test(feel) && times.length >= 8 && times.every(t => t <= .2), times.join());
+ok("nothing in the stylesheet transitions \"all\", and users who ask for less motion still get none (the old catch-all rule overrides the new transitions)", !/transition:\s*all/.test(css) && /@media\(prefers-reduced-motion:reduce\)\{\*\{animation:none!important;transition:none!important/.test(css));
+ok("tappable things answer a press: options, stops, cards, the header and tab-bar buttons shrink a touch on :active, and the gold buttons keep their own sink", /\.opt:active:not\(:disabled\)\{transform:scale\(\.985\)\}/.test(feel) && /\.node:active:not\(:disabled\)\{transform:scale\(\.95\)\}/.test(feel) && /\.tabbar button:active/.test(feel) && /\.btn:active\{transform:translateY\(2px\);border-bottom-width:2px\}/.test(css));
+ok("a mouse hover brightens a gold button but a touch screen has no hover, so a stop does not stay lifted after a tap", /@media\(hover:hover\)\{\.btn:not\(\.alt\):hover:not\(:disabled\)\{filter:brightness\(1\.07\)\}\}/.test(feel) && /@media\(hover:none\)\{\.node:hover:not\(:disabled\)\{transform:none\}\}/.test(feel));
+ok("headings balance their lines, paragraphs avoid a lone last word, and screen changes fade in with the strong curve in 200ms", /h1,h2,h3,\.lede\{text-wrap:balance\}/.test(feel) && /p,li\{text-wrap:pretty\}/.test(feel) && /\.view\{animation-duration:\.2s;animation-timing-function:var\(--ease-out\)\}/.test(feel));
+
 console.log(fails ? `${fails} FAILED` : "OK"); process.exit(fails ? 1 : 0);

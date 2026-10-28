@@ -949,6 +949,26 @@ html{background:#24150a;overscroll-behavior:none;overflow-x:hidden}
 .learn.withbtn{display:flex;align-items:center;justify-content:space-between;gap:.5rem 1rem;flex-wrap:wrap}
 .learn.withbtn>span{flex:1 1 18rem}
 .learn.withbtn .btn{flex:none;padding:.4rem 1rem;font-size:.85rem}
+/* Feel: one strong ease-out curve and short times (under 200ms) so a tap answers at once; nothing here changes a layout or a colour. */
+:root{--ease-out:cubic-bezier(.23,1,.32,1)}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.view{animation-duration:.2s;animation-timing-function:var(--ease-out)}
+.btn{transition:transform .12s var(--ease-out),border-bottom-width .12s var(--ease-out),filter .15s var(--ease-out)}
+.opt{transition:border-color .15s var(--ease-out),background-color .15s var(--ease-out),transform .12s var(--ease-out)}
+.node{transition:transform .18s var(--ease-out)}
+.dcard,.xrow,.shoplink,.xbottle,.go,.tab,.mnavbtn,.brandbtn,.diffbtn,.foot .pill.clickable,.tabbar button,.tabbar a{transition:background-color .15s var(--ease-out),border-color .15s var(--ease-out),color .15s var(--ease-out),box-shadow .15s var(--ease-out),transform .12s var(--ease-out)}
+/* a press: the gold buttons already sink; everything else tappable shrinks a touch */
+.opt:active:not(:disabled){transform:scale(.985)}
+.node:active:not(:disabled){transform:scale(.95)}
+.dcard:active,.xrow:active,.shoplink:active,.xbottle:active,.go:active{transform:scale(.985)}
+.diffbtn:active,.foot .pill.clickable:active,.tabbar button:active,.tabbar a:active,.mnavbtn:active{transform:scale(.96)}
+/* a mouse hover brightens a gold button a little; a finger has no hover, so a stop does not stay lifted after a tap */
+@media(hover:hover){.btn:not(.alt):hover:not(:disabled){filter:brightness(1.07)}}
+@media(hover:none){.node:hover:not(:disabled){transform:none}}
+button,a,[role=button]{-webkit-tap-highlight-color:transparent}
+/* headings break into even lines and paragraphs avoid a lone last word (browsers without it ignore these) */
+h1,h2,h3,.lede{text-wrap:balance}
+p,li{text-wrap:pretty}
 </style>
 </head>
 <body>
