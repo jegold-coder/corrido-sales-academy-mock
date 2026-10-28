@@ -51,6 +51,7 @@ function cleanAvatar(v) {
   if (A.gender === "Female") A.facial = "None";
   if (!SMILES.includes(A.smile)) A.smile = "Neutral";   // avatars saved before smiles existed
   A.frame = 0;   // frame color is no longer a choice
+  if (typeof NameCheck !== "undefined" && NameCheck.blocked(A.name)) A.name = "";   // a name that is not fine at work (saved earlier, or edited in storage) shows as "Rep" until it is changed
   return A;
 }
 function loadAvatar() {

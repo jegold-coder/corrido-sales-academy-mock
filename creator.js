@@ -73,14 +73,14 @@ function creator(onDone, opts = {}) {
     <div class="cwrap">
       <div class="cprev">
         <div class="pframe"><svg viewBox="0 -24 120 232" id="cprev" role="img" aria-label="Your character preview"></svg></div>
-        <label class="nlab">Your name (required)<input id="cname" maxlength="14" value="${esc(A.name)}" placeholder="Type your name" autocomplete="off" required></label>
+        <label class="nlab">Your name (required)<input id="cname" maxlength="14" value="${esc(A.name)}" placeholder="Type your name" autocomplete="off" aria-describedby="nreq" required></label>
         <button class="btn alt" id="crand" type="button">🎲 Randomize</button>
         <div class="shoplinks" id="shoplinks" aria-live="polite"></div>
       </div>
       <div class="copts" id="copts"></div>
     </div>
     <p class="note2">Shirts and hats use the real Tequila Corrido merch photos from their website, linked live (needs internet). Double-click any one to see it on the shop.</p>
-    <p class="csavebar"><button class="btn" id="cdone" type="button">Save &amp; continue</button> <small id="nreq" class="nreq">Enter your name to continue.</small></p></section>`;
+    <p class="csavebar"><button class="btn" id="cdone" type="button">Save &amp; continue</button> <small id="nreq" class="nreq" aria-live="polite">Enter your name to continue.</small></p></section>`;
   const paint = () => {
     $("#cprev").innerHTML = person(repLook());
     const shop = (label, name) => merchView(name, A.gender).url ? `<a class="shoplink" href="https://ilovetequilacorrido.com/products/${merchView(name, A.gender).url}" target="_blank" rel="noopener">${label}: ${esc(merchView(name, A.gender).label)} <span aria-hidden="true">↗</span><span class="sr"> (opens the Tequila Corrido shop in a new tab)</span></a>` : "";
@@ -121,7 +121,12 @@ function creator(onDone, opts = {}) {
     });
     paint();
   };
-  const checkName = () => { const ok = A.name.trim().length > 0; $("#cdone").disabled = !ok; $("#nreq").classList.toggle("hidden", ok); $("#cname").setAttribute("aria-invalid", String(!ok)); };
+  // The name has to be there and fine at work (NameCheck in names.js); the note under the field says which.
+  const checkName = () => {
+    const typed = A.name.trim().length > 0, ok = typed && !NameCheck.blocked(A.name);
+    $("#cdone").disabled = !ok; $("#nreq").textContent = typed ? "Please pick a name that is fine to show at work." : "Enter your name to continue.";
+    $("#nreq").classList.toggle("hidden", ok); $("#cname").setAttribute("aria-invalid", String(!ok));
+  };
   $("#cname").oninput = e => { A.name = e.target.value; checkName(); };
   $("#cname").onkeydown = e => { if (e.key === "Enter" && !$("#cdone").disabled) $("#cdone").click(); };
   $("#crand").onclick = () => {
@@ -131,7 +136,7 @@ function creator(onDone, opts = {}) {
   };
   $("#cdone").onclick = () => {
     A.name = (A.name || "").trim().slice(0, 14);
-    if (!A.name) return checkName();
+    if (!A.name || NameCheck.blocked(A.name)) return checkName();
     state.avatarSaved = true;
     try { localStorage.setItem("csa_avatar", JSON.stringify(A)); } catch { /* storage unavailable */ }
     onDone();

@@ -44,7 +44,7 @@ function onGoogleCredential(resp) {
   const r = checkGoogleToken(resp && resp.credential, googleClientId(), CSA_CONFIG.googleDomain), note = $("#emailnote");
   if (!r.ok) { note.textContent = r.reason; note.classList.add("bad"); return; }
   state.profile = { mode: "google", email: r.user.email, name: r.user.name };
-  if (!state.avatarSaved && !(state.avatar.name || "").trim()) state.avatar.name = r.user.first.slice(0, 14);   // start the character with their first name
+  if (!state.avatarSaved && !(state.avatar.name || "").trim() && !NameCheck.blocked(r.user.first)) state.avatar.name = r.user.first.slice(0, 14);   // start the character with their first name, unless the name check would refuse it
   Progress.save(state); enterGame();
   setTimeout(() => toast(`Signed in as ${r.user.email}. Only your name and email are used, and they stay on this device.`), 300);
 }
