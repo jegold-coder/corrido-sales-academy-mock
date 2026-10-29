@@ -11,8 +11,8 @@ const levelOf = xp => { let i = 0; LEVELS.forEach((l, n) => { if (xp >= l[1]) i 
 
 // Each badge: [name, how to earn it, test(session, P)]. session = the mission that was just finished.
 const BADGES = {
+  check: ["Knowledge Check", "Complete the knowledge check", () => false],   // first on the list, because the check comes first; awarded by syncBadges once the check is finished
   first: ["First Pitch", "Finish any mission", () => true],
-  check: ["Knowledge Check", "Complete the knowledge check", () => false],   // awarded by syncBadges once the check is finished
   flawless: ["Flawless", "Earn 3 stars on a mission", s => s.stars === 3],
   hard: ["Tough Crowd", "Pass a Hard or Expert mission", s => s.won && /^(Hard|Expert)$|Level [45]/.test(s.diff || "")],   // a history made before the rename says "Level 4" or "Level 5"
   typed: ["Perfect Answer", "Score 5 out of 5 on a single answer", s => s.perfect],
