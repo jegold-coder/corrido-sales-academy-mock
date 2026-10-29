@@ -9,9 +9,9 @@ function tierBar() {
     <div class="tierrow">${TIERS.map((n, i) => `<div class="tierdot ${i < t ? "done" : i === t ? "now" : ""}" title="Tier ${i}: ${n}"><b>${i}</b></div>`).join("<i class=\"tl\"></i>")}</div>
     <p class="tiernow"><b>Tier ${t} · ${TIERS[t]}</b>${nb && st ? ` <span>Next boss: <b>${esc(st.title)}</b></span>` : ` <span>Season complete. You beat every boss.</span>`}</p></div>`;
 }
-// The knowledge check used to lock the map until it was done. It is optional now (Dashboard > Knowledge check), so a new rep can start selling
-// straight away. This stays as one switch in case the company wants it required again: return true to lock the map until the check is done.
-const needsCheck = () => false;
+// The knowledge check is required before the first stop: the map stays locked behind a "Step 1" card until the rep has finished it (state.pre is the
+// saved result). A rep who already has finished stops is not locked out, and Presenter's "Unlock every stop" skips it. Return false to make it optional again.
+const needsCheck = () => !state.pre && !Object.keys(state.done).length;
 
 // The stops finished the last time the map was drawn, so a stop you just finished can pop and light the road to the next one.
 let mapSeen = null;

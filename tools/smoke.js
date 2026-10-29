@@ -62,6 +62,20 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       await click("#cdone"); if (!await chrome.waitFor("!!document.querySelector('#tskip')")) throw new Error("no tutorial");
       await click("#tskip"); if (!await chrome.waitFor("!!document.querySelector('.maphome')")) throw new Error("no map");
     });
+    await step("the new rep's map is locked behind the required knowledge check, which opens it once finished", async () => {
+      if (!await chrome.waitFor("!!document.querySelector('#gocheck')")) throw new Error("no Step 1 card");
+      const locked = await chrome.eval("document.querySelectorAll('.node.locked').length");
+      if (locked !== 16) throw new Error("expected every stop locked, got " + locked);
+      await click("#gocheck");
+      for (let i = 0; i < 10; i++) {
+        if (!await chrome.waitFor("!!document.querySelector('.opt:not(:disabled)')")) throw new Error("no question " + (i + 1));
+        await chrome.eval("document.querySelector('.opt').click()");
+        if (!await chrome.waitFor("!!document.querySelector('#nx')")) throw new Error("no Continue after question " + (i + 1));
+        await click("#nx");
+      }
+      if (!await chrome.waitFor("!!document.querySelector('#obgo')")) throw new Error("no result screen"); await click("#obgo");
+      if (!await chrome.waitFor("!!document.querySelector('.maphome') && !document.querySelector('#gocheck')")) throw new Error("map still locked");
+    });
     await step("the map has 16 stops, only the first one open", async () => {
       const r = await chrome.eval("({ nodes: document.querySelectorAll('.node').length, locked: document.querySelectorAll('.node.locked').length })");
       if (r.nodes !== 16 || r.locked !== 15) throw new Error(JSON.stringify(r));
