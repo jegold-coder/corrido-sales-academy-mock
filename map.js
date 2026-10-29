@@ -64,15 +64,16 @@ function home() {
   // A tier banner hangs 120px above its first stop so the START tag fits between them. Tier 0 has no stop above it to bump into, so its banner sits 26px from the top of the map.
   const bandUp = (f, t) => (t === 0 ? TOP - 26 : 120);
   const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - bandUp(f, t), 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
-  const newRep = !Object.keys(state.done).length;   // nothing finished yet: the map is kept quiet, with the Next up bar as the one thing to do
+  const newRep = !Object.keys(state.done).length;   // nothing finished yet: the side panels are kept quiet
+  const intro = newRep && !gated && !state.tipSeen;   // a first visit: only the How it works box and its Got it button, so there is one thing to click; the map, the Next up bar and the tiers follow
   app.innerHTML = `<section class="view maphome${newRep ? " newrep" : ""}">${sideLeft}<div class="mcenter">
     <h1 class="sr">Your training map</h1>
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Ready to sell, ${esc(repName())}?`}</p>
     ${Assign.strip()}
-    ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
-    ${tierBar()}
-    ${newRep && !gated && !state.tipSeen ? `<div class="howtip" id="howtip" role="note"><p><b>How it works:</b> finish stops to earn <b>XP</b> (points) and up to 3 stars. XP raises your rank. Beat each tier's boss to move up. Finished stops unlock merch for your character.</p><button class="btn alt" id="tipok" type="button">Got it</button></div>` : ""}
-    <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${bands}${stops}</div></div>${sideRight}</section>`;
+    ${intro ? "" : gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
+    ${intro ? "" : tierBar()}
+    ${intro ? `<div class="howtip" id="howtip" role="note"><p><b>How it works:</b> finish stops to earn <b>XP</b> (points) and up to 3 stars. XP raises your rank. Beat each tier's boss to move up. Finished stops unlock merch for your character.</p><button class="btn" id="tipok" type="button">Got it</button></div>` : ""}
+    ${intro ? "" : `<div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${bands}${stops}</div>`}</div>${sideRight}</section>`;
   const launch = st => (BOSS_BY[st.id] ? bossIntro(st) : st.qs ? lessonIntro(st) : openDiff(() => play(st), st));   // a lesson starts in one click, on its facts; a mission asks for the difficulty first
   app.querySelectorAll(".node").forEach(b => b.onclick = () => {
     if (b.getAttribute("aria-disabled")) {   // locked: say why in the toast (always in view, however far down the map you are) and nudge the circle
@@ -83,7 +84,7 @@ function home() {
     launch(nodes.find(x => x.id === b.dataset.id));
   });
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
-  if ($("#tipok")) $("#tipok").onclick = () => { state.tipSeen = true; Progress.save(state); $("#howtip").remove(); };
+  if ($("#tipok")) $("#tipok").onclick = () => { state.tipSeen = true; Progress.save(state); home(); };   // then the map and the Next up bar appear
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
   if ($("#sidefight")) $("#sidefight").onclick = () => launch(nbStop);
   Assign.wire(app);

@@ -75,6 +75,11 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       if (!await chrome.waitFor("!!document.querySelector('#obgo')")) throw new Error("no result screen"); await click("#obgo");
       if (!await chrome.waitFor("!!document.querySelector('.maphome') && !document.querySelector('#gocheck')")) throw new Error("map still locked");
     });
+    await step("a first visit shows only the How it works box (no map yet), and Got it brings the map", async () => {
+      if (!await chrome.waitFor("!!document.querySelector('#tipok')")) throw new Error("no How it works box");
+      if (await chrome.eval("!!document.querySelector('.map') || !!document.querySelector('.nextup')")) throw new Error("the map or the Next up bar showed before Got it");
+      await click("#tipok"); if (!await chrome.waitFor("!!document.querySelector('.map') && !!document.querySelector('.nextup') && !document.querySelector('#howtip')")) throw new Error("no map after Got it");
+    });
     await step("the map has 16 stops, only the first one open", async () => {
       const r = await chrome.eval("({ nodes: document.querySelectorAll('.node').length, locked: document.querySelectorAll('.node.locked').length })");
       if (r.nodes !== 16 || r.locked !== 15) throw new Error(JSON.stringify(r));

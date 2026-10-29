@@ -984,12 +984,15 @@ p,li{text-wrap:pretty}
 .elab{display:block;font-weight:700;margin:.2rem 0 .2rem;color:#eadfcc;font-size:.85rem}
 /* A lesson opens on its facts, then the quiz. */
 .learncards{list-style:none;margin:.6rem 0;padding:0;display:grid;gap:.5rem}
+/* The Start the quiz button stays in view above the bottom bar, and the card has room below it. */
+.lstartrow{position:sticky;bottom:62px;margin:.6rem 0 0;padding:.5rem 0 .2rem;background:linear-gradient(180deg,transparent,var(--cream) 40%);z-index:2}.lstartrow .btn{margin:0 auto}
+.sheet:has(.learncards){padding-bottom:1.2rem}
 .learncards li{background:#fff9ec;border:1px solid #e0a42f88;border-left:5px solid var(--gold);border-radius:10px;padding:.5rem .8rem;line-height:1.4}
 /* A new rep's map keeps only the rep card in the side panels until a stop is finished. */
 .maphome.newrep .mside .sidecard:not(.repcard){display:none}
 /* The how-it-works tip on a new rep's map. */
 .howtip{display:flex;gap:.7rem;align-items:flex-start;justify-content:space-between;background:#fff9ec;border:1px solid #e0a42f88;border-radius:12px;padding:.5rem .8rem;margin:.3rem 0 .6rem;font-size:.88rem;line-height:1.4;color:var(--ink)}
-.howtip p{margin:0}.howtip .btn{flex:none;padding:.2rem .85rem;font-size:.8rem;margin:0}
+.howtip p{margin:0}.howtip{align-items:center;font-size:.95rem}.howtip .btn{flex:none;padding:.4rem 1.2rem;margin:0}
 </style>
 </head>
 <body>
@@ -1058,48 +1061,48 @@ p,li{text-wrap:pretty}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-29e"></script>
-<script src="icons.js?v=2026-10-29e"></script>
-<script src="names.js?v=2026-10-29e"></script>
-<script src="sound.js?v=2026-10-29e"></script>
-<script src="scenarios.js?v=2026-10-29e"></script>
-<script src="progress.js?v=2026-10-29e"></script>
-<script src="criteria.js?v=2026-10-29e"></script>
-<script src="tone.js?v=2026-10-29e"></script>
-<script src="coach.js?v=2026-10-29e"></script>
-<script src="camera.js?v=2026-10-29e"></script>
-<script src="lessons.js?v=2026-10-29e"></script>
-<script src="dashboard.js?v=2026-10-29e"></script>
-<script src="grader.js?v=2026-10-29e"></script>
-<script src="onboarding.js?v=2026-10-29e"></script>
-<script src="tiers.js?v=2026-10-29e"></script>
-<script src="badges.js?v=2026-10-29e"></script>
-<script src="voices.js?v=2026-10-29e"></script>
-<script src="mission.js?v=2026-10-29e"></script>
-<script src="boss.js?v=2026-10-29e"></script>
-<script src="auth.js?v=2026-10-29e"></script>
-<script src="manager.js?v=2026-10-29e"></script>
-<script src="answers.js?v=2026-10-29e"></script>
-<script src="mgranswers.js?v=2026-10-29e"></script>
-<script src="assign.js?v=2026-10-29e"></script>
-<script src="facts.js?v=2026-10-29e"></script>
-<script src="surprise.js?v=2026-10-29e"></script>
-<script src="callcard.js?v=2026-10-29e"></script>
-<script src="presenter.js?v=2026-10-29e"></script>
-<script src="avatarcheck.js?v=2026-10-29e"></script>
-<script src="app.js?v=2026-10-29e"></script>
-<script src="dialog.js?v=2026-10-29e"></script>
-<script src="nav.js?v=2026-10-29e"></script>
-<script src="practice.js?v=2026-10-29e"></script>
-<script src="explorer.js?v=2026-10-29e"></script>
-<script src="map.js?v=2026-10-29e"></script>
-<script src="people.js?v=2026-10-29e"></script>
-<script src="hair.js?v=2026-10-29e"></script>
-<script src="merch.js?v=2026-10-29e"></script>
-<script src="avatar.js?v=2026-10-29e"></script>
-<script src="creator.js?v=2026-10-29e"></script>
-<script src="scenes.js?v=2026-10-29e"></script>
-<script src="results.js?v=2026-10-29e"></script>
-<script src="start.js?v=2026-10-29e"></script>
+<script src="config.js?v=2026-10-29f"></script>
+<script src="icons.js?v=2026-10-29f"></script>
+<script src="names.js?v=2026-10-29f"></script>
+<script src="sound.js?v=2026-10-29f"></script>
+<script src="scenarios.js?v=2026-10-29f"></script>
+<script src="progress.js?v=2026-10-29f"></script>
+<script src="criteria.js?v=2026-10-29f"></script>
+<script src="tone.js?v=2026-10-29f"></script>
+<script src="coach.js?v=2026-10-29f"></script>
+<script src="camera.js?v=2026-10-29f"></script>
+<script src="lessons.js?v=2026-10-29f"></script>
+<script src="dashboard.js?v=2026-10-29f"></script>
+<script src="grader.js?v=2026-10-29f"></script>
+<script src="onboarding.js?v=2026-10-29f"></script>
+<script src="tiers.js?v=2026-10-29f"></script>
+<script src="badges.js?v=2026-10-29f"></script>
+<script src="voices.js?v=2026-10-29f"></script>
+<script src="mission.js?v=2026-10-29f"></script>
+<script src="boss.js?v=2026-10-29f"></script>
+<script src="auth.js?v=2026-10-29f"></script>
+<script src="manager.js?v=2026-10-29f"></script>
+<script src="answers.js?v=2026-10-29f"></script>
+<script src="mgranswers.js?v=2026-10-29f"></script>
+<script src="assign.js?v=2026-10-29f"></script>
+<script src="facts.js?v=2026-10-29f"></script>
+<script src="surprise.js?v=2026-10-29f"></script>
+<script src="callcard.js?v=2026-10-29f"></script>
+<script src="presenter.js?v=2026-10-29f"></script>
+<script src="avatarcheck.js?v=2026-10-29f"></script>
+<script src="app.js?v=2026-10-29f"></script>
+<script src="dialog.js?v=2026-10-29f"></script>
+<script src="nav.js?v=2026-10-29f"></script>
+<script src="practice.js?v=2026-10-29f"></script>
+<script src="explorer.js?v=2026-10-29f"></script>
+<script src="map.js?v=2026-10-29f"></script>
+<script src="people.js?v=2026-10-29f"></script>
+<script src="hair.js?v=2026-10-29f"></script>
+<script src="merch.js?v=2026-10-29f"></script>
+<script src="avatar.js?v=2026-10-29f"></script>
+<script src="creator.js?v=2026-10-29f"></script>
+<script src="scenes.js?v=2026-10-29f"></script>
+<script src="results.js?v=2026-10-29f"></script>
+<script src="start.js?v=2026-10-29f"></script>
 </body>
 </html>

@@ -7,12 +7,12 @@ const BANK = [
   // ----- Story and spirit
   { id: "name", topic: "Story", q: `What does the name "Corrido" come from?`, a: `A traditional Mexican ballad`, w: [`A type of agave plant`, `The founder's last name`, `A Mexican dance`], why: `A corrido is a traditional Mexican ballad. The brand borrows its music-and-rebellion spirit.` },
   { id: "promise", topic: "Story", q: `Which phrase is part of the brand's promise?`, a: `Only three ingredients, no fake flavors`, w: [`Aged in oak for twelve years`, `Triple distilled for smoothness`, `Organic and low calorie`], why: `"Only three ingredients, no fake flavors" is the heart of the additive-free message.` },
-  { id: "distiller", topic: "Story", q: `What does the brand say about its master distiller?`, a: `It bears the stamp of one of the first female master distillers`, w: [`It was made by a retired bartender`, `A celebrity founder blends it`, `A single family has made it for 200 years`], why: `The site says the tequila carries the stamp of one of the first female master distillers.` },
+  { id: "distiller", topic: "Story", q: `What does the brand say about its master distiller?`, a: `It bears the stamp of one of the first female master distillers`, w: [`It was made by a retired bartender`, `A celebrity founder blends it`, `A single family has made it for 200 years`], why: `Corrido tequila carries the stamp of one of the first female master distillers.` },
   { id: "imagery", topic: "Story", q: `Which imagery shows up on the brand's site?`, a: `Vinyl records and piano`, w: [`Surfboards and palm trees`, `Race cars and trophies`, `Mountains and snowboards`], why: `Bottles, vinyl records and piano keys carry the music-meets-rebellion look.` },
-  { id: "voice", topic: "Story", q: `How would you describe the brand's voice?`, a: `Bold, irreverent and a little rebellious`, w: [`Quiet and formal`, `Scientific and technical`, `Luxury and exclusive`], why: `The site talks about defiance and authenticity, with lines like "Let's stir up some trouble."` },
-  { id: "endorse", topic: "Story", q: `What does the brand say it is NOT about?`, a: `Flashy endorsements`, w: [`Quality and craftsmanship`, `Music and rebellion`, `Mexico's tequila heartland`], why: `The site says it's not about flashy endorsements. Corrido is celebrity-free: the tequila does the talking.` },
+  { id: "voice", topic: "Story", q: `How would you describe the brand's voice?`, a: `Bold, irreverent and a little rebellious`, w: [`Quiet and formal`, `Scientific and technical`, `Luxury and exclusive`], why: `The voice is about defiance and authenticity, with lines like "Let's stir up some trouble."` },
+  { id: "endorse", topic: "Story", q: `What does the brand say it is NOT about?`, a: `Flashy endorsements`, w: [`Quality and craftsmanship`, `Music and rebellion`, `Mexico's tequila heartland`], why: `Corrido is celebrity-free: not flashy endorsements, the tequila does the talking.` },
   { id: "celebfree", topic: "Story", q: `Which best describes Corrido's approach to fame?`, a: `Celebrity-free: the tequila does the talking`, w: [`Backed by a famous actor`, `Endorsed by pro athletes`, `Founded by a pop star`], why: `Corrido is celebrity-free. Never claim celebrity fans or endorsements the brand doesn't have.` },
-  { id: "contrast", topic: "Story", q: `Who does the brand set itself against?`, a: `Mass-produced, overpriced competitors`, w: [`Craft cocktail bars`, `Local farmers`, `Wine makers`], why: `The messaging contrasts Corrido with mass-produced, overpriced tequila.` },
+  { id: "contrast", topic: "Story", q: `Who does the brand set itself against?`, a: `Mass-produced, overpriced competitors`, w: [`Craft cocktail bars`, `Local farmers`, `Wine makers`], why: `Corrido stands against mass-produced, overpriced tequila.` },
   // ----- Lineup, notes and prices
   { id: "count", topic: "Lineup", q: `How many tequila expressions are on the site?`, a: `Four: Blanco, Overproof, Reposado, Añejo`, w: [`Two: Blanco and Añejo`, `Three: Blanco, Reposado, Añejo`, `Six, including a mezcal`], why: `The lineup is Blanco, Overproof, Reposado and Añejo.` },
   { id: "priciest", topic: "Prices", q: `Which expression is the priciest on the site?`, a: `Añejo`, w: [`Blanco`, `Reposado`, `Overproof`], why: `The Añejo is the priciest at $89.99. Blanco $44.99, Reposado $54.99, Overproof $56.99.` },
@@ -93,7 +93,7 @@ function lessonIntro(L) {
     <p class="note2">${esc(L.sub)} · about ${stopMinutes(L)} min. Read these first, then take the quiz. There is no timer.</p>
     ${rw ? `<p class="unlockbox ${got ? "got" : ""}"><b>${got ? "✓ Already unlocked" : "🎁 Pass this to unlock"}:</b> ${rw.map(esc).join(", ")}</p>` : ""}
     <ul class="learncards">${items.map(q => `<li>${q.why}</li>`).join("")}</ul>
-    <p><button class="btn" id="lstart" type="button">Start the quiz</button></p></section>`;
+    <p class="lstartrow"><button class="btn" id="lstart" type="button">Start the quiz</button></p></section>`;
   wireX(); $("#lstart").onclick = () => quiz(L); $("#lstart").focus({ preventScroll: true }); window.scrollTo(0, 0);
 }
 
