@@ -67,6 +67,6 @@ function explorer() {
     app.querySelectorAll(".xtabs .mtab").forEach(x => x.setAttribute("aria-selected", String(x === t)));
     app.querySelectorAll(".xrow").forEach(r => { r.hidden = t.dataset.c !== "All" && r.dataset.c !== t.dataset.c; });
   });
-  $("#xquiz").onclick = () => { const l = LESSONS[0]; openDiff(() => quiz(l), l); };
+  $("#xquiz").onclick = () => lessonIntro(LESSONS[0]);
   CallCard.wire();
 }

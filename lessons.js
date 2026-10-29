@@ -70,19 +70,31 @@ function quiz(L, i = 0, right = 0, missed = []) {
   let done = false;
   app.innerHTML = `<section class="view sheet">${lessonTop(i / items.length, false, L.title)}
     <div class="q">${it.q}</div>
-    ${D().timer ? '<div class="timer" aria-label="Time left"><i id="tm"></i></div>' : ""}
     <div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o[0]}</button>`).join("")}</div><div id="fb" aria-live="polite"></div></section>`;
   wireX();
   const answer = (ok, btn) => {
     if (done) return; done = true; stopTimer(); Sound.sfx(ok ? "right" : "wrong");
     app.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (opts[x.dataset.n][1]) x.classList.add("best"); });
-    if (!ok) { if (btn) btn.classList.add("bad"); state.hearts = Math.max(0, state.hearts - 1); hud(); }
+    if (!ok) { if (btn) btn.classList.add("bad"); state.hearts = Math.max(0, state.hearts - 1); hud(); const hh = app.querySelector(".lesson-top .hearts"); if (hh) hh.innerHTML = `${ic("heart")} ${state.hearts}`; }   // the header hearts and the footer hearts change together
     $("#fb").innerHTML = `<div class="feed ${ok ? "best" : "bad"}"><span>${ok ? "Correct! " : btn ? "Not quite. " : "Time's up. "}${it.why}</span><button class="btn" id="nx">Continue</button></div>`;
     $("#nx").onclick = () => quiz(L, i + 1, right + (ok ? 1 : 0), ok ? missed : [...missed, it.id]);
     $("#nx").focus({ preventScroll: true });
   };
   app.querySelectorAll(".opt").forEach(b => b.onclick = () => answer(opts[b.dataset.n][1] === 1, b));
-  if (D().timer) startTimer(D().timer, () => answer(false, null));
+}
+
+// A lesson opens on the facts it asks about (the answer lines of its own questions, so a price change in the facts editor shows here too), and then the quiz.
+// The quiz has no timer: a lesson is for learning. Timers stay in the missions.
+function lessonIntro(L) {
+  const items = L.qs.map(Q), rw = stopRewards(L.id), got = rw && state.done[L.id];
+  stopAll(); Cam.stop(); Sound.stop();
+  app.innerHTML = `<section class="view sheet"><div class="lesson-top"><h1 class="sr">${esc(L.title)}</h1><button class="x" id="exit" aria-label="Exit">✕</button></div>
+    <h2>${esc(L.title)}</h2>
+    <p class="note2">${esc(L.sub)} · about ${stopMinutes(L)} min. Read these first, then take the quiz. There is no timer.</p>
+    ${rw ? `<p class="unlockbox ${got ? "got" : ""}"><b>${got ? "✓ Already unlocked" : "🎁 Pass this to unlock"}:</b> ${rw.map(esc).join(", ")}</p>` : ""}
+    <ul class="learncards">${items.map(q => `<li>${q.why}</li>`).join("")}</ul>
+    <p><button class="btn" id="lstart" type="button">Start the quiz</button></p></section>`;
+  wireX(); $("#lstart").onclick = () => quiz(L); $("#lstart").focus({ preventScroll: true }); window.scrollTo(0, 0);
 }
 
 // ----- before / after knowledge check (10 random questions, no hearts) -----

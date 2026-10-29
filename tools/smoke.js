@@ -50,12 +50,11 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       if (r.logo < 60 || !r.flags || !r.agave || !r.signinHidden || !r.card || r.dots !== 2) throw new Error(JSON.stringify(r));
       await fits(SIZES, "the age check");
     });
-    await step("yes opens sign-in, and guest leads to the character creator", async () => {
-      await click("#yes"); if (!await chrome.waitFor("!document.querySelector('#guest').disabled")) throw new Error("sign-in stayed locked");
-      if (!await chrome.eval("document.querySelector('#agecard').classList.contains('done') && /21\\+ confirmed/.test(document.querySelector('#agecard').innerText) && !document.querySelector('#signin').classList.contains('off')")) throw new Error("the age card did not give way to the confirmation");
-      if (!await chrome.eval("document.querySelector('#gate').classList.contains('step2') && getComputedStyle(document.querySelector('#signin')).display !== 'none' && !document.querySelector('#guest').disabled && !document.querySelector('#presentGo').disabled")) throw new Error("the sign-in card did not take the age card's place");
-      await fits(SIZES, "the sign-in");
-      await click("#guest"); if (!await chrome.waitFor("!!document.querySelector('#cname') && !!document.querySelector('#cprev')")) throw new Error("no creator");
+    await step("yes goes straight to the character creator (sign-in has nothing to offer yet, so there is no second card), with the Presenter shortcut already on the age screen", async () => {
+      if (!await chrome.eval("document.querySelector('#gate').classList.contains('onestep') && !document.querySelector('#presentGo').disabled && /Confirm I.m 21\\+/.test(document.querySelector('#presentGo').textContent) && getComputedStyle(document.querySelector('#presentGo')).display !== 'none'")) throw new Error("the one-step age screen is not set up");
+      await click("#yes"); if (!await chrome.waitFor("!!document.querySelector('#cname') && !!document.querySelector('#cprev')")) throw new Error("no creator after yes");
+      if (!await chrome.eval("document.querySelector('#gate').classList.contains('hidden') && !document.querySelector('#gate').classList.contains('step2')")) throw new Error("the sign-in card still showed");
+      if (!await chrome.eval("/first name/i.test(document.querySelector('.nlab').textContent)")) throw new Error("the creator does not ask for a first name");
     });
     await step("a name and Save and continue lead to the three-card tutorial, which can be skipped", async () => {
       await chrome.eval("(() => { const n = document.querySelector('#cname'); n.value = 'Taylor'; n.dispatchEvent(new Event('input', { bubbles: true })); })()");
@@ -81,8 +80,10 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
       if (r.nodes !== 16 || r.locked !== 15) throw new Error(JSON.stringify(r));
     });
     await step("the first lesson can be opened from the map and played through to its results", async () => {
-      await click(".node[data-id=brand]"); if (!await chrome.waitFor("document.querySelector('#diffDlg').open")) throw new Error("no dialog");
-      await chrome.eval("document.querySelector('#diffDlg button.btn:not(.alt)').click()");
+      await click(".node[data-id=brand]");   // one click: no difficulty popup for a lesson, it opens on its facts
+      if (!await chrome.waitFor("!!document.querySelector('#lstart') && document.querySelectorAll('.learncards li').length === 6")) throw new Error("no facts screen with six cards");
+      if (await chrome.eval("document.querySelector('#diffDlg').open")) throw new Error("a popup opened for a lesson");
+      await click("#lstart"); if (!await chrome.waitFor("!!document.querySelector('.opt') && !document.querySelector('.timer')")) throw new Error("the quiz did not start, or it has a timer");
       for (let i = 0; i < 40 && !await chrome.eval("!!document.querySelector('.result')"); i++) {
         await chrome.eval("(() => { const o = document.querySelector('.opt:not(:disabled)'); if (o) o.click(); })()"); await sleep(120);
         await chrome.eval("(() => { const n = document.querySelector('#nx'); if (n) n.click(); })()"); await sleep(120);
@@ -109,7 +110,7 @@ let fails = 0; const ok = (n, c, x = "") => { console.log((c ? "ok   " : "FAIL "
 
     // ----- Presenter mode: every page its menu reaches
     await chrome.go(base); await chrome.eval("localStorage.clear()"); await chrome.go(base);
-    await click("#yes"); await chrome.waitFor("!document.querySelector('#presentGo').disabled"); await click("#presentGo");
+    await chrome.waitFor("!document.querySelector('#presentGo').disabled"); await click("#presentGo");
     ok("Presenter mode opens with sample progress and its menu button", await chrome.waitFor("!!document.querySelector('#prbtn') && !!document.querySelector('.maphome')"));
     await step("the Presenter button sits inside the footer bar on a laptop, so it covers no page content", async () => {
       for (const w of [1440, 1100, 1000, 820]) {

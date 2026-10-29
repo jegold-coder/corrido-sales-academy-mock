@@ -20,6 +20,7 @@ const paintSound = () => { const b = $("#soundBtn"); b.innerHTML = Sound.on ? ic
 $("#soundBtn").onclick = () => { Sound.init(); Sound.setOn(!Sound.on); paintSound(); };
 paintSound();
 const goHome = () => { if (!document.body.classList.contains("onboarding")) home(); };
+$("#mapBtn").onclick = goHome;   // the same as the logo and the phone bar's Map
 $("#logo").onclick = goHome;
 $("#logo").onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goHome(); } };
 const closePanel = () => { if (document.body.classList.contains("onboarding")) return; if ($(".dhead")) home(); else if ($(".creator")) closeCreator(); };

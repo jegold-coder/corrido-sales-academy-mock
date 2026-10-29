@@ -38,7 +38,12 @@ document.addEventListener("visibilitychange", () => { if (document.hidden) Sound
 // The first screen: age check, then sign in. The options are "continue as guest", Sign in with Google (auth.js, once a client ID
 // is set) and an email that is only saved on this device. Company sign-in is not live yet.
 const enterGame = () => { $("#gate").classList.add("hidden"); startFlow(); };
+// Until a Google client ID is set, sign-in has nothing to offer but "guest", so "Yes, I'm 21+" goes straight into the game (one step, not two) and the
+// email box and the "not set up yet" button are never shown. With a client ID the second card appears again, with Google and guest.
+const oneStep = !googleClientId();
+if (oneStep) { $("#gate").classList.add("onestep"); $("#presentGo").disabled = false; }   // the Presenter shortcut sits on the age screen; it says it confirms 21+
 $("#yes").onclick = () => {
+  if (oneStep) { const p = state.profile || {}; state.profile = p.mode === "google" ? p : { mode: "guest", email: p.email || "" }; Progress.save(state); enterGame(); return; }
   $("#agecard").innerHTML = '<p class="ageok">✓ 21+ confirmed</p>'; $("#agecard").classList.add("done");   // the card gives way to a small confirmation
   // one card at a time: the sign-in card takes the age card's place, so the first screen never needs scrolling
   $("#signin").classList.remove("off"); $("#gate").classList.add("step2");

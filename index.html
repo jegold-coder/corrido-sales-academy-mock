@@ -509,7 +509,7 @@ details.xmerch[open]>summary::after{content:"Hide ▴"}
 @media(max-width:420px){.gate.splash{padding:.8rem;padding-top:3.6rem}.gate.splash::before{height:52px;background-size:146px 52px}.agecard{padding:2.2rem 1rem 1.1rem}.signin{padding:1rem .9rem}}
 /* the sign-in card takes the age card's place, and the header gets smaller with it */
 .gate.step2 .splashtag{display:none}.gate.step2 .splashtitle{font-size:clamp(1.7rem,8vw,2.2rem)}.gate.step2 .splashsub{margin-bottom:.5rem}.gate.step2 .stepdots{margin-bottom:.9rem}.gate.step2 .agecard{margin-top:0}
-.gate.step2 .splashfoot{display:none}.gate:not(.step2) .presentrow{display:none}
+.gate.step2 .splashfoot{display:none}.gate:not(.step2):not(.onestep) .presentrow{display:none}.gate.onestep .stepdots{display:none}.gate.onestep .splashfoot{display:none}.gate.onestep .presentrow .linkbtn{font-size:.85rem}
 .splashlinks{display:flex;justify-content:center;align-items:center;gap:0 1.1rem;flex-wrap:wrap;margin-top:.5rem}.splashlinks p{margin:0}
 .gsoon{padding:.45rem .8rem;font-size:.78rem}
 @media(max-height:700px){.gate.step2 .splashtitle{margin-top:0}.gate.step2 .splashsub{margin:.3rem 0 .4rem}.gate.step2 .stepdots{display:none}.gate.step2 .signin{padding:.7rem .9rem .6rem;margin-top:.5rem}.gate.step2 .guestbtn{padding:.65rem}.gate.step2 .emailrow input{padding:.5rem .8rem}.gate.step2 .emailrow .btn{padding:.5rem 1rem}.gate.step2 .or{margin:.6rem 0 .4rem}.gate.step2 .signnote{margin-top:.4rem}}
@@ -979,6 +979,17 @@ p,li{text-wrap:pretty}
 /* Tap targets: the footer sound button and the camera reminder's dismiss were 23px high; 24px is the WCAG 2.2 AA minimum. */
 .foot .soundfab{min-height:24px!important}
 .x2{min-width:24px;min-height:24px}
+/* Entry and first lesson: the email box stays out of sight until company sign-in works; its label is ready for then. */
+.signin .or,.signin .emailrow,.signin .signnote,.signin .elab{display:none}
+.elab{display:block;font-weight:700;margin:.2rem 0 .2rem;color:#eadfcc;font-size:.85rem}
+/* A lesson opens on its facts, then the quiz. */
+.learncards{list-style:none;margin:.6rem 0;padding:0;display:grid;gap:.5rem}
+.learncards li{background:#fff9ec;border:1px solid #e0a42f88;border-left:5px solid var(--gold);border-radius:10px;padding:.5rem .8rem;line-height:1.4}
+/* A new rep's map keeps only the rep card in the side panels until a stop is finished. */
+.maphome.newrep .mside .sidecard:not(.repcard){display:none}
+/* The how-it-works tip on a new rep's map. */
+.howtip{display:flex;gap:.7rem;align-items:flex-start;justify-content:space-between;background:#fff9ec;border:1px solid #e0a42f88;border-radius:12px;padding:.5rem .8rem;margin:.3rem 0 .6rem;font-size:.88rem;line-height:1.4;color:var(--ink)}
+.howtip p{margin:0}.howtip .btn{flex:none;padding:.2rem .85rem;font-size:.8rem;margin:0}
 </style>
 </head>
 <body>
@@ -993,7 +1004,7 @@ p,li{text-wrap:pretty}
   <div class="photo a"></div><div class="photo b"></div>
   <div class="keys"></div>
 </div>
-<div class="mock">MOCK PROTOTYPE · STAGE 1 · NOT FINAL · NOT AFFILIATED WITH TEQUILA CORRIDO</div>
+<div class="mock">CLASS PROJECT PROTOTYPE · NOT FINAL · NOT AN OFFICIAL TEQUILA CORRIDO PRODUCT</div>
 
 <div class="gate splash" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
   <div class="splashbox">
@@ -1003,8 +1014,8 @@ p,li{text-wrap:pretty}
     <div class="stepdots" aria-hidden="true"><i></i><i></i></div>
     <div class="agecard" id="agecard">
       <span class="agebadge" aria-hidden="true">21+</span>
-      <h2 id="gateTitle">Hold up. Age check.</h2>
-      <p>Tell us if you're old enough to know better, but young enough to still enjoy a good time.</p>
+      <h2 id="gateTitle">Are you 21 or older?</h2>
+      <p>Tequila Corrido is an alcohol brand, so this training is for adults of legal drinking age.</p>
       <div class="agebtns"><button class="btn" id="yes" type="button">Yes, I'm 21+</button><button class="btn alt" id="no" type="button">No</button></div>
       <small id="underMsg" class="hidden">Come back when you're 21. This training is for adults of legal drinking age.</small>
     </div>
@@ -1013,12 +1024,13 @@ p,li{text-wrap:pretty}
       <button class="btn guestbtn" id="guest" type="button" disabled>Continue as guest</button>
       <div class="googlerow" id="googlerow"><div id="gbtn" class="gbtn"></div><button class="btn alt gsoon" id="gsoon" type="button" disabled hidden>Sign in with Google · not set up yet</button></div>
       <p class="or">Or sign in with your company email</p>
+      <label class="elab" for="email">Company email</label>
       <div class="emailrow"><input id="email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Company email" disabled><button class="btn alt" id="sendlink" type="button" disabled>Continue</button></div>
       <p class="signnote" id="emailnote">Your email stays on this device. Company sign-in arrives with the rollout.</p>
     </div>
     <p class="splashfoot">For adults of legal drinking age.</p>
     <div class="splashlinks">
-      <p class="presentrow"><button type="button" class="linkbtn" id="presentGo" disabled>Presenting? Skip setup with sample progress</button></p>
+      <p class="presentrow"><button type="button" class="linkbtn" id="presentGo" disabled>Presenting? Confirm I'm 21+ and skip setup with sample progress</button></p>
       <p class="mgrlink"><a href="#manager" id="mgrLink">Manager? Open the manager view</a></p>
     </div>
   </div>
@@ -1026,7 +1038,7 @@ p,li{text-wrap:pretty}
 
 <header class="top">
   <div class="logo" id="logo" role="button" tabindex="0" title="Back to the map" style="cursor:pointer"><img class="brandlogo" src="https://ilovetequilacorrido.com/cdn/shop/files/tequila-corrido-logo-wht.png?v=1723729407" width="735" height="325" alt="" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('nologo')"><span class="brandtext">Tequila Corrido</span><small>SALES ACADEMY</small></div>
-  <div class="stats" aria-label="Menu"><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button><span class="navsep" aria-hidden="true"></span><button class="diffbtn brandbtn" id="brandBtn" type="button" title="What Tequila Corrido is: the promise, the lineup and the story"><span class="lg">Who is Tequila Corrido?</span><span class="sm">Brand</span></button><a class="diffbtn brandbtn" id="siteBtn" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer" title="The real Tequila Corrido website (opens in a new tab)">Website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a></div>
+  <div class="stats" aria-label="Menu"><button class="diffbtn" id="mapBtn" title="Your training map">Map</button><button class="diffbtn" id="dashBtn" title="Your progress">Dashboard</button><button class="diffbtn" id="charBtn" title="Edit your character">Character</button><span class="navsep" aria-hidden="true"></span><button class="diffbtn brandbtn" id="brandBtn" type="button" title="Who is Tequila Corrido? The promise, the lineup and the story" aria-label="Brand: who is Tequila Corrido?">Brand</button><a class="diffbtn brandbtn" id="siteBtn" href="https://ilovetequilacorrido.com" target="_blank" rel="noopener noreferrer" title="The real Tequila Corrido website (opens in a new tab)">Website <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab, so Sales Academy stays open)</span></a></div>
 </header>
 
 <main id="app" tabindex="-1"></main>
@@ -1046,48 +1058,48 @@ p,li{text-wrap:pretty}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-29a"></script>
-<script src="icons.js?v=2026-10-29a"></script>
-<script src="names.js?v=2026-10-29a"></script>
-<script src="sound.js?v=2026-10-29a"></script>
-<script src="scenarios.js?v=2026-10-29a"></script>
-<script src="progress.js?v=2026-10-29a"></script>
-<script src="criteria.js?v=2026-10-29a"></script>
-<script src="tone.js?v=2026-10-29a"></script>
-<script src="coach.js?v=2026-10-29a"></script>
-<script src="camera.js?v=2026-10-29a"></script>
-<script src="lessons.js?v=2026-10-29a"></script>
-<script src="dashboard.js?v=2026-10-29a"></script>
-<script src="grader.js?v=2026-10-29a"></script>
-<script src="onboarding.js?v=2026-10-29a"></script>
-<script src="tiers.js?v=2026-10-29a"></script>
-<script src="badges.js?v=2026-10-29a"></script>
-<script src="voices.js?v=2026-10-29a"></script>
-<script src="mission.js?v=2026-10-29a"></script>
-<script src="boss.js?v=2026-10-29a"></script>
-<script src="auth.js?v=2026-10-29a"></script>
-<script src="manager.js?v=2026-10-29a"></script>
-<script src="answers.js?v=2026-10-29a"></script>
-<script src="mgranswers.js?v=2026-10-29a"></script>
-<script src="assign.js?v=2026-10-29a"></script>
-<script src="facts.js?v=2026-10-29a"></script>
-<script src="surprise.js?v=2026-10-29a"></script>
-<script src="callcard.js?v=2026-10-29a"></script>
-<script src="presenter.js?v=2026-10-29a"></script>
-<script src="avatarcheck.js?v=2026-10-29a"></script>
-<script src="app.js?v=2026-10-29a"></script>
-<script src="dialog.js?v=2026-10-29a"></script>
-<script src="nav.js?v=2026-10-29a"></script>
-<script src="practice.js?v=2026-10-29a"></script>
-<script src="explorer.js?v=2026-10-29a"></script>
-<script src="map.js?v=2026-10-29a"></script>
-<script src="people.js?v=2026-10-29a"></script>
-<script src="hair.js?v=2026-10-29a"></script>
-<script src="merch.js?v=2026-10-29a"></script>
-<script src="avatar.js?v=2026-10-29a"></script>
-<script src="creator.js?v=2026-10-29a"></script>
-<script src="scenes.js?v=2026-10-29a"></script>
-<script src="results.js?v=2026-10-29a"></script>
-<script src="start.js?v=2026-10-29a"></script>
+<script src="config.js?v=2026-10-29e"></script>
+<script src="icons.js?v=2026-10-29e"></script>
+<script src="names.js?v=2026-10-29e"></script>
+<script src="sound.js?v=2026-10-29e"></script>
+<script src="scenarios.js?v=2026-10-29e"></script>
+<script src="progress.js?v=2026-10-29e"></script>
+<script src="criteria.js?v=2026-10-29e"></script>
+<script src="tone.js?v=2026-10-29e"></script>
+<script src="coach.js?v=2026-10-29e"></script>
+<script src="camera.js?v=2026-10-29e"></script>
+<script src="lessons.js?v=2026-10-29e"></script>
+<script src="dashboard.js?v=2026-10-29e"></script>
+<script src="grader.js?v=2026-10-29e"></script>
+<script src="onboarding.js?v=2026-10-29e"></script>
+<script src="tiers.js?v=2026-10-29e"></script>
+<script src="badges.js?v=2026-10-29e"></script>
+<script src="voices.js?v=2026-10-29e"></script>
+<script src="mission.js?v=2026-10-29e"></script>
+<script src="boss.js?v=2026-10-29e"></script>
+<script src="auth.js?v=2026-10-29e"></script>
+<script src="manager.js?v=2026-10-29e"></script>
+<script src="answers.js?v=2026-10-29e"></script>
+<script src="mgranswers.js?v=2026-10-29e"></script>
+<script src="assign.js?v=2026-10-29e"></script>
+<script src="facts.js?v=2026-10-29e"></script>
+<script src="surprise.js?v=2026-10-29e"></script>
+<script src="callcard.js?v=2026-10-29e"></script>
+<script src="presenter.js?v=2026-10-29e"></script>
+<script src="avatarcheck.js?v=2026-10-29e"></script>
+<script src="app.js?v=2026-10-29e"></script>
+<script src="dialog.js?v=2026-10-29e"></script>
+<script src="nav.js?v=2026-10-29e"></script>
+<script src="practice.js?v=2026-10-29e"></script>
+<script src="explorer.js?v=2026-10-29e"></script>
+<script src="map.js?v=2026-10-29e"></script>
+<script src="people.js?v=2026-10-29e"></script>
+<script src="hair.js?v=2026-10-29e"></script>
+<script src="merch.js?v=2026-10-29e"></script>
+<script src="avatar.js?v=2026-10-29e"></script>
+<script src="creator.js?v=2026-10-29e"></script>
+<script src="scenes.js?v=2026-10-29e"></script>
+<script src="results.js?v=2026-10-29e"></script>
+<script src="start.js?v=2026-10-29e"></script>
 </body>
 </html>

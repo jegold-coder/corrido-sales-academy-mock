@@ -32,7 +32,7 @@ function bossIntro(stop) {
   const next = tier >= 5 ? "complete the season" : `become ${aTier(tier + 1)}`, L = sc ? MLEVEL[sc.level] : null;
   const left = bossTriesLeft(stop.id), rewards = stopRewards(stop.id), reward = rewards.join(", ");
   const rules = quiz
-    ? [`${boss.count} questions, ${boss.secs} seconds each`, `Score ${Math.round(boss.pass * 100)}% or better to win`, "A question you run out of time on counts as wrong", `Win unlocks Tier ${tier + 1}${reward ? ". Also unlocks " + reward : ""}`]
+    ? [`${boss.count} questions, ${boss.secs} seconds each`, `${D().hearts} hearts: a wrong answer or a timeout costs one, and losing them all ends the battle`, `Score ${Math.round(boss.pass * 100)}% or better to win`, "A question you run out of time on counts as wrong", `Win unlocks Tier ${tier + 1}${reward ? ". Also unlocks " + reward : ""}`]
     : [`Score ${boss.pass.toFixed(1)} / 5 or better across the conversation`,
        boss.voice ? "Voice only: say your answers out loud (typing is switched off if your browser can record)" : "Speak or type. Tone counts toward your score",
        boss.strict ? "Zero compliance misses. Any health claim or pressure tactic loses instantly" : "Any health claim or pressure tactic loses instantly",
@@ -77,9 +77,10 @@ const quizStars = (right, total) => starsFor(Math.round(right / total * 100));
 function brandBrain(stop, boss, rehearsal) {
   const picks = shuffle(BANK).slice(0, boss.count), total = picks.length, missed = [];
   let i = 0, right = 0, tm = null;
+  state.hearts = D().hearts; hud(); Cam.stop();   // hearts here too, as in the lessons: a wrong answer or a timeout costs one, and none left ends the battle
   const finish = () => {
     clearInterval(tm); Sound.stop();
-    const pct = right / total, won = pct >= boss.pass, first = won && !rehearsal && !state.done[stop.id];
+    const pct = right / total, won = pct >= boss.pass && state.hearts > 0, first = won && !rehearsal && !state.done[stop.id];
     const score = `${right} / ${total}`, stars = quizStars(right, total);
     const ctx = { boss, stop, won, rehearsal, score, pct, stars, missed, first, kind: "quiz", avgText: `${Math.round(pct * 100)}%` };
     bossOutcome(ctx);
@@ -88,7 +89,7 @@ function brandBrain(stop, boss, rehearsal) {
     if (i >= total) return finish();
     const it = picks[i], opts = shuffle([[it.a, 1], ...it.w.slice(0, 2).map(x => [x, 0])]);
     app.innerHTML = `<section class="view sheet bbquiz">
-      <div class="lesson-top"><button class="x" id="exit" aria-label="Leave the boss battle">✕</button><div class="prog"><i style="width:${i / total * 100}%"></i></div><span class="chip">${rehearsal ? "Practice" : "Boss"} · ${i + 1} of ${total}</span></div>
+      <div class="lesson-top"><button class="x" id="exit" aria-label="Leave the boss battle">✕</button><div class="prog"><i style="width:${i / total * 100}%"></i></div><span class="hearts">${ic("heart")} ${state.hearts}</span><span class="chip">${rehearsal ? "Practice" : "Boss"} · ${i + 1} of ${total}</span></div>
       <div class="timer"><i id="bbtm"></i></div>
       <div class="q">${it.q}</div>
       <div class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o[0]}</button>`).join("")}</div>
@@ -99,9 +100,9 @@ function brandBrain(stop, boss, rehearsal) {
       if (done) return; done = true; clearInterval(tm);
       app.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (opts[x.dataset.n][1]) x.classList.add("best"); });
       if (btn && !ok) btn.classList.add("bad");
-      if (ok) right++; else missed.push(it.topic);
+      if (ok) right++; else { missed.push(it.topic); state.hearts = Math.max(0, state.hearts - 1); hud(); const hh = app.querySelector(".lesson-top .hearts"); if (hh) hh.innerHTML = `${ic("heart")} ${state.hearts}`; }
       Sound.sfx(ok ? "right" : "wrong");
-      setTimeout(() => { i++; show(); }, 650);
+      setTimeout(() => { i++; if (state.hearts === 0) finish(); else show(); }, 650);
     };
     app.querySelectorAll(".opt").forEach(b => b.onclick = () => next(opts[b.dataset.n][1] === 1, b));
     clearInterval(tm);

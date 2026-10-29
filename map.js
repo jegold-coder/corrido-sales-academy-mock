@@ -53,7 +53,7 @@ function home() {
   const sideLeft = `<aside class="mside" aria-label="Your rep">
     <div class="sidecard repcard go" data-go="progress" role="link" tabindex="0" title="Open your progress"><div class="rav"><svg viewBox="26 -6 68 84" aria-hidden="true">${person(repLook())}</svg></div><b class="rn">${esc(repName())}</b><span class="rt">Tier ${tNow} · ${TIERS[tNow]}</span>
       <div class="bar" aria-hidden="true"><i style="width:${lpct}%"></i></div><small>Rank: ${LEVELS[lv][0]}${lnxt ? ` · ${lnxt[1] - state.xp} XP to ${lnxt[0]}` : ""}</small>
-      <div class="sidestats"><span title="Day streak">🔥 ${state.streak || 0}</span><span title="XP">⭐ ${state.xp}</span><span title="Merch unlocked">👕 ${gotMerch}/${allMerch}</span></div><em class="goto">Your progress ›</em></div>
+      <div class="sidestats"><span title="Day streak: days in a row you practiced">🔥 ${state.streak || 0}</span><span title="XP: points from lessons and missions. They raise your rank.">⭐ ${state.xp}</span><span title="Merch unlocked: shirts and hats you have earned for your character">👕 ${gotMerch}/${allMerch}</span></div><em class="goto">Your progress ›</em></div>
     ${rewardStop ? `<div class="sidecard go" data-go="creator" role="link" tabindex="0" title="Open the character creator"><h3>Next unlock</h3><div class="pieces">${rewardItems.slice(0, 3).map(nm => `<span class="piece" title="${esc(merchView(nm, state.avatar.gender).label)}">${pieceThumb(nm)}</span>`).join("")}</div><p>${esc(merchView(rewardItems[0], state.avatar.gender).label)}${rewardItems.length > 1 ? ` +${rewardItems.length - 1} more` : ""}</p><small>Beat ${esc(rewardStop.title)}</small><em class="goto">Your outfits ›</em></div>` : ""}</aside>`;
   const sideRight = `<aside class="mside" aria-label="Next boss and badges">
     ${nb && nbStop ? `<div class="sidecard bosscard"><h3>Next boss</h3><div class="bigface">${bossFace(nbStop) || '<span class="bface brain">🧠</span>'}</div><b class="rn">${nbSc ? esc(nbSc.cust.name) : "Brand Brain"}</b><span class="rt">${nbSc ? esc(nbSc.cust.role) : "Ten timed questions"}</span>
@@ -64,14 +64,16 @@ function home() {
   // A tier banner hangs 120px above its first stop so the START tag fits between them. Tier 0 has no stop above it to bump into, so its banner sits 26px from the top of the map.
   const bandUp = (f, t) => (t === 0 ? TOP - 26 : 120);
   const bands = starts.map((f, t) => `<div class="tierband ${t < tNow ? "past" : t === tNow ? "now" : "next"} ${freshBoss && t === freshBoss.tier + 1 ? "new" : ""}" style="--x:${xs[f] / 4}%;top:${Math.max(ys[f] - bandUp(f, t), 22) / H * 100}%"><span>Tier ${t}<i class="tt"> · ${TIERS[t]}</i></span></div>`).join("");
-  app.innerHTML = `<section class="view maphome">${sideLeft}<div class="mcenter">
+  const newRep = !Object.keys(state.done).length;   // nothing finished yet: the map is kept quiet, with the Next up bar as the one thing to do
+  app.innerHTML = `<section class="view maphome${newRep ? " newrep" : ""}">${sideLeft}<div class="mcenter">
     <h1 class="sr">Your training map</h1>
     <p class="lede">${gated ? `Welcome, ${esc(repName())}` : `Ready to sell, ${esc(repName())}?`}</p>
     ${Assign.strip()}
     ${gated ? `<div class="checkgate" role="alert"><div><b>Step 1: take the knowledge check (required)</b><p>The map is locked until you finish a short 10-question check. It takes about two minutes, and it sets your starting point so you can see how much you improve.</p></div><button class="btn" id="gocheck" type="button">Start the knowledge check</button></div>` : nextStop ? `<div class="nextup"><span>Next up: <b>${esc(nextStop.title)}</b> <small>${nextStop.qs ? "lesson" : "mission"} · about ${stopMinutes(nextStop)} min</small></span><button class="btn" id="nextgo" type="button">Start</button></div>` : '<div class="nextup"><span><b>Every stop is complete.</b> Replay any stop to beat your stars.</span></div>'}
     ${tierBar()}
+    ${newRep && !gated && !state.tipSeen ? `<div class="howtip" id="howtip" role="note"><p><b>How it works:</b> finish stops to earn <b>XP</b> (points) and up to 3 stars. XP raises your rank. Beat each tier's boss to move up. Finished stops unlock merch for your character.</p><button class="btn alt" id="tipok" type="button">Got it</button></div>` : ""}
     <div class="map" style="aspect-ratio:400/${H}"><svg class="roads" viewBox="0 0 400 ${H}" aria-hidden="true">${roads}</svg>${bands}${stops}</div></div>${sideRight}</section>`;
-  const launch = st => (BOSS_BY[st.id] ? bossIntro(st) : openDiff(() => (st.qs ? quiz(st) : play(st)), st));
+  const launch = st => (BOSS_BY[st.id] ? bossIntro(st) : st.qs ? lessonIntro(st) : openDiff(() => play(st), st));   // a lesson starts in one click, on its facts; a mission asks for the difficulty first
   app.querySelectorAll(".node").forEach(b => b.onclick = () => {
     if (b.getAttribute("aria-disabled")) {   // locked: say why in the toast (always in view, however far down the map you are) and nudge the circle
       toast(gated ? "Locked. Take the knowledge check above first to open the map." : `Locked. Pass “${b.dataset.prev}” first to unlock this stop.`);
@@ -81,6 +83,7 @@ function home() {
     launch(nodes.find(x => x.id === b.dataset.id));
   });
   if ($("#nextgo")) $("#nextgo").onclick = () => launch(nextStop);
+  if ($("#tipok")) $("#tipok").onclick = () => { state.tipSeen = true; Progress.save(state); $("#howtip").remove(); };
   if ($("#gocheck")) $("#gocheck").onclick = () => knowledgeCheck(home);
   if ($("#sidefight")) $("#sidefight").onclick = () => launch(nbStop);
   Assign.wire(app);
