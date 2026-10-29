@@ -1,7 +1,7 @@
 # Corrido Sales Academy (solo mock)
 
 A playable mock of the "AI Sales Training Coach" from the CIS 591 project brief, built to give the team ideas.
-It is **not** the team's build, it is **not** in GitHub, and nothing in it is approved by Tequila Corrido.
+It is **not** the team's build, it is **not** in the team GitHub, and nothing in it is approved by Tequila Corrido yet.
 No input from Ken yet, so every script, rubric rule and score is a labeled draft.
 
 ## Run it
