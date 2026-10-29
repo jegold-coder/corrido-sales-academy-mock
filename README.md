@@ -148,6 +148,7 @@ Open the link ending in `#manager`, use the "Manager? Open the manager view" lin
 | `icons.js` | `ic(name)`: the drawn icons (sound, hearts, mic) that replace emoji, so they look the same on every device (streak, XP and merch stay emoji); the shapes are the sprite at the top of `index.html` |
 | `presenter.js` | presenter mode: the sample player, the jump menu, and safe switching in and out |
 | `avatarcheck.js` | the Presenter menu's Avatar check sheets: every shirt, or every hairstyle on every head shape, on one page |
+| `vercel.json`, `robots.txt` | the deploy settings: the mock is kept out of search engines, safe response headers, and a one-day cache for the scripts (they carry `?v=` versions, so bump it when a script changes) |
 | `sw.js` | the offline copy: the app and the shop photos are kept on the device after one visit, so a demo works on bad Wi-Fi |
 | `tools/` | `smoke.js` clicks through the whole game in a real Chrome and fails on any error (`node tools/smoke.js`); `cdp.js` is the tiny Chrome client it uses. No installs |
 | `DEMO.md` | a 6-minute demo script that uses Presenter mode |

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Corrido Sales Academy (Mock)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Rye&display=swap" rel="stylesheet">
@@ -975,6 +976,9 @@ p,li{text-wrap:pretty}
 @keyframes nope{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
 .node.nope{animation:nope .24s var(--ease-out)}
 #toast{transition:opacity .2s var(--ease-out),transform .2s var(--ease-out)}
+/* Tap targets: the footer sound button and the camera reminder's dismiss were 23px high; 24px is the WCAG 2.2 AA minimum. */
+.foot .soundfab{min-height:24px!important}
+.x2{min-width:24px;min-height:24px}
 </style>
 </head>
 <body>
@@ -1042,48 +1046,48 @@ p,li{text-wrap:pretty}
 </nav>
 <dialog id="diffDlg" aria-label="Choose difficulty"></dialog>
 
-<script src="config.js?v=2026-10-28b"></script>
-<script src="icons.js?v=2026-10-28b"></script>
-<script src="names.js?v=2026-10-28b"></script>
-<script src="sound.js?v=2026-10-28b"></script>
-<script src="scenarios.js?v=2026-10-28b"></script>
-<script src="progress.js?v=2026-10-28b"></script>
-<script src="criteria.js?v=2026-10-28b"></script>
-<script src="tone.js?v=2026-10-28b"></script>
-<script src="coach.js?v=2026-10-28b"></script>
-<script src="camera.js?v=2026-10-28b"></script>
-<script src="lessons.js?v=2026-10-28b"></script>
-<script src="dashboard.js?v=2026-10-28b"></script>
-<script src="grader.js?v=2026-10-28b"></script>
-<script src="onboarding.js?v=2026-10-28b"></script>
-<script src="tiers.js?v=2026-10-28b"></script>
-<script src="badges.js?v=2026-10-28b"></script>
-<script src="voices.js?v=2026-10-28b"></script>
-<script src="mission.js?v=2026-10-28b"></script>
-<script src="boss.js?v=2026-10-28b"></script>
-<script src="auth.js?v=2026-10-28b"></script>
-<script src="manager.js?v=2026-10-28b"></script>
-<script src="answers.js?v=2026-10-28b"></script>
-<script src="mgranswers.js?v=2026-10-28b"></script>
-<script src="assign.js?v=2026-10-28b"></script>
-<script src="facts.js?v=2026-10-28b"></script>
-<script src="surprise.js?v=2026-10-28b"></script>
-<script src="callcard.js?v=2026-10-28b"></script>
-<script src="presenter.js?v=2026-10-28b"></script>
-<script src="avatarcheck.js?v=2026-10-28b"></script>
-<script src="app.js?v=2026-10-28b"></script>
-<script src="dialog.js?v=2026-10-28b"></script>
-<script src="nav.js?v=2026-10-28b"></script>
-<script src="practice.js?v=2026-10-28b"></script>
-<script src="explorer.js?v=2026-10-28b"></script>
-<script src="map.js?v=2026-10-28b"></script>
-<script src="people.js?v=2026-10-28b"></script>
-<script src="hair.js?v=2026-10-28b"></script>
-<script src="merch.js?v=2026-10-28b"></script>
-<script src="avatar.js?v=2026-10-28b"></script>
-<script src="creator.js?v=2026-10-28b"></script>
-<script src="scenes.js?v=2026-10-28b"></script>
-<script src="results.js?v=2026-10-28b"></script>
-<script src="start.js?v=2026-10-28b"></script>
+<script src="config.js?v=2026-10-28c"></script>
+<script src="icons.js?v=2026-10-28c"></script>
+<script src="names.js?v=2026-10-28c"></script>
+<script src="sound.js?v=2026-10-28c"></script>
+<script src="scenarios.js?v=2026-10-28c"></script>
+<script src="progress.js?v=2026-10-28c"></script>
+<script src="criteria.js?v=2026-10-28c"></script>
+<script src="tone.js?v=2026-10-28c"></script>
+<script src="coach.js?v=2026-10-28c"></script>
+<script src="camera.js?v=2026-10-28c"></script>
+<script src="lessons.js?v=2026-10-28c"></script>
+<script src="dashboard.js?v=2026-10-28c"></script>
+<script src="grader.js?v=2026-10-28c"></script>
+<script src="onboarding.js?v=2026-10-28c"></script>
+<script src="tiers.js?v=2026-10-28c"></script>
+<script src="badges.js?v=2026-10-28c"></script>
+<script src="voices.js?v=2026-10-28c"></script>
+<script src="mission.js?v=2026-10-28c"></script>
+<script src="boss.js?v=2026-10-28c"></script>
+<script src="auth.js?v=2026-10-28c"></script>
+<script src="manager.js?v=2026-10-28c"></script>
+<script src="answers.js?v=2026-10-28c"></script>
+<script src="mgranswers.js?v=2026-10-28c"></script>
+<script src="assign.js?v=2026-10-28c"></script>
+<script src="facts.js?v=2026-10-28c"></script>
+<script src="surprise.js?v=2026-10-28c"></script>
+<script src="callcard.js?v=2026-10-28c"></script>
+<script src="presenter.js?v=2026-10-28c"></script>
+<script src="avatarcheck.js?v=2026-10-28c"></script>
+<script src="app.js?v=2026-10-28c"></script>
+<script src="dialog.js?v=2026-10-28c"></script>
+<script src="nav.js?v=2026-10-28c"></script>
+<script src="practice.js?v=2026-10-28c"></script>
+<script src="explorer.js?v=2026-10-28c"></script>
+<script src="map.js?v=2026-10-28c"></script>
+<script src="people.js?v=2026-10-28c"></script>
+<script src="hair.js?v=2026-10-28c"></script>
+<script src="merch.js?v=2026-10-28c"></script>
+<script src="avatar.js?v=2026-10-28c"></script>
+<script src="creator.js?v=2026-10-28c"></script>
+<script src="scenes.js?v=2026-10-28c"></script>
+<script src="results.js?v=2026-10-28c"></script>
+<script src="start.js?v=2026-10-28c"></script>
 </body>
 </html>
