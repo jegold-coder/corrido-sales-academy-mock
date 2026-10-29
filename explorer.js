@@ -38,6 +38,8 @@ const SHOP = [
 ];
 const SHOP_CATS = ["Tees and tops", "Polos", "Hoodies", "Hats", "Gear and accessories"];
 const SHOP_CHECKED = "24 Oct 2026";
+// Each merch row opens its own page on the real shop, in a new tab (the shop handle in SHOP is the end of that page's address).
+const SHOP_PAGE = "https://ilovetequilacorrido.com/products/";
 const SOLD_OUT = new Set(["denim-tote-bag"]);   // out of stock on the shop when it was checked
 
 // ---------- who is Tequila Corrido ----------
@@ -58,7 +60,7 @@ function explorer() {
     <details class="card xmerch"><summary><h3>Merch</h3><small>${SHOP.length} products</small></summary>
       <p class="note2">What the real shop sells, as checked on ${SHOP_CHECKED}. Prices and stock change.</p>
       <div class="xtabs" role="tablist">${["All", ...SHOP_CATS].map((c, i) => `<button type="button" role="tab" class="mtab" data-c="${c}" aria-selected="${i === 0}">${c === "Gear and accessories" ? "Gear" : c === "Tees and tops" ? "Tees" : c} <small>${i ? SHOP.filter(r => r[0] === c).length : SHOP.length}</small></button>`).join("")}</div>
-      <div class="xlist">${SHOP.map(([c, n, h, pr, th]) => `<div class="xrow" data-c="${c}"><img src="${IMG}${th}" alt="" loading="lazy"><span class="xn">${esc(n)}${SOLD_OUT.has(h) ? " <em class=\"out\">Sold out</em>" : ""}</span><span class="xp">${pr}</span></div>`).join("")}</div></details>
+      <div class="xlist">${SHOP.map(([c, n, h, pr, th]) => `<a class="xrow" data-c="${c}" href="${SHOP_PAGE}${h}" target="_blank" rel="noopener noreferrer"><img src="${IMG}${th}" alt="" loading="lazy"><span class="xn">${esc(n)}${SOLD_OUT.has(h) ? " <em class=\"out\">Sold out</em>" : ""}<span class="sr"> (opens in a new tab)</span></span><span class="xp">${pr}</span></a>`).join("")}</div></details>
     <p><button class="btn" id="xquiz" type="button">Test yourself with a lesson</button> <button class="btn alt" id="xmap" type="button">Back to the map</button></p></section>`;
   $("#xback").onclick = home; $("#xmap").onclick = home;
   app.querySelectorAll(".xtabs .mtab").forEach(t => t.onclick = () => {
